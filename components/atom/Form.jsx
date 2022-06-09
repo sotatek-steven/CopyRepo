@@ -106,55 +106,17 @@ const Form = ({ formId, projectForm, forNewProject = true }) => {
     <>
       <form id={formId} onSubmit={handleSubmit}>
         <label htmlFor="name">Name</label>
-        <input
-          type="text"
-          maxLength="20"
-          name="name"
-          value={form.name}
-          onChange={handleChange}
-          required
-        />
+        <input type="text" maxLength="20" name="name" value={form.name} onChange={handleChange} required />
         <label htmlFor="symbol">Symbol</label>
-        <input
-          type="text"
-          maxLength="20"
-          name="symbol"
-          value={form.symbol}
-          onChange={handleChange}
-          required
-        />
+        <input type="text" maxLength="20" name="symbol" value={form.symbol} onChange={handleChange} required />
         <label htmlFor="chain">Chain</label>
-        <input
-          type="text"
-          maxLength="30"
-          name="chain"
-          value={form.chain}
-          onChange={handleChange}
-          required
-        />
+        <input type="text" maxLength="30" name="chain" value={form.chain} onChange={handleChange} required />
         <label htmlFor="description">Description</label>
-        <textarea
-          name="description"
-          maxLength="60"
-          value={form.description}
-          onChange={handleChange}
-        />
+        <textarea name="description" maxLength="60" value={form.description} onChange={handleChange} />
         <label htmlFor="avatar">Avatar URL</label>
-        <input
-          type="url"
-          name="avatar"
-          value={form.avatar}
-          onChange={handleChange}
-          required
-        />
+        <input type="url" name="avatar" value={form.avatar} onChange={handleChange} required />
         <label htmlFor="price">Price</label>
-        <input
-          type="number"
-          name="price"
-          value={form.price}
-          onChange={handleChange}
-          required
-        />
+        <input type="number" name="price" value={form.price} onChange={handleChange} required />
         <button type="submit" className="btn">
           Submit
         </button>

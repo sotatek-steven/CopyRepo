@@ -49,7 +49,7 @@ export const theme = createTheme({
         root: {
           padding: '32px 24px',
           '&:last-child': {
-            paddingBottom: '32px',
+            // paddingBottom: '32px',
           },
         },
       },
@@ -158,7 +158,7 @@ export const theme = createTheme({
     },
     // divider: '#E6E8F0',
     primary: {
-      main: '#f9a825',
+      main: '#F07D60',
       light: '#fdd835',
       dark: '#f57f17',
       contrastText: '#FFFFFF',

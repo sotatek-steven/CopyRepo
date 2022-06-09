@@ -44,7 +44,6 @@ const ConnectWallet = () => {
       await activate(injected);
       setOpenSwitchNetwork(false);
     } catch (err) {
-      debugger
       toast.error(err.message);
     }
   };
@@ -53,10 +52,10 @@ const ConnectWallet = () => {
     setOpen(false);
     if (type === 'metamask') {
       changeNetwork({ params: networks[process.env.NEXT_PUBLIC_NETWORK_BINANCE] });
-      setOpenSwitchNetwork(false);
+      
     }
     if (type === 'wallet-connect') {
-      activate(walletconnect);
+        activate(walletconnect);
     }
   };
 

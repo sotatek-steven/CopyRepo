@@ -1,10 +1,4 @@
-import {
-  AppBar,
-  Toolbar,
-  Container,
-  Box,
-  Typography,
-} from '@mui/material';
+import { AppBar, Toolbar, Container, Box, Typography } from '@mui/material';
 
 import StorefrontIcon from '@mui/icons-material/Storefront';
 import { useRouter } from 'next/router';
@@ -22,57 +16,56 @@ const Navbar = () => {
   const { pathname } = router;
   const playerState = useSelector((state) => state.player);
   return (
-    <AppBar position="static" color="default" elevation={0}>
-      <Container sx={{ mt: 1 }} disableGutters maxWidth="xl">
-        <Toolbar sx={{ flexWrap: 'wrap' }}>
-          <NextLink href={'/'}>
-            <img
-              style={{ width: 50, cursor: 'pointer' }}
-              src="/static/assets/img/home/logo-main.png"
-              alt="logo"
-              loading="lazy"
-            />
-          </NextLink>
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <nav>
-              <Box display={'flex'}>
-                <Box
-                  onClick={() => router.push('/')}
-                  display={'flex'}
-                  alignItems={'center'}
-                  ml={4}
-                  sx={{
-                    ':hover': { color: 'orange' },
-                    color: pathname === '/' ? '#E1E1E1' : '',
-                  }}
-                >
-                  <Typography
+    <Box sx={{ display: 'flex', minHeight: '100vh' }}>
+      <AppBar position="fixed" color="default" elevation={0} sx={{ marginLeft: '56px' }}>
+        <Container sx={{ mt: 1 }} disableGutters maxWidth="xl">
+          <Toolbar sx={{ flexWrap: 'wrap' }}>
+            <Box xs={{ py: 2, textAlign: 'center' }}>
+              <NextLink href={'/'}>
+                <img
+                  style={{ width: 60, cursor: 'pointer' }}
+                  src="/static/assets/img/home/logo-main.png"
+                  alt="logo"
+                  loading="lazy"
+                />
+              </NextLink>
+            </Box>
+            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+              <nav>
+                <Box display={'flex'}>
+                  <Box
+                    onClick={() => router.push('/')}
+                    display={'flex'}
+                    alignItems={'center'}
+                    ml={4}
                     sx={{
-                      mx: 1,
-                      mt: 0.5,
-                      cursor: 'pointer',
-                      textDecoration: 'none',
-                    }}
-                    variant="body2"
-                    fontWeight={600}
-                  >
-                   Smart Contracts
-                  </Typography>
+                      ':hover': { color: 'orange' },
+                      color: pathname === '/' ? '#E1E1E1' : '',
+                    }}>
+                    <Typography
+                      sx={{
+                        mx: 1,
+                        mt: 0.5,
+                        cursor: 'pointer',
+                        textDecoration: 'none',
+                      }}
+                      variant="body2"
+                      fontWeight={600}>
+                      Smart Contracts
+                    </Typography>
+                  </Box>
                 </Box>
-              </Box>
-            </nav>
-          </Box>
-          <Box sx={{ flexGrow: 1 }} />
-          <Box
-            sx={{ display: { xs: 'none', md: 'flex' } }}
-            alignItems={'center'}
-          >
-            <ButtonConnectWallet />
-          </Box>
-          <MobileMenu />
-        </Toolbar>
-      </Container>
-    </AppBar>
+              </nav>
+            </Box>
+            <Box sx={{ flexGrow: 1 }} />
+            <Box sx={{ display: { xs: 'none', md: 'flex' } }} alignItems={'center'}>
+              <ButtonConnectWallet />
+            </Box>
+            <MobileMenu />
+          </Toolbar>
+        </Container>
+      </AppBar>
+    </Box>
   );
 };
 

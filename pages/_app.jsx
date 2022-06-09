@@ -16,6 +16,7 @@ import Layout from '@/components/layout/PageLayout';
 import { useStore } from '@/store/index.js';
 import 'react-toastify/dist/ReactToastify.css';
 import 'public/static/css/base.css';
+import { BrowserRouter } from 'react-router-dom';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -39,49 +40,23 @@ function App(props) {
   return (
     <>
       <Head>
-        <link
-          rel="shortcut icon"
-          href="/static/assets/img/home/logo-main.png"
-        />
+        <link rel="shortcut icon" href="/static/assets/img/home/logo-main.png" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
         <meta charSet="utf-8" />
         <meta name="description" content="Endless fun, lasting profits" />
-        <meta
-          property="og:title"
-          content="Corgi NFT Game - Endless fun, lasting profits"
-          key="ogtitle"
-        />
-        <meta
-          property="og:description"
-          content="Endless fun, lasting profits"
-          key="ogdesc"
-        />
+        <meta property="og:title" content="Corgi NFT Game - Endless fun, lasting profits" key="ogtitle" />
+        <meta property="og:description" content="Endless fun, lasting profits" key="ogdesc" />
         {/* Twitter */}
         <meta name="twitter:card" content="summary" key="twcard" />
-        <meta
-          name="twitter:creator"
-          content="Corgi NFT Game - Endless fun, lasting profits"
-          key="twhandle"
-        />
+        <meta name="twitter:creator" content="Corgi NFT Game - Endless fun, lasting profits" key="twhandle" />
 
         {/* Open Graph */}
-        <meta
-          property="og:url"
-          content="https://market.corginft.io"
-          key="ogurl"
-        />
-        <meta
-          property="og:image"
-          content="/static/assets/img/home/banner.png"
-          key="ogimage"
-        />
-        <meta
-          property="og:site_name"
-          content="Corgi NFT Game - Endless fun, lasting profits"
-          key="ogsitename"
-        />
+        <meta property="og:url" content="https://market.corginft.io" key="ogurl" />
+        <meta property="og:image" content="/static/assets/img/home/banner.png" key="ogimage" />
+        <meta property="og:site_name" content="Corgi NFT Game - Endless fun, lasting profits" key="ogsitename" />
       </Head>
       <Provider store={store}>
+        {/* <BrowserRouter> */}
         <Web3ReactProvider getLibrary={getLibrary}>
           <CacheProvider value={emotionCache}>
             <ThemeProvider theme={theme}>
@@ -98,6 +73,7 @@ function App(props) {
             </ThemeProvider>
           </CacheProvider>
         </Web3ReactProvider>
+        {/* </BrowserRouter> */}
       </Provider>
     </>
   );
