@@ -1,0 +1,237 @@
+
+blue_aura.png
+size: 962,2223
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+0002 shot
+  rotate: false
+  xy: 242, 498
+  size: 238, 240
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0000 shot
+  rotate: false
+  xy: 242, 498
+  size: 238, 240
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0004 shot
+  rotate: false
+  xy: 2, 486
+  size: 238, 240
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0006 shot
+  rotate: false
+  xy: 242, 256
+  size: 238, 240
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0008 shot
+  rotate: false
+  xy: 2, 244
+  size: 238, 240
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0010 shot
+  rotate: false
+  xy: 242, 14
+  size: 238, 240
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0012 shot
+  rotate: false
+  xy: 2, 2
+  size: 238, 240
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0014 shot
+  rotate: false
+  xy: 482, 253
+  size: 238, 240
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0016 shot
+  rotate: false
+  xy: 722, 253
+  size: 238, 240
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0018 shot
+  rotate: false
+  xy: 482, 11
+  size: 238, 240
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0020 shot
+  rotate: false
+  xy: 722, 11
+  size: 238, 240
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0022 shot
+  rotate: false
+  xy: 722, 749
+  size: 238, 253
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0024 shot
+  rotate: false
+  xy: 482, 1011
+  size: 238, 270
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0026 shot
+  rotate: false
+  xy: 2, 1297
+  size: 238, 289
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0028 shot
+  rotate: false
+  xy: 482, 1587
+  size: 238, 307
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0030 shot
+  rotate: false
+  xy: 482, 1896
+  size: 238, 325
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0032 shot
+  rotate: false
+  xy: 2, 1882
+  size: 238, 339
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0034 shot
+  rotate: false
+  xy: 242, 740
+  size: 238, 264
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0036 shot
+  rotate: false
+  xy: 242, 1006
+  size: 238, 282
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0038 shot
+  rotate: false
+  xy: 482, 495
+  size: 238, 247
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0040 shot
+  rotate: false
+  xy: 482, 744
+  size: 238, 265
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0042 shot
+  rotate: false
+  xy: 2, 1012
+  size: 238, 283
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0044 shot
+  rotate: false
+  xy: 482, 1283
+  size: 238, 302
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0046 shot
+  rotate: false
+  xy: 722, 1578
+  size: 238, 319
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0048 shot
+  rotate: false
+  xy: 242, 1890
+  size: 238, 331
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0050 shot
+  rotate: false
+  xy: 2, 728
+  size: 238, 282
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0052 shot
+  rotate: false
+  xy: 722, 1276
+  size: 238, 300
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0054 shot
+  rotate: false
+  xy: 722, 495
+  size: 238, 252
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0056 shot
+  rotate: false
+  xy: 722, 1004
+  size: 238, 270
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0058 shot
+  rotate: false
+  xy: 242, 1290
+  size: 238, 289
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0060 shot
+  rotate: false
+  xy: 242, 1581
+  size: 238, 307
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0062 shot
+  rotate: false
+  xy: 722, 1899
+  size: 238, 322
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
+0064 shot
+  rotate: false
+  xy: 2, 1588
+  size: 238, 292
+  orig: 520, 520
+  offset: 141, 77
+  index: -1
