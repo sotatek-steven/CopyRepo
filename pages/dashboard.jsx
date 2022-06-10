@@ -7,7 +7,7 @@ import { TabContext, TabPanel } from '@mui/lab';
 import { styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 
-const dashboard = () => {
+const Dashboard = () => {
   const [value, setValue] = useState('dashboard');
 
   const TabPanelCustom = styled(TabPanel)(({ theme }) => ({
@@ -16,10 +16,13 @@ const dashboard = () => {
   }));
 
   return (
-    <Grid container spacing={2} sx={{ padding: '20px 8px 0 24px' }}>
+    <Grid
+      container
+      spacing={2}
+      sx={{ padding: '20px 8px 0 24px', width: 'calc(100% - 85px) !important', overflow: 'hidden' }}>
       <Grid item xs={2}>
         <Card>
-          <CardContent sx={{ height: '100vh', padding: '5px 24px' }}>
+          <CardContent sx={{ height: 'calc(100vh - 100px)', padding: '5px 24px' }}>
             <Box
               sx={{
                 display: 'flex',
@@ -31,7 +34,7 @@ const dashboard = () => {
               <h3>Forder</h3>
               <AddCircleIcon />
             </Box>
-            <Box sx={{ justifyContent: 'center', fontSize: '14px', paddingTop: '50%' }}>
+            <Box sx={{ justifyContent: 'center', fontSize: '14px', paddingTop: '70%', textAlign: 'center' }}>
               Create folders & files here, on clicking on the “<AddCircleIcon fontSize="small" /> “ icon and organise
               the smart contracts by Drag & Drop
             </Box>
@@ -64,4 +67,4 @@ const dashboard = () => {
   );
 };
 
-export default dashboard;
+export default Dashboard;
