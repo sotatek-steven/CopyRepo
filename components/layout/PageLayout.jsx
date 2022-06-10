@@ -40,7 +40,7 @@ function Layout(props) {
               <Box
                 sx={{
                   marginLeft: `${navLeftWidth}px`,
-                  marginTop: '65px',
+                  marginTop: '70px',
                 }}
                 style={{ height: 'calc(100vh)', width: `calc(100vw)` }}>
                 <Box>{props.children}</Box>
