@@ -17,7 +17,7 @@ function Layout(props) {
   return (
     <div>
       <Head>
-        <title>Marketplace</title>
+        <title>Drag Drop</title>
       </Head>
       <Box sx={{ display: 'flex', background: '#3d3d3e', minHeight: '100vh' }}>
         <Navbar />
@@ -26,20 +26,7 @@ function Layout(props) {
             <NavBarLeft />
           </Box>
           <Divider />
-          {/* <List disablePadding={true}>
-          <ListItemButton className={styles.listItemBtn} onClick={() => navigate('/settings')}>
-            <ListItemIcon className={styles.listItemIcon}>
-              <SettingIcon />
-            </ListItemIcon>
-            <ListItemText primary="Settings" className={styles.listItemText} />
-          </ListItemButton>
-        </List> */}
         </Drawer>
-        {/* <Box
-          component="main"
-          sx={{ flexGrow: 1, width: `calc(100% - ${drawerWidth}px)`, height: 'fit-content', color: 'red' }}>
-          {props.children}
-        </Box> */}
         <Container disableGutters maxWidth="xl">
           <Toolbar sx={{ flexWrap: 'wrap', padding: '0 !important' }}>
             <Card
