@@ -55,8 +55,8 @@ const IconNavBar = ({ name, path }) => {
         sx={{
           ...styles.listItemIcon,
         }}>
-        {name === 'Dashboard' && <LayersIcon fontSize="medium" />}
-        {name === 'Language' && <LanguageIcon fontSize="medium" />}
+        {name === 'Dashboard' && <LayersIcon sx={{ color: isSelected ? '#161616' : '#F07D60' }} fontSize="medium" />}
+        {name === 'Language' && <LanguageIcon sx={{ color: isSelected ? '#161616' : '#F07D60' }} fontSize="medium" />}
       </ListItemIcon>
     </ListItemButton>
   );
