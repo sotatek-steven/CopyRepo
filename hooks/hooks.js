@@ -75,7 +75,7 @@ export function useInactiveListener(suppress = false) {
       console.log(new Date(), "Handling 'accountsChanged' event with payload", accounts);
     }
     deactivate();
-    player.logout();
+    // player.logout();
   };
 
   const handleNetworkChanged = (networkId) => {

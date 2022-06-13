@@ -48,6 +48,7 @@ const ConnectWallet = () => {
 
   const disconnectWallet = async () => {
     deactivate();
+    localStorage?.removeItem('playerAuth');
     // await player.logout();
   };
 
@@ -58,7 +59,7 @@ const ConnectWallet = () => {
           onClick={() => setOpen(true)}
           variant="contained"
           startIcon={<AccountBalanceWalletIcon />}
-          sx={{ my: 1 }}>
+          sx={{ my: 1, background: '#595655 !important', borderRadius: '30px' }}>
           Connect Wallet
         </Button>
       ) : (
