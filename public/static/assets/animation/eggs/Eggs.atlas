@@ -1,0 +1,195 @@
+
+Eggs.png
+size: 512,512
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+Fire_00
+  rotate: false
+  xy: 301, 410
+  size: 83, 100
+  orig: 85, 100
+  offset: 0, 0
+  index: -1
+Fire_03
+  rotate: false
+  xy: 108, 275
+  size: 85, 100
+  orig: 85, 100
+  offset: 0, 0
+  index: -1
+Fire_04
+  rotate: false
+  xy: 214, 410
+  size: 85, 100
+  orig: 85, 100
+  offset: 0, 0
+  index: -1
+Fire_05
+  rotate: false
+  xy: 2, 11
+  size: 85, 100
+  orig: 85, 100
+  offset: 0, 0
+  index: -1
+Fire_07
+  rotate: false
+  xy: 108, 173
+  size: 84, 100
+  orig: 85, 100
+  offset: 0, 0
+  index: -1
+Fire_08
+  rotate: false
+  xy: 386, 410
+  size: 82, 100
+  orig: 85, 100
+  offset: 0, 0
+  index: -1
+Fire_09
+  rotate: false
+  xy: 195, 275
+  size: 80, 100
+  orig: 85, 100
+  offset: 0, 0
+  index: -1
+Fire_12
+  rotate: false
+  xy: 108, 71
+  size: 81, 100
+  orig: 85, 100
+  offset: 0, 0
+  index: -1
+Fire_13
+  rotate: false
+  xy: 194, 173
+  size: 81, 100
+  orig: 85, 100
+  offset: 0, 0
+  index: -1
+Fire_14
+  rotate: false
+  xy: 277, 206
+  size: 80, 100
+  orig: 85, 100
+  offset: 0, 0
+  index: -1
+Fire_15
+  rotate: false
+  xy: 360, 308
+  size: 80, 100
+  orig: 85, 100
+  offset: 0, 0
+  index: -1
+Fire_17
+  rotate: false
+  xy: 359, 206
+  size: 80, 100
+  orig: 85, 100
+  offset: 0, 0
+  index: -1
+Fire_18
+  rotate: false
+  xy: 360, 104
+  size: 80, 100
+  orig: 85, 100
+  offset: 1, 0
+  index: -1
+Fire_19
+  rotate: false
+  xy: 277, 105
+  size: 81, 99
+  orig: 85, 100
+  offset: 0, 0
+  index: -1
+Fire_21
+  rotate: false
+  xy: 191, 71
+  size: 81, 100
+  orig: 85, 100
+  offset: 0, 0
+  index: -1
+Fire_22
+  rotate: false
+  xy: 277, 308
+  size: 81, 100
+  orig: 85, 100
+  offset: 0, 0
+  index: -1
+Water
+  rotate: false
+  xy: 2, 377
+  size: 104, 133
+  orig: 104, 133
+  offset: 0, 0
+  index: -1
+air
+  rotate: false
+  xy: 2, 242
+  size: 104, 133
+  orig: 104, 133
+  offset: 0, 0
+  index: -1
+de
+  rotate: false
+  xy: 89, 14
+  size: 84, 55
+  orig: 84, 55
+  offset: 0, 0
+  index: -1
+fire
+  rotate: false
+  xy: 108, 377
+  size: 104, 133
+  orig: 104, 133
+  offset: 0, 0
+  index: -1
+fx-nuoc
+  rotate: false
+  xy: 175, 16
+  size: 49, 53
+  orig: 49, 53
+  offset: 0, 0
+  index: -1
+fx-nuoc-2
+  rotate: false
+  xy: 214, 382
+  size: 28, 26
+  orig: 28, 26
+  offset: 0, 0
+  index: -1
+fxr1
+  rotate: false
+  xy: 175, 2
+  size: 16, 12
+  orig: 16, 12
+  offset: 0, 0
+  index: -1
+fxr2
+  rotate: false
+  xy: 470, 475
+  size: 26, 35
+  orig: 26, 35
+  offset: 0, 0
+  index: -1
+fxr3
+  rotate: false
+  xy: 442, 381
+  size: 20, 27
+  orig: 20, 27
+  offset: 0, 0
+  index: -1
+fxr4
+  rotate: false
+  xy: 89, 90
+  size: 16, 21
+  orig: 16, 21
+  offset: 0, 0
+  index: -1
+rock
+  rotate: false
+  xy: 2, 113
+  size: 104, 127
+  orig: 104, 133
+  offset: 0, 3
+  index: -1

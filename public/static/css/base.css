@@ -1,0 +1,48 @@
+html {
+  scroll-behavior: smooth;
+}
+
+.tw-font-medium {
+  color: black;
+}
+
+.rbc-toolbar button {
+  color: white;
+}
+
+.rbc-off-range-bg {
+  background: rgb(139, 139, 139);
+}
+
+.text-elipsis {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+
+#custom-scrollbar::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #f5f5f5;
+}
+
+#custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  background-color: #f5f5f5;
+}
+
+#custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #f90;
+  background-image: -webkit-linear-gradient(
+    45deg,
+    rgba(255, 255, 255, 0.2) 25%,
+    transparent 25%,
+    transparent 50%,
+    rgba(255, 255, 255, 0.2) 50%,
+    rgba(255, 255, 255, 0.2) 75%,
+    transparent 75%,
+    transparent
+  );
+}
