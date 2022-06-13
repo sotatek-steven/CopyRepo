@@ -6,6 +6,7 @@ import TabsBar from 'components/layout/TabsBar';
 import { TabContext, TabPanel } from '@mui/lab';
 import { styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
+import Layout from '@/components/layout/PageLayout';
 
 const dashboard = () => {
   const [value, setValue] = useState('dashboard');
@@ -63,5 +64,7 @@ const dashboard = () => {
     </Grid>
   );
 };
+
+dashboard.PageLayout = Layout;
 
 export default dashboard;
