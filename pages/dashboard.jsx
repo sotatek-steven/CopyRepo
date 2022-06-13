@@ -1,7 +1,6 @@
 import {
   Box,
   Button,
-  CardContent,
   Grid,
   Dialog,
   DialogTitle,
@@ -10,7 +9,6 @@ import {
   IconButton,
 } from '@mui/material';
 import React, { useState } from 'react';
-import { Card } from '@mui/material';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import TabsBar from 'components/layout/TabsBar';
 import { TabContext, TabPanel } from '@mui/lab';
@@ -18,6 +16,7 @@ import { styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import BusinessDomain from '@/components/BusinessDomain/BusinessDomain';
+import Layout from '@/components/layout/PageLayout';
 
 const businessData = [
   {
@@ -120,3 +119,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
+dashboard.PageLayout = Layout;
