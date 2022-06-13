@@ -51,7 +51,7 @@ export function useInactiveListener(suppress = false) {
     }
     // if (playerAuth?.owner?.toLowerCase() === account.toLowerCase()) {
     //   console.log('==============check and load account==================');
-    //   // player.getPlayerInfo();
+    //   player.getPlayerInfo();
     //   return;
     // }
     await player.login({ account, library });
@@ -75,7 +75,7 @@ export function useInactiveListener(suppress = false) {
       console.log(new Date(), "Handling 'accountsChanged' event with payload", accounts);
     }
     deactivate();
-    // player.logout();
+    player.logout();
   };
 
   const handleNetworkChanged = (networkId) => {
