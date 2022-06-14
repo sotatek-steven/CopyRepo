@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 import React from 'react';
 import { styled } from '@mui/material/styles';
 import DragIcon from '../../assets/icon/drag.svg';
@@ -15,10 +16,10 @@ const Text = styled('div')(({ theme }) => ({
   color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#E1E1E1',
 }));
 
-const ModuleItem = ({ nodeType }) => {
+const ModuleItem = ({ data, nodeType }) => {
   const onDragStart = (event, nodeType) => {
     event.dataTransfer?.setData('application/reactflow', nodeType);
-    // eslint-disable-next-line no-param-reassign
+    event.dataTransfer.setData('data', data);
     event.dataTransfer.effectAllowed = 'move';
   };
 
@@ -26,9 +27,10 @@ const ModuleItem = ({ nodeType }) => {
     <Item
       onDragStart={(event) => onDragStart(event, nodeType)}
       draggable
+      key={data.id}
     >
       <DragIcon />
-      <Text>Mintable Token</Text>
+      <Text> {data.name} </Text>
     </Item>
   );
 };
