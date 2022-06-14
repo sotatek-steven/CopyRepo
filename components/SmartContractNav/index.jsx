@@ -9,6 +9,7 @@ const NavbarContainer = styled('div')(({ theme }) => ({
   height: '100%',
   display: 'flex',
   justifyContent: 'space-between',
+  padding: '10px 0px',
   backgroundColor: theme.palette.mode === 'dark' ? '#2E2E30' : '#2E2E30'
 }));
 

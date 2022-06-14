@@ -24,19 +24,12 @@ const SmartContractDrag = () => {
     const fetchModules = async () => {
       const { page } = paging;
       try {
-        // const { meta, data } = await moduleApi.getModules(page);
-        // setModules(data);
-        // setPaging(meta);
+        const { meta, data } = await moduleApi.getModules(page);
+        setModules(data);
+        setPaging(meta);
       } catch (error) {
         console.log('Failed to fetch modules');
       }
-      const fakeData = [{
-        name: 'Mintable token',
-        id: 1,
-        description: 'fksfkd kjfkjfd fdhkjfdg fhgkjg ',
-        code: 'Sol_1',
-      }];
-      setModules(fakeData);
     };
     fetchModules();
   }, []);

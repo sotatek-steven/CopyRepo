@@ -16,7 +16,6 @@ const ConnectWallet = () => {
   const [openSwitchNetwork, setOpenSwitchNetwork] = React.useState(false);
 
   const changeNetwork = async ({ params }) => {
-    console.log(playerState);
     try {
       if (!window.ethereum) {
         throw new Error('No crypto wallet found');

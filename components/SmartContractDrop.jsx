@@ -11,12 +11,6 @@ import CustomNodes from './CustomNode';
 
 const initialNodes = [
   {
-    id: '1',
-    type: 'rectangle',
-    data: { label: 'Input Node' },
-    position: { x: 250, y: 250 },
-  },
-  {
     id: '2',
     type: 'diamond',
     data: { label: 'Input Node' },
@@ -56,6 +50,11 @@ const SmartContractDrop = () => {
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
+  const deleteNode = (nodeId) => {
+    if(!nodeId) return;
+    const _nodes = nodes.filter(node => node._id !== nodeId);
+    setNodes(_nodes);
+  };
 
   const onDrop = useCallback(
     (event) => {
@@ -64,9 +63,8 @@ const SmartContractDrop = () => {
       const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect();
       if (!event.dataTransfer) return;
       const type = event.dataTransfer.getData('application/reactflow');
-      const data = event.dataTransfer.getData('data');
-      console.log('data:', data);
-      console.log(data);
+      const dataJson = event.dataTransfer.getData('foo');
+      const data = JSON.parse(dataJson);
 
       // check if the dropped element is valid
       if (typeof type === 'undefined' || !type || !reactFlowInstance || !reactFlowBounds) {
@@ -81,7 +79,11 @@ const SmartContractDrop = () => {
         id: getId(),
         type,
         position,
-        data: { label: `${type} node` },
+        data: {
+          label: `${type} node`,
+          ...data,
+          onDeleteNode: deleteNode,
+        },
       };
 
       setNodes((nds) => nds.concat(newNode));
@@ -89,32 +91,29 @@ const SmartContractDrop = () => {
     [reactFlowInstance, setNodes],
   );
 
+
   return (
-        <div>
-            <ReactFlowProvider>
-                <div style={{ height: 500 }}>
-                    <div style={{ height: 500 }} ref={reactFlowWrapper}>
-                        <ReactFlow
-                            nodes={nodes}
-                            edges={edges}
-                            onNodesChange={onNodesChange}
-                            onEdgesChange={onEdgesChange}
-                            onConnect={onConnect}
-                            onNodeClick={onNodeClick}
-                            onInit={setReactFlowInstance}
-                            onDrop={onDrop}
-                            nodeTypes={CustomNodes}
-                            onDragOver={onDragOver}
-                            fitView
-                        // attributionPosition="top-right"
-                        >
-                            <Controls />
-                            <Background color="#aaa" gap={16} />
-                        </ReactFlow>
-                    </div>
-                </div>
-            </ReactFlowProvider>
-        </div>
+    <ReactFlowProvider>
+      <div style={{ height: '100%' }} ref={reactFlowWrapper}>
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          onNodeClick={onNodeClick}
+          onInit={setReactFlowInstance}
+          onDrop={onDrop}
+          nodeTypes={CustomNodes}
+          onDragOver={onDragOver}
+          fitView
+        // attributionPosition="top-right"
+        >
+          <Controls />
+          <Background color="#aaa" gap={16} />
+        </ReactFlow>
+      </div>
+    </ReactFlowProvider>
   );
 };
 
