@@ -51,7 +51,7 @@ export function useInactiveListener(suppress = false) {
     }
     // if (playerAuth?.owner?.toLowerCase() === account.toLowerCase()) {
     //   console.log('==============check and load account==================');
-    //   // player.getPlayerInfo();
+    //   player.getPlayerInfo();
     //   return;
     // }
     await player.login({ account, library });
