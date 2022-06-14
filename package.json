@@ -3,7 +3,7 @@
   "scripts": {
     "dev": "next dev -p 4001",
     "build": "next build",
-    "start": "next start"
+    "start": "next start -p 11562"
   },
   "dependencies": {
     "@emotion/cache": "latest",
