@@ -1,5 +1,5 @@
 import { Box, Button, Grid, Dialog, DialogTitle, DialogContent, Typography, IconButton } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import TabsBar from 'components/layout/TabsBar';
 import { TabContext, TabPanel } from '@mui/lab';
@@ -9,30 +9,66 @@ import Layout from '@/components/layout/PageLayout';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import BusinessDomain from '@/components/BusinessDomain/BusinessDomain';
 import AllSmartContract from '@/components/AllSmartContract/AllSmartContract';
+import TemplateItem from '@/components/TemplateItem/TemplateItem';
+import ListSmartContract from '@/components/ListSmartContract/ListSmartContract';
+import { useDispatch, useSelector } from 'react-redux';
 
 const businessData = [
   {
     id: 1,
-    name: 'Defi',
+    domain: 'Defi',
+    name: 'Disbursement Flow 1',
     description:
-      'A smart contract is a computer program or transaction protocol which is intended to automatically execute.',
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in... ',
+    status: 'deployed',
+    lastModified: Date.now(),
   },
   {
     id: 2,
-    name: 'NFT',
+    domain: 'NFT',
+    name: 'Disbursement Flow 1',
     description:
-      'A smart contract is a computer program or transaction protocol which is intended to automatically execute.',
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in... ',
+    status: 'draft',
+    lastModified: Date.now(),
+  },
+  {
+    id: 3,
+    domain: 'NFT',
+    name: 'Disbursement Flow 1',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in... ',
+    status: 'draft',
+    lastModified: Date.now(),
+  },
+  {
+    id: 4,
+    domain: 'NFT',
+    name: 'Disbursement Flow 1',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in... ',
+    status: 'draft',
+    lastModified: Date.now(),
   },
 ];
 
 const Dashboard = () => {
-  const [value, setValue] = useState('dashboard');
+  const { userContract } = useDispatch();
+  const userContractState = useSelector((state) => state.userContract);
+  const [value, setValue] = useState('All');
   const [openCreate, setOpenCreate] = useState(false);
 
   const TabPanelCustom = styled(TabPanel)(({ theme }) => ({
     ...theme.mixins.toolbar,
     paddingBottom: 0,
+    paddingLeft: '8px',
   }));
+
+  useEffect(() => {
+    userContract.getAllUserContracts();
+    userContract.getUserContractDraff();
+    userContract.getUserContractDeployed();
+  }, []);
 
   return (
     <Box
@@ -53,9 +89,13 @@ const Dashboard = () => {
       </Box>
       <TabContext value={value}>
         <TabPanelCustom value="All">
-          <Box sx={{ fontSize: '14px', alignItems: 'center' }}>
-            <AllSmartContract />
-          </Box>
+          <ListSmartContract data={userContractState?.listUserContract} />
+        </TabPanelCustom>
+        <TabPanelCustom value="Drafts">
+          <ListSmartContract data={userContractState?.listUserContractDraff} />
+        </TabPanelCustom>
+        <TabPanelCustom value="Deployed">
+          <ListSmartContract data={userContractState?.listUserContractDeployed} />
         </TabPanelCustom>
       </TabContext>
       <Dialog
