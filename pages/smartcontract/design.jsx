@@ -41,7 +41,7 @@ export const design = () => {
 
   return (
     <PageContainer>
-      <div style={{ height: '74px' }}>
+      <div>
         <DesignSmartContractNav />
       </div>
 

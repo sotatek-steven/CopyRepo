@@ -8,7 +8,7 @@ const RightSide = styled('div')(() => ({
   alignItems: 'center',
   gap: '15px',
   height: '100%',
-  padding: '20px 17px',
+  padding: '0px 17px',
   boxSizing: 'border-box'
 }));
 
@@ -21,7 +21,7 @@ const TextStyle = styled('span')(({ theme }) => ({
 const BurgerMenu = () => {
   return (
     <RightSide>
-      <BurgerIcon />
+      {/* <BurgerIcon /> */}
       <TextStyle>ICO Smart Contract</TextStyle>
       <KebabIcon />
     </RightSide>

@@ -19,8 +19,10 @@ const Text = styled('div')(({ theme }) => ({
 const ModuleItem = ({ data, nodeType }) => {
   const onDragStart = (event, nodeType) => {
     event.dataTransfer?.setData('application/reactflow', nodeType);
-    event.dataTransfer.setData('data', data);
+    const dataJson = JSON.stringify(data);
+    event.dataTransfer.setData('foo', dataJson);
     event.dataTransfer.effectAllowed = 'move';
+
   };
 
   return (

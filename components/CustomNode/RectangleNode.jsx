@@ -1,12 +1,16 @@
 import { Handle, Position } from 'react-flow-renderer';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material';
+import SmartContractModal from '../SmartcontractModal';
 
 const Card = styled('div')(({ theme }) => ({
   border: theme.palette.mode === 'dark' ? 'solid 1px #BEA75A' : '',
   borderRadius: '4px',
   width: '260px',
   backgroundColor: theme.palette.mode === 'dark' ? '#BEA75A' : '',
+  ":hover": {
+    cursor: "pointer",
+  }
 }));
 
 const Item = styled('div')(({ theme }) => ({
@@ -24,7 +28,7 @@ const CardBody = styled('div')(({ theme }) => ({
 }));
 
 const Label = styled('div')(({ theme }) => ({
-  fontSize: '12px',
+  fontSize: '14px',
   fontWeight: 600,
   marginBottom: '5px',
   color: theme.palette.mode === 'dark' ? '#FFFFFF' : '#FFFFFF',
@@ -32,22 +36,43 @@ const Label = styled('div')(({ theme }) => ({
 
 const Status = ({ label, count }) => (
   <Item>
-    <div style={{ fontSize: '12px', fontWeight: 400 }}>
+    <div style={{ fontSize: '16px', fontWeight: 600 }}>
       {count}
     </div>
-    <div style={{ fontSize: '16px', fontWeight: 500 }}>
+    <div style={{ fontSize: '13px', fontWeight: 500 }}>
       {label}
     </div>
   </Item>
 );
 
 const RectangleNode = ({ data }) => {
-  console.log(data);
+  const { description, code, name, onDeleteNode, _id } = data;
+  const deleteModule = (event) => {
+    event.stopPropagation();
+    if(!onDeleteNode) return;
+    onDeleteNode(_id);
+  }
+
+  useEffect(() => {
+
+  }, [])
 
   return (
     <>
       <Card>
-        <CardTitle> Sol: Mintable Token </CardTitle>
+        <div style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}>
+          <CardTitle> {code}: {name} </CardTitle>
+          <div
+            style={{ padding: '10px' }}
+            onClick={deleteModule}
+          >
+            X
+          </div>
+        </div>
+
         <CardBody >
           <div style={{
             display: 'flex',
@@ -63,8 +88,9 @@ const RectangleNode = ({ data }) => {
             display: 'flex',
             justifyContent: 'space-between',
             marginBottom: '10px',
+            fontSize: 13,
           }}>
-            The community has built a booing digital economy, bold new ways
+            {description}
           </div>
         </CardBody>
         <Handle
@@ -93,6 +119,8 @@ const RectangleNode = ({ data }) => {
         />
         <div>{data.text}</div>
       </Card>
+
+      <SmartContractModal/>
     </>
   );
 };
