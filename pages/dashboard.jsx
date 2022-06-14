@@ -1,13 +1,4 @@
-import {
-  Box,
-  Button,
-  Grid,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Typography,
-  IconButton,
-} from '@mui/material';
+import { Box, Button, Grid, Dialog, DialogTitle, DialogContent, Typography, IconButton } from '@mui/material';
 import React, { useState } from 'react';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import TabsBar from 'components/layout/TabsBar';
@@ -17,6 +8,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import Layout from '@/components/layout/PageLayout';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import BusinessDomain from '@/components/BusinessDomain/BusinessDomain';
+import AllSmartContract from '@/components/AllSmartContract/AllSmartContract';
 
 const businessData = [
   {
@@ -62,7 +54,7 @@ const Dashboard = () => {
       <TabContext value={value}>
         <TabPanelCustom value="All">
           <Box sx={{ fontSize: '14px', alignItems: 'center' }}>
-            Build Your first smart contract with Ethereum & Polygon with an exciting way.
+            <AllSmartContract />
           </Box>
         </TabPanelCustom>
       </TabContext>
