@@ -52,6 +52,21 @@ const businessData = [
   },
 ];
 
+const dataCreate = [
+  {
+    id: 1,
+    name: 'Defi',
+    description:
+      'A smart contract is a computer program or transaction protocol which is intended to automatically execute.',
+  },
+  {
+    id: 2,
+    name: 'NFT',
+    description:
+      'A smart contract is a computer program or transaction protocol which is intended to automatically execute.',
+  },
+];
+
 const Dashboard = () => {
   const { userContract } = useDispatch();
   const userContractState = useSelector((state) => state.userContract);
@@ -131,7 +146,6 @@ const Dashboard = () => {
             <Grid
               sx={{
                 '&:hover': { opacity: 0.7 },
-                cursor: 'pointer',
                 paddingLeft: '70px',
               }}
               item
@@ -139,7 +153,7 @@ const Dashboard = () => {
               <Typography sx={{ fontSize: '12px', py: 1 }}>
                 Choose the business domain that you are creating for this smart contract
               </Typography>
-              {businessData.map((item) => {
+              {dataCreate.map((item) => {
                 return <BusinessDomain key={item.id} data={item}></BusinessDomain>;
               })}
             </Grid>
