@@ -1,7 +1,11 @@
 import { useMemo } from 'react';
 import { init } from '@rematch/core';
 import {
+<<<<<<< HEAD
   ticket,  contract, player,
+=======
+  ticket, contract, moduleApi,
+>>>>>>> api get all modules
 } from './models';
 
 let store;
@@ -14,7 +18,11 @@ export const initStore = (initialState = exampleInitialState) => init({
   models: {
     ticket,
     contract,
+<<<<<<< HEAD
     player,
+=======
+    moduleApi,
+>>>>>>> api get all modules
   },
   redux: {
     initialState,

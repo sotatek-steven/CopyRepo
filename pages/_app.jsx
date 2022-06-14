@@ -17,6 +17,7 @@ import { useStore } from '@/store/index.js';
 import 'react-toastify/dist/ReactToastify.css';
 import 'public/static/css/base.css';
 import { BrowserRouter } from 'react-router-dom';
+import HomePage from './index.jsx';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -63,12 +64,17 @@ function App(props) {
               <ToastContainer />
               <CssBaseline />
               <div suppressHydrationWarning>
-                {typeof window === 'undefined' ? null : (
-                  <Layout>
-                    <AutoSwitchNetwork />
-                    <Component {...pageProps} />
-                  </Layout>
-                )}
+                {
+                  // eslint-disable-next-line no-nested-ternary
+                  typeof window === 'undefined'
+                    ? null
+                    : Component.PageLayout
+                      ? (
+                        <Component.PageLayout>
+                          <Component {...pageProps} />
+                        </Component.PageLayout>
+                      ) : <Component {...pageProps} />
+                }
               </div>
             </ThemeProvider>
           </CacheProvider>

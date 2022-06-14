@@ -13,6 +13,12 @@ module.exports = {
       child_process: false,
       readline: false,
     };
+
+    config.module.rules.push({
+      test: /\.svg$/,
+      use: ["@svgr/webpack"]
+    });
+    
     return config;
   },
 };
