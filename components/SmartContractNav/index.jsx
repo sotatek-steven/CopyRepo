@@ -20,10 +20,10 @@ const RightSide = styled('div')(() => ({
   padding: '0 27px'
 }));
 
-const DesignSmartContractNav = () => {
+const DesignSmartContractNav = ({ data }) => {
   return (
     <NavbarContainer>
-      <BurgerMenu />
+      <BurgerMenu contractName={data ? data.name : 'New Contract'}/>
       <PhaseNavigation />
       <RightSide>
         <Exitbutton />

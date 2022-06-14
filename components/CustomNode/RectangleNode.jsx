@@ -46,17 +46,12 @@ const Status = ({ label, count }) => (
 );
 
 const RectangleNode = ({ data }) => {
-  const { description, code, name, onDeleteNode, _id } = data;
+  const { description, code, name, onDeleteNode, _id, event } = data;
   const deleteModule = (event) => {
-    console.log('delete node at ', _id, onDeleteNode);
-    // event.stopPropagation();
-    // if (!onDeleteNode) return;
-    // onDeleteNode(_id);
+    event.stopPropagation();
+    if (!onDeleteNode) return;
+    onDeleteNode(_id);
   }
-
-  useEffect(() => {
-
-  }, [])
 
   return (
     <>
@@ -121,7 +116,7 @@ const RectangleNode = ({ data }) => {
         <div>{data.text}</div>
       </Card>
 
-      <SmartContractModal />
+      <SmartContractModal openDefault={event ? true : false} />
     </>
   );
 };

@@ -17,16 +17,16 @@ const moduleApi = createModel({
         return { paging: meta, data };
       },
       async getDetailModule(id) {
-        const { data } = await getRequest({
+        const { meta, data } = await getRequest({
           url: `/api/v1/modules/${id}'`,
           params: { page },
           userState: state.player,
           userModoel: player,
         });
-        return data;
+        return { paging: meta, data };
       },
     }
-  },
+  }
 });
 
 export default moduleApi;

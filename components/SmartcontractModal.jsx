@@ -24,14 +24,13 @@ const CloseBtn = styled('div')(() => ({
     }
 }));
 
-const SmartContractModal = (props) => {
+const SmartContractModal = ({openDefault = true}) => {
 
     const [open, setOpen] = useState(false);
     // const [selectedValue, setSelectedValue] = useState();
 
     const handleClose = (_, reason) => {
         if (reason !== "backdropClick") {
-            console.log("close");
             setOpen(false);
         }
     };

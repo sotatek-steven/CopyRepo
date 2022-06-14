@@ -18,11 +18,11 @@ const TextStyle = styled('span')(({ theme }) => ({
   color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#',
 }));
 
-const BurgerMenu = () => {
+const BurgerMenu = ({ contractName }) => {
   return (
     <RightSide>
       {/* <BurgerIcon /> */}
-      <TextStyle>ICO Smart Contract</TextStyle>
+      <TextStyle> {contractName} </TextStyle>
       <KebabIcon />
     </RightSide>
   )

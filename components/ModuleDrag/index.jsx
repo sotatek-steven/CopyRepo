@@ -10,7 +10,7 @@ const DragArea = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#2E2E30' : '#2E2E30',
 }));
 
-const SmartContractDrag = () => {
+const ModuleDrag = () => {
   const { moduleApi } = useDispatch();
   const [modules, setModules] = useState([]);
   const [paging, setPaging] = useState({
@@ -51,4 +51,4 @@ const SmartContractDrag = () => {
   );
 };
 
-export default SmartContractDrag;
+export default ModuleDrag;
