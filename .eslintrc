@@ -1,9 +1,5 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "airbnb-base"
-    // "plugin:prettier/recommended"
-  ],
+  "extends": ["next/core-web-vitals", "prettier"],
   "rules": {
     "@next/next/no-img-element": "off",
     "import/no-unresolved": "off",
@@ -23,6 +19,7 @@
       }
     ],
     "nonblock-statement-body-position": "off",
-    "curly": "off"
+    "curly": "off",
+    "import/no-extraneous-dependencies": "error"
   }
 }

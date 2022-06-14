@@ -44,12 +44,15 @@ const player = createModel({
     const { player } = dispatch;
     return {
       async getPlayerInfo(payload, state) {
-        console.log("Load player info");
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/market/v1/players/${state.player.playerAuth?.owner}`, {
-          headers: {
-            Authorization: `Bearer ${state.player.playerAuth?.token}`,
-          },
-        });
+        console.log('Load player info');
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/market/v1/players/${state.player.playerAuth?.owner}`,
+          {
+            headers: {
+              Authorization: `Bearer ${state.player.playerAuth?.token}`,
+            },
+          }
+        );
         const res = await response.json();
         if (res.code === 200) {
           const data = res.data;
@@ -59,26 +62,34 @@ const player = createModel({
             player.setPlayerAuth({ ...state.player.playerAuth, emailUpdated: data.emailUpdated?.email });
           }
           return data;
-        } else if (res.code === 1001) { // token expired
+        } else if (res.code === 1001) {
+          // token expired
           player.clearAll();
         }
         return null;
       },
       async login({ account, library }) {
         const timestamp = Date.now();
-        const signer = await signMessage(`corginftgame#${timestamp}`, library);
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/market/v1/players/${account}/login?timestamp=${timestamp}`, {
+        const signer = await signMessage(`dragdrop#${timestamp}`, library);
+        const payload = {
+          owner: account,
+          signed: signer?.signature,
+          timestamp: timestamp,
+        };
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/users/login`, {
           method: 'POST',
           headers: {
-            signed: signer?.signature,
+            'Content-Type': 'application/json',
           },
+          body: JSON.stringify(payload),
         });
         const res = await response.json();
         if (res.code === 200) {
           player.setTokenExpired(false);
           player.setPlayerAuth(res.data);
           player.setPlayerInfo(res.data);
-        } else if (res.code === 1001) { // token expired
+        } else if (res.code === 1001) {
+          // token expired
           player.clearAll();
         }
         return res;
@@ -86,14 +97,17 @@ const player = createModel({
       async setupAccount(payload, state) {
         if (!state.player.playerAuth?.token) return null;
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/market/v1/players/${state.player.playerAuth?.owner}`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${state.player.playerAuth?.token}`,
-          },
-          body: JSON.stringify(payload),
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/market/v1/players/${state.player.playerAuth?.owner}`,
+          {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${state.player.playerAuth?.token}`,
+            },
+            body: JSON.stringify(payload),
+          }
+        );
         const res = await response.json();
         if (res.code === 200) {
           // nothing
@@ -106,14 +120,17 @@ const player = createModel({
       async updatePlayerName(payload, state) {
         if (!state.player.playerAuth?.token) return null;
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/market/v1/players/${state.player.playerAuth?.owner}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${state.player.playerAuth?.token}`,
-          },
-          body: JSON.stringify(payload),
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/market/v1/players/${state.player.playerAuth?.owner}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${state.player.playerAuth?.token}`,
+            },
+            body: JSON.stringify(payload),
+          }
+        );
         const res = await response.json();
         if (res.code === 200) {
           // nothing
@@ -127,14 +144,17 @@ const player = createModel({
       async updatePlayerEmail(payload, state) {
         if (!state.player.playerAuth?.token) return null;
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/market/v1/players/${state.player.playerAuth?.owner}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${state.player.playerAuth?.token}`,
-          },
-          body: JSON.stringify(payload),
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/market/v1/players/${state.player.playerAuth?.owner}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${state.player.playerAuth?.token}`,
+            },
+            body: JSON.stringify(payload),
+          }
+        );
         const res = await response.json();
         if (res.code === 200) {
           // nothing
@@ -147,14 +167,17 @@ const player = createModel({
       async updatePlayerPassword(payload, state) {
         if (!state.player.playerAuth?.token) return null;
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/market/v1/players/${state.player.playerAuth?.owner}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${state.player.playerAuth?.token}`,
-          },
-          body: JSON.stringify(payload),
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/market/v1/players/${state.player.playerAuth?.owner}`,
+          {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${state.player.playerAuth?.token}`,
+            },
+            body: JSON.stringify(payload),
+          }
+        );
         const res = await response.json();
         if (res.code === 200) {
           // nothing
@@ -227,12 +250,15 @@ const player = createModel({
           return null;
         }
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/market/v1/players/${state.player.playerAuth?.owner}/logout`, {
-          method: 'PUT',
-          headers: {
-            Authorization: `Bearer ${state.player.playerAuth?.token}`,
-          },
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/market/v1/players/${state.player.playerAuth?.owner}/logout`,
+          {
+            method: 'PUT',
+            headers: {
+              Authorization: `Bearer ${state.player.playerAuth?.token}`,
+            },
+          }
+        );
         const res = await response.json();
         await player.clearAll();
         return res;

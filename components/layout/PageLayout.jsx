@@ -36,14 +36,15 @@ function Layout(props) {
                 mt: 1,
                 overflow: 'auto',
                 bgcolor: '#3d3d3e',
+                overflow: 'height',
               }}>
               <Box
                 sx={{
                   marginLeft: `${navLeftWidth}px`,
                   marginTop: '70px',
                 }}
-                style={{ height: 'calc(100vh)', width: `calc(100vw)` }}>
-                <Box>{props.children}</Box>
+                style={{ width: `calc(100vw - 85px)`, height: 'calc(100vh - 85px)' }}>
+                <Box sx={{ overflow: 'hidden' }}>{props.children}</Box>
               </Box>
             </Card>
           </Toolbar>

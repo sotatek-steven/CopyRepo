@@ -1,9 +1,7 @@
-import {
-  useState, useEffect,
-} from 'react';
+import { useState, useEffect } from 'react';
 import { useWeb3React } from '@web3-react/core';
 
-import { useDispatch, } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { injected } from './connectors';
 
 export function useEagerConnect() {
@@ -48,15 +46,15 @@ export function useInactiveListener(suppress = false) {
     }
     let playerAuth = {};
     const playerAuthRaw = localStorage.getItem('playerAuth');
-    if(playerAuthRaw){
+    if (playerAuthRaw) {
       playerAuth = JSON.parse(playerAuthRaw);
     }
-    if(playerAuth?.owner?.toLowerCase() === account.toLowerCase()){
-      console.log('==============check and load account==================');
-      player.getPlayerInfo();
-      return;
-    }
-    // await player.login({ account, library });
+    // if (playerAuth?.owner?.toLowerCase() === account.toLowerCase()) {
+    //   console.log('==============check and load account==================');
+    //   player.getPlayerInfo();
+    //   return;
+    // }
+    await player.login({ account, library });
   }, [active, library, account]);
 
   const handleConnect = (e) => {
@@ -77,7 +75,7 @@ export function useInactiveListener(suppress = false) {
       console.log(new Date(), "Handling 'accountsChanged' event with payload", accounts);
     }
     deactivate();
-    player.logout();
+    // player.logout();
   };
 
   const handleNetworkChanged = (networkId) => {

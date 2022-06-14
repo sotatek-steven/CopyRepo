@@ -1,8 +1,6 @@
 import { useMemo } from 'react';
 import { init } from '@rematch/core';
-import {
-  ticket, contract, moduleApi,
-} from './models';
+import * as models from './models';
 
 let store;
 
@@ -11,11 +9,7 @@ const exampleInitialState = {
 };
 
 export const initStore = (initialState = exampleInitialState) => init({
-  models: {
-    ticket,
-    contract,
-    moduleApi,
-  },
+  models,
   redux: {
     initialState,
   },

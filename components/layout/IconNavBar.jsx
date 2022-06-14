@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-globals */
 import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 // import {
 //   ClientsIcon,
@@ -7,8 +8,8 @@ import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
 // } from 'assets/icons/sidebarIcon';
 import LanguageIcon from '@mui/icons-material/Language';
 import LayersIcon from '@mui/icons-material/Layers';
+import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
-import { Router, useRouter } from 'next/router';
 
 const IconNavBar = ({ name, path }) => {
   const [isSelected, setIsSelected] = useState(false);
@@ -54,8 +55,8 @@ const IconNavBar = ({ name, path }) => {
         sx={{
           ...styles.listItemIcon,
         }}>
-        {name === 'Dashboard' && <LayersIcon fontSize="medium" />}
-        {name === 'Language' && <LanguageIcon fontSize="medium" />}
+        {name === 'Dashboard' && <LayersIcon sx={{ color: isSelected ? '#161616' : '#F07D60' }} fontSize="medium" />}
+        {name === 'Language' && <LanguageIcon sx={{ color: isSelected ? '#161616' : '#F07D60' }} fontSize="medium" />}
       </ListItemIcon>
     </ListItemButton>
   );

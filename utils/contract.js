@@ -13,6 +13,31 @@ export function isAddress(value) {
   }
 }
 
+export async function signMessage(message, liblary) {
+  let provider = liblary;
+  if (!provider && window.ethereum) {
+    await window.ethereum.send('eth_requestAccounts');
+    provider = new ethers.providers.Web3Provider(window.ethereum);
+  }
+  if (!provider) {
+    return null;
+  }
+
+  try {
+    const signer = provider.getSigner();
+    const signature = await signer.signMessage(message);
+    const address = await signer.getAddress();
+
+    return {
+      message,
+      signature,
+      address,
+    };
+  } catch (err) {
+    return null;
+  }
+}
+
 export function getSigner(library, account) {
   return library.getSigner(account).connectUnchecked();
 }
