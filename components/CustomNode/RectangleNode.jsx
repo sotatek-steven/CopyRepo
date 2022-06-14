@@ -41,56 +41,60 @@ const Status = ({ label, count }) => (
   </Item>
 );
 
-const RectangleNode = ({ data }) => (
-  <>
-    <Card>
-      <CardTitle> Sol: Mintable Token </CardTitle>
-      <CardBody >
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          marginBottom: '10px',
-        }}>
-          <Status label="Tasks" count={4} />
-          <Status label="Functions" count={13} />
-          <Status label="API Services" count={6} />
-        </div>
-        <Label> Description</Label>
-        <div style={{
-          display: 'flex',
-          justifyContent: 'space-between',
-          marginBottom: '10px',
-        }}>
-          The community has built a booing digital economy, bold new ways
-        </div>
-      </CardBody>
-      <Handle
-        type="source"
-        position={Position.Top}
-        id="a"
-        style={{ background: '#555' }}
-      />
-      <Handle
-        type="target"
-        position={Position.Right}
-        id="b"
-        style={{ background: '#555' }}
-      />
-      <Handle
-        type="target"
-        position={Position.Bottom}
-        id="c"
-        style={{ background: '#555' }}
-      />
-      <Handle
-        type="source"
-        position={Position.Left}
-        style={{ background: '#555' }}
-        id="d"
-      />
-      <div>{data.text}</div>
-    </Card>
-  </>
-);
+const RectangleNode = ({ data }) => {
+  console.log(data);
+
+  return (
+    <>
+      <Card>
+        <CardTitle> Sol: Mintable Token </CardTitle>
+        <CardBody >
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginBottom: '10px',
+          }}>
+            <Status label="Tasks" count={4} />
+            <Status label="Functions" count={13} />
+            <Status label="API Services" count={6} />
+          </div>
+          <Label> Description</Label>
+          <div style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            marginBottom: '10px',
+          }}>
+            The community has built a booing digital economy, bold new ways
+          </div>
+        </CardBody>
+        <Handle
+          type="source"
+          position={Position.Top}
+          id="a"
+          style={{ background: '#555' }}
+        />
+        <Handle
+          type="target"
+          position={Position.Right}
+          id="b"
+          style={{ background: '#555' }}
+        />
+        <Handle
+          type="target"
+          position={Position.Bottom}
+          id="c"
+          style={{ background: '#555' }}
+        />
+        <Handle
+          type="source"
+          position={Position.Left}
+          style={{ background: '#555' }}
+          id="d"
+        />
+        <div>{data.text}</div>
+      </Card>
+    </>
+  );
+};
 
 export default RectangleNode;
