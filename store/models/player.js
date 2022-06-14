@@ -46,7 +46,7 @@ const player = createModel({
       async getPlayerInfo(payload, state) {
         console.log('Load player info');
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/market/v1/players/${state.player.playerAuth?.owner}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/api/v1/users`,
           {
             headers: {
               Authorization: `Bearer ${state.player.playerAuth?.token}`,
@@ -58,9 +58,6 @@ const player = createModel({
           const data = res.data;
           player.setTokenExpired(false);
           player.setPlayerInfo(data);
-          if (data?.emailUpdated?.email && player.playerAuth?.emailUpdated !== data?.emailUpdated?.email) {
-            player.setPlayerAuth({ ...state.player.playerAuth, emailUpdated: data.emailUpdated?.email });
-          }
           return data;
         } else if (res.code === 1001) {
           // token expired

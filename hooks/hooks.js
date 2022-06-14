@@ -49,12 +49,12 @@ export function useInactiveListener(suppress = false) {
     if (playerAuthRaw) {
       playerAuth = JSON.parse(playerAuthRaw);
     }
-    // if (playerAuth?.owner?.toLowerCase() === account.toLowerCase()) {
-    //   console.log('==============check and load account==================');
-    //   player.getPlayerInfo();
-    //   return;
-    // }
-    // await player.login({ account, library });
+    if (playerAuth?.owner?.toLowerCase() === account.toLowerCase()) {
+      console.log('==============check and load account==================');
+      player.getPlayerInfo();
+      return;
+    }
+    await player.login({ account, library });
   }, [active, library, account]);
 
   const handleConnect = (e) => {
