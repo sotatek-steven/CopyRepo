@@ -15,6 +15,8 @@ import { TabContext, TabPanel } from '@mui/lab';
 import { styled } from '@mui/material/styles';
 import SearchIcon from '@mui/icons-material/Search';
 import Layout from '@/components/layout/PageLayout';
+import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import BusinessDomain from '@/components/BusinessDomain/BusinessDomain';
 
 const businessData = [
   {
@@ -117,4 +119,4 @@ const Dashboard = () => {
 };
 
 export default Dashboard;
-dashboard.PageLayout = Layout;
+Dashboard.PageLayout = Layout;

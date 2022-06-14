@@ -54,7 +54,7 @@ export function useInactiveListener(suppress = false) {
     //   player.getPlayerInfo();
     //   return;
     // }
-    await player.login({ account, library });
+    // await player.login({ account, library });
   }, [active, library, account]);
 
   const handleConnect = (e) => {
