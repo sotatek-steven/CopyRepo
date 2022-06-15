@@ -103,6 +103,28 @@ const userContract = createModel({
         userContract.setListContractDeployed([]);
         return null;
       },
+      async createSmartContract(body) {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts`, {
+          method: 'POST',
+          mode: 'cors',
+          cache: 'no-cache',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          headers: {
+            Authorization: `Bearer ${state.player.playerAuth?.token}`,
+          },
+          body: JSON.stringify(body),
+        });
+        const res = await response.json();
+
+        if (res.code === 200) {
+        } else if (res.code === 1001) {
+          // token expired
+          // player.clearAll();
+        }
+        return res;
+      },
     };
   },
 });
