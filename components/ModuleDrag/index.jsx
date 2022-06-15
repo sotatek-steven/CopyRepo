@@ -10,7 +10,7 @@ const DragArea = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.mode === 'dark' ? '#2E2E30' : '#2E2E30',
 }));
 
-const ModuleDrag = () => {
+const ModuleDrag = ({ contract }) => {
   const { moduleApi } = useDispatch();
   const [modules, setModules] = useState([]);
   const [paging, setPaging] = useState({
@@ -37,7 +37,7 @@ const ModuleDrag = () => {
   return (
     <DragArea>
       <Menu />
-      <SubMenu />
+      <SubMenu contract={contract}/>
       <div>
         {
           modules.length <= 0

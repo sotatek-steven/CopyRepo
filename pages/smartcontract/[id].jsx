@@ -3,8 +3,8 @@ import DesignSmartContractNav from 'components/SmartContractNav';
 import ModuleDrag from '@/components/ModuleDrag';
 import ModuleDrop from '@/components/ModuleDrop';
 import { styled } from '@mui/material/styles';
-import { useDispatch } from 'react-redux';
-import { positions } from '@mui/system';
+import { useDispatch,useSelector } from 'react-redux';
+// import { useRouter } from 'next/router'
 
 const PageContainer = styled('div')(({ theme }) => ({
   height: '100vh',
@@ -44,6 +44,10 @@ const Design = () => {
   const [contract, setContract] = useState(null);
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
+  // const contract = useSelector((state) => state.contractApi);
+  // const router = useRouter();
+  // const { contractId } = router.query;
+  // console.log(contractId);
 
   useEffect(() => {
     const fetchDetailContract = async () => {
@@ -54,7 +58,7 @@ const Design = () => {
         const moduleIds = [...contract.modules];
         const _nodes = await createNodes(moduleIds);
         const _edges = createEdges(moduleIds);
-        setContract(contract)
+        // setContract(contract)
         setNodes(_nodes);
         setEdges(_edges);
       } catch (error) {
@@ -126,7 +130,7 @@ const Design = () => {
           height: '100%',
           width: '444px',
         }}>
-          <ModuleDrag />
+          <ModuleDrag contract={contract}/>
         </div>
       </div>
     </PageContainer>
