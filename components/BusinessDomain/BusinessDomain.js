@@ -5,15 +5,14 @@ import Avatar from '@mui/material/Avatar';
 import TemplateDialogDefi from '../Dialog/TemplateDialogDefi';
 import TemplateDialogNFT from '../Dialog/TemplateDialogNFT';
 
-const BusinessDomain = ({ data }) => {
-  const [openListDefi, setOpenListDefi] = useState(false);
-  const [openListNFT, setOpenListNFT] = useState(false);
+const BusinessDomain = ({ data, setOpenListDefi, setOpenListNFT, setOpenCreate }) => {
   const handleClick = () => {
     if (data.name === 'Defi') {
       setOpenListDefi(true);
     } else {
       setOpenListNFT(true);
     }
+    setOpenCreate(false);
   };
   return (
     <>
@@ -32,8 +31,8 @@ const BusinessDomain = ({ data }) => {
           </Grid>
         </Grid>
       </Box>
-      <TemplateDialogDefi openListDefi={openListDefi} setOpenListDefi={setOpenListDefi} />
-      <TemplateDialogNFT openListNFT={openListNFT} setOpenListNFT={setOpenListNFT} />
+      {/* <TemplateDialogDefi openListDefi={openListDefi} setOpenListDefi={setOpenListDefi} />
+      <TemplateDialogNFT openListNFT={openListNFT} setOpenListNFT={setOpenListNFT} /> */}
     </>
   );
 };

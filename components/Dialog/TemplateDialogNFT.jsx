@@ -116,13 +116,14 @@ const TemplateDialogDefi = ({ openListNFT, setOpenListNFT }) => {
           tags,
           description,
         });
+        setOpenListNFT(false);
       } catch (error) {
         console.log(error);
         console.log('Failed to submit');
+        setOpenListNFT(false);
       }
     };
     submitCreateSC();
-    setOpenListNFT(false);
   };
   return (
     <Dialog

@@ -12,6 +12,8 @@ import AllSmartContract from '@/components/AllSmartContract/AllSmartContract';
 import TemplateItem from '@/components/TemplateItem/TemplateItem';
 import ListSmartContract from '@/components/ListSmartContract/ListSmartContract';
 import { useDispatch, useSelector } from 'react-redux';
+import TemplateDialogDefi from '@/components/Dialog/TemplateDialogDefi';
+import TemplateDialogNFT from '@/components/Dialog/TemplateDialogNFT';
 
 const businessData = [
   {
@@ -73,6 +75,8 @@ const Dashboard = () => {
   const userState = useSelector((state) => state.player);
   const [value, setValue] = useState('All');
   const [openCreate, setOpenCreate] = useState(false);
+  const [openListDefi, setOpenListDefi] = useState(false);
+  const [openListNFT, setOpenListNFT] = useState(false);
 
   const TabPanelCustom = styled(TabPanel)(({ theme }) => ({
     ...theme.mixins.toolbar,
@@ -155,12 +159,21 @@ const Dashboard = () => {
                 Choose the business domain that you are creating for this smart contract
               </Typography>
               {dataCreate.map((item) => {
-                return <BusinessDomain key={item.id} data={item}></BusinessDomain>;
+                return (
+                  <BusinessDomain
+                    setOpenListDefi={setOpenListDefi}
+                    setOpenListNFT={setOpenListNFT}
+                    setOpenCreate={setOpenCreate}
+                    key={item.id}
+                    data={item}></BusinessDomain>
+                );
               })}
             </Grid>
           </Grid>
         </DialogContent>
       </Dialog>
+      <TemplateDialogDefi openListDefi={openListDefi} setOpenListDefi={setOpenListDefi} />
+      <TemplateDialogNFT openListNFT={openListNFT} setOpenListNFT={setOpenListNFT} />
     </Box>
   );
 };

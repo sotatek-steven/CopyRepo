@@ -53,13 +53,14 @@ const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
           tags,
           description,
         });
+        setOpenListDefi(false);
       } catch (error) {
         console.log(error);
         console.log('Failed to submit');
+        setOpenListDefi(false);
       }
     };
     submitCreateSC();
-    setOpenListDefi;
   };
   return (
     <Dialog
