@@ -1,14 +1,5 @@
-import {
-  Box,
-  Button,
-  Grid,
-  Dialog,
-  DialogTitle,
-  DialogContent,
-  Typography,
-  IconButton,
-} from '@mui/material';
-import React, { useState } from 'react';
+import { Box, Button, Grid, Dialog, DialogTitle, DialogContent, Typography, IconButton } from '@mui/material';
+import React, { useEffect, useState } from 'react';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import TabsBar from 'components/layout/TabsBar';
 import { TabContext, TabPanel } from '@mui/lab';
@@ -17,8 +8,51 @@ import SearchIcon from '@mui/icons-material/Search';
 import Layout from '@/components/layout/PageLayout';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import BusinessDomain from '@/components/BusinessDomain/BusinessDomain';
+import AllSmartContract from '@/components/AllSmartContract/AllSmartContract';
+import TemplateItem from '@/components/TemplateItem/TemplateItem';
+import ListSmartContract from '@/components/ListSmartContract/ListSmartContract';
+import { useDispatch, useSelector } from 'react-redux';
 
 const businessData = [
+  {
+    id: 1,
+    domain: 'Defi',
+    name: 'Disbursement Flow 1',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in... ',
+    status: 'deployed',
+    lastModified: Date.now(),
+  },
+  {
+    id: 2,
+    domain: 'NFT',
+    name: 'Disbursement Flow 1',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in... ',
+    status: 'draft',
+    lastModified: Date.now(),
+  },
+  {
+    id: 3,
+    domain: 'NFT',
+    name: 'Disbursement Flow 1',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in... ',
+    status: 'draft',
+    lastModified: Date.now(),
+  },
+  {
+    id: 4,
+    domain: 'NFT',
+    name: 'Disbursement Flow 1',
+    description:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in... ',
+    status: 'draft',
+    lastModified: Date.now(),
+  },
+];
+
+const dataCreate = [
   {
     id: 1,
     name: 'Defi',
@@ -34,13 +68,22 @@ const businessData = [
 ];
 
 const Dashboard = () => {
-  const [value, setValue] = useState('dashboard');
+  const { userContract } = useDispatch();
+  const userContractState = useSelector((state) => state.userContract);
+  const [value, setValue] = useState('All');
   const [openCreate, setOpenCreate] = useState(false);
 
   const TabPanelCustom = styled(TabPanel)(({ theme }) => ({
     ...theme.mixins.toolbar,
     paddingBottom: 0,
+    paddingLeft: '8px',
   }));
+
+  useEffect(() => {
+    userContract.getAllUserContracts();
+    userContract.getUserContractDraff();
+    userContract.getUserContractDeployed();
+  }, []);
 
   return (
     <Box
@@ -61,9 +104,13 @@ const Dashboard = () => {
       </Box>
       <TabContext value={value}>
         <TabPanelCustom value="All">
-          <Box sx={{ fontSize: '14px', alignItems: 'center' }}>
-            Build Your first smart contract with Ethereum & Polygon with an exciting way.
-          </Box>
+          <ListSmartContract data={userContractState?.listUserContract} />
+        </TabPanelCustom>
+        <TabPanelCustom value="Drafts">
+          <ListSmartContract data={userContractState?.listUserContractDraff} />
+        </TabPanelCustom>
+        <TabPanelCustom value="Deployed">
+          <ListSmartContract data={userContractState?.listUserContractDeployed} />
         </TabPanelCustom>
       </TabContext>
       <Dialog
@@ -99,7 +146,6 @@ const Dashboard = () => {
             <Grid
               sx={{
                 '&:hover': { opacity: 0.7 },
-                cursor: 'pointer',
                 paddingLeft: '70px',
               }}
               item
@@ -107,7 +153,7 @@ const Dashboard = () => {
               <Typography sx={{ fontSize: '12px', py: 1 }}>
                 Choose the business domain that you are creating for this smart contract
               </Typography>
-              {businessData.map((item) => {
+              {dataCreate.map((item) => {
                 return <BusinessDomain key={item.id} data={item}></BusinessDomain>;
               })}
             </Grid>
