@@ -97,7 +97,7 @@ const Dashboard = () => {
           <SearchIcon sx={{ color: '#F07D60' }} />
           <Box sx={{ pl: 3 }}>
             <Button variant="contained" startIcon={<AddCircleIcon />} onClick={() => setOpenCreate(true)}>
-              Creat
+              Create
             </Button>
           </Box>
         </Box>
