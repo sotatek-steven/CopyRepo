@@ -70,6 +70,7 @@ const dataCreate = [
 const Dashboard = () => {
   const { userContract } = useDispatch();
   const userContractState = useSelector((state) => state.userContract);
+  const userState = useSelector((state) => state.player);
   const [value, setValue] = useState('All');
   const [openCreate, setOpenCreate] = useState(false);
 
@@ -83,7 +84,7 @@ const Dashboard = () => {
     userContract.getAllUserContracts();
     userContract.getUserContractDraff();
     userContract.getUserContractDeployed();
-  }, []);
+  }, [userState.playerAuth?._id]);
 
   return (
     <Box

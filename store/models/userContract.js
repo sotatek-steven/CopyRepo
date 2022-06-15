@@ -51,10 +51,12 @@ const userContract = createModel({
           const { data } = res;
           userContract.setListContract(data);
           return data;
-        } else if (res.code === 1001) {
+        }
+        if (res.code === 1001) {
           // token expired
           userContract.clearAll();
         }
+        userContract.setListContract([]);
         return null;
       },
       async getUserContractDraff(payload, state) {
@@ -71,10 +73,12 @@ const userContract = createModel({
           const { data } = res;
           userContract.setListContractDraff(data);
           return data;
-        } else if (res.code === 1001) {
+        }
+        if (res.code === 1001) {
           // token expired
           userContract.clearAll();
         }
+        userContract.setListContractDraff([]);
         return null;
       },
       async getUserContractDeployed(payload, state) {
@@ -91,10 +95,12 @@ const userContract = createModel({
           const { data } = res;
           userContract.setListContractDeployed(data);
           return data;
-        } else if (res.code === 1001) {
+        }
+        if (res.code === 1001) {
           // token expired
           userContract.clearAll();
         }
+        userContract.setListContractDeployed([]);
         return null;
       },
     };

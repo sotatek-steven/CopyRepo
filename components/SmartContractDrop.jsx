@@ -10,18 +10,6 @@ import ReactFlow, {
 import CustomNodes from './CustomNode';
 
 const initialNodes = [
-  {
-    id: '2',
-    type: 'diamond',
-    data: { label: 'Input Node' },
-    position: { x: 50, y: 50 },
-  },
-  {
-    id: '3',
-    type: 'circle',
-    data: { label: 'Input Node' },
-    position: { x: 300, y: 50 },
-  },
 ];
 
 const initialEdges = [

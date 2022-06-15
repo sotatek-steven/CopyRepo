@@ -48,7 +48,7 @@ const ConnectWallet = () => {
   const disconnectWallet = async () => {
     deactivate();
     localStorage?.removeItem('playerAuth');
-    // await player.logout();
+    await player.logout();
   };
 
   return (
