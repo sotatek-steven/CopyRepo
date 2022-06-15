@@ -1,5 +1,8 @@
 import { createModel } from '@rematch/core';
 
+const fakeToken =
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmE2ZGQ2YjY2YWVlNzgzOGI0YTMzOTUiLCJjcmVhdGVkQXQiOiIyMDIyLTA2LTE0VDA0OjA0OjE5LjIwMFoiLCJvd25lciI6IjB4MjEyMWQ0NjQ4NTNhYzRmMDUxM2VmODE5YjBjYjVhMWUyYTZkZTJiNyIsImlhdCI6MTY1NTE3OTQ1OX0.arzYQ9qS7Qja0ZVTkzDqXPdSjyp5BZwotajTUx6K7bw';
+
 const userContract = createModel({
   state: {
     listUserContract: [],
@@ -36,8 +39,10 @@ const userContract = createModel({
     return {
       async getAllUserContracts(payload, state) {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts`, {
+          method: 'GET',
           headers: {
             Authorization: `Bearer ${state.player.playerAuth?.token}`,
+            // Authorization: `Bearer ${fakeToken}`,
           },
         });
         const res = await response.json();
@@ -53,6 +58,7 @@ const userContract = createModel({
       },
       async getUserContractDraff(payload, state) {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts?status=draff`, {
+          method: 'GET',
           headers: {
             Authorization: `Bearer ${state.player.playerAuth?.token}`,
           },
@@ -70,6 +76,7 @@ const userContract = createModel({
       },
       async getUserContractDeployed(payload, state) {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts?status=deployped`, {
+          method: 'GET',
           headers: {
             Authorization: `Bearer ${state.player.playerAuth?.token}`,
           },

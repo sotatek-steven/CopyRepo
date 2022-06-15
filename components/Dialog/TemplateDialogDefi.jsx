@@ -1,30 +1,26 @@
 import { Dialog, DialogTitle, Box, Typography, IconButton, DialogContent, Grid } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import TemplateDomainItem from './TemplateDomainItem';
+import { useDispatch, useSelector } from 'react-redux';
 
-const data = [
-  {
-    _id: '62a3237d0e4b41019e4d6dbb',
-    owner: 'system',
-    color: 'red',
-    name: 'Tempate Defi',
-    domain: 'defi',
-    description: 'This is tempate defi smart contract',
-    tags: ['defi', 'smart-contract'],
-    modules: ['62a322bd0e4b41019e4d5742'],
-    coordinates: [
-      {
-        module: '62a322bd0e4b41019e4d5742',
-        position: {
-          top: 10,
-          left: 100,
-        },
-      },
-    ],
-  },
-];
 const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
+  const [tempDataList, setTempDataList] = useState([]);
+  const { template } = useDispatch();
+  const templateList = useSelector((state) => state.template);
+  useEffect(() => {
+    const fetchTemplate = async () => {
+      const domain = 'defi';
+      try {
+        const data = await template.getTemplate(domain);
+        data && setTempDataList(data);
+      } catch (error) {
+        console.log(error);
+        console.log('Failed to fetch template');
+      }
+    };
+    openListDefi && fetchTemplate();
+  }, [openListDefi]);
   return (
     <Dialog
       fullWidth
@@ -60,7 +56,7 @@ const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
             }}
             item
             xs={6}>
-            {data.map((item) => {
+            {templateList.listTemplate?.map((item) => {
               return <TemplateDomainItem key={item._id} item={item} />;
             })}
           </Grid>
