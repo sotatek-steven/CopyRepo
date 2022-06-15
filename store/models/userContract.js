@@ -39,12 +39,11 @@ const userContract = createModel({
     return {
       async getAllUserContracts(payload, state) {
         const token = state.player.playerAuth?.token;
-        console.log('token at get getAllUserContracts: ', token);
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts`, {
-          method: 'GET',
+          mode: 'cors',
+          cache: 'no-cache',
           headers: {
             Authorization: `Bearer ${token}`,
-            // Authorization: `Bearer ${fakeToken}`,
           },
         });
         const res = await response.json();
@@ -61,6 +60,8 @@ const userContract = createModel({
       async getUserContractDraff(payload, state) {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts?status=draff`, {
           method: 'GET',
+          mode: 'cors',
+          cache: 'no-cache',
           headers: {
             Authorization: `Bearer ${state.player.playerAuth?.token}`,
           },
@@ -79,6 +80,8 @@ const userContract = createModel({
       async getUserContractDeployed(payload, state) {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts?status=deployed`, {
           method: 'GET',
+          mode: 'cors',
+          cache: 'no-cache',
           headers: {
             Authorization: `Bearer ${state.player.playerAuth?.token}`,
           },
