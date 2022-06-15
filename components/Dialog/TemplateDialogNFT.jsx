@@ -2,7 +2,6 @@ import { Dialog, DialogTitle, Box, Typography, IconButton, DialogContent, Grid, 
 import React, { useEffect, useState } from 'react';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import { useDispatch, useSelector } from 'react-redux';
-import TemplateDomainItem from './TemplateDomainItem';
 import CheckboxChoose from '../Shared/CheckboxChoose';
 
 const data1 = [
@@ -100,11 +99,8 @@ const TemplateDialogDefi = ({ openListNFT, setOpenListNFT }) => {
 
     const submitCreateSC = async () => {
       const dataTemplateBody = _.find(templateState, (item) => {
-        console.log(item._id);
         return item._id === idTemplate;
       });
-      console.log(dataTemplateBody);
-      debugger;
       const { _id, modules, name, domain, tags, description } = dataTemplateBody;
 
       try {

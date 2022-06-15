@@ -1,7 +1,6 @@
 import { Dialog, DialogTitle, Box, Typography, IconButton, DialogContent, Grid, Radio, Button } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
-import TemplateDomainItem from './TemplateDomainItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import CheckboxChoose from '../Shared/CheckboxChoose';
