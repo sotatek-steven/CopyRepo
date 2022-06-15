@@ -75,7 +75,7 @@ const userContract = createModel({
         return null;
       },
       async getUserContractDeployed(payload, state) {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts?status=deployped`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts?status=deployed`, {
           method: 'GET',
           headers: {
             Authorization: `Bearer ${state.player.playerAuth?.token}`,
