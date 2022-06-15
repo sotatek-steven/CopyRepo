@@ -4,7 +4,11 @@ import { signMessage } from '@/utils/contract';
 const player = createModel({
   state: {
     playerInfo: null,
-    playerAuth: null,
+    playerAuth: {
+      owner: "0x2121D464853aC4f0513eF819b0cB5A1E2a6dE2b7",
+      token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmE2ZGQ2YjY2YWVlNzgzOGI0YTMzOTUiLCJjcmVhdGVkQXQiOiIyMDIyLTA2LTE1VDA0OjUzOjM1LjA2NVoiLCJvd25lciI6IjB4MjEyMWQ0NjQ4NTNhYzRmMDUxM2VmODE5YjBjYjVhMWUyYTZkZTJiNyIsImlhdCI6MTY1NTI2ODgxNX0.CU-PDKdxo5DDe-rXLDTVV6rIAUZ9AdPa0F-Q1Ckvny4",
+      _id: "62a6dd6b66aee7838b4a3395",
+    },
     tokenExpired: false,
   },
   reducers: {

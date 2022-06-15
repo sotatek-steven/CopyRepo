@@ -38,6 +38,7 @@ const userContract = createModel({
     const { userContract } = dispatch;
     return {
       async getAllUserContracts(payload, state) {
+        console.log('token: ', state.player.playerAuth?.token);
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts`, {
           method: 'GET',
           headers: {
