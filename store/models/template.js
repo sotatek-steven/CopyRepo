@@ -25,6 +25,8 @@ const template = createModel({
       async getTemplate(payload, state) {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/templates?domain=${payload}`, {
           method: 'GET',
+          mode: 'cors',
+          cache: 'no-cache',
           headers: {
             Authorization: `Bearer ${state.player.playerAuth?.token}`,
             // Authorization: `Bearer ${fakeToken}`,
