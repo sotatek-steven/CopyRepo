@@ -31,6 +31,7 @@
     "ethers": "latest",
     "formik": "^2.2.9",
     "formik-material-ui": "^4.0.0-alpha.2",
+    "lodash": "^4.17.21",
     "lodash-es": "^4.17.21",
     "moment": "^2.29.3",
     "next": "^12.0.10",

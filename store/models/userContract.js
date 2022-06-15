@@ -103,11 +103,9 @@ const userContract = createModel({
         userContract.setListContractDeployed([]);
         return null;
       },
-      async createSmartContract(body) {
+      async createSmartContract(body, state) {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts`, {
           method: 'POST',
-          mode: 'cors',
-          cache: 'no-cache',
           headers: {
             'Content-Type': 'application/json',
           },

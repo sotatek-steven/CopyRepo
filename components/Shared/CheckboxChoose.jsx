@@ -4,6 +4,7 @@ import React, { useEffect } from 'react';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 import styled from '@emotion/styled';
+import _ from 'lodash';
 
 const CheckBoxStyled = styled(Card)((theme) => ({
   minWidth: 500,
@@ -21,7 +22,8 @@ const RadioCustom = styled(Radio)((theme) => ({
 }));
 
 const CheckboxChoose = ({ options, name, handleChange }) => {
-  return options?.length ? (
+  console.log(options);
+  return _.isArray(options) && options.length > 0 ? (
     <FormControl>
       <RadioGroup
         aria-labelledby="demo-radio-buttons-group-label"
@@ -38,11 +40,11 @@ const CheckboxChoose = ({ options, name, handleChange }) => {
                   onChange={handleChange}
                   control={<RadioCustom icon={<CircleOutlinedIcon />} checkedIcon={<CheckCircleIcon />} />}
                 />
-                <Typography sx={{ color: '#E5C2B9' }}>{option.name}</Typography>
+                <Typography sx={{ color: '#E5C2B9' }}>{option?.name}</Typography>
               </Box>
               <CardContent sx={{ padding: '0 16px' }}>
                 <Typography sx={{ fontSize: '10px', paddingRight: '32px' }} color="text.secondary">
-                  {option.description}
+                  {option?.description}
                 </Typography>
               </CardContent>
             </CheckBoxStyled>

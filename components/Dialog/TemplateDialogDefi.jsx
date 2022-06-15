@@ -5,140 +5,61 @@ import TemplateDomainItem from './TemplateDomainItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import CheckboxChoose from '../Shared/CheckboxChoose';
-
-const data = [
-  {
-    _id: '62a3237d0e4b41019e4d6dbb',
-    owner: 'system',
-    color: 'red',
-    name: 'Tempate Defi',
-    domain: 'defi',
-    description: 'This is tempate defi smart contract',
-    tags: ['defi', 'smart-contract'],
-    modules: ['62a322bd0e4b41019e4d5742'],
-    coordinates: [
-      {
-        module: '62a322bd0e4b41019e4d5742',
-        position: {
-          top: 10,
-          left: 100,
-        },
-      },
-    ],
-  },
-  {
-    _id: '62a3237d0e4b41019e4d6dbb2',
-    owner: 'system',
-    color: 'red',
-    name: 'Tempate Defi 3',
-    domain: 'defi',
-    description:
-      'Allows to create new tokens in the crowdsale, instead of having a fixed total supply from the beginning. Next, we want to make our token "pausable". This will allow us to freeze token transfers during the ',
-    tags: ['defi', 'smart-contract'],
-    modules: ['62a322bd0e4b41019e4d5742'],
-    coordinates: [
-      {
-        module: '62a322bd0e4b41019e4d5742',
-        position: {
-          top: 10,
-          left: 100,
-        },
-      },
-    ],
-  },
-  {
-    _id: '62a3237d0e4b41019e4d6dbb3',
-    owner: 'system',
-    color: 'red',
-    name: 'Tempate Defi 3',
-    domain: 'defi',
-    description:
-      'Allows to create new tokens in the crowdsale, instead of having a fixed total supply from the beginning. Next, we want to make our token "pausable". This will allow us to freeze token transfers during the ',
-    tags: ['defi', 'smart-contract'],
-    modules: ['62a322bd0e4b41019e4d5742'],
-    coordinates: [
-      {
-        module: '62a322bd0e4b41019e4d5742',
-        position: {
-          top: 10,
-          left: 100,
-        },
-      },
-    ],
-  },
-];
+import _ from 'lodash';
 
 const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
-  // const [tempDataList, setTempDataList] = useState([]);
   const { template, userContract } = useDispatch();
   const templateList = useSelector((state) => state.template);
-  const [idTemplate, setIdTemplate] = useState(templateList.length > 0 ? templateListMemo[0]._id : null);
+  const [templateState, setTemplateState] = useState([]);
+  const [idTemplate, setIdTemplate] = useState(null);
 
-  const templateListMemo = useMemo(() => {
-    if (!templateList) {
-      template.getTemplate('defi');
-    } else {
-      return templateList;
-    }
-  }, [templateList, template]);
   useEffect(() => {
     const fetchTemplate = async () => {
       const domain = 'defi';
       try {
         const data = await template.getTemplate(domain);
-        // data && setTempDataList(data);
+        if (data.length > 0) {
+          setTemplateState(data);
+
+          setIdTemplate(data[0]._id);
+        }
       } catch (error) {
         console.log(error);
         console.log('Failed to fetch template');
       }
     };
     openListDefi && fetchTemplate();
-  }, [openListDefi]);
+  }, [openListDefi, setIdTemplate]);
 
   const handeSetIdTemplate = (e) => {
     setIdTemplate(e.target.value);
   };
 
-  // const dataTemplateBody = useMemo(() => {
-  //   if (templateListMemo.length > 0) {
-  //     const templateById = templateListMemo?.filter(
-  //       (item, index) => {
-  //         return item._id === idTemplate;
-  //       },
-  //       [templateListMemo, idTemplate]
-  //     );
-  //     debugger;
-  //     return templateById;
-  //   }
-  // }, [idTemplate, templateListMemo]);
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (templateList.length > 0) {
-      const dataTemplateBody = templateList?.filter((item, index) => {
+    if (!_.isArray(templateState)) return;
+
+    const submitCreateSC = async () => {
+      const dataTemplateBody = _.find(templateState, (item) => {
         return item._id === idTemplate;
       });
-      if (dataTemplateBody?.length > 0) {
-        const { _id, modules, name, domain, tags, description } = dataTemplateBody[0];
-
-        const submitCreateSC = async () => {
-          try {
-            const res = await userContract.createSmartContract({
-              template: _id,
-              modules,
-              name,
-              domain,
-              tags,
-              description,
-            });
-          } catch (error) {
-            console.log(error);
-            console.log('Failed to submit');
-          }
-        };
-        submitCreateSC();
+      const { _id, modules, name, domain, tags, description } = dataTemplateBody;
+      try {
+        const res = await userContract.createSmartContract({
+          template: _id,
+          modules,
+          name,
+          domain,
+          tags,
+          description,
+        });
+      } catch (error) {
+        console.log(error);
+        console.log('Failed to submit');
       }
-    }
+    };
+    submitCreateSC();
+    setOpenListDefi;
   };
   return (
     <Dialog
@@ -177,7 +98,7 @@ const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
             }}
             item
             xs={6}>
-            <CheckboxChoose name="template" options={templateListMemo.listTemplate} handleChange={handeSetIdTemplate} />
+            <CheckboxChoose name="template" options={templateState} handleChange={handeSetIdTemplate} />
           </Grid>
           <Grid xs={6}>
             <Box
