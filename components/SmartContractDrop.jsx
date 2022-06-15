@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback } from 'react';
+import React, { useState, useRef, useCallback, useEffect } from 'react';
 import ReactFlow, {
   addEdge,
   Controls,
@@ -38,10 +38,11 @@ const SmartContractDrop = () => {
     event.dataTransfer.dropEffect = 'move';
   }, []);
 
-  const deleteNode = (nodeId) => {
-    if(!nodeId) return;
-    const _nodes = nodes.filter(node => node._id !== nodeId);
-    setNodes(_nodes);
+  const deleteNode = () => {
+    if (!nodeId) return;
+    const _nodes = currentNodes.filter(node => node._id !== nodeId);
+    console.log('nodes result: ', _nodes);
+    // setNodes(_nodes);
   };
 
   const onDrop = useCallback(
@@ -65,6 +66,7 @@ const SmartContractDrop = () => {
       });
       const newNode = {
         id: getId(),
+        _id: data._id,
         type,
         position,
         data: {
@@ -73,7 +75,6 @@ const SmartContractDrop = () => {
           onDeleteNode: deleteNode,
         },
       };
-
       setNodes((nds) => nds.concat(newNode));
     },
     [reactFlowInstance, setNodes],
@@ -94,7 +95,7 @@ const SmartContractDrop = () => {
           onDrop={onDrop}
           nodeTypes={CustomNodes}
           onDragOver={onDragOver}
-          fitView
+        // fitView
         // attributionPosition="top-right"
         >
           <Controls />

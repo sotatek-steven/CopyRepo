@@ -48,9 +48,10 @@ const Status = ({ label, count }) => (
 const RectangleNode = ({ data }) => {
   const { description, code, name, onDeleteNode, _id } = data;
   const deleteModule = (event) => {
-    event.stopPropagation();
-    if(!onDeleteNode) return;
-    onDeleteNode(_id);
+    console.log('delete node at ', _id, onDeleteNode);
+    // event.stopPropagation();
+    // if (!onDeleteNode) return;
+    // onDeleteNode(_id);
   }
 
   useEffect(() => {
@@ -67,7 +68,7 @@ const RectangleNode = ({ data }) => {
           <CardTitle> {code}: {name} </CardTitle>
           <div
             style={{ padding: '10px' }}
-            onClick={deleteModule}
+            onClick={()=>deleteModule()}
           >
             X
           </div>
@@ -120,7 +121,7 @@ const RectangleNode = ({ data }) => {
         <div>{data.text}</div>
       </Card>
 
-      <SmartContractModal/>
+      <SmartContractModal />
     </>
   );
 };
