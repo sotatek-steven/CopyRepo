@@ -3,70 +3,11 @@ import React, { useEffect, useState } from 'react';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import { useDispatch, useSelector } from 'react-redux';
 import CheckboxChoose from '../Shared/CheckboxChoose';
+import { useRouter } from 'next/router';
 
-const data1 = [
-  {
-    _id: '62a3237d0e4b41019e4d6dbb',
-    owner: 'system',
-    color: 'red',
-    name: 'Tempate Defi',
-    domain: 'defi',
-    description: 'This is tempate defi smart contract',
-    tags: ['defi', 'smart-contract'],
-    modules: ['62a322bd0e4b41019e4d5742'],
-    coordinates: [
-      {
-        module: '62a322bd0e4b41019e4d5742',
-        position: {
-          top: 10,
-          left: 100,
-        },
-      },
-    ],
-  },
-  {
-    _id: '62a3237d0e4b41019e4d6dbb2',
-    owner: 'system',
-    color: 'red',
-    name: 'Tempate Defi 3',
-    domain: 'defi',
-    description:
-      'Allows to create new tokens in the crowdsale, instead of having a fixed total supply from the beginning. Next, we want to make our token "pausable". This will allow us to freeze token transfers during the ',
-    tags: ['defi', 'smart-contract'],
-    modules: ['62a322bd0e4b41019e4d5742'],
-    coordinates: [
-      {
-        module: '62a322bd0e4b41019e4d5742',
-        position: {
-          top: 10,
-          left: 100,
-        },
-      },
-    ],
-  },
-  {
-    _id: '62a3237d0e4b41019e4d6dbb3',
-    owner: 'system',
-    color: 'red',
-    name: 'Tempate Defi 3',
-    domain: 'defi',
-    description:
-      'Allows to create new tokens in the crowdsale, instead of having a fixed total supply from the beginning. Next, we want to make our token "pausable". This will allow us to freeze token transfers during the ',
-    tags: ['defi', 'smart-contract'],
-    modules: ['62a322bd0e4b41019e4d5742'],
-    coordinates: [
-      {
-        module: '62a322bd0e4b41019e4d5742',
-        position: {
-          top: 10,
-          left: 100,
-        },
-      },
-    ],
-  },
-];
 const TemplateDialogDefi = ({ openListNFT, setOpenListNFT }) => {
   const { template, userContract } = useDispatch();
+  const router = useRouter();
   const templateList = useSelector((state) => state.template);
   const [templateState, setTemplateState] = useState([]);
   const [idTemplate, setIdTemplate] = useState(null);
@@ -112,6 +53,10 @@ const TemplateDialogDefi = ({ openListNFT, setOpenListNFT }) => {
           tags,
           description,
         });
+        if (res.data) {
+          const { _id } = res.data;
+          _id && router.push(`/smartcontract/${_id}`);
+        }
         setOpenListNFT(false);
       } catch (error) {
         console.log(error);

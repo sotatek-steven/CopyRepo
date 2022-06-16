@@ -5,9 +5,11 @@ import { useDispatch, useSelector } from 'react-redux';
 import { Formik, Form, Field } from 'formik';
 import CheckboxChoose from '../Shared/CheckboxChoose';
 import _ from 'lodash';
+import { useRouter } from 'next/router';
 
 const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
   const { template, userContract } = useDispatch();
+  const router = useRouter();
   const templateList = useSelector((state) => state.template);
   const [templateState, setTemplateState] = useState([]);
   const [idTemplate, setIdTemplate] = useState(null);
@@ -52,6 +54,10 @@ const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
           tags,
           description,
         });
+        if (res.data) {
+          const { _id } = res.data;
+          _id && router.push(`/smartcontract/${_id}`);
+        }
         setOpenListDefi(false);
       } catch (error) {
         console.log(error);
