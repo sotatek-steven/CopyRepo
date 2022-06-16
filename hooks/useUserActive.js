@@ -20,7 +20,7 @@ const useUserBackup = () => {
         const playerAuth = JSON.parse(playerAuthString);
         player.setPlayerAuth(playerAuth);
       } catch (error) {
-        console.log('error: ', error);
+        console.log('restoreUserAuth: ', error);
       }
     }
   };

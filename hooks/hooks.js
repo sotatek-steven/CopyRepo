@@ -47,14 +47,22 @@ export function useInactiveListener(suppress = false) {
     let playerAuth = {};
     const playerAuthRaw = localStorage.getItem('playerAuth');
     if (playerAuthRaw) {
-      playerAuth = JSON.parse(playerAuthRaw);
+      try {
+        playerAuth = JSON.parse(playerAuthRaw);
+      } catch (error) {
+        player.logout();
+        return;
+      }
     }
     if (playerAuth?.owner?.toLowerCase() === account.toLowerCase()) {
       console.log('==============check and load account==================');
       player.getPlayerInfo();
       return;
     }
-    await player.login({ account, library });
+    const rs = await player.login({ account, library });
+    if(!rs){
+      deactivate();
+    }
   }, [active, library, account]);
 
   const handleConnect = (e) => {

@@ -8,8 +8,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import Layout from '@/components/layout/PageLayout';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import BusinessDomain from '@/components/BusinessDomain/BusinessDomain';
-import AllSmartContract from '@/components/AllSmartContract/AllSmartContract';
-import TemplateItem from '@/components/TemplateItem/TemplateItem';
 import ListSmartContract from '@/components/ListSmartContract/ListSmartContract';
 import { useDispatch, useSelector } from 'react-redux';
 import TemplateDialogDefi from '@/components/Dialog/TemplateDialogDefi';

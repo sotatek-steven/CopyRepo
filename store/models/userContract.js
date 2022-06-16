@@ -1,7 +1,5 @@
 import { createModel } from '@rematch/core';
-
-const fakeToken =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmE2ZGQ2YjY2YWVlNzgzOGI0YTMzOTUiLCJjcmVhdGVkQXQiOiIyMDIyLTA2LTE0VDA0OjA0OjE5LjIwMFoiLCJvd25lciI6IjB4MjEyMWQ0NjQ4NTNhYzRmMDUxM2VmODE5YjBjYjVhMWUyYTZkZTJiNyIsImlhdCI6MTY1NTE3OTQ1OX0.arzYQ9qS7Qja0ZVTkzDqXPdSjyp5BZwotajTUx6K7bw';
+import { getRequest, postRequest } from '../../utils/httpRequest';
 
 const userContract = createModel({
   state: {
@@ -35,92 +33,54 @@ const userContract = createModel({
     },
   },
   effects: (dispatch) => {
-    const { userContract } = dispatch;
+    const { userContract, player } = dispatch;
+    const userModoel = player;
     return {
       async getAllUserContracts(payload, state) {
-        const token = state.player.playerAuth?.token;
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts`, {
-          mode: 'cors',
-          cache: 'no-cache',
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const res = await response.json();
-        if (res.code === 200) {
-          const { data } = res;
-          userContract.setListContract(data);
-          return data;
+        try {
+          const { data } = await getRequest({
+            url: '/api/v1/user-contracts',
+            params: { status: 'draff' },
+            userState: state.player,
+            userModoel
+          });
+          console.log('data all: ', data);
+          userContract.setListContract(data || []);
+        } catch (error) {
+          console.log('error: ', error);
+          userContract.setListContract([]);
         }
-        if (res.code === 1001) {
-          // token expired
-          userContract.clearAll();
-        }
-        userContract.setListContract([]);
-        return null;
       },
       async getUserContractDraff(payload, state) {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts?status=draff`, {
-          method: 'GET',
-          mode: 'cors',
-          cache: 'no-cache',
-          headers: {
-            Authorization: `Bearer ${state.player.playerAuth?.token}`,
-          },
-        });
-        const res = await response.json();
-        if (res.code === 200) {
-          const { data } = res;
-          userContract.setListContractDraff(data);
-          return data;
+        try {
+          const { meta, data } = await getRequest({
+            url: '/api/v1/user-contracts',
+            params: { status: 'draff' },
+            userState: state.player,
+            userModoel
+          });
+          userContract.setListContractDraff(data || []);
+        } catch (error) {
+          console.log('error: ', error);
+          userContract.setListContractDraff([]);
         }
-        if (res.code === 1001) {
-          // token expired
-          userContract.clearAll();
-        }
-        userContract.setListContractDraff([]);
-        return null;
       },
       async getUserContractDeployed(payload, state) {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts?status=deployed`, {
-          method: 'GET',
-          mode: 'cors',
-          cache: 'no-cache',
-          headers: {
-            Authorization: `Bearer ${state.player.playerAuth?.token}`,
-          },
-        });
-        const res = await response.json();
-        if (res.code === 200) {
-          const { data } = res;
-          userContract.setListContractDeployed(data);
-          return data;
+        try {
+          const { meta, data } = await getRequest({
+            url: '/api/v1/user-contracts',
+            params: { status: 'deployed' },
+            userState: state.player,
+            userModoel
+          });
+          userContract.setListContractDeployed(data || []);
+        } catch (error) {
+          console.log('error: ', error);
+          userContract.setListContractDeployed([]);
         }
-        if (res.code === 1001) {
-          // token expired
-          userContract.clearAll();
-        }
-        userContract.setListContractDeployed([]);
-        return null;
       },
       async createSmartContract(body, state) {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          headers: {
-            Authorization: `Bearer ${state.player.playerAuth?.token}`,
-          },
-          body: JSON.stringify(body),
-        });
-        const res = await response.json();
-
-        if (res.code === 200) {
-        } else if (res.code === 1001) {
-          // token expired
-          // player.clearAll();
-        }
+        const res = postRequest({ url: '/api/v1/user-contracts', body });
         return res;
       },
     };

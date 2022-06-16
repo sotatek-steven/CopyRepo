@@ -1,6 +1,6 @@
 import { createModel } from '@rematch/core';
 import { signMessage } from '@/utils/contract';
-
+import { getRequest, postRequest } from '../../utils/httpRequest';
 const player = createModel({
   state: {
     playerInfo: null,
@@ -42,26 +42,17 @@ const player = createModel({
   },
   effects: (dispatch) => {
     const { player } = dispatch;
+    const userModoel = player;
     return {
       async getPlayerInfo(payload, state) {
         console.log('Load player info');
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/v1/users`,
-          {
-            headers: {
-              Authorization: `Bearer ${state.player.playerAuth?.token}`,
-            },
-          }
-        );
-        const res = await response.json();
+        const res = await getRequest({ url: '/api/v1/users', userState: state.player, userModoel })
+        
         if (res.code === 200) {
           const data = res.data;
           player.setTokenExpired(false);
           player.setPlayerInfo(data);
           return data;
-        } else if (res.code === 1001) {
-          // token expired
-          player.clearAll();
         }
         return null;
       },
@@ -73,179 +64,23 @@ const player = createModel({
           signed: signer?.signature,
           timestamp: timestamp,
         };
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/v1/users/login`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(payload),
-        });
-        const res = await response.json();
-        if (res.code === 200) {
-          player.setTokenExpired(false);
-          player.setPlayerAuth(res.data);
-          player.setPlayerInfo(res.data);
-        } else if (res.code === 1001) {
-          // token expired
-          player.clearAll();
+        const { data } = await postRequest({ url: '/api/v1/users/login', auth: false, body: payload });
+        if(!data){
+          return false;
         }
-        return res;
-      },
-      async setupAccount(payload, state) {
-        if (!state.player.playerAuth?.token) return null;
-
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/market/v1/players/${state.player.playerAuth?.owner}`,
-          {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${state.player.playerAuth?.token}`,
-            },
-            body: JSON.stringify(payload),
-          }
-        );
-        const res = await response.json();
-        if (res.code === 200) {
-          // nothing
-          player.setPlayerAuth({ ...state.player.playerAuth, emailUpdated: payload.email });
-        } else if (res.code === 1001) {
-          player.setTokenExpired(true);
-        }
-        return res;
-      },
-      async updatePlayerName(payload, state) {
-        if (!state.player.playerAuth?.token) return null;
-
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/market/v1/players/${state.player.playerAuth?.owner}`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${state.player.playerAuth?.token}`,
-            },
-            body: JSON.stringify(payload),
-          }
-        );
-        const res = await response.json();
-        if (res.code === 200) {
-          // nothing
-          player.setPlayerAuth({ ...state.player.playerAuth, name: payload.name });
-          player.setPlayerInfo({ ...state.player.playerAuth, name: payload.name });
-        } else if (res.code === 1001) {
-          player.setTokenExpired(true);
-        }
-        return res;
-      },
-      async updatePlayerEmail(payload, state) {
-        if (!state.player.playerAuth?.token) return null;
-
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/market/v1/players/${state.player.playerAuth?.owner}`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${state.player.playerAuth?.token}`,
-            },
-            body: JSON.stringify(payload),
-          }
-        );
-        const res = await response.json();
-        if (res.code === 200) {
-          // nothing
-          player.setPlayerAuth({ ...state.player.playerAuth, emailUpdated: payload.email });
-        } else if (res.code === 1001) {
-          player.setTokenExpired(true);
-        }
-        return res;
-      },
-      async updatePlayerPassword(payload, state) {
-        if (!state.player.playerAuth?.token) return null;
-
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/market/v1/players/${state.player.playerAuth?.owner}`,
-          {
-            method: 'PUT',
-            headers: {
-              'Content-Type': 'application/json',
-              Authorization: `Bearer ${state.player.playerAuth?.token}`,
-            },
-            body: JSON.stringify(payload),
-          }
-        );
-        const res = await response.json();
-        if (res.code === 200) {
-          // nothing
-        } else if (res.code === 1001) {
-          player.setTokenExpired(true);
-        }
-        return res;
-      },
-      async forgotPassword(payload, state) {
-        if (!state.player.playerAuth?.token) return null;
-
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/market/v1/players/forgot`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${state.player.playerAuth?.token}`,
-          },
-        });
-        const res = await response.json();
-        if (res.code === 200) {
-          // nothing
-        } else if (res.code === 1001) {
-          player.setTokenExpired(true);
-        }
-        return res;
-      },
-      async recoverPassword(payload, state) {
-        if (!state.player.playerAuth?.token) return null;
-
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/market/v1/players/recovery-password`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${state.player.playerAuth?.token}`,
-          },
-          body: JSON.stringify(payload),
-        });
-        const res = await response.json();
-        if (res.code === 200) {
-          // nothing
-        } else if (res.code === 1001) {
-          player.setTokenExpired(true);
-        }
-        return res;
-      },
-      async confirmEmail(payload, state) {
-        if (!state.player.playerAuth?.token) return null;
-
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/market/v1/players/confirm-email`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${state.player.playerAuth?.token}`,
-          },
-          body: JSON.stringify(payload),
-        });
-        const res = await response.json();
-        if (res.code === 200) {
-          // nothing
-          delete state.player.playerAuth?.emailUpdated;
-          player.setPlayerAuth({ ...state.player.playerAuth, email: payload.email });
-        } else if (res.code === 1001) {
-          player.setTokenExpired(true);
-        }
-        return res;
+        console.log('data: ', data);
+        player.setTokenExpired(false);
+        player.setPlayerAuth(data);
+        player.setPlayerInfo(data);
+        return true;
       },
       async logout(payload, state) {
+        console.log('logout when player auth empty');
         if (!state.player.playerAuth) {
           player.clearAll();
           return null;
         }
+        console.log('logout');
 
         // const response = await fetch(
         //   `${process.env.NEXT_PUBLIC_API_URL}/api/market/v1/players/${state.player.playerAuth?.owner}/logout`,
