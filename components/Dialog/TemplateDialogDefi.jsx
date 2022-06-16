@@ -1,28 +1,70 @@
-import { Dialog, DialogTitle, Box, Typography, IconButton, DialogContent, Grid } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Dialog, DialogTitle, Box, Typography, IconButton, DialogContent, Grid, Radio, Button } from '@mui/material';
+import React, { useEffect, useMemo, useState } from 'react';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
-import TemplateDomainItem from './TemplateDomainItem';
 import { useDispatch, useSelector } from 'react-redux';
+import { Formik, Form, Field } from 'formik';
+import CheckboxChoose from '../Shared/CheckboxChoose';
+import _ from 'lodash';
 
 const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
-  const [tempDataList, setTempDataList] = useState([]);
-  const { template } = useDispatch();
+  const { template, userContract } = useDispatch();
   const templateList = useSelector((state) => state.template);
+  const [templateState, setTemplateState] = useState([]);
+  const [idTemplate, setIdTemplate] = useState(null);
+
   useEffect(() => {
     const fetchTemplate = async () => {
       const domain = 'defi';
       try {
         const data = await template.getTemplate(domain);
-        data && setTempDataList(data);
+        if (data.length > 0) {
+          setTemplateState(data);
+
+          setIdTemplate(data[0]._id);
+        }
       } catch (error) {
         console.log(error);
         console.log('Failed to fetch template');
       }
     };
     openListDefi && fetchTemplate();
-  }, [openListDefi]);
+  }, [openListDefi, setIdTemplate]);
+
+  const handeSetIdTemplate = (e) => {
+    setIdTemplate(e.target.value);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!_.isArray(templateState)) return;
+
+    const submitCreateSC = async () => {
+      const dataTemplateBody = _.find(templateState, (item) => {
+        return item._id === idTemplate;
+      });
+      const { _id, modules, name, domain, tags, description } = dataTemplateBody;
+      try {
+        const res = await userContract.createSmartContract({
+          template: _id,
+          modules,
+          name,
+          domain,
+          tags,
+          description,
+        });
+        setOpenListDefi(false);
+      } catch (error) {
+        console.log(error);
+        console.log('Failed to submit');
+        setOpenListDefi(false);
+      }
+    };
+    submitCreateSC();
+  };
   return (
     <Dialog
+      component="form"
+      onSubmit={handleSubmit}
       fullWidth
       maxWidth="lg"
       open={openListDefi}
@@ -56,12 +98,33 @@ const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
             }}
             item
             xs={6}>
-            {templateList.listTemplate?.map((item) => {
-              return <TemplateDomainItem key={item._id} item={item} />;
-            })}
+            <CheckboxChoose name="template" options={templateState} handleChange={handeSetIdTemplate} />
           </Grid>
           <Grid xs={6}>
-            <Box sx={{ width: '589px', height: '548px', background: '#3D3D3E' }}></Box>
+            <Box
+              sx={{
+                width: '589px',
+                height: '548px',
+                background: '#3D3D3E',
+              }}>
+              <Grid container>
+                <Grid item xs={12}></Grid>
+                <Grid item xs={12} sx={{ height: '500px' }}></Grid>
+                <Grid item xs={12} sx={{ mr: 2 }}>
+                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <Button
+                      variant="outlined"
+                      sx={{ color: '#fff', border: '1px solid #fff', minWidth: '114px', mx: 1 }}>
+                      Skip
+                    </Button>
+                    <Button variant="contained" type="submit">
+                      {' '}
+                      Let do this
+                    </Button>
+                  </Box>
+                </Grid>
+              </Grid>
+            </Box>
           </Grid>
         </Grid>
       </DialogContent>

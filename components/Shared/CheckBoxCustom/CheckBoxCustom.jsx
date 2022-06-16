@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Checkbox from '@mui/material/Checkbox';
 import { styled } from '@mui/material';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -10,8 +10,15 @@ const CheckBoxStyled = styled(Checkbox)((theme) => ({
     color: '#95D5B2 ',
   },
 }));
-const CheckBoxCustom = ({ label }) => {
-  return <CheckBoxStyled {...label} defaultChecked icon={<CircleOutlinedIcon />} checkedIcon={<CheckCircleIcon />} />;
+const CheckBoxCustom = ({ label, handleChecked, id }) => {
+  return (
+    <CheckBoxStyled
+      {...label}
+      icon={<CircleOutlinedIcon />}
+      checkedIcon={<CheckCircleIcon />}
+      onChange={(e) => handleCheckedItem(e, id)}
+    />
+  );
 };
 
 export default CheckBoxCustom;
