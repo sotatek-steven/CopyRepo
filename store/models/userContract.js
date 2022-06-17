@@ -42,7 +42,7 @@ const userContract = createModel({
             url: '/api/v1/user-contracts',
             params: { status: 'draff' },
             userState: state.player,
-            userModoel
+            userModoel,
           });
           console.log('data all: ', data);
           userContract.setListContract(data || []);
@@ -57,7 +57,7 @@ const userContract = createModel({
             url: '/api/v1/user-contracts',
             params: { status: 'draff' },
             userState: state.player,
-            userModoel
+            userModoel,
           });
           userContract.setListContractDraff(data || []);
         } catch (error) {
@@ -71,7 +71,7 @@ const userContract = createModel({
             url: '/api/v1/user-contracts',
             params: { status: 'deployed' },
             userState: state.player,
-            userModoel
+            userModoel,
           });
           userContract.setListContractDeployed(data || []);
         } catch (error) {

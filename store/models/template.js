@@ -21,10 +21,15 @@ const template = createModel({
     },
   },
   effects: (dispatch) => {
-    const { template } = dispatch;
+    const { template, player } = dispatch;
     return {
       async getTemplate(domain, state) {
-        const { data } = await getRequest({ url: '/api/v1/templates', params: { domain } });
+        const { data } = await getRequest({
+          url: '/api/v1/templates',
+          params: { domain },
+          userState: state.player,
+          userModoel: player,
+        });
         template.setListTemplate(data || []);
       },
     };
