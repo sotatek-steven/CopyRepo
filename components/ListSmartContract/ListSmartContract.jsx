@@ -7,14 +7,14 @@ const ListSmartContract = ({ data }) => {
   return (
     <Grid container columnSpacing={2}>
       <Grid item xs={2}>
-        <Box sx={{ background: '#1E1E1F', height: '100vh' }}></Box>
+        <Box sx={{ background: '#1E1E1F', height: '100%' }}></Box>
       </Grid>
       <Grid item xs={10}>
         <Box sx={{ fontSize: '14px', alignItems: 'center' }}>
           <Grid container spacing={2}>
             {data?.map((item, key) => {
               return (
-                <Grid item xs={4} key={key} sx={{ paddingBottom: '32px !important' }}>
+                <Grid item xs={4} key={key} sx={{ paddingBottom: '16px !important' }}>
                   <TemplateItem key={key} data={item} />
                 </Grid>
               );
