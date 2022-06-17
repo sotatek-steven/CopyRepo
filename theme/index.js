@@ -130,6 +130,28 @@ export const theme = createTheme({
         },
       },
     },
+    Truncate: {
+      singleLineEllipsis: {
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+      },
+      twoLineEllipsis: {
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        display: '-webkit-box',
+        WebkitLineClamp: '2!important',
+        WebkitBoxOrient: 'vertical'
+      },
+      threeLineEllipsis: {
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+        display: '-webkit-box',
+        WebkitLineClamp: '3!important',
+        WebkitBoxOrient: 'vertical',
+        whiteSpace: 'normal',
+      }
+    }
   },
   palette: {
     mode: 'dark',
@@ -237,8 +259,7 @@ export const theme = createTheme({
     button: {
       fontWeight: 600,
     },
-    fontFamily:
-      '"Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
+    fontFamily: '"Josefin Sans", sans-serif, "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
     body1: {
       fontSize: '1rem',
       fontWeight: 400,

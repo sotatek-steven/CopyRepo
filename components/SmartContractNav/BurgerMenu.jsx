@@ -1,5 +1,5 @@
 import React from 'react';
-import BurgerIcon from '../../assets/icon/menu.svg';
+// import BurgerIcon from '../../assets/icon/menu.svg';
 import KebabIcon from '../../assets/icon/kebab.svg';
 import { styled } from '@mui/material/styles';
 
@@ -18,11 +18,11 @@ const TextStyle = styled('span')(({ theme }) => ({
   color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#',
 }));
 
-const BurgerMenu = () => {
+const BurgerMenu = ({ contractName }) => {
   return (
     <RightSide>
       {/* <BurgerIcon /> */}
-      <TextStyle>ICO Smart Contract</TextStyle>
+      <TextStyle> {contractName} </TextStyle>
       <KebabIcon />
     </RightSide>
   )

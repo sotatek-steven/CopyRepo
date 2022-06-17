@@ -5,4 +5,11 @@ import player from './player';
 import userContract from './userContract';
 import template from './template';
 
-export { ticket, contract, player, moduleApi, userContract, template };
+export {
+  ticket,
+  contract,
+  player,
+  moduleApi,
+  userContract,
+  template
+};

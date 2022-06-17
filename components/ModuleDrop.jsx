@@ -9,21 +9,32 @@ import ReactFlow, {
 } from 'react-flow-renderer';
 import CustomNodes from './CustomNode';
 
-const initialNodes = [
-];
-
-const initialEdges = [
-  { id: 'e2-3', source: '1', target: '2' },
-];
-
 let id = 0;
 const getId = () => `dndnode_${id++}`;
 
-const SmartContractDrop = () => {
+const ModuleDrop = ({ initialNodes, initialEdges }) => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState();
 
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const deleteNode = (nodeId) => {
+    if (!nodeId) return;
+    const _nodes = nodes.filter(node => node.id !== nodeId);
+    setNodes(_nodes);
+  };
+
+  const [nodes, setNodes, onNodesChange] = useNodesState(() => {
+    const data = initialNodes.map(item => {
+      return {
+        ...item,
+        data: {
+          ...item.data,
+          onDeleteNode: deleteNode,
+        }
+      }
+    });
+    return data;
+  });
+  
   const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
 
   const onConnect = useCallback((connection) => setEdges((eds) => addEdge(connection, eds)), []);
@@ -37,13 +48,6 @@ const SmartContractDrop = () => {
     if (!event.dataTransfer) return;
     event.dataTransfer.dropEffect = 'move';
   }, []);
-
-  const deleteNode = () => {
-    if (!nodeId) return;
-    const _nodes = currentNodes.filter(node => node._id !== nodeId);
-    console.log('nodes result: ', _nodes);
-    // setNodes(_nodes);
-  };
 
   const onDrop = useCallback(
     (event) => {
@@ -73,6 +77,7 @@ const SmartContractDrop = () => {
           label: `${type} node`,
           ...data,
           onDeleteNode: deleteNode,
+          event: 'drop',
         },
       };
       setNodes((nds) => nds.concat(newNode));
@@ -106,4 +111,4 @@ const SmartContractDrop = () => {
   );
 };
 
-export default SmartContractDrop;
+export default ModuleDrop;

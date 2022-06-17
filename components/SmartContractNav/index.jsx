@@ -4,6 +4,9 @@ import PhaseNavigation from './PhaseNavigation';
 import Exitbutton from './ExitButton';
 import SaveContractBtn from './SaveContractBtn';
 import { styled } from '@mui/material/styles';
+import { useSelector } from 'react-redux';
+import EditInfoContract from '../EditInfoContract';
+import NextBtn from './NextBtn';
 
 const NavbarContainer = styled('div')(({ theme }) => ({
   height: '100%',
@@ -21,13 +24,16 @@ const RightSide = styled('div')(() => ({
 }));
 
 const DesignSmartContractNav = () => {
+  const contract = useSelector((state) => state.contract);
   return (
     <NavbarContainer>
-      <BurgerMenu />
+      <BurgerMenu contractName={contract.name || 'New Contract'}/>
       <PhaseNavigation />
       <RightSide>
-        <Exitbutton />
+        <EditInfoContract />
+        <NextBtn />
         <SaveContractBtn />
+        <Exitbutton />
       </RightSide>
     </NavbarContainer>
   )

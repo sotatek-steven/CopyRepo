@@ -3,17 +3,18 @@ import React from 'react';
 import { styled } from '@mui/material/styles';
 import DragIcon from '../../assets/icon/drag.svg';
 
-const Item = styled('div')(() => ({
-  display: 'flex',
+const Item = styled('div')(({disable}) => ({
   gap: '17px',
   alignItems: 'center',
   padding: '11px 19px',
+  display: disable === 'true' ? 'none' : 'flex' ,
 }));
 
 const Text = styled('div')(({ theme }) => ({
   fontSize: '15px',
   fontWeight: '400',
   color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#E1E1E1',
+  ...theme.components.Truncate.singleLineEllipsis
 }));
 
 const ModuleItem = ({ data, nodeType }) => {
@@ -22,7 +23,6 @@ const ModuleItem = ({ data, nodeType }) => {
     const dataJson = JSON.stringify(data);
     event.dataTransfer.setData('foo', dataJson);
     event.dataTransfer.effectAllowed = 'move';
-
   };
 
   return (
@@ -30,9 +30,14 @@ const ModuleItem = ({ data, nodeType }) => {
       onDragStart={(event) => onDragStart(event, nodeType)}
       draggable
       key={data.id}
+      disable={data.disable.toString()}
     >
-      <DragIcon />
-      <Text> {data.name} </Text>
+      <div>
+        <DragIcon />
+      </div>
+      <Text>
+        {data.name}
+      </Text>
     </Item>
   );
 };

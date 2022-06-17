@@ -2,9 +2,10 @@ import { Handle, Position } from 'react-flow-renderer';
 import React, { useEffect, useState } from 'react';
 import { styled } from '@mui/material';
 import SmartContractModal from '../SmartcontractModal';
+import CloseIcon from '@mui/icons-material/Close';
 
 const Card = styled('div')(({ theme }) => ({
-  border: theme.palette.mode === 'dark' ? 'solid 1px #BEA75A' : '',
+  border: 'solid 1px',
   borderRadius: '4px',
   width: '260px',
   backgroundColor: theme.palette.mode === 'dark' ? '#BEA75A' : '',
@@ -17,8 +18,10 @@ const Item = styled('div')(({ theme }) => ({
   color: theme.palette.mode === 'dark' ? '#F7F7F7' : '#F7F7F7',
 }));
 
-const CardTitle = styled('div')(() => ({
+const CardTitle = styled('div')(({ theme }) => ({
   padding: '10px',
+  color: theme.palette.mode === 'dark' ? '#2E2E30' : '#2E2E30',
+  ...theme.components.Truncate.singleLineEllipsis
 }));
 
 const CardBody = styled('div')(({ theme }) => ({
@@ -34,9 +37,23 @@ const Label = styled('div')(({ theme }) => ({
   color: theme.palette.mode === 'dark' ? '#FFFFFF' : '#FFFFFF',
 }));
 
+const Description = styled('div')(({ theme }) => ({
+  fontSize: 13,
+  ...theme.components.Truncate.threeLineEllipsis
+}));
+
+const CloseBtn = styled('div')(({ theme }) => ({
+  padding: '10px',
+  color: 'white',
+  transition: 'color, 0.2s',
+  ':hover': {
+    color: '#e1e1e19c',
+  }
+}));
+
 const Status = ({ label, count }) => (
   <Item>
-    <div style={{ fontSize: '16px', fontWeight: 600 }}>
+    <div style={{ fontSize: '18px', fontWeight: 600 }}>
       {count}
     </div>
     <div style={{ fontSize: '13px', fontWeight: 500 }}>
@@ -45,36 +62,33 @@ const Status = ({ label, count }) => (
   </Item>
 );
 
-const RectangleNode = ({ data }) => {
-  const { description, code, name, onDeleteNode, _id } = data;
+const RectangleNode = ({ data, id }) => {
+  const { description, code, name, onDeleteNode, _id: moduleId, event, color } = data;
   const deleteModule = (event) => {
-    console.log('delete node at ', _id, onDeleteNode);
-    // event.stopPropagation();
-    // if (!onDeleteNode) return;
-    // onDeleteNode(_id);
+    event.stopPropagation();
+    if (!onDeleteNode) return;
+    onDeleteNode(id, moduleId);
   }
-
-  useEffect(() => {
-
-  }, [])
 
   return (
     <>
-      <Card>
+      <Card sx={{
+        background: color || '#BEA75A',
+        borderColor: '#BEA75A'
+      }}>
         <div style={{
           display: 'flex',
           justifyContent: 'space-between',
         }}>
           <CardTitle> {code}: {name} </CardTitle>
-          <div
-            style={{ padding: '10px' }}
-            onClick={()=>deleteModule()}
+          <CloseBtn
+            onClick={deleteModule}
           >
-            X
-          </div>
+            <CloseIcon sx={{ fontSize: 20, color: '#000000' }}/>
+          </CloseBtn>
         </div>
 
-        <CardBody >
+        <CardBody>
           <div style={{
             display: 'flex',
             justifyContent: 'space-between',
@@ -85,14 +99,9 @@ const RectangleNode = ({ data }) => {
             <Status label="API Services" count={6} />
           </div>
           <Label> Description</Label>
-          <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            marginBottom: '10px',
-            fontSize: 13,
-          }}>
+          <Description>
             {description}
-          </div>
+          </Description>
         </CardBody>
         <Handle
           type="source"
@@ -100,28 +109,28 @@ const RectangleNode = ({ data }) => {
           id="a"
           style={{ background: '#555' }}
         />
-        <Handle
+        {/* <Handle
           type="target"
           position={Position.Right}
           id="b"
           style={{ background: '#555' }}
-        />
+        /> */}
         <Handle
           type="target"
           position={Position.Bottom}
           id="c"
           style={{ background: '#555' }}
         />
-        <Handle
+        {/* <Handle
           type="source"
           position={Position.Left}
           style={{ background: '#555' }}
           id="d"
-        />
+        /> */}
         <div>{data.text}</div>
       </Card>
 
-      <SmartContractModal />
+      <SmartContractModal openDefault={event ? false : false} />
     </>
   );
 };
