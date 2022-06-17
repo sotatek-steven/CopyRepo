@@ -17,7 +17,7 @@ const TemplateDialogDefi = ({ openListNFT, setOpenListNFT }) => {
       const domain = 'nft';
       try {
         const data = await template.getTemplate(domain);
-        if (data.length > 0) {
+        if (data?.length > 0) {
           setTemplateState(data);
 
           setIdTemplate(data[0]._id);

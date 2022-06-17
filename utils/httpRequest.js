@@ -1,14 +1,20 @@
 import queryString from 'query-string';
-export const getRequest = async ({ domain = process.env.NEXT_PUBLIC_API_URL, url = '/', params = {}, auth = true, userState, userModoel } = {}) => {
+export const getRequest = async ({
+  domain = process.env.NEXT_PUBLIC_API_URL,
+  url = '/',
+  params = {},
+  auth = true,
+  userState,
+  userModoel,
+} = {}) => {
   const headers = {
     Authorization: `Bearer ${userState?.playerAuth?.token}`,
-
-  }
+  };
   if (!auth) {
     delete headers.Authorization;
   }
   const query = queryString.stringify({
-    ...params
+    ...params,
   });
   const response = await fetch(`${domain}${url}${url.includes('?') ? '&' : '?'}${query}`, {
     method: 'GET',
@@ -27,16 +33,24 @@ export const getRequest = async ({ domain = process.env.NEXT_PUBLIC_API_URL, url
   return res;
 };
 
-export const postRequest = async ({ domain = process.env.NEXT_PUBLIC_API_URL, url = '/', params = {}, body = {}, auth = true, userState, userModoel } = {}) => {
+export const postRequest = async ({
+  domain = process.env.NEXT_PUBLIC_API_URL,
+  url = '/',
+  params = {},
+  body = {},
+  auth = true,
+  userState,
+  userModoel,
+} = {}) => {
   const headers = {
     Authorization: `Bearer ${userState?.playerAuth?.token}`,
     'Content-Type': 'application/json',
-  }
+  };
   if (!auth) {
     delete headers.Authorization;
   }
   const query = queryString.stringify({
-    ...params
+    ...params,
   });
   const response = await fetch(`${domain}${url}${url.includes('?') ? '&' : '?'}${query}`, {
     method: 'POST',

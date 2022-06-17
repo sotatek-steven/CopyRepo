@@ -31,6 +31,7 @@ const template = createModel({
           userModoel: player,
         });
         template.setListTemplate(data || []);
+        return data;
       },
     };
   },
