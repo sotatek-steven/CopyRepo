@@ -1,9 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { styled } from '@mui/material/styles';
-import CreateButton from './CreateButton';
 import SearchModule from './SearchModule';
-import { Modal } from '@mui/material';
-import CreateContractForm from '../CreateContractForm';
+import CreateButton from './CreateBtn';
 
 const LeftSide = styled('div')(({ theme }) => ({
   color: theme.palette.mode === 'dark' ? '#E5C2B9' : '#E5C2B9',
@@ -11,9 +9,7 @@ const LeftSide = styled('div')(({ theme }) => ({
   fontWeight: 400,
 }));
 
-const SubMenu = ({ contract }) => {
-  const [isOpenCreateModal, setIsOpenCreateModal] = useState(false);
-
+const SubMenu = () => {
   return (
     <div style={{
       display: 'flex',
@@ -27,17 +23,10 @@ const SubMenu = ({ contract }) => {
         gap: '18px',
         alignItems: 'center',
       }}>
-        <CreateButton handleOpen={() => setIsOpenCreateModal(true)} />
+        <CreateButton />
         <SearchModule />
       </div>
-      <Modal
-        open={isOpenCreateModal}
-        onClose={() => setIsOpenCreateModal(false)}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description"
-      >
-        <CreateContractForm />
-      </Modal>
+      
     </div>
   )
 };

@@ -4,14 +4,12 @@ import moduleApi from './moduleApi';
 import player from './player';
 import userContract from './userContract';
 import template from './template';
-import contractApi from './contractApi'
 
 export {
   ticket,
   contract,
   player,
   moduleApi,
-  contractApi,
   userContract,
   template
 };

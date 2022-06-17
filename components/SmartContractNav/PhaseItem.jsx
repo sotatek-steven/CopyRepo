@@ -15,9 +15,9 @@ const Icon = styled('div')(({theme, isactive}) => ({
 }));
 
 const Label = styled('div')(({ theme, isactive }) => ({
-  fontSize: '12px',
-  fontWeight: 600,
-  color: (isActive) => isActive ? '#84F2B6' : '#FFD33F',
+  fontSize: '13px',
+  fontWeight: 500,
+  color: isactive === "true" ? '#84F2B6' : '#FFD33F',
   marginTop: '7px',
 }));
 

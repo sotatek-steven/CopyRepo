@@ -24,7 +24,7 @@ const CloseBtn = styled('div')(() => ({
     }
 }));
 
-const SmartContractModal = ({openDefault = true}) => {
+const SmartContractModal = ({openDefault = false}) => {
 
     const [open, setOpen] = useState(false);
     // const [selectedValue, setSelectedValue] = useState();

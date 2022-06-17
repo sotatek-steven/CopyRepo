@@ -1,3 +1,4 @@
+import { styled } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import MenuItem from './MenuItem';
 
@@ -16,15 +17,20 @@ const tabs = [
   }
 ];
 
+const MenuContainer = styled('div')(({theme}) => ({
+  background: theme.palette.mode === 'dark' ? '#595655' : '#595655',
+  display: 'flex',
+  padding: '0px 25px',
+  justifyContent: 'space-between',
+  height: 46,
+  alignContent: 'end',
+}))
+
 const Menu = () => {
   const [activeTab, setActiveTab] = useState(tabs[0].label);
 
   return (
-    <div style={{
-      display: 'flex',
-      padding: '0px 25px',
-      justifyContent: 'space-between'
-    }}>
+    <MenuContainer>
       {
         tabs.map((item) => {
           const { text, label } = item;
@@ -37,7 +43,7 @@ const Menu = () => {
           />
         })
       }
-    </div>
+    </MenuContainer>
   )
 };
 

@@ -1,30 +1,14 @@
 import styled from '@emotion/styled';
 
-const Box = styled('div')(({theme}) => ({
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 600,
-  backgroundColor: theme.palette.mode === 'dark' ? '#3D3D3E' : '#3D3D3E',
-  boxShadow: 24,
-  padding: '30px 40px',
-}));
-
-const Title = styled('div')(({theme}) => ({
-  color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#E1E1E1',
-  fontSize: 20,
-  fontWeight: 600,
-}));
-
 const InputWrapper = styled('div')(() => ({
-  marginBottom: 23,
+  marginBottom: 20,
 }));
 
 const Label = styled('div')(({theme}) => ({
   color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#E1E1E1',
-  fontSize: 18,
-  fontWeight: 600,
+  fontSize: 16,
+  fontWeight: 500,
+  marginBottom: 3,
 }));
 
 const Input = styled('input')(({theme}) => ({
@@ -47,7 +31,7 @@ const TextArea = styled('textarea')(({theme}) => ({
   outline: 'none',
   width: '100%',
   fontSize: 15,
-  padding: '0px 15px',
+  padding: '15px 15px',
 }));
 
 const Error = styled('div')(({theme}) => ({
@@ -56,12 +40,41 @@ const Error = styled('div')(({theme}) => ({
     marginTop: 8,
 }));
 
+const CancelBtn = styled('div')(({theme}) => ({
+  color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#E1E1E1',
+  background: theme.palette.mode === 'dark' ? '#3D3D3E' : '#3D3D3E',
+  fontSize: 16,
+  padding: '8px 28px',
+  borderRadius: 4,
+  border: 'solid 1px #E1E1E1',
+  transition: 'opacity 0.15s ease-in-out',
+  opacity: 1,
+  ":hover": {
+    cursor: 'pointer',
+    opacity: 0.8,
+  }
+}));
+
+const ConfirmBtn = styled('div')(({theme}) => ({
+  color: theme.palette.mode === 'dark' ? '#2E2E30' : '#2E2E30',
+  background: theme.palette.mode === 'dark' ? '#F07D60' : '#F07D60',
+  fontSize: 16,
+  padding: '8px 28px',
+  borderRadius: 4,
+  transition: 'opacity 0.15s ease-in-out',
+  opacity: 1,
+  ":hover": {
+    cursor: 'pointer',
+    opacity: 0.9,
+  }
+}));
+
 export {
-    Box,
-    Title,
     InputWrapper,
     Label,
     Input,
     TextArea,
-    Error
+    Error,
+    CancelBtn,
+    ConfirmBtn,
 }
