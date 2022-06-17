@@ -40,7 +40,7 @@ const userContract = createModel({
         try {
           const { data } = await getRequest({
             url: '/api/v1/user-contracts',
-            params: { status: 'draff' },
+            // params: { status: 'draff' },
             userState: state.player,
             userModoel,
           });

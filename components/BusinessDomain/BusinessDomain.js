@@ -17,7 +17,14 @@ const BusinessDomain = ({ data, setOpenListDefi, setOpenListNFT, setOpenCreate }
   return (
     <>
       <Box
-        sx={{ background: '#3D3D3E', padding: '24px 24px 24px 32px', my: 3, maxWidth: '450px', cursor: 'pointer' }}
+        sx={{
+          background: '#3D3D3E',
+          padding: '24px 24px 24px 32px',
+          my: 3,
+          maxWidth: '450px',
+          cursor: 'pointer',
+          '&:hover': { opacity: 0.7 },
+        }}
         onClick={handleClick}>
         <Grid container columnSpacing={4}>
           <Grid item xs={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
