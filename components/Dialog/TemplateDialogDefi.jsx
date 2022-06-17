@@ -19,7 +19,7 @@ const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
       const domain = 'defi';
       try {
         const data = await template.getTemplate(domain);
-        if (data.length > 0) {
+        if (data?.length > 0) {
           setTemplateState(data);
 
           setIdTemplate(data[0]._id);
@@ -67,6 +67,8 @@ const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
     };
     submitCreateSC();
   };
+
+  console.log(templateState);
   return (
     <Dialog
       component="form"

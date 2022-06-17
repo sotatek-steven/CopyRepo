@@ -80,7 +80,7 @@ const userContract = createModel({
         }
       },
       async createSmartContract(body, state) {
-        const res = postRequest({ url: '/api/v1/user-contracts', body });
+        const res = postRequest({ url: '/api/v1/user-contracts', body, userState: state.player, userModoel: player });
         return res;
       },
     };
