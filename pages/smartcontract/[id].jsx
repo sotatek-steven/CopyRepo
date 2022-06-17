@@ -3,7 +3,10 @@ import DesignSmartContractNav from 'components/SmartContractNav';
 import ModuleDrag from '@/components/ModuleDrag';
 import ModuleDrop from '@/components/ModuleDrop';
 import { styled } from '@mui/material/styles';
-import { useDispatch,useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import useUserBackup from '@/hooks/useUserActive';
+import { useRouter } from 'next/router';
+import { generateEdgeId, generateNodeId } from '@/components/ModuleDrop/generateNodeId';
 // import { useRouter } from 'next/router'
 
 const PageContainer = styled('div')(({ theme }) => ({
@@ -40,51 +43,48 @@ const styles = {
 };
 
 const Design = () => {
-  const { contractApi, moduleApi } = useDispatch();
-  const [contract, setContract] = useState(null);
+  const { contract, moduleApi } = useDispatch();
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
-  // const contract = useSelector((state) => state.contractApi);
-  // const router = useRouter();
-  // const { contractId } = router.query;
+  useUserBackup();
+  const contractState = useSelector((state) => state.contract);
+  const router = useRouter();
+  const { id } = router.query;
   // console.log(contractId);
 
   useEffect(() => {
     const fetchDetailContract = async () => {
       try {
-        const contractId = '62a854244a3b90a8b48cfa2a';
-        const contract = await contractApi.getDetailContract(contractId);
-        if (!contract) return;
-        const moduleIds = [...contract.modules];
-        const _nodes = await createNodes(moduleIds);
-        const _edges = createEdges(moduleIds);
-        // setContract(contract)
+        if (!id) {
+          return;
+        }
+        const contractDetail = await contract.getDetailContract(id);
+        if (!contractDetail) return;
+        const moduleIds = [...contractDetail.modules];
+        const _nodes = createNodes(contractDetail);
+        const _edges = createEdges(_nodes);
         setNodes(_nodes);
         setEdges(_edges);
       } catch (error) {
-        console.log('Failed to fetch detail contract');
+        console.log('Failed to fetch detail contract', error);
       }
     };
     fetchDetailContract();
-  }, []);
+  }, [id]);
 
-  const createNodes = async (moduleIds) => {
-    if (!moduleIds) return [];
-    const modules = await Promise.all(
-      moduleIds.map(moduleId => moduleApi.getDetailModule(moduleId))
-    )
-    const nodes = modules.map((module) => {
+  const createNodes = (contractDetail) => {
+    const { coordinates } = contractDetail;
+    const nodes = coordinates.map((item) => {
       const type = 'rectangle';
       const position = {
-        x: 50,
-        y: 50
+        x: item.position.left,
+        y: item.position.top,
       }
-      const { _id } = module;
       return {
-        id: _id,
+        id: generateNodeId(),
         type,
         data: {
-          ...module,
+          ...item.module,
           label: 'Input Node',
         },
         position,
@@ -94,17 +94,18 @@ const Design = () => {
     return nodes;
   }
 
-  const createEdges = (moduleIds) => {
-    if (!moduleIds || moduleIds.length < 2) return [];
+  const createEdges = (nodes) => {
+    if (!nodes || nodes.length < 2) return [];
     const edges = [];
-    for (let i = 0; i < moduleIds.length - 1; i++) {
-      const source = moduleIds[i];
-      const target = moduleIds[i + 1];
-      const id = `e${source}-${target}`;
+    console.log(nodes);
+    for (let i = 0; i < nodes.length - 1; i++) {
+      const source = nodes[i].id;
+      const target = nodes[i + 1].id;
+      const id = generateEdgeId(source, target);
       edges.push({
         id,
         source,
-        target
+        target,
       })
     };
     return edges;
@@ -121,7 +122,7 @@ const Design = () => {
         display: 'flex',
       }}>
         <div style={{ flexGrow: 1 }}>
-          {nodes.length > 0 && <ModuleDrop
+          {nodes && <ModuleDrop
             initialNodes={nodes}
             initialEdges={edges}
           />}
@@ -130,7 +131,7 @@ const Design = () => {
           height: '100%',
           width: '444px',
         }}>
-          <ModuleDrag contract={contract}/>
+          <ModuleDrag contract={contract} />
         </div>
       </div>
     </PageContainer>

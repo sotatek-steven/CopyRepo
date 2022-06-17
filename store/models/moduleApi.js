@@ -14,16 +14,15 @@ const moduleApi = createModel({
           userState: state.player,
           userModoel: player,
         })
-        return { paging: meta, data };
+        return { meta, data };
       },
-      async getDetailModule(id) {
-        const { meta, data } = await getRequest({
-          url: `/api/v1/modules/${id}'`,
-          params: { page },
+      async getDetailModule(id, state) {
+        const { data } = await getRequest({
+          url: `/api/v1/modules/${id}`,
           userState: state.player,
           userModoel: player,
         });
-        return { paging: meta, data };
+        return { data };
       },
     }
   }

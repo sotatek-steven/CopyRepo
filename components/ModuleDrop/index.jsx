@@ -38,6 +38,7 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
   }, [nodeDeleted, setNodes]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState(() => {
+    console.log('init nodes abcd: ', initialNodes);
     const data = initialNodes.map(item => {
       return {
         ...item,

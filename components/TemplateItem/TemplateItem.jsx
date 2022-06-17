@@ -23,7 +23,7 @@ const TemplateItem = ({ data }) => {
     <Card sx={{ maxWidth: 440, px: 1.5 }}>
       <ButtonBase
         sx={{ display: 'block', textAlign: 'initial' }}
-        onClick={() => { router.push('/smartcontract/design') }}
+        onClick={() => { router.push(`/smartcontract/${data._id}`) }}
       >
         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2 }}>
           <Typography sx={{ fontSize: '12px' }}>{data.domain}</Typography>

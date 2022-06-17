@@ -1,3 +1,4 @@
+import { getRequest } from '@/utils/httpRequest';
 import { createModel } from '@rematch/core';
 
 const TOKEN = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmE2ZGQ2YjY2YWVlNzgzOGI0YTMzOTUiLCJjcmVhdGVkQXQiOiIyMDIyLTA2LTE0VDA0OjA0OjE5LjIwMFoiLCJvd25lciI6IjB4MjEyMWQ0NjQ4NTNhYzRmMDUxM2VmODE5YjBjYjVhMWUyYTZkZTJiNyIsImlhdCI6MTY1NTE3OTQ1OX0.arzYQ9qS7Qja0ZVTkzDqXPdSjyp5BZwotajTUx6K7bw';
@@ -12,7 +13,8 @@ const contract = createModel({
     status: null,
     tags: [],
     modules: [],
-    status: null
+    status: null,
+    coordinates: null,
   },
   reducers: {
     update: (state, data) => ({
@@ -21,9 +23,9 @@ const contract = createModel({
     }),
   },
   effects: (dispatch) => {
-    const { contract } = dispatch;
+    const { contract, player } = dispatch;
     return {
-      async getContracts(page) {
+      async getContracts(page, state) {
         const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts`;
         const response = await fetch(url,
           {
@@ -38,20 +40,13 @@ const contract = createModel({
         const { meta, data } = responseJson;
         return { paging: meta, data };
       },
-      async getDetailContract(id) {
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts/${id}`;
-        const response = await fetch(url, {
-          headers: {
-            Authorization: TOKEN,
-          },
-        });
-
-        const responseJson = await response.json();
-        const { data } = responseJson;
+      async getDetailContract(id, state) {
+        const { data } = await getRequest({url: `/api/v1/user-contracts/${id}`, userModoel: player, userState: state.player});
+        console.log('get detail contract: ', data);
         contract.update(data);
         return data;
       },
-      async updateContract(contract) {
+      async updateContract(contract, state) {
         const id = contract._id;
         const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts/${id}`;
         const response = await fetch (url, {
