@@ -14,7 +14,7 @@ import Layout from '@/components/layout/PageLayout';
 
 const HomePage = () => {
   const route = useRouter();
-  route.push('/dashboard');
+  route.push('/smartcontract');
   return <></>
 };
 

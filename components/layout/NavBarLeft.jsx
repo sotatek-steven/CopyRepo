@@ -6,7 +6,7 @@ import NextLink from 'next/link';
 const NavbarData = [
   {
     label: 'Dashboard',
-    path: '/dashboard',
+    path: '/smartcontract',
   },
   {
     label: 'Language',

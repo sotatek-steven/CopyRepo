@@ -97,7 +97,6 @@ const Design = () => {
   const createEdges = (nodes) => {
     if (!nodes || nodes.length < 2) return [];
     const edges = [];
-    console.log(nodes);
     for (let i = 0; i < nodes.length - 1; i++) {
       const source = nodes[i].id;
       const target = nodes[i + 1].id;

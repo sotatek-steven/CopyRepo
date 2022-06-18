@@ -10,7 +10,6 @@ const contract = createModel({
     name: null,
     description: null,
     domain: null,
-    status: null,
     tags: [],
     modules: [],
     status: null,
@@ -42,7 +41,6 @@ const contract = createModel({
       },
       async getDetailContract(id, state) {
         const { data } = await getRequest({url: `/api/v1/user-contracts/${id}`, userModoel: player, userState: state.player});
-        console.log('get detail contract: ', data);
         contract.update(data);
         return data;
       },

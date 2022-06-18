@@ -89,7 +89,7 @@ const RectangleNode = ({ data, id }) => {
         </div>
 
         <CardBody>
-          <div style={{
+          {/* <div style={{
             display: 'flex',
             justifyContent: 'space-between',
             marginBottom: '10px',
@@ -97,7 +97,7 @@ const RectangleNode = ({ data, id }) => {
             <Status label="Tasks" count={4} />
             <Status label="Functions" count={13} />
             <Status label="API Services" count={6} />
-          </div>
+          </div> */}
           <Label> Description</Label>
           <Description>
             {description}

@@ -68,7 +68,6 @@ const player = createModel({
         if(!data){
           return false;
         }
-        console.log('data: ', data);
         player.setTokenExpired(false);
         player.setPlayerAuth(data);
         player.setPlayerInfo(data);

@@ -1,5 +1,6 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
+import { useRouter } from 'next/router';
 
 const ExitButton = styled('div')(({ theme }) => ({
   width: '130px',
@@ -14,9 +15,9 @@ const ExitButton = styled('div')(({ theme }) => ({
 }));
 
 const Exitbutton = () => {
-
+  const route = useRouter();
   return (
-    <ExitButton >Exit</ExitButton>
+    <ExitButton onClick={() => { route.push('/'); }}>Exit</ExitButton>
   )
 };
 

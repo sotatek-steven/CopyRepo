@@ -60,6 +60,19 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
     if (!event.dataTransfer) return;
     event.dataTransfer.dropEffect = 'move';
   }, []);
+  useEffect(() => {
+    const data = initialNodes.map(item => {
+      return {
+        ...item,
+        data: {
+          ...item.data,
+          onDeleteNode: deleteNode,
+        }
+      }
+    });
+    setNodes(data);
+    setEdges(initialEdges);
+  }, [initialNodes, initialEdges]);
 
   const onDrop = useCallback((event) => {
     event.preventDefault();

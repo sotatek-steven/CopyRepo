@@ -68,7 +68,6 @@ const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
     submitCreateSC();
   };
 
-  console.log(templateState);
   return (
     <Dialog
       component="form"

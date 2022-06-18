@@ -44,7 +44,6 @@ const userContract = createModel({
             userState: state.player,
             userModoel,
           });
-          console.log('data all: ', data);
           userContract.setListContract(data || []);
         } catch (error) {
           console.log('error: ', error);
