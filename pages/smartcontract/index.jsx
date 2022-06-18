@@ -92,7 +92,6 @@ const Dashboard = () => {
     <Box
       sx={{
         padding: '20px 24px 0 24px',
-        overflow: 'hidden',
       }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <TabsBar setTab={setValue} tab={value} />
