@@ -116,6 +116,7 @@ const Dashboard = () => {
               sx={{
                 width: expand ? '200px' : '0',
                 display: expand ? 'block' : 'none',
+                transition: 'width .4s ease-in-out',
               }}
               type="search"
               size="small"

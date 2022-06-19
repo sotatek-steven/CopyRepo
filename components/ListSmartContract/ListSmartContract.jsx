@@ -59,10 +59,10 @@ const ListSmartContract = ({ data, status }) => {
           }}
           autoHide>
           <Box sx={{ fontSize: '14px', alignItems: 'center', minHeight: '70vh' }}>
-            <Grid container spacing={2}>
+            <Grid container columnSpacing={{ md: 2, lg: 4, xl: 2 }} rowSpacing={{ md: 2, lg: 6, xl: 6 }}>
               {dataUserContracts?.map((item, key) => {
                 return (
-                  <Grid item xs={4} key={key} sx={{ paddingBottom: '16px !important' }}>
+                  <Grid item xs={4} key={key}>
                     <TemplateItem key={key} data={item} />
                   </Grid>
                 );
