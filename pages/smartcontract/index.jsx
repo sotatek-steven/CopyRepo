@@ -75,6 +75,7 @@ const Dashboard = () => {
   const [openCreate, setOpenCreate] = useState(false);
   const [openListDefi, setOpenListDefi] = useState(false);
   const [openListNFT, setOpenListNFT] = useState(false);
+  const [page, setPage] = useState(0);
 
   const TabPanelCustom = styled(TabPanel)(({ theme }) => ({
     ...theme.mixins.toolbar,
@@ -82,11 +83,13 @@ const Dashboard = () => {
     paddingLeft: '8px',
   }));
 
-  useEffect(() => {
-    userContract.getAllUserContracts();
-    userContract.getUserContractDraff();
-    userContract.getUserContractDeployed();
-  }, [userState.playerAuth?._id]);
+  // useEffect(() => {
+  //   userContract.getAllUserContracts();
+  //   userContract.getUserContractDraff();
+  //   userContract.getUserContractDeployed();
+  // }, [userState.playerAuth?._id]);
+
+  const [dataContracts, setDataContracts] = useState([]);
 
   return (
     <Box
@@ -106,13 +109,13 @@ const Dashboard = () => {
       </Box>
       <TabContext value={value}>
         <TabPanelCustom value="All">
-          <ListSmartContract data={userContractState?.listUserContract} />
+          <ListSmartContract status="all" />
         </TabPanelCustom>
         <TabPanelCustom value="Drafts">
-          <ListSmartContract data={userContractState?.listUserContractDraff} />
+          <ListSmartContract status="drafts" data={userContractState?.listUserContractDraff} />
         </TabPanelCustom>
-        <TabPanelCustom value="Deployed">
-          <ListSmartContract data={userContractState?.listUserContractDeployed} />
+        <TabPanelCustom value="Deployed" status="deployed">
+          <ListSmartContract />
         </TabPanelCustom>
       </TabContext>
       <Dialog

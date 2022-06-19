@@ -38,13 +38,14 @@ const userContract = createModel({
     return {
       async getAllUserContracts(payload, state) {
         try {
-          const { data } = await getRequest({
+          const { meta, data } = await getRequest({
             url: '/api/v1/user-contracts',
-            // params: { status: 'draff' },
+            params: { page: payload.page, size: payload.size },
             userState: state.player,
             userModoel,
           });
-          userContract.setListContract(data || []);
+          return { meta, data };
+          // userContract.setListContract(data || []);
         } catch (error) {
           console.log('error: ', error);
           userContract.setListContract([]);
@@ -54,11 +55,12 @@ const userContract = createModel({
         try {
           const { meta, data } = await getRequest({
             url: '/api/v1/user-contracts',
-            params: { status: 'draff' },
+            params: { status: 'draff', page: payload.page, size: payload.size },
             userState: state.player,
             userModoel,
           });
-          userContract.setListContractDraff(data || []);
+          return { meta, data };
+          // userContract.setListContractDraff(data || []);
         } catch (error) {
           console.log('error: ', error);
           userContract.setListContractDraff([]);
@@ -68,11 +70,12 @@ const userContract = createModel({
         try {
           const { meta, data } = await getRequest({
             url: '/api/v1/user-contracts',
-            params: { status: 'deployed' },
+            params: { status: 'deployed', page: payload.page, size: payload.size },
             userState: state.player,
             userModoel,
           });
-          userContract.setListContractDeployed(data || []);
+          return { meta, data };
+          // userContract.setListContractDeployed(data || []);
         } catch (error) {
           console.log('error: ', error);
           userContract.setListContractDeployed([]);
