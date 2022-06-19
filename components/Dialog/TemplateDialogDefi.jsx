@@ -107,7 +107,7 @@ const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
             xs={6}>
             <CheckboxChoose name="template" options={templateState} handleChange={handeSetIdTemplate} />
           </Grid>
-          <Grid xs={6}>
+          <Grid item xs={6}>
             <Box
               sx={{
                 width: '589px',

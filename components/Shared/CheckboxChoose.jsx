@@ -22,7 +22,6 @@ const RadioCustom = styled(Radio)((theme) => ({
 }));
 
 const CheckboxChoose = ({ options, name, handleChange }) => {
-  console.log(options);
   return _.isArray(options) && options.length > 0 ? (
     <FormControl>
       <RadioGroup
@@ -30,7 +29,7 @@ const CheckboxChoose = ({ options, name, handleChange }) => {
         name="radio-buttons-group"
         defaultValue={options[0]._id}>
         {options.map((option) => (
-          <>
+          <div key={option._id}>
             <CheckBoxStyled>
               <Box sx={{ display: 'flex', alignItems: 'center', py: 2 }}>
                 <FormControlLabel
@@ -48,7 +47,7 @@ const CheckboxChoose = ({ options, name, handleChange }) => {
                 </Typography>
               </CardContent>
             </CheckBoxStyled>
-          </>
+          </div>
         ))}
       </RadioGroup>
     </FormControl>

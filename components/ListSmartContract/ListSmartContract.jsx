@@ -1,6 +1,6 @@
 import { Grid } from '@mui/material';
 import { Box } from '@mui/system';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import TemplateItem from '../TemplateItem/TemplateItem';
 import Pagination from '@mui/material/Pagination';
 import { useDispatch, useSelector } from 'react-redux';
@@ -37,14 +37,14 @@ const ListSmartContract = ({ data, status }) => {
       setDataUserContracts(res.data);
       setMeta(res.meta);
     } catch (error) {
-      return;
       console.log('Failed to fetch modules');
+      return;
     }
   };
 
   useEffect(() => {
     userState.playerInfo && getUserContracts();
-  }, [page, status, userState.playerAuth?._id, userState.playerInfo]);
+  }, [page, userState.playerAuth?._id, userState.playerInfo]);
 
   return (
     <Grid container columnSpacing={2}>
