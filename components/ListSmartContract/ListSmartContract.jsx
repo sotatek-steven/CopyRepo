@@ -36,7 +36,6 @@ const ListSmartContract = ({ data, status }) => {
 
       setDataUserContracts(res.data);
       setMeta(res.meta);
-      if (data) return;
     } catch (error) {
       return;
       console.log('Failed to fetch modules');
@@ -59,7 +58,7 @@ const ListSmartContract = ({ data, status }) => {
             overflowX: 'hidden',
           }}
           autoHide>
-          <Box sx={{ fontSize: '14px', alignItems: 'center' }}>
+          <Box sx={{ fontSize: '14px', alignItems: 'center', minHeight: '70vh' }}>
             <Grid container spacing={2}>
               {dataUserContracts?.map((item, key) => {
                 return (
@@ -88,7 +87,7 @@ const ListSmartContract = ({ data, status }) => {
               }}
               variant="outlined"
               shape="rounded"
-              count={meta.count}
+              count={meta.totalPage}
               defaultPage={1}
               page={page}
               onChange={(_, value) => {

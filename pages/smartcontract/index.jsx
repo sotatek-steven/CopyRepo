@@ -75,21 +75,12 @@ const Dashboard = () => {
   const [openCreate, setOpenCreate] = useState(false);
   const [openListDefi, setOpenListDefi] = useState(false);
   const [openListNFT, setOpenListNFT] = useState(false);
-  const [page, setPage] = useState(0);
 
   const TabPanelCustom = styled(TabPanel)(({ theme }) => ({
     ...theme.mixins.toolbar,
     paddingBottom: 0,
     paddingLeft: '8px',
   }));
-
-  // useEffect(() => {
-  //   userContract.getAllUserContracts();
-  //   userContract.getUserContractDraff();
-  //   userContract.getUserContractDeployed();
-  // }, [userState.playerAuth?._id]);
-
-  const [dataContracts, setDataContracts] = useState([]);
 
   return (
     <Box
@@ -112,7 +103,7 @@ const Dashboard = () => {
           <ListSmartContract status="all" />
         </TabPanelCustom>
         <TabPanelCustom value="Drafts">
-          <ListSmartContract status="drafts" data={userContractState?.listUserContractDraff} />
+          <ListSmartContract status="drafts" />
         </TabPanelCustom>
         <TabPanelCustom value="Deployed" status="deployed">
           <ListSmartContract />
