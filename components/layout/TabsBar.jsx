@@ -30,7 +30,7 @@ const TabsBar = ({ tab, setTab }) => {
     setTab(newValue);
   };
   return (
-    <Box sx={{ borderBottom: '1px solid #8C8C8C', paddingBottom: '1px', width: '100%' }}>
+    <Box sx={{ borderBottom: '1px solid #8C8C8C', paddingBottom: '1px', width: '85%' }}>
       <Tabs value={tab} onChange={handleChange} textColor="primary" indicatorColor="primary">
         {Navbars.map((navbar) => (
           <Tab sx={{ ...styles.textStyles }} key={navbar} label={navbar} value={navbar} />

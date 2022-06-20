@@ -21,7 +21,7 @@ function Layout(props) {
       </Head>
       <Box sx={{ display: 'flex', background: '#3d3d3e', minHeight: '100vh' }}>
         <Navbar />
-        <Drawer variant="permanent" open={open}>
+        <Drawer variant="permanent">
           <Box display={'flex'} flexGrow={1} flexDirection="column" sx={{ width: `${navLeftWidth}px` }}>
             <NavBarLeft />
           </Box>

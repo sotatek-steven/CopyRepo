@@ -1,5 +1,15 @@
-import { Box, Button, Grid, Dialog, DialogTitle, DialogContent, Typography, IconButton } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import {
+  Box,
+  Button,
+  Grid,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  Typography,
+  IconButton,
+  TextField,
+} from '@mui/material';
+import React, { useEffect, useRef, useState } from 'react';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import TabsBar from 'components/layout/TabsBar';
 import { TabContext, TabPanel } from '@mui/lab';
@@ -12,45 +22,8 @@ import ListSmartContract from '@/components/ListSmartContract/ListSmartContract'
 import { useDispatch, useSelector } from 'react-redux';
 import TemplateDialogDefi from '@/components/Dialog/TemplateDialogDefi';
 import TemplateDialogNFT from '@/components/Dialog/TemplateDialogNFT';
-
-const businessData = [
-  {
-    id: 1,
-    domain: 'Defi',
-    name: 'Disbursement Flow 1',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in... ',
-    status: 'deployed',
-    lastModified: Date.now(),
-  },
-  {
-    id: 2,
-    domain: 'NFT',
-    name: 'Disbursement Flow 1',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in... ',
-    status: 'draft',
-    lastModified: Date.now(),
-  },
-  {
-    id: 3,
-    domain: 'NFT',
-    name: 'Disbursement Flow 1',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in... ',
-    status: 'draft',
-    lastModified: Date.now(),
-  },
-  {
-    id: 4,
-    domain: 'NFT',
-    name: 'Disbursement Flow 1',
-    description:
-      'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in... ',
-    status: 'draft',
-    lastModified: Date.now(),
-  },
-];
+import { borderRadius, boxSizing } from '@mui/system';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const dataCreate = [
   {
@@ -67,6 +40,53 @@ const dataCreate = [
   },
 ];
 
+// const Container = styled('div')(() => ({
+//   position: 'relative',
+//   width: '50px',
+//   height: '50px',
+//   boxSizing: 'border-box',
+//   borderRadius: '50px',
+//   border: '4px solid #393e46',
+//   padding: '5px',
+//   background: '#222831',
+//   transition: 'all 0.5s',
+
+//   display: 'flex',
+//   justifyContent: 'center',
+//   alignItems: 'center',
+//   flexDirection: 'column',
+//   '& :hover': {
+//     width: '50%',
+//     border: '4px solid red ',
+//   },
+// }));
+
+// const SearchInput = styled('input')((showSearchInput) => ({
+//   position: 'absolute',
+//   top: 0,
+//   left: 0,
+//   width: '100%',
+//   height: '42px',
+//   lineHeight: '30px',
+//   outline: 0,
+//   border: 0,
+//   fontSize: '2rem',
+//   borderRadius: '20px',
+//   padding: '0 20px',
+//   margin: 0,
+//   MozAppearance: 'none',
+//   WebkitAppearance: 'none',
+//   appearance: 'none',
+//   display: showSearchInput ? 'block' : 'none',
+// }));
+const TabPanelCustom = styled(TabPanel)(({ theme }) => ({
+  ...theme.mixins.toolbar,
+  paddingBottom: 0,
+  paddingLeft: '8px',
+}));
+
+const MemoizedSubComponent = React.memo(ListSmartContract);
+
 const Dashboard = () => {
   const { userContract } = useDispatch();
   const userContractState = useSelector((state) => state.userContract);
@@ -75,29 +95,50 @@ const Dashboard = () => {
   const [openCreate, setOpenCreate] = useState(false);
   const [openListDefi, setOpenListDefi] = useState(false);
   const [openListNFT, setOpenListNFT] = useState(false);
+  const [expand, setExpand] = useState(false);
+  const [keywords, setKeywords] = useState(null);
 
-  const TabPanelCustom = styled(TabPanel)(({ theme }) => ({
-    ...theme.mixins.toolbar,
-    paddingBottom: 0,
-    paddingLeft: '8px',
-  }));
-
-  useEffect(() => {
-    userContract.getAllUserContracts();
-    userContract.getUserContractDraff();
-    userContract.getUserContractDeployed();
-  }, [userState.playerAuth?._id]);
+  const handleSearch = () => {
+    console.log(keywords);
+  };
 
   return (
     <Box
       sx={{
         padding: '20px 24px 0 24px',
-        overflow: 'hidden',
       }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <TabsBar setTab={setValue} tab={value} />
-        <Box sx={{ display: 'flex', alignItems: 'center', pt: 2 }}>
-          <SearchIcon sx={{ color: '#F07D60' }} />
+
+        <Box sx={{ display: 'flex', alignItems: 'center', pt: 2, mx: 2 }}>
+          <Box>
+            <TextField
+              sx={{
+                width: expand ? '200px' : '0',
+                display: expand ? 'block' : 'none',
+                transition: 'width .4s ease-in-out',
+              }}
+              type="search"
+              size="small"
+              fullWidth
+              onChange={(e) => setKeywords(e.target.value)}
+              InputProps={{
+                endAdornment: expand ? (
+                  <SearchIcon onClick={handleSearch} sx={{ color: '#F07D60', cursor: 'pointer' }} />
+                ) : null,
+              }}
+            />
+          </Box>
+          {!expand ? (
+            <SearchIcon onClick={() => setExpand(!expand)} sx={{ color: '#F07D60', cursor: 'pointer' }} />
+          ) : (
+            <ArrowForwardIosIcon
+              size="small"
+              onClick={() => setExpand(!expand)}
+              sx={{ color: '#F07D60', cursor: 'pointer', fontSize: '17px', mx: 1 }}
+            />
+          )}
+
           <Box sx={{ pl: 3 }}>
             <Button variant="contained" startIcon={<AddCircleIcon />} onClick={() => setOpenCreate(true)}>
               Create
@@ -107,13 +148,13 @@ const Dashboard = () => {
       </Box>
       <TabContext value={value}>
         <TabPanelCustom value="All">
-          <ListSmartContract data={userContractState?.listUserContract} />
+          <MemoizedSubComponent status="all" handleSearch={() => handleSearch(keywords)} />
         </TabPanelCustom>
         <TabPanelCustom value="Drafts">
-          <ListSmartContract data={userContractState?.listUserContractDraff} />
+          <MemoizedSubComponent status="drafts" />
         </TabPanelCustom>
-        <TabPanelCustom value="Deployed">
-          <ListSmartContract data={userContractState?.listUserContractDeployed} />
+        <TabPanelCustom value="Deployed" status="deployed">
+          <MemoizedSubComponent />
         </TabPanelCustom>
       </TabContext>
       <Dialog
@@ -143,7 +184,7 @@ const Dashboard = () => {
         </DialogTitle>
         <DialogContent>
           <Grid container sx={{ borderTop: '1px solid #8C8C8C' }}>
-            <Grid xs={6}>
+            <Grid item xs={6}>
               <Box sx={{ width: '589px', height: '548px', background: '#3D3D3E' }}></Box>
             </Grid>
             <Grid
