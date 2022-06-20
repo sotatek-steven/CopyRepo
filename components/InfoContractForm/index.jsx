@@ -37,7 +37,7 @@ const InfoContractForm = ({ onClose, data }) => {
   };
 
   const updateContract = () => {
-    const newContract = { ...contractState, name, description, tags };
+    const newContract = { ...contractState, name, description, tags, domain };
     contract.update(newContract);
     onClose();
   }

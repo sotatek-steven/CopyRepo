@@ -11,7 +11,13 @@ const ExitButton = styled('div')(({ theme }) => ({
   fontSize: '14px',
   padding: '8px 40px',
   color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#E1E1E1',
-  fontWeight: 600
+  fontWeight: 600,
+  transition: 'all 0.3s',
+  ":hover": {
+    cursor: 'pointer',
+    backgroundColor: theme.palette.mode === 'dark' ? '#414144' : '#414144',
+    boxShadow: '0px 0px 10px #111112',
+  }
 }));
 
 const Exitbutton = () => {

@@ -1,53 +1,45 @@
-import React from 'react';
-import { styled } from '@mui/material/styles';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import Stack from '@mui/material/Stack';
-import Snackbar from '@mui/material/Snackbar';
-import Alert from '@mui/material/Alert';
-
-const SaveButton = styled('div')(({ theme }) => ({
-  width: '130px',
-  textAlign: 'center',
-  border: 'solid 1px #F07D60',
-  borderRadius: '4px',
-  fontSize: '14px',
-  padding: '6px 15px',
-  color: theme.palette.mode === 'dark' ? '#2E2E30' : '#2E2E30',
-  fontWeight: 600,
-  backgroundColor: theme.palette.mode === 'dark' ? '#F07D60' : '#F07D60',
-  ":hover": {
-    cursor: 'pointer',
-  }
-}));
+// import Stack from '@mui/material/Stack';
+// import Snackbar from '@mui/material/Snackbar';
+// import Alert from '@mui/material/Alert';
+import { PrimaryButton } from '../ButtonStyle';
+import SavingScreen from '../Saving';
 
 const SaveContractBtn = () => {
+  const [loading, setLoading] = useState(false);
   const { contract } = useDispatch();
   const contractState = useSelector(state => state.contract);
 
 
-  const saveContract = () => {
-    console.log("save SC");
-    console.log(contractState);
-    const { code } = contract.updateContract(contractState);
+  const saveContract = async () => {
+    setLoading(true);
+    const { code } = await contract.updateContract(contractState);
+    setLoading(false);
     if (code == 200) return;
-    setOpen(true);
+    console.log("saving failed!");
+    // setOpen(true);
   };
 
-  const [open, setOpen] = React.useState(false);
+  // const [open, setOpen] = React.useState(false);
 
-  const handleClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
-    }
+  // const handleClose = (event, reason) => {
+  //   if (reason === 'clickaway') {
+  //     return;
+  //   }
 
-    setOpen(false);
-  };
+  //   setOpen(false);
+  // };
 
   return (
     <>
-      <SaveButton onClick={saveContract}>
-        Save Contract
-      </SaveButton>
+    <PrimaryButton width="130px" onClick={saveContract}>
+            Save Contract
+          </PrimaryButton>
+      {
+        loading && <SavingScreen />
+      }
+
       {/* <Stack sx={{ width: '100%' }}>
                 <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
                     <Alert severity="error" onClose={handleClose}>
