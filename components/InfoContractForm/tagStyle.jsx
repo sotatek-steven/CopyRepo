@@ -8,6 +8,7 @@ const colourStyles = {
         boxShadow: 'none',
         height: '45px',
     }),
+    input: (styles) => ({...styles, color: '#E1E1E1!important',}),
     option: (styles, { data, isDisabled, isFocused, isSelected }) => {
         const color = chroma('#F07D60');
         return {
@@ -38,6 +39,7 @@ const colourStyles = {
     multiValue: (styles, { data }) => ({
         ...styles,
         backgroundColor: '#F07D60',
+        color: '#E1E1E1',
     }),
     multiValueLabel: (styles, { data }) => ({
         ...styles,

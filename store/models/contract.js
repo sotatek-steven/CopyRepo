@@ -56,7 +56,6 @@ const contract = createModel({
           body: JSON.stringify(contract),
         });
         const responseJson = await response.json();
-        console.log(responseJson);
         return responseJson;
       }
     }

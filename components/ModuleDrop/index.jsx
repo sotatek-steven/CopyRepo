@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import ReactFlow, {
   addEdge,
   Controls,
@@ -10,7 +10,7 @@ import ReactFlow, {
 } from 'react-flow-renderer';
 import { useDispatch, useSelector } from 'react-redux';
 import CustomNodes from '../CustomNode';
-import { generateEdgeId, generateNodeId } from './generateNodeId';
+import { createEdges, generateEdgeId, generateNodeId } from './CreateElement';
 
 const ModuleDrop = ({ initialNodes, initialEdges }) => {
   const reactFlowWrapper = useRef(null);
@@ -18,6 +18,7 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
   const [nodeDeleted, setNodeDeleted] = useState(null);
   const { contract } = useDispatch();
   const contractState = useSelector(state => state.contract);
+  const nodeTypes = useMemo(() => (CustomNodes), []);
 
   /**
    * @param {*} id to update node list of react flow
@@ -30,15 +31,17 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
 
   useEffect(() => {
     if (!nodeDeleted) return;
-    setNodes((nds) =>
-      nds.filter((node) => node.id !== nodeDeleted.id)
-    );
+    const updatedNodes = nodes.filter((node) => node.id !== nodeDeleted.id);
+    setNodes(updatedNodes);
+
+    const updatedEdges = createEdges(updatedNodes);
+    setEdges(updatedEdges);
 
     removeModuleFromContract(nodeDeleted.moduleId);
-  }, [nodeDeleted, setNodes]);
+  }, [nodeDeleted, setNodes, nodes, setEdges]);
+
 
   const [nodes, setNodes, onNodesChange] = useNodesState(() => {
-    console.log('init nodes abcd: ', initialNodes);
     const data = initialNodes.map(item => {
       return {
         ...item,
@@ -121,7 +124,8 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
         id,
         source,
         target,
-        markerEnd: { type: 'arrow', color: '#fff' },
+        markerEnd: { type: 'arrowclosed', color: '#fff' },
+        style: { strokeWidth: 2 },
       };
       setEdges((eds) => eds.concat(newEdge));
     }
@@ -204,7 +208,7 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
           onNodeClick={onNodeClick}
           onInit={setReactFlowInstance}
           onDrop={onDrop}
-          nodeTypes={CustomNodes}
+          nodeTypes={nodeTypes}
           onDragOver={onDragOver}
           defaultZoom={1}
           onEdgeUpdate={onEdgeUpdate}
