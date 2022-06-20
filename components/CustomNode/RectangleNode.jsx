@@ -74,7 +74,7 @@ const RectangleNode = ({ data, id }) => {
     <>
       <Card sx={{
         background: color || '#BEA75A',
-        borderColor: '#BEA75A'
+        borderColor: color || '#BEA75A',
       }}>
         <div style={{
           display: 'flex',
@@ -104,7 +104,7 @@ const RectangleNode = ({ data, id }) => {
           </Description>
         </CardBody>
         <Handle
-          type="source"
+          type="target"
           position={Position.Top}
           id="a"
           style={{ background: '#555' }}
@@ -116,7 +116,7 @@ const RectangleNode = ({ data, id }) => {
           style={{ background: '#555' }}
         /> */}
         <Handle
-          type="target"
+          type="source"
           position={Position.Bottom}
           id="c"
           style={{ background: '#555' }}

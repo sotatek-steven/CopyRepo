@@ -28,7 +28,13 @@ const ModuleDrag = () => {
     const { page } = paging;
     try {
       const { meta, data: modulesData } = await moduleApi.getModules(page);
-      const { modules: activeModules } = contractState;
+      let { modules: activeModules } = contractState;
+
+      if(!activeModules) {
+        const contractDetail = await contract.getDetailContract(id);
+        activeModules = contractDetail.modules;
+      }
+
       const modules = modulesData.map((moduleData) => {
         const { _id } = moduleData;
         const disable = activeModules.includes(_id);
