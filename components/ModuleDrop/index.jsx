@@ -186,10 +186,22 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
     console.log('click node: ', el.id);
   }
 
-  // const onNodeDragStop = (event, node) => {
-  //   const { data, position } = node;
-  //   // const newPosition = 
-  // };
+  const onNodeDragStop = (event, node) => {
+    const { data, position } = node;
+    const { coordinates, modules } = contractState;
+    const moduleIndex = modules.findIndex(moduleId => moduleId === data._id);
+    const module = coordinates[moduleIndex];
+    const {x: left, y: top} = position
+    coordinates[moduleIndex] = {
+      ...module,
+      position: {
+        top,
+        left,
+      },
+    };
+
+    contract.update({...contractState, coordinates});
+  };
 
   const onEdgeUpdate = (oldEdge, newConnection) => {
     setEdges((els) => updateEdge(oldEdge, newConnection, els));
@@ -202,7 +214,7 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
           nodes={nodes}
           edges={edges}
           onNodesChange={onNodesChange}
-          // onNodeDragStop={onNodeDragStop}
+          onNodeDragStop={onNodeDragStop}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           onNodeClick={onNodeClick}

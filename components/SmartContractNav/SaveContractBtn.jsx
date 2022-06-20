@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 // import Snackbar from '@mui/material/Snackbar';
 // import Alert from '@mui/material/Alert';
 import { PrimaryButton } from '../ButtonStyle';
-import { styled } from '@mui/material/styles';
 import SavingScreen from '../Saving';
 
 const SaveContractBtn = () => {
@@ -15,7 +14,6 @@ const SaveContractBtn = () => {
 
   const saveContract = async () => {
     setLoading(true);
-    console.log(contractState);
     const { code } = await contract.updateContract(contractState);
     setLoading(false);
     if (code == 200) return;
