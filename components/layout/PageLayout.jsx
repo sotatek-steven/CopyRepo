@@ -8,7 +8,7 @@ import { Box } from '@mui/system';
 import NavBarLeft from './NavBarLeft';
 
 const drawerWidth = 256;
-const navLeftWidth = 85;
+const navLeftWidth = 64;
 
 function Layout(props) {
   const triedEager = useEagerConnect();
@@ -35,7 +35,7 @@ function Layout(props) {
                 height: '100%',
                 mt: 1,
                 overflow: 'auto',
-                bgcolor: '#3d3d3e',
+                bgcolor: '#3d3d3E',
                 overflow: 'height',
               }}>
               <Box

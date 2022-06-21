@@ -19,18 +19,8 @@ const Navbar = () => {
     <Box sx={{ display: 'flex', minHeight: '100vh' }}>
       <AppBar position="fixed" color="default" elevation={0} sx={{ marginLeft: '56px' }}>
         <Container sx={{ mt: 1 }} disableGutters maxWidth="xl">
-          <Toolbar sx={{ flexWrap: 'wrap' }}>
-            <Box xs={{ py: 2, textAlign: 'center' }}>
-              <NextLink href={'/'}>
-                <img
-                  style={{ width: 60, cursor: 'pointer' }}
-                  src="/static/assets/img/home/logo-main.png"
-                  alt="logo"
-                  loading="lazy"
-                />
-              </NextLink>
-            </Box>
-            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+          <Toolbar sx={{ flexWrap: 'wrap', height: '76px' }}>
+            <Box sx={{ display: { xs: 'none', md: 'flex', marginLeft: '60px' } }}>
               <nav>
                 <Box display={'flex'}>
                   <Box
@@ -48,6 +38,7 @@ const Navbar = () => {
                         mt: 0.5,
                         cursor: 'pointer',
                         textDecoration: 'none',
+                        fontSize: '22px',
                       }}
                       variant="body2"
                       fontWeight={600}>

@@ -11,6 +11,7 @@ import {
 } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import TabsBar from 'components/layout/TabsBar';
 import { TabContext, TabPanel } from '@mui/lab';
 import { styled } from '@mui/material/styles';
@@ -83,6 +84,7 @@ const TabPanelCustom = styled(TabPanel)(({ theme }) => ({
   ...theme.mixins.toolbar,
   paddingBottom: 0,
   paddingLeft: '8px',
+  fontSize: '16px',
 }));
 
 const MemoizedSubComponent = React.memo(ListSmartContract);
@@ -138,9 +140,19 @@ const Dashboard = () => {
               sx={{ color: '#F07D60', cursor: 'pointer', fontSize: '17px', mx: 1 }}
             />
           )}
+          {/* <div className="search-box">
+            <button className="btn-search">
+              <SearchIcon />
+            </button>
+            <input type="text" className="input-search" placeholder="Type to Search..." />
+          </div> */}
 
-          <Box sx={{ pl: 3 }}>
-            <Button variant="contained" startIcon={<AddCircleIcon />} onClick={() => setOpenCreate(true)}>
+          <Box sx={{ pl: 3, pr: 1 }}>
+            <Button
+              sx={{ color: '#2E2E30' }}
+              variant="contained"
+              startIcon={<AddCircleOutlineOutlinedIcon sx={{ color: '#2E2E30' }} />}
+              onClick={() => setOpenCreate(true)}>
               Create
             </Button>
           </Box>
