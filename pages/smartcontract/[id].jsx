@@ -45,7 +45,7 @@ const Design = () => {
   return (
     <PageContainer>
       <div>
-        <DesignSmartContractNav data={contract} />
+        <DesignSmartContractNav />
       </div>
 
       <div style={{
@@ -62,7 +62,7 @@ const Design = () => {
           height: '100%',
           width: '444px',
         }}>
-          <ModuleDrag contract={contract} />
+          <ModuleDrag />
         </div>
       </div>
     </PageContainer>
