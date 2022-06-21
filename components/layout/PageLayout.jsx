@@ -43,7 +43,7 @@ function Layout(props) {
                   marginLeft: `${navLeftWidth}px`,
                   marginTop: '70px',
                 }}
-                style={{ width: `calc(100vw - 85px)`, height: 'calc(100vh - 85px)' }}>
+                style={{ width: `calc(100vw - 50px)`, height: 'calc(100vh - 85px)' }}>
                 <Box sx={{ overflow: 'hidden' }}>{props.children}</Box>
               </Box>
             </Card>
