@@ -6,10 +6,6 @@ import { styled } from '@mui/material/styles';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import { createEdges, createNodes } from '@/components/ModuleDrop/CreateElement';
-<<<<<<< HEAD
-import DesignLayout from '@/components/layout/DesignLayout';
-
-=======
 import { Box, Card, CardHeader, Tab, Tabs, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
@@ -17,7 +13,8 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import _ from 'lodash';
 import Scrollbars from 'react-custom-scrollbars';
 import { a11yDark, dark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
->>>>>>> a1120bf (feat: done style button)
+import DesignLayout from '@/components/layout/DesignLayout';
+
 const PageContainer = styled('div')(({ theme }) => ({
   height: '100vh',
   width: '100vw',
@@ -38,7 +35,7 @@ const Design = () => {
     setValue(newValue);
   };
 
-  useUserBackup();
+  // useUserBackup();
   const router = useRouter();
   const { id } = router.query;
 
