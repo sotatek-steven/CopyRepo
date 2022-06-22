@@ -12,7 +12,7 @@ const Navbar = () => {
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh' }}>
       <AppBar position="fixed" color="default" elevation={0} sx={{ marginLeft: '56px' }}>
-        <Container sx={{ mt: 1 }} disableGutters maxWidth="xl">
+        <Container disableGutters maxWidth="xl">
           <Toolbar sx={{ flexWrap: 'wrap', height: '76px' }}>
             <Box sx={{ display: { xs: 'none', md: 'flex', marginLeft: '60px' } }}>
               <nav>
