@@ -16,36 +16,16 @@ const Diamond = styled('div')(({ theme }) => ({
 
 const DiamondNode = ({ id }) => (
   <Diamond id={id}>
-    <div style={{
-      transform: 'rotate(315deg)',
-    }}
-    >
+    <div
+      style={{
+        transform: 'rotate(315deg)',
+      }}>
       Diamond Node
     </div>
-    <Handle
-      type="source"
-      position={Position.Top}
-      id="a"
-      style={{ background: '#555', left: '0%' }}
-    />
-    <Handle
-      type="target"
-      position={Position.Right}
-      id="b"
-      style={{ background: '#555', top: '0%' }}
-    />
-    <Handle
-      type="target"
-      position={Position.Bottom}
-      id="c"
-      style={{ background: '#555', left: '100%' }}
-    />
-    <Handle
-      type="source"
-      position={Position.Left}
-      style={{ background: '#555', top: '100%' }}
-      id="d"
-    />
+    <Handle type="source" position={Position.Top} id="a" style={{ background: '#555', left: '0%' }} />
+    <Handle type="target" position={Position.Right} id="b" style={{ background: '#555', top: '0%' }} />
+    <Handle type="target" position={Position.Bottom} id="c" style={{ background: '#555', left: '100%' }} />
+    <Handle type="source" position={Position.Left} style={{ background: '#555', top: '100%' }} id="d" />
   </Diamond>
 );
 

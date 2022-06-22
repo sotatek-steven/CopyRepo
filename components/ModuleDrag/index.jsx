@@ -13,7 +13,7 @@ const DragArea = styled('div')(({ theme }) => ({
 
 const ModuleDrag = () => {
   useUserBackup();
-  const contractState = useSelector(state => state.contract);
+  const contractState = useSelector((state) => state.contract);
   const { moduleApi } = useDispatch();
   const [modules, setModules] = useState([]);
   const [paging, setPaging] = useState({
@@ -22,7 +22,6 @@ const ModuleDrag = () => {
     totalPage: 0,
     page: 0,
   });
-
 
   const fetchModules = async () => {
     const { page } = paging;
@@ -40,8 +39,8 @@ const ModuleDrag = () => {
         const disable = activeModules.includes(_id);
         return {
           ...moduleData,
-          disable
-        }
+          disable,
+        };
       });
 
       setModules(modules);
@@ -53,7 +52,7 @@ const ModuleDrag = () => {
 
   useEffect(() => {
     fetchModules();
-  }, [])
+  }, []);
 
   useEffect(() => {
     const { modules: activeModules } = contractState;
@@ -62,32 +61,25 @@ const ModuleDrag = () => {
       const disable = activeModules.includes(_id);
       return {
         ...data,
-        disable
-      }
+        disable,
+      };
     });
 
     setModules(newState);
-  }, [contractState])
-
+  }, [contractState]);
 
   return (
     <DragArea>
       <Menu />
       <SubMenu />
       <div>
-        {
-          modules.length <= 0
-            ? <div> Module not found</div>
-            : modules.map((item, index) => {
-              return (
-                <ModuleItem
-                  key={index}
-                  data={item}
-                  nodeType="rectangle"
-                />
-              )
-            })
-        }
+        {modules.length <= 0 ? (
+          <div> Module not found</div>
+        ) : (
+          modules.map((item, index) => {
+            return <ModuleItem key={index} data={item} nodeType="rectangle" />;
+          })
+        )}
       </div>
     </DragArea>
   );

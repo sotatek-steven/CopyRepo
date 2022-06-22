@@ -66,14 +66,13 @@ function App(props) {
               <div suppressHydrationWarning>
                 {
                   // eslint-disable-next-line no-nested-ternary
-                  typeof window === 'undefined'
-                    ? null
-                    : Component.PageLayout
-                      ? (
-                        <Component.PageLayout>
-                          <Component {...pageProps} />
-                        </Component.PageLayout>
-                      ) : <Component {...pageProps} />
+                  typeof window === 'undefined' ? null : Component.PageLayout ? (
+                    <Component.PageLayout>
+                      <Component {...pageProps} />
+                    </Component.PageLayout>
+                  ) : (
+                    <Component {...pageProps} />
+                  )
                 }
               </div>
             </ThemeProvider>

@@ -6,18 +6,17 @@ import { useDispatch, useSelector } from 'react-redux';
 import { PrimaryButton } from '../ButtonStyle';
 import SavingScreen from '../Saving';
 
-const SaveContractBtn = () => {
+const SaveContractButton = () => {
   const [loading, setLoading] = useState(false);
   const { contract } = useDispatch();
-  const contractState = useSelector(state => state.contract);
-
+  const contractState = useSelector((state) => state.contract);
 
   const saveContract = async () => {
     setLoading(true);
     const { code } = await contract.updateContract(contractState);
     setLoading(false);
     if (code == 200) return;
-    console.log("saving failed!");
+    console.log('saving failed!');
     // setOpen(true);
   };
 
@@ -33,12 +32,10 @@ const SaveContractBtn = () => {
 
   return (
     <>
-    <PrimaryButton width="130px" onClick={saveContract}>
-            Save Contract
-          </PrimaryButton>
-      {
-        loading && <SavingScreen />
-      }
+      <PrimaryButton width="130px" onClick={saveContract}>
+        Save Contract
+      </PrimaryButton>
+      {loading && <SavingScreen />}
 
       {/* <Stack sx={{ width: '100%' }}>
                 <Snackbar open={open} autoHideDuration={6000} onClose={handleClose}>
@@ -48,7 +45,7 @@ const SaveContractBtn = () => {
                 </Snackbar>
             </Stack> */}
     </>
-  )
+  );
 };
 
-export default SaveContractBtn;
+export default SaveContractButton;

@@ -9,4 +9,3 @@ const CustomNodes = {
 };
 
 export default CustomNodes;
-

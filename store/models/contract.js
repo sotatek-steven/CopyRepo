@@ -1,7 +1,9 @@
 import { getRequest } from '@/utils/httpRequest';
 import { createModel } from '@rematch/core';
+import { ContractFactory } from 'ethers';
 
-const TOKEN = 'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmE2ZGQ2YjY2YWVlNzgzOGI0YTMzOTUiLCJjcmVhdGVkQXQiOiIyMDIyLTA2LTE0VDA0OjA0OjE5LjIwMFoiLCJvd25lciI6IjB4MjEyMWQ0NjQ4NTNhYzRmMDUxM2VmODE5YjBjYjVhMWUyYTZkZTJiNyIsImlhdCI6MTY1NTE3OTQ1OX0.arzYQ9qS7Qja0ZVTkzDqXPdSjyp5BZwotajTUx6K7bw';
+const TOKEN =
+  'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2MmE2ZGQ2YjY2YWVlNzgzOGI0YTMzOTUiLCJjcmVhdGVkQXQiOiIyMDIyLTA2LTE0VDA0OjA0OjE5LjIwMFoiLCJvd25lciI6IjB4MjEyMWQ0NjQ4NTNhYzRmMDUxM2VmODE5YjBjYjVhMWUyYTZkZTJiNyIsImlhdCI6MTY1NTE3OTQ1OX0.arzYQ9qS7Qja0ZVTkzDqXPdSjyp5BZwotajTUx6K7bw';
 
 const contract = createModel({
   state: {
@@ -26,40 +28,65 @@ const contract = createModel({
     return {
       async getContracts(page, state) {
         const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts`;
-        const response = await fetch(url,
-          {
-            headers: {
-              Authorization: TOKEN,
-            },
-            params: {
-              page,
-            },
-          });
+        const response = await fetch(url, {
+          headers: {
+            Authorization: TOKEN,
+          },
+          params: {
+            page,
+          },
+        });
         const responseJson = await response.json();
         const { meta, data } = responseJson;
         return { paging: meta, data };
       },
       async getDetailContract(id, state) {
-        const { data } = await getRequest({url: `/api/v1/user-contracts/${id}`, userModoel: player, userState: state.player});
+        const { data } = await getRequest({
+          url: `/api/v1/user-contracts/${id}`,
+          userModoel: player,
+          userState: state.player,
+        });
         contract.update(data);
         return data;
       },
       async updateContract(contract, state) {
         const id = contract._id;
         const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts/${id}`;
-        const response = await fetch (url, {
+        const response = await fetch(url, {
           method: 'PUT',
           headers: {
             Authorization: TOKEN,
-            'Content-type': 'application/json; charset=UTF-8'
+            'Content-type': 'application/json; charset=UTF-8',
           },
           body: JSON.stringify(contract),
         });
         const responseJson = await response.json();
         return responseJson;
-      }
-    }
-  }
+      },
+      async deployContract(signer, state) {
+        console.log(signer);
+        const { _id: id } = contract;
+        const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts/deploy/${id}`;
+        const response = await fetch(url, {
+          method: 'PUT',
+          headers: {
+            Authorization: TOKEN,
+            'Content-type': 'application/json; charset=UTF-8',
+          },
+          body: JSON.stringify(contract),
+        });
+        const responseJson = await response.json();
+        const { abi, bytecode } = responseJson;
+
+        console.log('abi: ', abi);
+        // let factory = new ContractFactory(JSON.parse(abi), bytecode, signer);
+        // const prams = contract.parameters.map((param) => param.value);
+        // const depoyedContract = await factory.deploy(...prams);
+        // console.log(depoyedContract.address);
+        // console.log(depoyedContract.deployTransaction.hash);
+      },
+    };
+  },
 });
 
 export default contract;

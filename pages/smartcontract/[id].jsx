@@ -44,29 +44,26 @@ const Design = () => {
 
   return (
     <PageContainer>
-      <div>
+      <div style={{ height: 74 }}>
         <DesignSmartContractNav />
       </div>
 
-      <div style={{
-        flexGrow: 1,
-        display: 'flex',
-      }}>
-        <div style={{ flexGrow: 1 }}>
-          {nodes && <ModuleDrop
-            initialNodes={nodes}
-            initialEdges={edges}
-          />}
-        </div>
-        <div style={{
-          height: '100%',
-          width: '444px',
+      <div
+        style={{
+          flexGrow: 1,
+          display: 'flex',
         }}>
-          <ModuleDrag />
+        <div style={{ flexGrow: 1 }}>{nodes && <ModuleDrop initialNodes={nodes} initialEdges={edges} />}</div>
+        <div
+          style={{
+            height: '100%',
+            width: '444px',
+          }}>
+          <ModuleDrag contract={contract} />
         </div>
       </div>
     </PageContainer>
-  )
+  );
 };
 
 export default Design;
