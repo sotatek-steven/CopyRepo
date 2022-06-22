@@ -234,7 +234,7 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
           onDragOver={onDragOver}
           defaultZoom={1}
           onEdgeUpdate={onEdgeUpdate}>
-          <Controls />
+          <Controls style={{ bottom: '100px' }} />
           <Background color="#aaa" gap={16} />
         </ReactFlow>
       </Box>

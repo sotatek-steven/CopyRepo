@@ -16,7 +16,7 @@ import { a11yDark, dark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import DesignLayout from '@/components/layout/DesignLayout';
 
 const PageContainer = styled('div')(({ theme }) => ({
-  height: '100vh',
+  height: `calc(100vh -10px)`,
   width: '100vw',
   display: 'flex',
   flexDirection: 'column',
@@ -137,13 +137,13 @@ const Design = () => {
               </div>
             </TabPanel>
             <TabPanel value="2" sx={{ padding: '0 !important' }}>
-              <Scrollbars style={{ height: 'calc(100vh - 100px)', width: '100%' }}>
+              <Scrollbars style={{ height: 'calc(100vh - 70px)', width: '100%' }}>
                 <>
                   <Card
                     sx={{
-                      wordWrap: 'break-word;',
-                      marginBottom: '24px',
+                      marginBottom: '0px',
                       overflowX: 'hidden !important',
+                      height: '100vh',
                     }}>
                     <SyntaxHighlighter
                       language="solidity"
