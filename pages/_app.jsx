@@ -29,14 +29,12 @@ Router.onRouteChangeComplete = () => NProgress.done();
 Router.onRouteChangeError = () => NProgress.done();
 
 const getLibrary = (provider) => {
-  console.log('get library');
   const library = new Web3Provider(provider);
   library.pollingInterval = 12000;
   return library;
 };
 
 function App(props) {
-  console.log('Render at App');
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   const store = useStore(pageProps.initialReduxState);
 

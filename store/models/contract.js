@@ -1,4 +1,4 @@
-import { getRequest } from '@/utils/httpRequest';
+import { getRequest, putRequest } from '@/utils/httpRequest';
 import { createModel } from '@rematch/core';
 import { ContractFactory } from 'ethers';
 
@@ -45,19 +45,17 @@ const contract = createModel({
         contract.update(data);
         return data;
       },
-      async updateContract(contract, state) {
-        const id = contract._id;
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts/${id}`;
-        const response = await fetch(url, {
-          method: 'PUT',
-          headers: {
-            Authorization: TOKEN,
-            'Content-type': 'application/json; charset=UTF-8',
-          },
-          body: JSON.stringify(contract),
+      async updateContract(payload, state) {
+        const { _id, ...other } = payload;
+        const { code, data } = await putRequest({
+          url: `/api/v1/user-contracts/${payload._id}`,
+          userModoel: player,
+          userState: state.player,
+          body: other,
         });
-        const responseJson = await response.json();
-        return responseJson;
+        if (code == 200)
+          contract.update(data);
+        return { code, data };
       },
       async deployContract({ signer, deploying, deployed }, state) {
         const { abi, bytecode, parameters, _id } = state.contract;
