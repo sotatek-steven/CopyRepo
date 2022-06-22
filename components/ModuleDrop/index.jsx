@@ -1,3 +1,4 @@
+import { Box } from '@mui/system';
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import ReactFlow, {
   addEdge,
@@ -11,6 +12,14 @@ import ReactFlow, {
 import { useDispatch, useSelector } from 'react-redux';
 import CustomNodes from '../CustomNode';
 import { createEdges, generateEdgeId, generateNodeId } from './CreateElement';
+
+const styles = {
+  backgroundFlow: {
+    '& .react-flow__attribution': {
+      display: 'none !important',
+    },
+  },
+};
 
 const ModuleDrop = ({ initialNodes, initialEdges }) => {
   const reactFlowWrapper = useRef(null);
@@ -210,7 +219,7 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
 
   return (
     <ReactFlowProvider>
-      <div style={{ height: '100%', position: 'relative' }} ref={reactFlowWrapper}>
+      <Box sx={{ ...styles.backgroundFlow }} style={{ height: '100%', position: 'relative' }} ref={reactFlowWrapper}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -228,7 +237,7 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
           <Controls />
           <Background color="#aaa" gap={16} />
         </ReactFlow>
-      </div>
+      </Box>
     </ReactFlowProvider>
   );
 };
