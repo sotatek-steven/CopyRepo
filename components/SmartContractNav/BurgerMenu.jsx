@@ -9,13 +9,13 @@ const RightSide = styled('div')(() => ({
   gap: '15px',
   height: '100%',
   padding: '0px 17px',
-  boxSizing: 'border-box'
+  boxSizing: 'border-box',
 }));
 
 const TextStyle = styled('span')(({ theme }) => ({
   fontSize: '22px',
   fontWeight: 500,
-  color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#',
+  color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#E1E1E1',
 }));
 
 const BurgerMenu = ({ contractName }) => {
@@ -25,7 +25,7 @@ const BurgerMenu = ({ contractName }) => {
       <TextStyle> {contractName} </TextStyle>
       <KebabIcon />
     </RightSide>
-  )
-}
+  );
+};
 
 export default BurgerMenu;

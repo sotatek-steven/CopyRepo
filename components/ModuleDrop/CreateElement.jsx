@@ -1,5 +1,3 @@
-import { MarkerType } from "react-flow-renderer";
-
 let nodeId = 0;
 
 export const generateNodeId = () => `dndnode_${nodeId++}`;
@@ -12,7 +10,7 @@ export const createNodes = (modulesData) => {
     const position = {
       x: item.position.left,
       y: item.position.top,
-    }
+    };
     return {
       id: generateNodeId(),
       type,
@@ -21,11 +19,11 @@ export const createNodes = (modulesData) => {
         label: 'Input Node',
       },
       position,
-    }
+    };
   });
 
   return nodes;
-}
+};
 
 export const createEdges = (nodes) => {
   if (!nodes || nodes.length < 2) return [];
@@ -40,7 +38,7 @@ export const createEdges = (nodes) => {
       target,
       markerEnd: { type: 'arrowclosed', color: '#fff' },
       style: { strokeWidth: 2 },
-    })
-  };
+    });
+  }
   return edges;
-}
+};

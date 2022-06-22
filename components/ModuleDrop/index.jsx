@@ -17,8 +17,8 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [nodeDeleted, setNodeDeleted] = useState(null);
   const { contract } = useDispatch();
-  const contractState = useSelector(state => state.contract);
-  const nodeTypes = useMemo(() => (CustomNodes), []);
+  const contractState = useSelector((state) => state.contract);
+  const nodeTypes = useMemo(() => CustomNodes, []);
 
   /**
    * @param {*} id to update node list of react flow
@@ -40,16 +40,15 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
     removeModuleFromContract(nodeDeleted.moduleId);
   }, [nodeDeleted, setNodes, nodes, setEdges]);
 
-
   const [nodes, setNodes, onNodesChange] = useNodesState(() => {
-    const data = initialNodes.map(item => {
+    const data = initialNodes.map((item) => {
       return {
         ...item,
         data: {
           ...item.data,
           onDeleteNode: deleteNode,
-        }
-      }
+        },
+      };
     });
     return data;
   });
@@ -63,77 +62,79 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
     if (!event.dataTransfer) return;
     event.dataTransfer.dropEffect = 'move';
   }, []);
+
   useEffect(() => {
-    const data = initialNodes.map(item => {
+    const data = initialNodes.map((item) => {
       return {
         ...item,
         data: {
           ...item.data,
           onDeleteNode: deleteNode,
-        }
-      }
+        },
+      };
     });
     setNodes(data);
     setEdges(initialEdges);
   }, [initialNodes, initialEdges]);
 
-  const onDrop = useCallback((event) => {
-    event.preventDefault();
+  const onDrop = useCallback(
+    (event) => {
+      event.preventDefault();
 
-    const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect();
-    if (!event.dataTransfer) return;
-    const type = event.dataTransfer.getData('application/reactflow');
+      const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect();
+      if (!event.dataTransfer) return;
+      const type = event.dataTransfer.getData('application/reactflow');
 
-    // check if the dropped element is valid
-    if (typeof type === 'undefined' || !type || !reactFlowInstance || !reactFlowBounds) {
-      return;
-    }
+      // check if the dropped element is valid
+      if (typeof type === 'undefined' || !type || !reactFlowInstance || !reactFlowBounds) {
+        return;
+      }
 
-    const position = reactFlowInstance.project({
-      x: event.clientX - reactFlowBounds.left,
-      y: event.clientY - reactFlowBounds.top,
-    });
+      const position = reactFlowInstance.project({
+        x: event.clientX - reactFlowBounds.left,
+        y: event.clientY - reactFlowBounds.top,
+      });
 
-    //get data of node
-    const dataJson = event.dataTransfer.getData('foo');
-    const data = JSON.parse(dataJson);
+      //get data of node
+      const dataJson = event.dataTransfer.getData('foo');
+      const data = JSON.parse(dataJson);
 
-    const { modules } = contractState;
-    if (modules.some(item => item === data._id)) return;
+      const { modules } = contractState;
+      if (modules.some((item) => item === data._id)) return;
 
-    //add new node
-    const newNode = {
-      id: generateNodeId(),
-      type,
-      position,
-      data: {
-        label: `${type} node`,
-        ...data,
-        onDeleteNode: deleteNode,
-        event: 'drop',
-      },
-    };
-    setNodes((nds) => nds.concat(newNode));
-
-    //add new edge
-    if (nodes.length >= 1) {
-      const source = nodes[nodes.length - 1].id;
-      const target = newNode.id;
-      const id = generateEdgeId(source, target);
-      const newEdge = {
-        id,
-        source,
-        target,
-        markerEnd: { type: 'arrowclosed', color: '#fff' },
-        style: { strokeWidth: 2 },
+      //add new node
+      const newNode = {
+        id: generateNodeId(),
+        type,
+        position,
+        data: {
+          label: `${type} node`,
+          ...data,
+          onDeleteNode: deleteNode,
+          event: 'drop',
+        },
       };
-      setEdges((eds) => eds.concat(newEdge));
-    }
+      setNodes((nds) => nds.concat(newNode));
 
-    //update contract state
-    addNewModuleToContract(data, position);
-  },
-    [reactFlowInstance, setNodes, contractState.modules, nodes],
+      //add new edge
+      if (nodes.length >= 1) {
+        const source = nodes[nodes.length - 1].id;
+        const target = newNode.id;
+        const id = generateEdgeId(source, target);
+        const newEdge = {
+          id,
+          source,
+          target,
+          markerEnd: { type: 'arrowclosed', color: '#fff' },
+          style: { strokeWidth: 2 },
+        };
+        setEdges((eds) => eds.concat(newEdge));
+      }
+
+      //update contract state
+      addNewModuleToContract(data, position);
+    },
+    [reactFlowInstance, setNodes, contractState.modules, nodes]
   );
 
   const updateContractState = (modules, coordinates) => {
@@ -145,7 +146,7 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
 
     contract.update(newContract);
     // contract.updateContract(newContract);
-  }
+  };
 
   const addNewModuleToContract = (moduleInfo, position) => {
     if (!moduleInfo) return;
@@ -168,30 +169,30 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
     coordinates.push(newModule);
 
     updateContractState(modules, coordinates);
-  }
+  };
 
   const removeModuleFromContract = (moduleId) => {
     let { modules, coordinates } = contractState;
 
     //update moudles feild
-    const newModules = modules.filter(id => id !== moduleId);
+    const newModules = modules.filter((id) => id !== moduleId);
 
     //update coordinates field
-    const newCoordinates = coordinates.filter(item => item.module._id !== moduleId);
+    const newCoordinates = coordinates.filter((item) => item.module._id !== moduleId);
 
     updateContractState(newModules, newCoordinates);
-  }
+  };
 
   const onNodeClick = (event, el) => {
     console.log('click node: ', el.id);
-  }
+  };
 
   const onNodeDragStop = (event, node) => {
     const { data, position } = node;
     const { coordinates, modules } = contractState;
-    const moduleIndex = modules.findIndex(moduleId => moduleId === data._id);
+    const moduleIndex = modules.findIndex((moduleId) => moduleId === data._id);
     const module = coordinates[moduleIndex];
-    const {x: left, y: top} = position
+    const { x: left, y: top } = position;
     coordinates[moduleIndex] = {
       ...module,
       position: {
@@ -200,16 +201,16 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
       },
     };
 
-    contract.update({...contractState, coordinates});
+    contract.update({ ...contractState, coordinates });
   };
 
   const onEdgeUpdate = (oldEdge, newConnection) => {
     setEdges((els) => updateEdge(oldEdge, newConnection, els));
-  }
+  };
 
   return (
     <ReactFlowProvider>
-      <div style={{ height: '100%' }} ref={reactFlowWrapper}>
+      <div style={{ height: '100%', position: 'relative' }} ref={reactFlowWrapper}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -223,8 +224,7 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
           nodeTypes={nodeTypes}
           onDragOver={onDragOver}
           defaultZoom={1}
-          onEdgeUpdate={onEdgeUpdate}
-        >
+          onEdgeUpdate={onEdgeUpdate}>
           <Controls />
           <Background color="#aaa" gap={16} />
         </ReactFlow>

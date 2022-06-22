@@ -12,26 +12,28 @@ const Line = styled('div')(({ theme }) => ({
   position: 'absolute',
   top: '19px',
   left: '20px',
-  backgroundColor: theme.palette.mode === 'dark' ? 'white' : 'white'
+  backgroundColor: theme.palette.mode === 'dark' ? 'white' : 'white',
 }));
 
 const NavigationContainer = styled('div')(() => ({
   display: 'flex',
   gap: '38px',
-  position: 'relative',
+  position: 'absolute',
+  top: 7,
+  left: '50%',
+  transform: 'translateX(-50%)',
 }));
 
 const PhaseNavigation = () => {
-
   return (
     <NavigationContainer>
-      <Line/>
-      <PhaseItem label="Design Phase" icon={<DesignIcon fill='#64F5A6' />} isActive={true} />
-      <PhaseItem label="Design Phase" icon={<SearchIcon fill='#FFD33F' />} isActive={false} />
-      <PhaseItem label="Design Phase" icon={<SecurityIcon fill='#FFD33F' />} isActive={false} />
-      <PhaseItem label="Design Phase" icon={<RocketIcon stroke='#FFD33F' />} isActive={false} />
+      <Line />
+      <PhaseItem label="Design Phase" icon={<DesignIcon fill="#64F5A6" />} isActive={true} />
+      <PhaseItem label="Design Phase" icon={<SearchIcon fill="#FFD33F" />} isActive={false} />
+      <PhaseItem label="Design Phase" icon={<SecurityIcon fill="#FFD33F" />} isActive={false} />
+      <PhaseItem label="Design Phase" icon={<RocketIcon stroke="#FFD33F" />} isActive={false} />
     </NavigationContainer>
-  )
+  );
 };
 
 export default PhaseNavigation;

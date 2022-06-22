@@ -4,9 +4,9 @@ import SearchIcon from '../../assets/icon/search.svg';
 const SearchModule = () => {
   return (
     <>
-        <SearchIcon />
+      <SearchIcon />
     </>
-  )
+  );
 };
 
 export default SearchModule;

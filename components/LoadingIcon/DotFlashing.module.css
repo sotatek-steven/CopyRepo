@@ -3,10 +3,10 @@
   width: 5px;
   height: 5px;
   border-radius: 5px;
-  background-color: #F07D60;
-  color: #F07D60;
+  background-color: #f07d60;
+  color: #f07d60;
   animation: dotFlashing 1s infinite linear alternate;
-  animation-delay: .5s;
+  animation-delay: 0.5s;
 }
 
 .dotFlashing::before,
@@ -22,8 +22,8 @@
   width: 5px;
   height: 5px;
   border-radius: 5px;
-  background-color: #F07D60;
-  color: #F07D60;
+  background-color: #f07d60;
+  color: #f07d60;
   animation: dotFlashing 1s infinite alternate;
   animation-delay: 0s;
 }
@@ -33,15 +33,15 @@
   width: 5px;
   height: 5px;
   border-radius: 5px;
-  background-color: #F07D60;
-  color: #F07D60;
+  background-color: #f07d60;
+  color: #f07d60;
   animation: dotFlashing 1s infinite alternate;
   animation-delay: 1s;
 }
 
 @keyframes dotFlashing {
   0% {
-    background-color: #F07D60;
+    background-color: #f07d60;
   }
 
   50%,

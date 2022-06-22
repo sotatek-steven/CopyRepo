@@ -4,9 +4,9 @@ import ModuleDrag from '@/components/ModuleDrag';
 import ModuleDrop from '@/components/ModuleDrop';
 import { styled } from '@mui/material/styles';
 import { useDispatch } from 'react-redux';
-import useUserBackup from '@/hooks/useUserActive';
 import { useRouter } from 'next/router';
 import { createEdges, createNodes } from '@/components/ModuleDrop/CreateElement';
+import DesignLayout from '@/components/layout/DesignLayout';
 
 const PageContainer = styled('div')(({ theme }) => ({
   height: '100vh',
@@ -20,7 +20,6 @@ const Design = () => {
   const { contract } = useDispatch();
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
-  useUserBackup();
   const router = useRouter();
   const { id } = router.query;
 
@@ -44,29 +43,27 @@ const Design = () => {
 
   return (
     <PageContainer>
-      <div>
+      <div style={{ height: 74 }}>
         <DesignSmartContractNav />
       </div>
 
-      <div style={{
-        flexGrow: 1,
-        display: 'flex',
-      }}>
-        <div style={{ flexGrow: 1 }}>
-          {nodes && <ModuleDrop
-            initialNodes={nodes}
-            initialEdges={edges}
-          />}
-        </div>
-        <div style={{
-          height: '100%',
-          width: '444px',
+      <div
+        style={{
+          flexGrow: 1,
+          display: 'flex',
         }}>
-          <ModuleDrag />
+        <div style={{ flexGrow: 1 }}>{nodes && <ModuleDrop initialNodes={nodes} initialEdges={edges} />}</div>
+        <div
+          style={{
+            height: '100%',
+            width: '444px',
+          }}>
+          <ModuleDrag contract={contract} />
         </div>
       </div>
     </PageContainer>
-  )
+  );
 };
 
 export default Design;
+Design.PageLayout = DesignLayout;

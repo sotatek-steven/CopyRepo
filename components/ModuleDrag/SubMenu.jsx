@@ -7,28 +7,30 @@ const LeftSide = styled('div')(({ theme }) => ({
   color: theme.palette.mode === 'dark' ? '#E5C2B9' : '#E5C2B9',
   fontSize: '18px',
   fontWeight: 400,
+  fontFamily: '"Noto Sans", sans-serif',
 }));
 
 const SubMenu = () => {
   return (
-    <div style={{
-      display: 'flex',
-      padding: '25px 20px',
-      justifyContent: 'space-between',
-      alignItems: 'center',
-    }}>
-      <LeftSide>Drag & Drop Modules</LeftSide>
-      <div style={{
+    <div
+      style={{
         display: 'flex',
-        gap: '18px',
+        padding: '25px 20px',
+        justifyContent: 'space-between',
         alignItems: 'center',
       }}>
+      <LeftSide>Drag & Drop Modules</LeftSide>
+      <div
+        style={{
+          display: 'flex',
+          gap: '18px',
+          alignItems: 'center',
+        }}>
         <CreateButton />
         <SearchModule />
       </div>
-      
     </div>
-  )
+  );
 };
 
 export default SubMenu;

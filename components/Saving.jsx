@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 import { styled } from '@mui/material/styles';
 import { DotFlashing } from './LoadingIcon/DotFlashing';
 
@@ -22,13 +22,13 @@ const LoadingButton = styled('button')(({ theme, width }) => ({
   gap: 15,
 }));
 
-const SavingScreen = () => {
+const SavingScreen = ({ title = 'Saving' }) => {
   return (
     <LoadingButton>
-        <div style={{paddingBottom: '7px'}}>Saving</div>
-        <DotFlashing />
+      <div style={{ paddingBottom: '7px' }}>{title}</div>
+      <DotFlashing />
     </LoadingButton>
-  )
+  );
 };
 
 export default SavingScreen;
