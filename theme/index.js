@@ -141,7 +141,7 @@ export const theme = createTheme({
         textOverflow: 'ellipsis',
         display: '-webkit-box',
         WebkitLineClamp: '2!important',
-        WebkitBoxOrient: 'vertical'
+        WebkitBoxOrient: 'vertical',
       },
       threeLineEllipsis: {
         overflow: 'hidden',
@@ -150,8 +150,8 @@ export const theme = createTheme({
         WebkitLineClamp: '3!important',
         WebkitBoxOrient: 'vertical',
         whiteSpace: 'normal',
-      }
-    }
+      },
+    },
   },
   palette: {
     mode: 'dark',
@@ -175,8 +175,8 @@ export const theme = createTheme({
     //   disabled: 'rgba(55, 65, 81, 0.26)'
     // },
     background: {
-      default: '#212121',
-      paper: '#212121',
+      default: '#2E2E30',
+      paper: '#2E2E30',
     },
     // divider: '#E6E8F0',
     primary: {
@@ -259,7 +259,8 @@ export const theme = createTheme({
     button: {
       fontWeight: 600,
     },
-    fontFamily: '"Josefin Sans", sans-serif, "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
+    fontFamily:
+      '"Josefin Sans", sans-serif, "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
     body1: {
       fontSize: '1rem',
       fontWeight: 400,

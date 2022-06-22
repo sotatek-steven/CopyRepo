@@ -26,13 +26,16 @@ const IconNavBar = ({ name, path }) => {
         minHeight: 48,
         justifyContent: open ? 'initial' : 'center',
         px: 2.5,
-        mx: open ? 0 : -1,
+        marginRight: '8px',
+
         cursor: 'pointer',
       },
       listItemIcon: {
-        minWidth: 42,
-        mr: open ? 3 : 'auto',
+        // minWidth: 10,
+        marginRight: '30px',
         justifyContent: 'center',
+        position: 'absolute',
+        left: '0px',
       },
       listItemText: {
         opacity: open ? 1 : 0,
@@ -46,6 +49,7 @@ const IconNavBar = ({ name, path }) => {
       sx={{
         ...styles.listItemBtn,
         backgroundColor: isSelected ? '#F07D60' : 'transparent',
+        borderRadius: '0 4px 4px 0',
       }}
       onClick={() => {
         router.push(path);

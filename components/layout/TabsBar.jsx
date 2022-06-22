@@ -20,8 +20,9 @@ const styles = {
     fontStyle: 'normal',
     fontWeight: '500 !important',
     fontSize: '16px !important',
-    m: '0 8px !important',
+    m: '0 4px !important',
     color: '#ffff !important',
+    maxWidth: '24px',
   },
 };
 
@@ -30,8 +31,19 @@ const TabsBar = ({ tab, setTab }) => {
     setTab(newValue);
   };
   return (
-    <Box sx={{ borderBottom: '1px solid #8C8C8C', paddingBottom: '1px', width: '85%' }}>
-      <Tabs value={tab} onChange={handleChange} textColor="primary" indicatorColor="primary">
+    <Box sx={{ paddingBottom: '1px', width: '90%' }}>
+      <Tabs
+        value={tab}
+        onChange={handleChange}
+        textColor="primary"
+        indicatorColor="primary"
+        sx={{
+          '.MuiTabs-indicator': {
+            height: '5px',
+          },
+          borderBottom: '1px solid #8C8C8C',
+          pt: 1,
+        }}>
         {Navbars.map((navbar) => (
           <Tab sx={{ ...styles.textStyles }} key={navbar} label={navbar} value={navbar} />
         ))}

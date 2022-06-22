@@ -21,16 +21,18 @@ const NavBarLeft = () => {
         <Box sx={{ py: 3, justifyContent: 'center', display: 'flex' }}>
           <NextLink href={'/'}>
             <img
-              style={{ width: 40, cursor: 'pointer' }}
+              style={{ width: 46.98, height: 40, cursor: 'pointer' }}
               src="/static/assets/img/home/logo-main.png"
               alt="logo"
               loading="lazy"
             />
           </NextLink>
         </Box>
-        {NavbarData.map((item, key) => (
-          <IconNavBar key={key} name={item.label} path={`${item.path}`} />
-        ))}
+        <Box>
+          {NavbarData.map((item, key) => (
+            <IconNavBar key={key} name={item.label} path={`${item.path}`} />
+          ))}
+        </Box>
       </List>
     </>
   );

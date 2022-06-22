@@ -48,10 +48,10 @@ const ListSmartContract = ({ data, status }) => {
 
   return (
     <Grid container columnSpacing={2}>
-      <Grid item xs={2}>
+      {/* <Grid item xs={2}>
         <Box sx={{ background: '#1E1E1F', height: '100%' }}></Box>
-      </Grid>
-      <Grid item xs={10}>
+      </Grid> */}
+      <Grid item xs={12}>
         <Scrollbars
           style={{
             height: 'calc(100vh - 200px)',
@@ -59,10 +59,10 @@ const ListSmartContract = ({ data, status }) => {
           }}
           autoHide>
           <Box sx={{ fontSize: '14px', alignItems: 'center', minHeight: '70vh' }}>
-            <Grid container columnSpacing={{ md: 2, lg: 4, xl: 2 }} rowSpacing={{ md: 2, lg: 6, xl: 6 }}>
+            <Grid container columnSpacing={{ md: 2, lg: 4, xl: 3 }} rowSpacing={{ md: 2, lg: 6, xl: 6 }}>
               {dataUserContracts?.map((item, key) => {
                 return (
-                  <Grid item xs={4} key={key}>
+                  <Grid item xs={4} xl={3} key={key}>
                     <TemplateItem key={key} data={item} />
                   </Grid>
                 );
