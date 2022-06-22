@@ -106,3 +106,37 @@ export const putRequest = async ({
   }
   return res;
 };
+
+export const deleteRequest = async ({
+  domain = process.env.NEXT_PUBLIC_API_URL,
+  url = '/',
+  params = {},
+  auth = true,
+  userState,
+  userModoel,
+} = {}) => {
+  const headers = {
+    Authorization: `Bearer ${userState?.playerAuth?.token}`,
+  };
+  if (!auth) {
+    delete headers.Authorization;
+  }
+  const query = queryString.stringify({
+    ...params,
+  });
+  const response = await fetch(`${domain}${url}${url.includes('?') ? '&' : '?'}${query}`, {
+    method: 'DELETE',
+    mode: 'cors',
+    cache: 'no-cache',
+    headers,
+  });
+  const res = await response.json();
+
+  if (res.code === 200) {
+    return res;
+  } else if (res.code >= 3000) {
+    // token expired
+    userModoel.clearAll();
+  }
+  return res;
+};

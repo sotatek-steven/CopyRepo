@@ -12,7 +12,7 @@ const BusinessDomain = ({ data, setOpenListDefi, setOpenListNFT, setOpenCreate }
     } else {
       setOpenListNFT(true);
     }
-    // setOpenCreate(false);
+    setOpenCreate(false);
   };
   return (
     <>

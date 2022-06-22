@@ -1,5 +1,5 @@
 import { createModel } from '@rematch/core';
-import { getRequest, postRequest } from '../../utils/httpRequest';
+import { deleteRequest, getRequest, postRequest } from '../../utils/httpRequest';
 
 const userContract = createModel({
   state: {
@@ -83,6 +83,10 @@ const userContract = createModel({
       },
       async createSmartContract(body, state) {
         const res = postRequest({ url: '/api/v1/user-contracts', body, userState: state.player, userModoel: player });
+        return res;
+      },
+      async deleteSmartContract({ _id }, state) {
+        const res = deleteRequest({ url: `/api/v1/user-contracts/${_id}`, userState: state.player, userModoel: player });
         return res;
       },
     };
