@@ -22,10 +22,10 @@ const LoadingButton = styled('button')(({ theme, width }) => ({
   gap: 15,
 }));
 
-const SavingScreen = () => {
+const SavingScreen = ({ title = 'Saving' }) => {
   return (
     <LoadingButton>
-      <div style={{ paddingBottom: '7px' }}>Saving</div>
+      <div style={{ paddingBottom: '7px' }}>{title}</div>
       <DotFlashing />
     </LoadingButton>
   );

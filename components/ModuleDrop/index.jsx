@@ -210,7 +210,7 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
 
   return (
     <ReactFlowProvider>
-      <div style={{ height: '100%' }} ref={reactFlowWrapper}>
+      <div style={{ height: '100%', position: 'relative' }} ref={reactFlowWrapper}>
         <ReactFlow
           nodes={nodes}
           edges={edges}

@@ -1,20 +1,14 @@
 import { AppBar, Toolbar, Container, Box, Typography } from '@mui/material';
 
-import StorefrontIcon from '@mui/icons-material/Storefront';
 import { useRouter } from 'next/router';
-import NextLink from 'next/link';
-import InventoryIcon from '@mui/icons-material/Inventory';
-import DashboardIcon from '@mui/icons-material/Dashboard';
 import { useSelector } from 'react-redux';
 
 import MobileMenu from './MobileMenu';
 import ButtonConnectWallet from '../atom/ButtonConnectWallet';
-import MoreMenu from './MoreMenu';
 
 const Navbar = () => {
   const router = useRouter();
   const { pathname } = router;
-  const playerState = useSelector((state) => state.player);
   return (
     <Box sx={{ display: 'flex', minHeight: '100vh' }}>
       <AppBar position="fixed" color="default" elevation={0} sx={{ marginLeft: '56px' }}>

@@ -29,12 +29,14 @@ Router.onRouteChangeComplete = () => NProgress.done();
 Router.onRouteChangeError = () => NProgress.done();
 
 const getLibrary = (provider) => {
+  console.log('get library');
   const library = new Web3Provider(provider);
   library.pollingInterval = 12000;
   return library;
 };
 
 function App(props) {
+  console.log('Render at App');
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   const store = useStore(pageProps.initialReduxState);
 
@@ -66,13 +68,9 @@ function App(props) {
               <div suppressHydrationWarning>
                 {
                   // eslint-disable-next-line no-nested-ternary
-                  typeof window === 'undefined' ? null : Component.PageLayout ? (
-                    <Component.PageLayout>
-                      <Component {...pageProps} />
-                    </Component.PageLayout>
-                  ) : (
+                  typeof window === 'undefined' ? null : <Component.PageLayout>
                     <Component {...pageProps} />
-                  )
+                  </Component.PageLayout>
                 }
               </div>
             </ThemeProvider>

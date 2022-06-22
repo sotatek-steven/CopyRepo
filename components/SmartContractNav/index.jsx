@@ -10,7 +10,9 @@ import { PrimaryButton } from '../ButtonStyle';
 import DeployContractModal from './DeployContractModal';
 import ConfirmModal from './ConfirmModal';
 import ContractDeployedAlert from '../Dialog/ContractDeployedAlert';
-
+import { useWeb3React } from '@web3-react/core';
+import { useDispatch } from 'react-redux';
+import SavingScreen from '../Saving';
 const NavbarContainer = styled('div')(({ theme }) => ({
   height: '100%',
   display: 'flex',
@@ -28,11 +30,13 @@ const RightSide = styled('div')(() => ({
 
 const DesignSmartContractNav = () => {
   const contractState = useSelector((state) => state.contract);
+  const { contract } = useDispatch();
+  const [loading, setLoading] = useState(false);
   const [infoContractModalOpen, setInfoContractModalOpen] = useState(false);
   const [deployContractModalOpen, setDeployContractModalOpen] = useState(false);
   const [confirmDeployModalOpen, setConfirmDeployModalOpen] = useState(false);
   const [contractDeployedAlertOpen, setContractDeployedAlertOpen] = useState(false);
-
+  const { account, library } = useWeb3React();
   const handleInfoContractModalClose = (_, reason) => {
     if (reason === 'backdropClick') return;
     setInfoContractModalOpen(false);
@@ -52,8 +56,17 @@ const DesignSmartContractNav = () => {
   const handleDeployContract = () => {
     setConfirmDeployModalOpen(true);
     setDeployContractModalOpen(false);
-    console.log('vfjsbkds');
   };
+
+  const deploying = () => {
+    setLoading(true);
+  }
+
+  const deployed = () => {
+    setLoading(false);
+    setConfirmDeployModalOpen(false);
+    setContractDeployedAlertOpen(true);
+  }
 
   const handleConfirmDeployModalClose = () => {
     setConfirmDeployModalOpen(false);
@@ -66,6 +79,14 @@ const DesignSmartContractNav = () => {
 
   const handleContractDeployedAlertClose = () => {
     setContractDeployedAlertOpen(false);
+  };
+
+  const handleAgreeDeploy = async () => {
+    if (!account || !library || !contractState.abi || !contractState.bytecode) {
+      return;
+    }
+    const signer = await library.getSigner(account);
+    await contract.deployContract({ signer, deploying, deployed });
   };
 
   return (
@@ -92,14 +113,15 @@ const DesignSmartContractNav = () => {
         onClose={handleDeployContractModalClose}
         onDeploy={handleDeployContract}
       />
-      <ConfirmModal open={confirmDeployModalOpen} onClose={handleConfirmDeployModalClose} />
+      <ConfirmModal open={confirmDeployModalOpen} onClose={handleConfirmDeployModalClose} onAgree={handleAgreeDeploy} />
 
       <ContractDeployedAlert
-        txHash="cca7507897abc89628f450e8b1e0c6fca4ec3f7b34cccf55f3f531c659ff4d79"
-        address="0xeD706ABeA0F69065700a12c30C3baF7409514Ae9"
+        txHash={contractState.transaction}
+        address={contractState.address}
         open={contractDeployedAlertOpen}
         onClose={handleContractDeployedAlertClose}
       />
+      {loading && <SavingScreen title='Loading' />}
     </>
   );
 };

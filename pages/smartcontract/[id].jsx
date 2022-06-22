@@ -4,9 +4,9 @@ import ModuleDrag from '@/components/ModuleDrag';
 import ModuleDrop from '@/components/ModuleDrop';
 import { styled } from '@mui/material/styles';
 import { useDispatch } from 'react-redux';
-import useUserBackup from '@/hooks/useUserActive';
 import { useRouter } from 'next/router';
 import { createEdges, createNodes } from '@/components/ModuleDrop/CreateElement';
+import DesignLayout from '@/components/layout/DesignLayout';
 
 const PageContainer = styled('div')(({ theme }) => ({
   height: '100vh',
@@ -20,7 +20,6 @@ const Design = () => {
   const { contract } = useDispatch();
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
-  useUserBackup();
   const router = useRouter();
   const { id } = router.query;
 
@@ -67,3 +66,4 @@ const Design = () => {
 };
 
 export default Design;
+Design.PageLayout = DesignLayout;

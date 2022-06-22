@@ -1,9 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Modal } from '@mui/material';
 import styled from '@emotion/styled';
 import { PrimaryButton, SecondaryButton } from '../ButtonStyle';
-import { useWeb3React } from '@web3-react/core';
-import { useDispatch } from 'react-redux';
 
 const Box = styled('div')(({ theme }) => ({
   position: 'absolute',
@@ -26,34 +24,19 @@ const Title = styled('div')(({ theme }) => ({
   textAlign: 'center',
 }));
 
-const ConfirmModal = ({ open, onClose }) => {
-  const { contract } = useDispatch();
-  const { account, library } = useWeb3React();
-
-  const handleDeploy = async () => {
-    // const signer = await library.getSigner(account);
-    // contract.deployContract(signer);
-
-    if (!onClose) return;
-    onClose();
-  };
-
-  useEffect(() => {
-    console.log('library:', library);
-  }, [library]);
-
+const ConfirmModal = ({ open, onClose, onAgree, title = 'Confirm to deploy this Smart Contract' }) => {
   return (
     <Modal open={open} onClose={onClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box>
-        <Title>Confirm to deploy this Smart Contract</Title>
+        <Title>{title}</Title>
         <div
           style={{
             display: 'flex',
             justifyContent: 'center',
             gap: '20px',
           }}>
-          <PrimaryButton onClick={onClose}>No</PrimaryButton>
-          <SecondaryButton onClick={handleDeploy}>Yes</SecondaryButton>
+          <SecondaryButton onClick={onClose}>No</SecondaryButton>
+          <PrimaryButton onClick={onAgree}>Yes</PrimaryButton>
         </div>
       </Box>
     </Modal>

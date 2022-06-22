@@ -16,30 +16,26 @@ const contract = createModel({
     modules: [],
     status: null,
     coordinates: null,
+    address: '',
+    transaction: '',
   },
   reducers: {
     update: (state, data) => ({
       ...state,
       ...data,
     }),
+    setAddress: (state, address) => ({
+      ...state,
+      address,
+    }),
+    setTransaction: (state, transaction) => ({
+      ...state,
+      transaction,
+    }),
   },
   effects: (dispatch) => {
     const { contract, player } = dispatch;
     return {
-      async getContracts(page, state) {
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts`;
-        const response = await fetch(url, {
-          headers: {
-            Authorization: TOKEN,
-          },
-          params: {
-            page,
-          },
-        });
-        const responseJson = await response.json();
-        const { meta, data } = responseJson;
-        return { paging: meta, data };
-      },
       async getDetailContract(id, state) {
         const { data } = await getRequest({
           url: `/api/v1/user-contracts/${id}`,
@@ -63,27 +59,17 @@ const contract = createModel({
         const responseJson = await response.json();
         return responseJson;
       },
-      async deployContract(signer, state) {
-        console.log(signer);
-        const { _id: id } = contract;
-        const url = `${process.env.NEXT_PUBLIC_API_URL}/api/v1/user-contracts/deploy/${id}`;
-        const response = await fetch(url, {
-          method: 'PUT',
-          headers: {
-            Authorization: TOKEN,
-            'Content-type': 'application/json; charset=UTF-8',
-          },
-          body: JSON.stringify(contract),
-        });
-        const responseJson = await response.json();
-        const { abi, bytecode } = responseJson;
-
-        console.log('abi: ', abi);
-        // let factory = new ContractFactory(JSON.parse(abi), bytecode, signer);
-        // const prams = contract.parameters.map((param) => param.value);
-        // const depoyedContract = await factory.deploy(...prams);
-        // console.log(depoyedContract.address);
-        // console.log(depoyedContract.deployTransaction.hash);
+      async deployContract({ signer, deploying, deployed }, state) {
+        const { abi, bytecode, parameters, _id } = state.contract;
+        let factory = new ContractFactory(abi, bytecode, signer);
+        const params = parameters.map((param) => param.value);
+        deploying();
+        const depoyedContract = await factory.deploy(...params);
+        await contract.updateContract({ _id, address: depoyedContract.address });
+        contract.setAddress(depoyedContract.address);
+        contract.setTransaction(depoyedContract.deployTransaction.hash);
+        console.log(depoyedContract);
+        deployed();
       },
     };
   },

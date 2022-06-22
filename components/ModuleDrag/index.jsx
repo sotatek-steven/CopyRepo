@@ -4,7 +4,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import SubMenu from './SubMenu';
 import Menu from './Menu';
 import ModuleItem from './ModuleItem';
-import useUserBackup from '@/hooks/useUserActive';
 
 const DragArea = styled('div')(({ theme }) => ({
   height: '100%',
@@ -12,7 +11,6 @@ const DragArea = styled('div')(({ theme }) => ({
 }));
 
 const ModuleDrag = () => {
-  useUserBackup();
   const contractState = useSelector((state) => state.contract);
   const { moduleApi } = useDispatch();
   const [modules, setModules] = useState([]);
