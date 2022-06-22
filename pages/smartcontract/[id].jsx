@@ -67,6 +67,7 @@ const Design = () => {
         const stringFile = item.lines.join(' ');
         lines = lines.concat(stringFile);
       });
+    console.log(lines);
 
     return lines;
   }, [sources]);
@@ -143,7 +144,6 @@ const Design = () => {
                     sx={{
                       marginBottom: '0px',
                       overflowX: 'hidden !important',
-                      height: '100vh',
                     }}>
                     <SyntaxHighlighter
                       language="solidity"
