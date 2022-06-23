@@ -29,9 +29,9 @@ const PhaseNavigation = () => {
     <NavigationContainer>
       <Line />
       <PhaseItem label="Design Phase" icon={<DesignIcon fill="#64F5A6" />} isActive={true} />
-      <PhaseItem label="Design Phase" icon={<SearchIcon fill="#FFD33F" />} isActive={false} />
-      <PhaseItem label="Design Phase" icon={<SecurityIcon fill="#FFD33F" />} isActive={false} />
-      <PhaseItem label="Design Phase" icon={<RocketIcon stroke="#FFD33F" />} isActive={false} />
+      <PhaseItem label="Validation Phase" icon={<SearchIcon fill="#FFD33F" />} isActive={false} />
+      <PhaseItem label="Security Phase" icon={<SecurityIcon fill="#FFD33F" />} isActive={false} />
+      <PhaseItem label="Deployment Phase" icon={<RocketIcon stroke="#FFD33F" />} isActive={false} />
     </NavigationContainer>
   );
 };

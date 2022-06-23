@@ -14,6 +14,7 @@ import _ from 'lodash';
 import Scrollbars from 'react-custom-scrollbars';
 import { a11yDark, dark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import DesignLayout from '@/components/layout/DesignLayout';
+import { useSelector } from 'react-redux';
 
 const PageContainer = styled('div')(({ theme }) => ({
   height: `calc(100vh -10px)`,
@@ -25,6 +26,7 @@ const PageContainer = styled('div')(({ theme }) => ({
 
 const Design = () => {
   const { contract } = useDispatch();
+  const contractState = useSelector((state) => state.contract);
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const [sources, setSource] = useState(null);
@@ -40,23 +42,37 @@ const Design = () => {
   const { id } = router.query;
 
   useEffect(() => {
-    const fetchDetailContract = async () => {
-      try {
-        if (!id) return;
-        const contractDetail = await contract.getDetailContract(id);
-        if (!contractDetail) return;
-        const { coordinates: modulesData } = contractDetail;
-        const _nodes = createNodes(modulesData);
-        const _edges = createEdges(_nodes);
-        setNodes(_nodes);
-        setEdges(_edges);
-        setSource(contractDetail.sources);
-      } catch (error) {
-        console.log('Failed to fetch detail contract', error);
-      }
-    };
-    fetchDetailContract();
+    console.log('id: ', id);
+    if (!id)
+      return;
+    contract.getDetailContract(id);
+    // const fetchDetailContract = async () => {
+    //   try {
+    //     if (!id) return;
+    //     const contractDetail = await contract.getDetailContract(id);
+    //     if (!contractDetail) return;
+    //     const { coordinates: modulesData } = contractDetail;
+    //     const _nodes = createNodes(modulesData);
+    //     const _edges = createEdges(_nodes);
+    //     setNodes(_nodes);
+    //     setEdges(_edges);
+    //     setSource(contractDetail.sources);
+    //   } catch (error) {
+    //     console.log('Failed to fetch detail contract', error);
+    //   }
+    // };
+    // fetchDetailContract();
   }, [id]);
+  useEffect(() => {
+    if (!contractState?._id) return;
+    console.log(contractState);
+    const { coordinates: modulesData } = contractState;
+    const _nodes = createNodes(modulesData);
+    const _edges = createEdges(_nodes);
+    setNodes(_nodes);
+    setEdges(_edges);
+    setSource(contractState.sources);
+  }, [contractState])
 
   const allLines = useMemo(() => {
     const lines = '';

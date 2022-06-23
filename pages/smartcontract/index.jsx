@@ -10,11 +10,11 @@ import {
   TextField,
 } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import TabsBar from 'components/layout/TabsBar';
-import { TabContext, TabPanel } from '@mui/lab';
-import { styled } from '@mui/material/styles';
+import TabContext from '@mui/lab/TabContext';
+import TabPanel from '@mui/lab/TabPanel';
+import { styled } from '@mui/system';
 import SearchIcon from '@mui/icons-material/Search';
 import Layout from '@/components/layout/PageLayout';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
@@ -23,7 +23,6 @@ import ListSmartContract from '@/components/ListSmartContract/ListSmartContract'
 import { useDispatch, useSelector } from 'react-redux';
 import TemplateDialogDefi from '@/components/Dialog/TemplateDialogDefi';
 import TemplateDialogNFT from '@/components/Dialog/TemplateDialogNFT';
-import { borderRadius, boxSizing } from '@mui/system';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 const dataCreate = [
@@ -41,45 +40,6 @@ const dataCreate = [
   },
 ];
 
-// const Container = styled('div')(() => ({
-//   position: 'relative',
-//   width: '50px',
-//   height: '50px',
-//   boxSizing: 'border-box',
-//   borderRadius: '50px',
-//   border: '4px solid #393e46',
-//   padding: '5px',
-//   background: '#222831',
-//   transition: 'all 0.5s',
-
-//   display: 'flex',
-//   justifyContent: 'center',
-//   alignItems: 'center',
-//   flexDirection: 'column',
-//   '& :hover': {
-//     width: '50%',
-//     border: '4px solid red ',
-//   },
-// }));
-
-// const SearchInput = styled('input')((showSearchInput) => ({
-//   position: 'absolute',
-//   top: 0,
-//   left: 0,
-//   width: '100%',
-//   height: '42px',
-//   lineHeight: '30px',
-//   outline: 0,
-//   border: 0,
-//   fontSize: '2rem',
-//   borderRadius: '20px',
-//   padding: '0 20px',
-//   margin: 0,
-//   MozAppearance: 'none',
-//   WebkitAppearance: 'none',
-//   appearance: 'none',
-//   display: showSearchInput ? 'block' : 'none',
-// }));
 const TabPanelCustom = styled(TabPanel)(({ theme }) => ({
   ...theme.mixins.toolbar,
   paddingBottom: 0,
@@ -140,12 +100,6 @@ const Dashboard = () => {
               sx={{ color: '#F07D60', cursor: 'pointer', fontSize: '17px', mx: 1 }}
             />
           )}
-          {/* <div className="search-box">
-            <button className="btn-search">
-              <SearchIcon />
-            </button>
-            <input type="text" className="input-search" placeholder="Type to Search..." />
-          </div> */}
 
           <Box sx={{ pl: 3, pr: 1 }}>
             <Button

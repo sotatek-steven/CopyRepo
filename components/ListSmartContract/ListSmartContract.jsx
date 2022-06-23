@@ -43,6 +43,11 @@ const ListSmartContract = ({ data, status }) => {
   };
 
   useEffect(() => {
+    if (!userState.playerAuth?.token) {
+      setDataUserContracts([]);
+      setMeta({ totalPage: 1, page: 1 });
+      return;
+    }
     userState.playerInfo && getUserContracts();
   }, [page, userState.playerAuth?._id, userState.playerInfo]);
 

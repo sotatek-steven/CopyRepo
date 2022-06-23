@@ -34,11 +34,6 @@ const useUserBackup = () => {
     restoreUserAuth();
   }, []);
 
-  // useEffect(() => {
-  //   if (playerState?.tokenExpired) {
-  //     deactiveUser();
-  //   }
-  // }, [playerState?.tokenExpired]);
 };
 
 export default useUserBackup;

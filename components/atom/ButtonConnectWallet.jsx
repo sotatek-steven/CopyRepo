@@ -1,49 +1,48 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useWeb3React } from '@web3-react/core';
 import AccountBalanceWalletIcon from '@mui/icons-material/AccountBalanceWallet';
 import { Box, Button, Dialog, DialogContent, DialogTitle, Grid, Tooltip, Typography } from '@mui/material';
-import { toast } from 'react-toastify';
 import { useDispatch, useSelector } from 'react-redux';
 import { injected, walletconnect } from '@/hooks/connectors';
 import { truncateAddress } from '@/utils/string';
-import networks from '@/config/constant/networks';
 
 const ConnectWallet = () => {
-  const { account, activate, deactivate } = useWeb3React();
+  const { account, active, activate, deactivate, library } = useWeb3React();
   const { player } = useDispatch();
   const playerState = useSelector((state) => state.player);
   const [open, setOpen] = React.useState(false);
-  const [openSwitchNetwork, setOpenSwitchNetwork] = React.useState(false);
-
-  const changeNetwork = async ({ params }) => {
-    try {
-      if (!window.ethereum) {
-        throw new Error('No crypto wallet found');
-      }
-      await window.ethereum.request({
-        method: 'wallet_addEthereumChain',
-        params: [
-          {
-            ...params,
-          },
-        ],
-      });
-      await activate(injected);
-      setOpenSwitchNetwork(false);
-    } catch (err) {
-      toast.error(err.message);
-    }
-  };
+  const [requestLogin, setRequestLogin] = useState(false);
+  const [signed, setSigned] = useState(false);
 
   const connectWallet = async (type) => {
     setOpen(false);
     if (type === 'metamask') {
-      changeNetwork({ params: networks[process.env.NEXT_PUBLIC_NETWORK_BINANCE] });
+      await activate(injected);
+      setRequestLogin(true);
     }
     if (type === 'wallet-connect') {
       activate(walletconnect);
     }
   };
+  useEffect(async () => {
+    if (!active || !requestLogin || !account || !library) {
+      return;
+    }
+    if(playerState.playerAuth?.owner?.toLowerCase() == account.toLowerCase()){
+      return;
+    }
+    const rs = await player.login({ account, library });
+    if (!rs) {
+      deactivate();
+      localStorage?.removeItem('playerAuth');
+    }
+  }, [requestLogin, account, library, active]);
+
+  useEffect(() => {
+    setSigned(playerState.playerAuth?.owner
+      && account
+      && playerState.playerAuth?.owner.toLowerCase() == account.toLowerCase());
+  }, [playerState.playerAuth?.token, account])
 
   const disconnectWallet = async () => {
     deactivate();
@@ -53,15 +52,7 @@ const ConnectWallet = () => {
 
   return (
     <Box>
-      {!playerState.playerAuth?.token ? (
-        <Button
-          onClick={() => setOpen(true)}
-          variant="contained"
-          startIcon={<AccountBalanceWalletIcon />}
-          sx={{ my: 1, background: '#595655 !important', borderRadius: '30px' }}>
-          Connect Wallet
-        </Button>
-      ) : (
+      {signed ? (
         <Tooltip title="Disconnect">
           <Button onClick={() => disconnectWallet()} startIcon={<AccountBalanceWalletIcon />} variant="text">
             <Typography sx={{ cursor: 'pointer' }} variant="body2">
@@ -69,47 +60,15 @@ const ConnectWallet = () => {
             </Typography>
           </Button>
         </Tooltip>
+      ) : (
+        <Button
+          onClick={() => setOpen(true)}
+          variant="contained"
+          startIcon={<AccountBalanceWalletIcon />}
+          sx={{ my: 1, background: '#595655 !important', borderRadius: '30px' }}>
+          Connect Wallet
+        </Button>
       )}
-      <Dialog
-        open={openSwitchNetwork}
-        onClose={() => setOpenSwitchNetwork(false)}
-        aria-labelledby="responsive-dialog-title">
-        <DialogTitle sx={{ textAlign: 'center', mb: 2 }} id="responsive-dialog-title">
-          {'Force network'}
-        </DialogTitle>
-        <DialogContent>
-          <Grid p={2} alignItems={'flex-end'} container spacing={4}>
-            <Grid
-              display={'flex'}
-              flexDirection={'column'}
-              alignItems={'center'}
-              sx={{ '&:hover': { opacity: 0.7 }, cursor: 'pointer' }}
-              onClick={() => changeNetwork({ params: networks[process.env.NEXT_PUBLIC_NETWORK_POLYGON] })}
-              item
-              xs={12}
-              md={6}>
-              <img height={40} src="/static/assets/img/wallet/polygon.svg" />
-              <Typography mt={2} variant="body2" fontWeight={600}>
-                Polygon
-              </Typography>
-            </Grid>
-            <Grid
-              display={'flex'}
-              flexDirection={'column'}
-              alignItems={'center'}
-              sx={{ '&:hover': { opacity: 0.7 }, cursor: 'pointer' }}
-              onClick={() => changeNetwork({ params: networks[process.env.NEXT_PUBLIC_NETWORK_BINANCE] })}
-              item
-              xs={12}
-              md={6}>
-              <img height={30} style={{ marginBottom: 10 }} src="/static/assets/img/wallet/binance.svg" />
-              <Typography variant="body2" textAlign={'center'} noWrap mt={2} fontWeight={600}>
-                Binance
-              </Typography>
-            </Grid>
-          </Grid>
-        </DialogContent>
-      </Dialog>
       <Dialog open={open} onClose={() => setOpen(false)} aria-labelledby="responsive-dialog-title">
         <DialogTitle sx={{ textAlign: 'center', mb: 2 }} id="responsive-dialog-title">
           {'Connect Wallet'}

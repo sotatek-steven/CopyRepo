@@ -18,7 +18,6 @@ export const getRequest = async ({
   });
   const response = await fetch(`${domain}${url}${url.includes('?') ? '&' : '?'}${query}`, {
     method: 'GET',
-    // mode: 'cors',
     cache: 'no-cache',
     headers,
   });

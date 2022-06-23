@@ -13,6 +13,7 @@ const player = createModel({
       playerInfo,
     }),
     setPlayerAuth: (state, playerAuth) => {
+      console.log('set item to player auth: ', JSON.stringify(playerAuth));
       localStorage?.setItem('playerAuth', JSON.stringify(playerAuth));
       return {
         ...state,
@@ -52,9 +53,8 @@ const player = createModel({
           const data = res.data;
           player.setTokenExpired(false);
           player.setPlayerInfo(data);
-          return data;
         }
-        return null;
+        return res;
       },
       async login({ account, library }) {
         const timestamp = Date.now();

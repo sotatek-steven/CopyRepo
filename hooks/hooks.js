@@ -54,15 +54,19 @@ export function useInactiveListener(suppress = false) {
         return;
       }
     }
-    if (playerAuth?.owner?.toLowerCase() === account.toLowerCase()) {
-      console.log('==============check and load account==================');
-      player.getPlayerInfo();
+    if (!playerAuth?.owner) {
       return;
     }
-    const rs = await player.login({ account, library });
-    if(!rs){
-      deactivate();
+    let loadInfoComplete = false;
+    if (playerAuth?.owner?.toLowerCase() === account.toLowerCase()) {
+      const { code } = player.getPlayerInfo();
+      loadInfoComplete = code === 200;
+      // return;
     }
+    // if (!loadInfoComplete) {
+    //   console.log('deactivate when not load complete');
+    //   deactivate();
+    // }
   }, [active, library, account]);
 
   const handleConnect = (e) => {
@@ -82,8 +86,25 @@ export function useInactiveListener(suppress = false) {
     if (process.env.NODE_ENV !== 'production') {
       console.log(new Date(), "Handling 'accountsChanged' event with payload", accounts);
     }
-    deactivate();
-    // player.logout();
+    const account = accounts[0];
+
+    let playerAuth = {};
+    const playerAuthRaw = localStorage.getItem('playerAuth');
+    if (playerAuthRaw) {
+      try {
+        playerAuth = JSON.parse(playerAuthRaw);
+      } catch (error) {
+        player.logout();
+        return;
+      }
+    }
+    if (!playerAuth?.owner) {
+      return;
+    }
+    if (playerAuth?.owner?.toLowerCase() !== account.toLowerCase()) {
+      deactivate();
+      player.logout();
+    }
   };
 
   const handleNetworkChanged = (networkId) => {
