@@ -2,6 +2,7 @@ import React from 'react';
 import { Modal } from '@mui/material';
 import styled from '@emotion/styled';
 import { PrimaryButton, SecondaryButton } from '../ButtonStyle';
+import CloseIcon from '../../assets/icon/close-circle.svg';
 
 const Box = styled('div')(({ theme }) => ({
   position: 'absolute',
@@ -20,15 +21,27 @@ const Title = styled('div')(({ theme }) => ({
   color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#E1E1E1',
   fontSize: 20,
   fontWeight: 600,
-  marginBottom: 55,
+  marginBottom: 25,
   textAlign: 'center',
 }));
 
-const ConfirmModal = ({ open, onClose, onAgree, title = 'Confirm to deploy this Smart Contract' }) => {
+const Description = styled('div')(({ theme }) => ({
+  color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#E1E1E1',
+  fontSize: 15,
+  fontWeight: 600,
+  textAlign: 'center',
+  marginBottom: 36,
+}));
+
+const ConfirmModal = ({ open, onClose, onAgree }) => {
   return (
     <Modal open={open} onClose={onClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Box>
-        <Title>{title}</Title>
+        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 40 }}>
+          <CloseIcon />
+        </div>
+        <Title>Are you sure?</Title>
+        <Description>Do you really want to delete these records? This process cannot be undone.</Description>
         <div
           style={{
             display: 'flex',
