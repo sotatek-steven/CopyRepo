@@ -2,12 +2,13 @@ import { ButtonBase, Card, CardActions, CardContent, CardHeader, Grid, Typograph
 
 import { Box, styled } from '@mui/system';
 import moment from 'moment';
-import React from 'react';
+import React, { useState } from 'react';
 import ButtonStatus from './ButtonStatus';
 import DeleteIconWithX from '../../assets/icon/deletewithx.svg';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 import { toast } from 'react-toastify';
+import ConfirmModal from '../SmartContractNav/ConfirmModal';
 
 const BoxBottom = styled(Box)(({ theme }) => ({
   alignItems: 'center',
@@ -21,6 +22,19 @@ const BoxBottom = styled(Box)(({ theme }) => ({
   height: '35px',
 }));
 const TemplateItem = ({ data }) => {
+  const [confirmDelOpen, setConfirmDelOpen] = useState(false);
+  const handleAgreeDel = async () => {
+    const { code } = await userContract.deleteSmartContract({ _id: data._id });
+    setConfirmDelOpen(false);
+    console.log(code);
+    if (code == 200) {
+      router.push('/');
+    }
+  }
+
+  const handleCancel = () => {
+    setConfirmDelOpen(false);
+  }
   const router = useRouter();
   const { userContract } = useDispatch();
   const handleDelete = async (_id) => {
@@ -63,7 +77,7 @@ const TemplateItem = ({ data }) => {
             </Typography>
           </Grid>
           <Grid item xs={2} sx={{ textAlign: 'right' }}>
-            {data.status !== 'deployed' ? <DeleteIconWithX onClick={() => { handleDelete(data._id) }} /> : null}
+            {data.status !== 'deployed' ? <DeleteIconWithX onClick={() => { setConfirmDelOpen(true) }} /> : null}
           </Grid>
         </Grid>
       </CardContent>
@@ -73,6 +87,11 @@ const TemplateItem = ({ data }) => {
           <Typography>{moment(data.updatedAt).format('LLL')}</Typography>
         </BoxBottom>
       </CardActions>
+      <ConfirmModal
+        open={confirmDelOpen}
+        title={'Do you want delete this smart contract?'}
+        onClose={handleCancel}
+        onAgree={handleAgreeDel} />
     </Card>
   );
 };

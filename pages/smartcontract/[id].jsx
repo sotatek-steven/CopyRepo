@@ -64,10 +64,9 @@ const Design = () => {
 
     _.isArray(sources) &&
       sources.forEach((item, index) => {
-        const stringFile = item.lines.join(' ');
-        lines = lines.concat(stringFile);
+        const stringFile = item.lines.join('\n');
+        lines = lines.concat(stringFile).concat('\n\n');
       });
-    console.log(lines);
 
     return lines;
   }, [sources]);
