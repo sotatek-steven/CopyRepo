@@ -6,6 +6,7 @@ import colourStyles from '../EditInfoContractModal/tagStyle';
 import { useDispatch } from 'react-redux';
 import { PrimaryButton, SecondaryButton } from '../ButtonStyle';
 import { Input, TextArea } from '../Input';
+import CloseIcon from '@mui/icons-material/Close';
 
 const Box = styled('div')(({ theme }) => ({
   position: 'absolute',
@@ -43,7 +44,15 @@ const Error = styled('div')(({ theme }) => ({
   marginTop: 8,
 }));
 
-const EditInfoContractModal = ({ open, onClose, data, readOnly }) => {
+const CloseButton = styled('div')(({ theme }) => ({
+  transition: 'all 0.2s',
+  ':hover': {
+    cursor: 'pointer',
+    transform: 'scale(1.05)',
+  },
+}));
+
+const EditInfoContractModal = ({ open, onClose, data, readOnly = false }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [domain, setDomain] = useState('');
@@ -88,7 +97,12 @@ const EditInfoContractModal = ({ open, onClose, data, readOnly }) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description">
         <Box>
-          <Title>Smart Contract Info</Title>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <Title>Smart Contract Info</Title>
+            <CloseButton onClick={onClose}>
+              <CloseIcon sx={{ fontSize: 25, color: '#fff' }} />
+            </CloseButton>
+          </div>
           <div style={{ padding: '0px 20px' }}>
             <InputWrapper>
               <Input
