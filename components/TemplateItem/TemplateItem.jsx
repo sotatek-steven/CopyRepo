@@ -7,8 +7,7 @@ import ButtonStatus from './ButtonStatus';
 import DeleteIconWithX from '../../assets/icon/deletewithx.svg';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
-import { toast } from 'react-toastify';
-import ConfirmModal from '../SmartContractNav/ConfirmModal';
+import ConfirmDeleteDialog from '../atom/Dialog/ConfirmDeleteDialog';
 
 const BoxBottom = styled(Box)(({ theme }) => ({
   alignItems: 'center',
@@ -92,7 +91,12 @@ const TemplateItem = ({ data }) => {
           <Typography>{moment(data.updatedAt).format('LLL')}</Typography>
         </BoxBottom>
       </CardActions>
-      <ConfirmModal open={confirmDelOpen} onClose={handleCancel} onAgree={handleAgreeDel} />
+      <ConfirmDeleteDialog
+        open={confirmDelOpen}
+        onClose={handleCancel}
+        onAgree={handleAgreeDel}
+        desciption="Do you really want to delete these records? This process cannot be undone."
+      />
     </Card>
   );
 };
