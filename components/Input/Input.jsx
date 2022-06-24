@@ -22,14 +22,14 @@ const InputBasic = styled('input')(({ theme }) => ({
   fontFamily: 'Josefin Sans',
 }));
 
-const Input = ({ label, value, isRequired, id, name, type = 'text', onChange }) => {
+const Input = ({ label, value, isRequired, id, name, type = 'text', onChange, readOnly }) => {
   return (
     <>
       <Label htmlFor={id}>
         {label}
         {isRequired && '*'}
       </Label>
-      <InputBasic type={type} name={name} id={id} value={value} onChange={onChange} />
+      <InputBasic type={type} name={name} id={id} value={value} onChange={onChange} readOnly={readOnly} />
     </>
   );
 };
