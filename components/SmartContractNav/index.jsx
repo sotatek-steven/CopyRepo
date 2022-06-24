@@ -8,11 +8,11 @@ import { useSelector } from 'react-redux';
 import EditInfoContractModal from '../EditInfoContractModal';
 import { PrimaryButton } from '../ButtonStyle';
 import DeployContractModal from './DeployContractModal';
-import ConfirmModal from './ConfirmModal';
 import ContractDeployedAlert from '../Dialog/ContractDeployedAlert';
 import { useWeb3React } from '@web3-react/core';
 import { useDispatch } from 'react-redux';
 import SavingScreen from '../Saving';
+import ConfirmDialog from '../atom/Dialog/ConfirmDialog';
 const NavbarContainer = styled('div')(({ theme }) => ({
   height: '100%',
   display: 'flex',
@@ -60,13 +60,13 @@ const DesignSmartContractNav = () => {
 
   const deploying = () => {
     setLoading(true);
-  }
+  };
 
   const deployed = () => {
     setLoading(false);
     setConfirmDeployModalOpen(false);
     setContractDeployedAlertOpen(true);
-  }
+  };
 
   const handleConfirmDeployModalClose = () => {
     setConfirmDeployModalOpen(false);
@@ -113,7 +113,12 @@ const DesignSmartContractNav = () => {
         onClose={handleDeployContractModalClose}
         onDeploy={handleDeployContract}
       />
-      <ConfirmModal open={confirmDeployModalOpen} onClose={handleConfirmDeployModalClose} onAgree={handleAgreeDeploy} />
+      <ConfirmDialog
+        open={confirmDeployModalOpen}
+        onClose={handleConfirmDeployModalClose}
+        onAgree={handleAgreeDeploy}
+        title="Confirm to deploy this Smart Contract"
+      />
 
       <ContractDeployedAlert
         txHash={contractState.transaction}
@@ -121,7 +126,7 @@ const DesignSmartContractNav = () => {
         open={contractDeployedAlertOpen}
         onClose={handleContractDeployedAlertClose}
       />
-      {loading && <SavingScreen title='Loading' />}
+      {loading && <SavingScreen title="Loading" />}
     </>
   );
 };
