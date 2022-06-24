@@ -45,32 +45,16 @@ const Design = () => {
   useEffect(() => {
     if (!id) return;
     contract.getDetailContract(id);
-    // const fetchDetailContract = async () => {
-    //   try {
-    //     if (!id) return;
-    //     const contractDetail = await contract.getDetailContract(id);
-    //     if (!contractDetail) return;
-    //     const { coordinates: modulesData } = contractDetail;
-    //     const _nodes = createNodes(modulesData);
-    //     const _edges = createEdges(_nodes);
-    //     setNodes(_nodes);
-    //     setEdges(_edges);
-    //     setSource(contractDetail.sources);
-    //   } catch (error) {
-    //     console.log('Failed to fetch detail contract', error);
-    //   }
-    // };
-    // fetchDetailContract();
   }, [id]);
   useEffect(() => {
-    if (!contractState?._id) return;
-    const { coordinates: modulesData } = contractState;
+    if (!contractState.current?._id) return;
+    const { coordinates: modulesData } = contractState.current;
     const _nodes = createNodes(modulesData);
     const _edges = createEdges(_nodes);
     setNodes(_nodes);
     setEdges(_edges);
-    setSource(contractState.sources);
-  }, [contractState]);
+    setSource(contractState.current.sources);
+  }, [contractState.current]);
 
   const allLines = useMemo(() => {
     const lines = '';
@@ -129,7 +113,7 @@ const Design = () => {
                 height: 'calc(100vh - 74px)',
               }}>
               <div style={{ flexGrow: 1 }}>{nodes && <ModuleDrop initialNodes={nodes} initialEdges={edges} />}</div>
-              {contractState.status !== 'deployed' && (
+              {contractState.current.status !== 'deployed' && (
                 <div
                   style={{
                     height: '100%',

@@ -84,7 +84,7 @@ const EditInfoContractModal = ({ open, onClose, data, readOnly = false }) => {
 
   const updateContract = () => {
     const newContract = { ...data, name, description, tags, domain };
-    contract.update(newContract);
+    contract.updateCurrent(newContract);
     if (!onClose) return;
     onClose();
   };

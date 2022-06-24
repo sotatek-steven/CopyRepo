@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 // import Stack from '@mui/material/Stack';
 // import Snackbar from '@mui/material/Snackbar';
 // import Alert from '@mui/material/Alert';
@@ -9,14 +10,16 @@ import SavingScreen from '../Saving';
 const SaveContractButton = () => {
   const [loading, setLoading] = useState(false);
   const { contract } = useDispatch();
-  const contractState = useSelector((state) => state.contract);
 
   const saveContract = async () => {
     setLoading(true);
-    const { code } = await contract.updateContract(contractState);
+    const { code, message } = await contract.updateContract();
     setLoading(false);
-    if (code == 200) return;
-    console.log('saving failed!');
+    if (code == 200) {
+      toast.success('Save contract success');
+      return;
+    }
+    toast.error('saving contract failed!', message);
     // setOpen(true);
   };
 

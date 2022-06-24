@@ -59,15 +59,15 @@ const DeployContractModal = ({ open, onClose, onDeploy }) => {
   };
 
   const handleDeployContract = async () => {
-    const _contractState = { ...contractState, parameters };
-    contract.update(_contractState);
+    const _contractState = { ...contractState.current, parameters };
+    contract.updateCurrent(_contractState);
     if (!onDeploy) return;
     onDeploy();
   };
 
   useEffect(() => {
-    setParameters(contractState.parameters || []);
-  }, [contractState.parameters]);
+    setParameters(contractState.current.parameters || []);
+  }, [contractState.current.parameters]);
 
   return (
     <>
