@@ -30,11 +30,11 @@ const TemplateItem = ({ data }) => {
     if (code == 200) {
       router.push('/');
     }
-  }
+  };
 
   const handleCancel = () => {
     setConfirmDelOpen(false);
-  }
+  };
   const router = useRouter();
   const { userContract } = useDispatch();
   const handleDelete = async (_id) => {
@@ -42,17 +42,16 @@ const TemplateItem = ({ data }) => {
     if (code == 200) {
       router.push('/');
     }
-  }
+  };
   return (
     <Card sx={{ maxWidth: 440, px: 1.5, maxHeight: '200px', height: '100%' }}>
-
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2 }}>
         <Typography sx={{ fontSize: '12px' }}>{data.domain}</Typography>
         <ButtonStatus status={data.status} />
       </Box>
       <CardContent sx={{ padding: '0 16px', cursor: 'pointer' }}>
         <Typography
-          sx={{ color: '#E5C2B9', fontSize: '20px', }}
+          sx={{ color: '#E5C2B9', fontSize: '20px' }}
           onClick={() => {
             router.push(`/smartcontract/${data._id}`);
           }}>
@@ -77,7 +76,13 @@ const TemplateItem = ({ data }) => {
             </Typography>
           </Grid>
           <Grid item xs={2} sx={{ textAlign: 'right' }}>
-            {data.status !== 'deployed' ? <DeleteIconWithX onClick={() => { setConfirmDelOpen(true) }} /> : null}
+            {data.status !== 'deployed' ? (
+              <DeleteIconWithX
+                onClick={() => {
+                  setConfirmDelOpen(true);
+                }}
+              />
+            ) : null}
           </Grid>
         </Grid>
       </CardContent>
@@ -87,11 +92,7 @@ const TemplateItem = ({ data }) => {
           <Typography>{moment(data.updatedAt).format('LLL')}</Typography>
         </BoxBottom>
       </CardActions>
-      <ConfirmModal
-        open={confirmDelOpen}
-        title={'Do you want delete this smart contract?'}
-        onClose={handleCancel}
-        onAgree={handleAgreeDel} />
+      <ConfirmModal open={confirmDelOpen} onClose={handleCancel} onAgree={handleAgreeDel} />
     </Card>
   );
 };
