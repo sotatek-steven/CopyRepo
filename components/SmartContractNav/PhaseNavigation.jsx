@@ -7,11 +7,12 @@ import RocketIcon from '../../assets/icon/rocket.svg';
 import { styled } from '@mui/material/styles';
 
 const Line = styled('div')(({ theme }) => ({
-  width: '371px',
+  width: '80%',
   height: '2px',
   position: 'absolute',
   top: '19px',
-  left: '20px',
+  left: '50%',
+  transform: 'translate(-50%, 0%)',
   backgroundColor: theme.palette.mode === 'dark' ? 'white' : 'white',
 }));
 

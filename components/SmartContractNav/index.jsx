@@ -90,7 +90,7 @@ const DesignSmartContractNav = () => {
   };
 
   return (
-    <>
+    <div style={{ height: 74 }}>
       <NavbarContainer>
         <BurgerMenu contractName={contractState.name || 'New Contract'} />
         <PhaseNavigation />
@@ -132,7 +132,7 @@ const DesignSmartContractNav = () => {
         onClose={handleContractDeployedAlertClose}
       />
       {loading && <SavingScreen title="Loading" />}
-    </>
+    </div>
   );
 };
 

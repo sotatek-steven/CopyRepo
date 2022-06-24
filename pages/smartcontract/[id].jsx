@@ -87,61 +87,50 @@ const Design = () => {
   }, [sources]);
 
   return (
-    <>
-      <PageContainer>
-        <div>
-          <DesignSmartContractNav />
-        </div>
-
-        <Box sx={{ width: '100%', overflow: 'hidden' }} className="test">
-          <TabContext value={value}>
-            <Box sx={{ borderBottom: 0, paddingTop: '14px', position: 'absolute', zIndex: '10', paddingLeft: '40px' }}>
-              <TabList
-                onChange={handleChange}
-                aria-label="lab API tabs example"
-                sx={{
-                  width: '242px',
-                  borderRadius: '14px',
-                  background: '#595655',
-                  boxShadow: '0px 4px 4px rgba(0, 0, 0, 0.25), inset 0px 4px 4px rgba(0, 0, 0, 0.25)',
-                  '.MuiTabs-indicator': {
-                    display: 'none',
-                  },
-                  pt: 1,
+    <div>
+      <Box className="test">
+        <TabContext value={value}>
+          <Box sx={{ borderBottom: 0, paddingTop: '14px', position: 'absolute', zIndex: '10', paddingLeft: '40px' }}>
+            <TabList
+              onChange={handleChange}
+              aria-label="lab API tabs example"
+              sx={{
+                borderRadius: '16px',
+                background: '#595655',
+                boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.25), inset 0px 2px 2px rgba(0, 0, 0, 0.25)',
+                '.MuiTabs-indicator': {
+                  display: 'none',
+                },
+                textTransform: 'none',
+                '.MuiButtonBase-root': {
                   textTransform: 'none',
-                  '.MuiButtonBase-root': {
-                    textTransform: 'none',
-                  },
-                  height: '40px',
-                  lineHeight: '40px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  '	.Mui-selected': {
-                    background: '#F07D60',
-                    height: '24px',
-                    boxShadow: '0px 1px 2px rgba(97, 97, 97, 0.2), 0px 2px 4px rgba(97, 97, 97, 0.2)',
-                    borderRadius: '12px',
-                    color: '#E1E1E1 !important',
-                    padding: '4px 12px',
-                    marginBottom: '10px',
-                    justifyContent: 'center',
-                  },
-                  '	.MuiTab-root': {
-                    borderBottom: 0,
-                  },
-                }}>
-                <Tab label="Workflow view" value="1" />
-                <Tab label="Code View" value="2" />
-              </TabList>
-            </Box>
-            <TabPanel value="1">
-              <div
-                style={{
-                  flexGrow: 1,
-                  display: 'flex',
-                  height: '100vh',
-                }}>
-                <div style={{ flexGrow: 1 }}>{nodes && <ModuleDrop initialNodes={nodes} initialEdges={edges} />}</div>
+                },
+                display: 'flex',
+                alignItems: 'center',
+                '	.Mui-selected': {
+                  background: '#F07D60',
+                  borderRadius: '14px',
+                  color: '#E1E1E1 !important',
+                },
+                '.MuiTab-root': {
+                  padding: '0px 7px',
+                },
+                '.MuiTabs-flexContainer': {
+                  padding: '4px 0px',
+                },
+              }}>
+              <Tab sx={{ fontSize: 18, transform: 'scale(0.85, 0.78)' }} label="Workflow view" value="1" />
+              <Tab sx={{ fontSize: 18, transform: 'scale(0.85, 0.78)' }} label="Code View" value="2" />
+            </TabList>
+          </Box>
+          <TabPanel value="1" sx={{ padding: '0 !important' }}>
+            <div
+              style={{
+                display: 'flex',
+                height: 'calc(100vh - 74px)',
+              }}>
+              <div style={{ flexGrow: 1 }}>{nodes && <ModuleDrop initialNodes={nodes} initialEdges={edges} />}</div>
+              {contractState.status !== 'deployed' && (
                 <div
                   style={{
                     height: '100%',
@@ -149,31 +138,31 @@ const Design = () => {
                   }}>
                   <ModuleDrag />
                 </div>
-              </div>
-            </TabPanel>
-            <TabPanel value="2" sx={{ padding: '0 !important' }}>
-              <Scrollbars style={{ height: 'calc(100vh - 70px)', width: '100%' }}>
-                <>
-                  <Card
-                    sx={{
-                      marginBottom: '0px',
-                      overflowX: 'hidden !important',
-                    }}>
-                    <SyntaxHighlighter
-                      language="solidity"
-                      style={a11yDark}
-                      wrapLongLines
-                      customStyle={{ overflow: 'hidden', paddingTop: '60px' }}>
-                      {allLines}
-                    </SyntaxHighlighter>
-                  </Card>
-                </>
-              </Scrollbars>
-            </TabPanel>
-          </TabContext>
-        </Box>
-      </PageContainer>
-    </>
+              )}
+            </div>
+          </TabPanel>
+          <TabPanel value="2" sx={{ padding: '0 !important' }}>
+            <Scrollbars style={{ height: 'calc(100vh - 74x)', width: '100%' }}>
+              <>
+                <Card
+                  sx={{
+                    marginBottom: '0px',
+                    overflowX: 'hidden !important',
+                  }}>
+                  <SyntaxHighlighter
+                    language="solidity"
+                    style={a11yDark}
+                    wrapLongLines
+                    customStyle={{ overflow: 'hidden', paddingTop: '60px' }}>
+                    {allLines}
+                  </SyntaxHighlighter>
+                </Card>
+              </>
+            </Scrollbars>
+          </TabPanel>
+        </TabContext>
+      </Box>
+    </div>
   );
 };
 
