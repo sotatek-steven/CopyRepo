@@ -21,14 +21,22 @@ const TextAreaBasic = styled('textarea')(({ theme }) => ({
   fontFamily: 'Josefin Sans',
 }));
 
-const TextArea = ({ label, value, isRequired, id, name, type = 'text', onChange, rows = '5' }) => {
+const TextArea = ({ label, value, isRequired, id, name, type = 'text', onChange, rows = '5', readOnly = false }) => {
   return (
     <>
       <Label htmlFor={id}>
         {label}
         {isRequired && '*'}
       </Label>
-      <TextAreaBasic type={type} name={name} id={id} value={value} onChange={onChange} rows={rows} />
+      <TextAreaBasic
+        type={type}
+        name={name}
+        id={id}
+        value={value}
+        onChange={onChange}
+        rows={rows}
+        readOnly={readOnly}
+      />
     </>
   );
 };

@@ -43,7 +43,7 @@ const Error = styled('div')(({ theme }) => ({
   marginTop: 8,
 }));
 
-const EditInfoContractModal = ({ open, onClose, data }) => {
+const EditInfoContractModal = ({ open, onClose, data, readOnly }) => {
   const [name, setName] = useState('');
   const [description, setDescription] = useState('');
   const [domain, setDomain] = useState('');
@@ -98,6 +98,7 @@ const EditInfoContractModal = ({ open, onClose, data }) => {
                 isRequired={true}
                 value={name}
                 onChange={(event) => setName(event.target.value)}
+                readOnly={readOnly}
               />
             </InputWrapper>
 
@@ -108,6 +109,7 @@ const EditInfoContractModal = ({ open, onClose, data }) => {
                 id="description"
                 value={description}
                 onChange={(event) => setDescription(event.target.value)}
+                readOnly={readOnly}
               />
             </InputWrapper>
 
@@ -119,6 +121,7 @@ const EditInfoContractModal = ({ open, onClose, data }) => {
                 isRequired={true}
                 value={domain}
                 onChange={(event) => setDomain(event.target.value)}
+                readOnly={readOnly}
               />
             </InputWrapper>
 
@@ -130,19 +133,22 @@ const EditInfoContractModal = ({ open, onClose, data }) => {
                 options={tagOptions}
                 value={tagOptions}
                 styles={colourStyles}
+                isDisabled={readOnly}
               />
             </InputWrapper>
 
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'flex-end',
-                gap: '20px',
-                marginTop: 30,
-              }}>
-              <SecondaryButton onClick={onClose}>Cancel</SecondaryButton>
-              <PrimaryButton onClick={updateContract}>Continue</PrimaryButton>
-            </div>
+            {!readOnly && (
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'flex-end',
+                  gap: '20px',
+                  marginTop: 30,
+                }}>
+                <SecondaryButton onClick={onClose}>Cancel</SecondaryButton>
+                <PrimaryButton onClick={updateContract}>Continue</PrimaryButton>
+              </div>
+            )}
           </div>
         </Box>
       </Modal>

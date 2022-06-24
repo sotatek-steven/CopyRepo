@@ -96,8 +96,12 @@ const DesignSmartContractNav = () => {
         <PhaseNavigation />
         <RightSide>
           <PrimaryButton onClick={() => setInfoContractModalOpen(true)}>Edit Info</PrimaryButton>
-          <PrimaryButton onClick={() => setDeployContractModalOpen(true)}>Next</PrimaryButton>
-          <SaveContractButton />
+          {contractState.status !== 'deployed' && (
+            <>
+              <PrimaryButton onClick={() => setDeployContractModalOpen(true)}>Next</PrimaryButton>
+              <SaveContractButton />
+            </>
+          )}
           <ExitButton />
         </RightSide>
       </NavbarContainer>
@@ -107,6 +111,7 @@ const DesignSmartContractNav = () => {
         onClose={handleInfoContractModalClose}
         nameValue={contractState.name}
         data={contractState}
+        readOnly={contractState.status === 'deployed'}
       />
       <DeployContractModal
         open={deployContractModalOpen}

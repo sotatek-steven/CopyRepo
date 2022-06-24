@@ -43,8 +43,7 @@ const Design = () => {
 
   useEffect(() => {
     console.log('id: ', id);
-    if (!id)
-      return;
+    if (!id) return;
     contract.getDetailContract(id);
     // const fetchDetailContract = async () => {
     //   try {
@@ -72,7 +71,7 @@ const Design = () => {
     setNodes(_nodes);
     setEdges(_edges);
     setSource(contractState.sources);
-  }, [contractState])
+  }, [contractState]);
 
   const allLines = useMemo(() => {
     const lines = '';
