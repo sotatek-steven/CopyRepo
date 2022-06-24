@@ -42,7 +42,6 @@ const Design = () => {
   const { id } = router.query;
 
   useEffect(() => {
-    console.log('id: ', id);
     if (!id) return;
     contract.getDetailContract(id);
     // const fetchDetailContract = async () => {
@@ -64,7 +63,6 @@ const Design = () => {
   }, [id]);
   useEffect(() => {
     if (!contractState?._id) return;
-    console.log(contractState);
     const { coordinates: modulesData } = contractState;
     const _nodes = createNodes(modulesData);
     const _edges = createEdges(_nodes);
@@ -142,7 +140,7 @@ const Design = () => {
             </div>
           </TabPanel>
           <TabPanel value="2" sx={{ padding: '0 !important' }}>
-            <Scrollbars style={{ height: 'calc(100vh - 74x)', width: '100%' }}>
+            <Scrollbars style={{ height: 'calc(100vh - 74px)', width: '100%' }}>
               <>
                 <Card
                   sx={{
@@ -153,7 +151,7 @@ const Design = () => {
                     language="solidity"
                     style={a11yDark}
                     wrapLongLines
-                    customStyle={{ overflow: 'hidden', paddingTop: '60px' }}>
+                    customStyle={{ overflow: 'hidden', paddingTop: '60px', marginTop: 0 }}>
                     {allLines}
                   </SyntaxHighlighter>
                 </Card>
