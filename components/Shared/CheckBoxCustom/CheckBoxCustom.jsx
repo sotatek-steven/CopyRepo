@@ -7,7 +7,7 @@ import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 const CheckBoxStyled = styled(Checkbox)((theme) => ({
   color: '#64F5A6',
   '&.Mui-checked': {
-    color: '#95D5B2 ',
+    color: theme.palette.success.main,
   },
 }));
 const CheckBoxCustom = ({ label, handleChecked, id }) => {

@@ -1,27 +1,27 @@
 import React from 'react';
 import Dialog from '@mui/material/Dialog';
-import styled from '@emotion/styled';
+import { styled } from '@mui/material/styles';
 
 const TransactionHash = styled('div')(({ theme }) => ({
-  color: theme.palette.mode === 'dark' ? '#319eed' : '#319eed',
+  color: theme.palette.info.dark,
 }));
 
 const Title = styled('div')(({ theme }) => ({
-  color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#E1E1E1',
+  color: theme.palette.text.primary,
   fontSize: 18,
-  fontWeight: 600,
+  fontWeight: theme.typography.fontWeightBold,
   marginBottom: 10,
 }));
 
 const Content = styled('div')(({ theme }) => ({
-  color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#E1E1E1',
+  color: theme.palette.text.primary,
   fontSize: 16,
-  fontWeight: 400,
+  fontWeight: theme.typography.fontWeightRegular,
 }));
 
 const Wrapper = styled('div')(({ theme }) => ({
   padding: '20px',
-  background: theme.palette.mode === 'dark' ? '#2E2E30' : '#2E2E30',
+  background: theme.palette.background.dark,
 }));
 
 const ContractDeployedAlert = ({ address, txHash, open, onClose }) => {

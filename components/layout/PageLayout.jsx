@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, CardContent, Container, Divider, Drawer, List, ListItemButton, Toolbar } from '@mui/material';
+import { Card, CardContent, Container, Divider, Drawer, List, ListItemButton, Toolbar, useTheme } from '@mui/material';
 import Head from 'next/head';
 import { useEagerConnect, useInactiveListener } from '@/hooks/hooks';
 import Navbar from './NavBar';
@@ -14,20 +14,25 @@ function Layout(props) {
   const triedEager = useEagerConnect();
   useInactiveListener(!triedEager);
   useUserActive();
+  const theme = useTheme();
   return (
     <div>
       <Head>
         <title>Drag Drop</title>
       </Head>
-      <Box sx={{ display: 'flex', background: '#3d3d3e', minHeight: '100vh' }}>
+      <Box sx={{ display: 'flex', minHeight: '100vh' }}>
         <Navbar />
         <Drawer variant="permanent">
-          <Box display={'flex'} flexGrow={1} flexDirection="column" sx={{ width: `${navLeftWidth}px` }}>
+          <Box
+            display={'flex'}
+            flexGrow={1}
+            flexDirection="column"
+            sx={{ width: `${navLeftWidth}px`, background: theme.palette.background.dark }}>
             <NavBarLeft />
           </Box>
           <Divider />
         </Drawer>
-        <Container disableGutters maxWidth="xl">
+        <Box sx={{ overflow: 'hidden' }}>
           <Toolbar sx={{ flexWrap: 'wrap', padding: '0 !important' }}>
             <Card
               sx={{
@@ -44,11 +49,11 @@ function Layout(props) {
                   marginTop: '70px',
                 }}
                 style={{ width: `calc(100vw - 50px)`, height: 'calc(100vh - 85px)' }}>
-                <Box sx={{ overflow: 'hidden' }}>{props.children}</Box>
+                <Box>{props.children}</Box>
               </Box>
             </Card>
           </Toolbar>
-        </Container>
+        </Box>
       </Box>
     </div>
   );

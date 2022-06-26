@@ -1,4 +1,4 @@
-import { ButtonBase, Card, CardActions, CardContent, CardHeader, Grid, Typography } from '@mui/material';
+import { ButtonBase, Card, CardActions, CardContent, CardHeader, Grid, Typography, useTheme } from '@mui/material';
 
 import { Box, styled } from '@mui/system';
 import moment from 'moment';
@@ -11,7 +11,7 @@ import ConfirmDeleteDialog from '../atom/Dialog/ConfirmDeleteDialog';
 
 const BoxBottom = styled(Box)(({ theme }) => ({
   alignItems: 'center',
-  backgroundColor: '#3D3D3E',
+  backgroundColor: theme.palette.background.default,
   padding: '8px',
   borderRadius: '8px',
   maxWidth: '408px',
@@ -42,15 +42,17 @@ const TemplateItem = ({ data }) => {
       router.push('/');
     }
   };
+  const theme = useTheme();
   return (
-    <Card sx={{ maxWidth: 440, px: 1.5, maxHeight: '200px', height: '100%' }}>
+    <Card
+      sx={{ maxWidth: 440, px: 1.5, maxHeight: '200px', height: '100%', background: theme.palette.background.dark }}>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2 }}>
         <Typography sx={{ fontSize: '12px' }}>{data.domain}</Typography>
         <ButtonStatus status={data.status} />
       </Box>
       <CardContent sx={{ padding: '0 16px', cursor: 'pointer' }}>
         <Typography
-          sx={{ color: '#E5C2B9', fontSize: '20px' }}
+          sx={{ color: 'primary.light', fontSize: '20px' }}
           onClick={() => {
             router.push(`/smartcontract/${data._id}`);
           }}>
@@ -60,7 +62,7 @@ const TemplateItem = ({ data }) => {
           <Grid item xs={10}>
             <Typography
               sx={{
-                fontSize: '10px',
+                fontSize: '12px',
                 paddingRight: '32px',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
@@ -87,7 +89,7 @@ const TemplateItem = ({ data }) => {
       </CardContent>
       <CardActions sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', py: 2 }}>
         <BoxBottom>
-          <Typography sx={{ fontSize: '10px', color: '#ffffff', px: 1 }}>Last Modified At</Typography>{' '}
+          <Typography sx={{ fontSize: '12px', color: '#ffffff', px: 1 }}>Last Modified At</Typography>{' '}
           <Typography>{moment(data.updatedAt).format('LLL')}</Typography>
         </BoxBottom>
       </CardActions>

@@ -3,13 +3,13 @@ import { styled } from '@mui/material/styles';
 
 const Text = styled('div')(({ theme, isactive }) => ({
   fontSize: '16px',
-  color: isactive === 'true' ? '#F07D60' : '#E1E1E1',
-  fontWeight: 600,
+  color: isactive === 'true' ? theme.palette.primary.main : theme.palette.text.primary,
+  fontWeight: theme.typography.fontWeightBold,
   padding: '5px',
 }));
 
 const Line = styled('div')(({ theme, isactive }) => ({
-  backgroundColor: isactive === 'true' ? '#F07D60' : '#F07D6000',
+  backgroundColor: isactive === 'true' ? theme.palette.primary.main : `${theme.palette.primary.main}00`,
   height: '4px',
   width: '100%',
 }));

@@ -6,8 +6,8 @@ const Icon = styled('div')(({ theme, isactive }) => ({
   height: '38px',
   borderRadius: '50%',
   border: 'solid 1px',
-  backgroundColor: isactive === 'true' ? '#094D27' : '#392D04',
-  borderColor: isactive === 'true' ? '#84F2B6' : '#FFD33F',
+  backgroundColor: isactive === 'true' ? theme.palette.success.dark : theme.palette.warning.dark,
+  borderColor: isactive === 'true' ? '#84F2B6' : theme.palette.warning.main,
   display: 'flex',
   justifyContent: 'center',
   alignItems: 'center',
@@ -17,7 +17,7 @@ const Icon = styled('div')(({ theme, isactive }) => ({
 const Label = styled('div')(({ theme, isactive }) => ({
   fontSize: '12px',
   fontWeight: 600,
-  color: isactive === 'true' ? '#84F2B6' : '#FFD33F',
+  color: isactive === 'true' ? '#84F2B6' : theme.palette.warning.main,
   marginTop: '7px',
 }));
 

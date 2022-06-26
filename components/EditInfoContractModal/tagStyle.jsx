@@ -1,24 +1,25 @@
 import chroma from 'chroma-js';
-const colourStyles = {
-  menu: (styles) => ({ ...styles, backgroundColor: '#595655' }),
+
+const colourStyles = (theme) => ({
+  menu: (styles) => ({ ...styles, backgroundColor: theme.palette.background.light }),
   control: (styles) => ({
     ...styles,
-    backgroundColor: '#595655',
+    backgroundColor: theme.palette.background.light,
     border: 'none',
     boxShadow: 'none',
     height: '45px',
   }),
   input: (styles) => ({
     ...styles,
-    color: '#E1E1E1!important',
+    color: `${theme.palette.text.primary}important`,
     fontWeight: 600,
     fontSize: 14,
   }),
   option: (styles, { data, isDisabled, isFocused, isSelected }) => {
-    const color = chroma('#F07D60');
+    const color = chroma(theme.palette.primary.main);
     return {
       ...styles,
-      backgroundColor: '#595655',
+      backgroundColor: theme.palette.background.light,
       fontWeight: 600,
       fontSize: 14,
       color: isDisabled ? '#ccc' : isSelected ? (chroma.contrast(color, 'white') > 2 ? 'white' : 'black') : data.color,
@@ -34,24 +35,24 @@ const colourStyles = {
   },
   multiValue: (styles, { data }) => ({
     ...styles,
-    backgroundColor: '#F07D60',
-    color: '#E1E1E1',
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.text.primary,
     fontWeight: 600,
     fontSize: 14,
   }),
   multiValueLabel: (styles, { data }) => ({
     ...styles,
-    color: '#E1E1E1',
+    color: theme.palette.text.primary,
   }),
   multiValueRemove: (styles, { data }) => ({
     ...styles,
-    color: '#E1E1E1',
+    color: theme.palette.text.primary,
     ':hover': {
       backgroundColor: '#fdb4a1',
-      color: '#E1E1E1',
+      color: theme.palette.text.primary,
       cursor: 'pointer',
     },
   }),
-};
+});
 
 export default colourStyles;

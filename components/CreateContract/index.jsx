@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Modal } from '@mui/material';
 import { useSelector } from 'react-redux';
-import styled from '@emotion/styled';
+import { styled } from '@mui/material/styles';
 import InfoContractForm from '../InfoContractForm';
 
 const Box = styled('div')(({ theme }) => ({
@@ -10,13 +10,13 @@ const Box = styled('div')(({ theme }) => ({
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 600,
-  backgroundColor: theme.palette.mode === 'dark' ? '#3D3D3E' : '#3D3D3E',
+  backgroundColor: theme.palette.background.default,
   boxShadow: 24,
   padding: '35px 35px',
 }));
 
 const Title = styled('div')(({ theme }) => ({
-  color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#E1E1E1',
+  color: theme.palette.text.primary,
   fontSize: 22,
   fontWeight: 600,
   marginBottom: 30,

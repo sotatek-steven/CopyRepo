@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import { Modal } from '@mui/material';
-import styled from '@emotion/styled';
+import { Modal, useTheme } from '@mui/material';
+import { styled } from '@mui/material/styles';
 import Creatable from 'react-select/creatable';
 import colourStyles from '../EditInfoContractModal/tagStyle';
 import { useDispatch } from 'react-redux';
@@ -14,14 +14,21 @@ const Box = styled('div')(({ theme }) => ({
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 600,
-  backgroundColor: theme.palette.mode === 'dark' ? '#3D3D3E' : '#3D3D3E',
+  backgroundColor: theme.palette.background.default,
   boxShadow: 24,
   padding: '35px 35px',
   outline: 'none',
 }));
 
+const HeaderModal = styled('div')(({ theme }) => ({
+  color: theme.palette.text.primary,
+  display: 'flex',
+  justifyContent: 'space-between',
+  fontSize: 25,
+}));
+
 const Title = styled('div')(({ theme }) => ({
-  color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#E1E1E1',
+  color: theme.palette.text.primary,
   fontSize: 20,
   fontWeight: 600,
   marginBottom: 30,
@@ -32,14 +39,14 @@ const InputWrapper = styled('div')(() => ({
 }));
 
 const Label = styled('div')(({ theme }) => ({
-  color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#E1E1E1',
+  color: theme.palette.text.primary,
   fontSize: 18,
   fontWeight: 600,
   marginBottom: 3,
 }));
 
 const Error = styled('div')(({ theme }) => ({
-  color: theme.palette.mode === 'dark' ? '#F91D1D' : '#F91D1D',
+  color: theme.palette.error.main,
   fontSize: 14,
   marginTop: 8,
 }));
@@ -59,6 +66,7 @@ const EditInfoContractModal = ({ open, onClose, data, readOnly = false }) => {
   const [tags, setTags] = useState([]);
   const [tagOptions, setTagOptions] = useState([]);
   const { contract } = useDispatch();
+  const theme = useTheme();
 
   useEffect(() => {
     const tagList = tags.map((tag) => ({
@@ -97,12 +105,12 @@ const EditInfoContractModal = ({ open, onClose, data, readOnly = false }) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description">
         <Box>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <HeaderModal>
             <Title>Smart Contract Info</Title>
             <CloseButton onClick={onClose}>
-              <CloseIcon sx={{ fontSize: 25, color: '#fff' }} />
+              <CloseIcon />
             </CloseButton>
-          </div>
+          </HeaderModal>
           <div style={{ padding: '0px 20px' }}>
             <InputWrapper>
               <Input
@@ -146,7 +154,7 @@ const EditInfoContractModal = ({ open, onClose, data, readOnly = false }) => {
                 onChange={handleChange}
                 options={tagOptions}
                 value={tagOptions}
-                styles={colourStyles}
+                styles={colourStyles(theme)}
                 isDisabled={readOnly}
               />
             </InputWrapper>

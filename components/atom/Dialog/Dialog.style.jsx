@@ -1,31 +1,30 @@
-import styled from '@emotion/styled';
+import { styled } from '@mui/material/styles';
 
 const Container = styled('div')(({ theme }) => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 600,
-  backgroundColor: theme.palette.mode === 'dark' ? '#3D3D3E' : '#3D3D3E',
+  fontWeight: theme.typography.fontWeightBold,
+  backgroundColor: theme.palette.background.default,
   boxShadow: 24,
   padding: '50px 35px',
   outline: 'none',
   padding: '55px 90px',
-  background: '#3D3D3E',
 }));
 
 const Title = styled('div')(({ theme }) => ({
-  color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#E1E1E1',
+  color: theme.palette.text.primary,
   fontSize: 20,
-  fontWeight: 600,
+  fontWeight: theme.typography.fontWeightBold,
   marginBottom: 30,
   textAlign: 'center',
 }));
 
 const ContentText = styled('div')(({ theme }) => ({
-  color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#E1E1E1',
+  color: theme.palette.text.primary,
   fontSize: 15,
-  fontWeight: 600,
+  fontWeight: theme.typography.fontWeightBold,
   textAlign: 'center',
   marginBottom: 30,
 }));

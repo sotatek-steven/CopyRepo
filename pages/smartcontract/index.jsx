@@ -8,6 +8,7 @@ import {
   Typography,
   IconButton,
   TextField,
+  useTheme,
 } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
@@ -59,6 +60,7 @@ const Dashboard = () => {
   const [openListNFT, setOpenListNFT] = useState(false);
   const [expand, setExpand] = useState(false);
   const [keywords, setKeywords] = useState(null);
+  const theme = useTheme();
 
   const handleSearch = () => {
     console.log(keywords);
@@ -86,26 +88,29 @@ const Dashboard = () => {
               onChange={(e) => setKeywords(e.target.value)}
               InputProps={{
                 endAdornment: expand ? (
-                  <SearchIcon onClick={handleSearch} sx={{ color: '#F07D60', cursor: 'pointer' }} />
+                  <SearchIcon onClick={handleSearch} sx={{ color: theme.palette.primary.main, cursor: 'pointer' }} />
                 ) : null,
               }}
             />
           </Box>
           {!expand ? (
-            <SearchIcon onClick={() => setExpand(!expand)} sx={{ color: '#F07D60', cursor: 'pointer' }} />
+            <SearchIcon
+              onClick={() => setExpand(!expand)}
+              sx={{ color: theme.palette.primary.main, cursor: 'pointer' }}
+            />
           ) : (
             <ArrowForwardIosIcon
               size="small"
               onClick={() => setExpand(!expand)}
-              sx={{ color: '#F07D60', cursor: 'pointer', fontSize: '17px', mx: 1 }}
+              sx={{ color: theme.palette.primary.main, cursor: 'pointer', fontSize: '17px', mx: 1 }}
             />
           )}
 
           <Box sx={{ pl: 3, pr: 1 }}>
             <Button
-              sx={{ color: '#2E2E30' }}
+              sx={{ color: theme.palette.primary.contrastText }}
               variant="contained"
-              startIcon={<AddCircleOutlineOutlinedIcon sx={{ color: '#2E2E30' }} />}
+              startIcon={<AddCircleOutlineOutlinedIcon sx={{ color: theme.palette.background.dark }} />}
               onClick={() => setOpenCreate(true)}>
               Create
             </Button>
@@ -151,7 +156,7 @@ const Dashboard = () => {
         <DialogContent>
           <Grid container sx={{ borderTop: '1px solid #8C8C8C' }}>
             <Grid item xs={6}>
-              <Box sx={{ width: '589px', height: '548px', background: '#3D3D3E' }}></Box>
+              <Box sx={{ width: '589px', height: '548px', background: theme.palette.background.default }}></Box>
             </Grid>
             <Grid
               sx={{

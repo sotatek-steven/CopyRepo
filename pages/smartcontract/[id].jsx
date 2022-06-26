@@ -6,7 +6,7 @@ import { styled } from '@mui/material/styles';
 import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
 import { createEdges, createNodes } from '@/components/ModuleDrop/CreateElement';
-import { Box, Card, CardHeader, Tab, Tabs, ToggleButton, ToggleButtonGroup, Typography } from '@mui/material';
+import { Box, Card, CardHeader, Tab, Tabs, ToggleButton, ToggleButtonGroup, Typography, useTheme } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 // import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
@@ -21,7 +21,7 @@ const PageContainer = styled('div')(({ theme }) => ({
   width: '100vw',
   display: 'flex',
   flexDirection: 'column',
-  backgroundColor: theme.palette.mode === 'dark' ? '#3D3D3E' : '#3D3D3E',
+  backgroundColor: theme.palette.background.default,
 }));
 
 const Design = () => {
@@ -32,6 +32,7 @@ const Design = () => {
   const [sources, setSource] = useState(null);
   const [value, setValue] = useState('1');
   const [alignment, setAlignment] = React.useState('web');
+  const theme = useTheme();
 
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -94,7 +95,7 @@ const Design = () => {
               aria-label="lab API tabs example"
               sx={{
                 borderRadius: '16px',
-                background: '#595655',
+                background: theme.palette.background.light,
                 boxShadow: '0px 2px 2px rgba(0, 0, 0, 0.25), inset 0px 2px 2px rgba(0, 0, 0, 0.25)',
                 '.MuiTabs-indicator': {
                   display: 'none',
@@ -106,9 +107,9 @@ const Design = () => {
                 display: 'flex',
                 alignItems: 'center',
                 '	.Mui-selected': {
-                  background: '#F07D60',
+                  background: theme.palette.primary.main,
                   borderRadius: '14px',
-                  color: '#E1E1E1 !important',
+                  color: `${theme.palette.text.primary} !important`,
                 },
                 '.MuiTab-root': {
                   padding: '0px 7px',

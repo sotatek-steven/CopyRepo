@@ -1,27 +1,39 @@
-import { Box, Card, CardContent, FormControl, FormControlLabel, Radio, RadioGroup, Typography } from '@mui/material';
+import {
+  Box,
+  Card,
+  CardContent,
+  FormControl,
+  FormControlLabel,
+  Radio,
+  RadioGroup,
+  Typography,
+  useTheme,
+} from '@mui/material';
 import { useRadioGroup } from '@mui/material/RadioGroup';
 import React, { useEffect } from 'react';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
-import styled from '@emotion/styled';
+import { styled } from '@mui/material/styles';
 import _ from 'lodash';
 
 const CheckBoxStyled = styled(Card)((theme) => ({
   minWidth: 500,
   px: 1.5,
   borderRadius: '4px',
-  borderRight: '2px solid #F07D60',
+  borderRight: '2px solid',
+  borderColor: theme.palette.background.default,
   marginTop: '24px',
 }));
 
 const RadioCustom = styled(Radio)((theme) => ({
   color: '#64F5A6',
   '&.Mui-checked': {
-    color: '#95D5B2 ',
+    color: theme.palette.success.main,
   },
 }));
 
 const CheckboxChoose = ({ options, name, handleChange }) => {
+  const theme = useTheme();
   return _.isArray(options) && options.length > 0 ? (
     <FormControl>
       <RadioGroup
@@ -39,10 +51,10 @@ const CheckboxChoose = ({ options, name, handleChange }) => {
                   onChange={handleChange}
                   control={<RadioCustom icon={<CircleOutlinedIcon />} checkedIcon={<CheckCircleIcon />} />}
                 />
-                <Typography sx={{ color: '#E5C2B9' }}>{option?.name}</Typography>
+                <Typography sx={{ color: theme.palette.primary.light }}>{option?.name}</Typography>
               </Box>
               <CardContent sx={{ padding: '0 16px' }}>
-                <Typography sx={{ fontSize: '10px', paddingRight: '32px' }} color="text.secondary">
+                <Typography sx={{ fontSize: '12px', paddingRight: '32px' }} color="text.secondary">
                   {option?.description}
                 </Typography>
               </CardContent>
