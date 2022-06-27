@@ -29,13 +29,17 @@ const NavigationContainer = styled('div')(() => ({
 const PhaseNavigation = () => {
   const contractState = useSelector((state) => state.contract);
   const theme = useTheme();
+  const colors = {
+    true: theme.palette.success.main,
+    false: theme.palette.warning.main,
+  }
   return (
     <NavigationContainer>
       <Line />
-      <PhaseItem label="Design Phase" icon={<DesignIcon fill={theme.palette.success.main} />} isActive={contractState.current?.status !== 'deployed'} />
-      <PhaseItem label="Validation Phase" icon={<SearchIcon fill={theme.palette.warning.main} />} isActive={false} />
-      <PhaseItem label="Security Phase" icon={<SecurityIcon fill={theme.palette.warning.main} />} isActive={false} />
-      <PhaseItem label="Deployment Phase" icon={<RocketIcon stroke={theme.palette.warning.main} />} isActive={contractState.current?.status === 'deployed'} />
+      <PhaseItem label="Design Phase" icon={<DesignIcon fill={colors[contractState.current?.status !== 'deployed']} />} isActive={contractState.current?.status !== 'deployed'} />
+      <PhaseItem label="Validation Phase" icon={<SearchIcon fill={colors[false]} />} isActive={false} />
+      <PhaseItem label="Security Phase" icon={<SecurityIcon fill={colors[false]} />} isActive={false} />
+      <PhaseItem label="Deployment Phase" icon={<RocketIcon stroke={colors[contractState.current?.status === 'deployed']} />} isActive={contractState.current?.status === 'deployed'} />
     </NavigationContainer>
   );
 };
