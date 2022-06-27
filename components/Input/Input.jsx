@@ -1,25 +1,25 @@
-import styled from '@emotion/styled';
+import { styled } from '@mui/material/styles';
 import React from 'react';
 
 const Label = styled('div')(({ theme }) => ({
-  color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#E1E1E1',
+  color: theme.palette.text.primary,
   fontSize: 18,
   fontWeight: 600,
   marginBottom: 3,
 }));
 
 const InputBasic = styled('input')(({ theme }) => ({
-  backgroundColor: theme.palette.mode === 'dark' ? '#595655' : '#595655',
-  color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#E1E1E1',
+  backgroundColor: theme.palette.background.light,
+  color: theme.palette.text.primary,
   height: 45,
   borderRadius: 5,
   border: 'none',
   outline: 'none',
   width: '100%',
   fontSize: 14,
-  fontWeight: 600,
+  fontWeight: theme.typography.fontWeightBold,
   padding: '0px 15px',
-  fontFamily: 'Josefin Sans',
+  fontFamily: theme.typography.fontFamily,
 }));
 
 const Input = ({ label, value, isRequired, id, name, type = 'text', onChange, readOnly }) => {

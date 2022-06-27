@@ -7,7 +7,7 @@ import ModuleItem from './ModuleItem';
 
 const DragArea = styled('div')(({ theme }) => ({
   height: '100%',
-  backgroundColor: theme.palette.mode === 'dark' ? '#2E2E30' : '#2E2E30',
+  backgroundColor: theme.palette.background.dark,
 }));
 
 const ModuleDrag = () => {
@@ -27,7 +27,7 @@ const ModuleDrag = () => {
       const { meta, data: modulesData } = await moduleApi.getModules(page);
       let { modules: activeModules } = contractState;
 
-      if(!activeModules) {
+      if (!activeModules) {
         const contractDetail = await contract.getDetailContract(id);
         activeModules = contractDetail.modules;
       }

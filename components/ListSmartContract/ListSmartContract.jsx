@@ -1,4 +1,4 @@
-import { Grid } from '@mui/material';
+import { Grid, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import TemplateItem from '../TemplateItem/TemplateItem';
@@ -13,6 +13,7 @@ const ListSmartContract = ({ data, status }) => {
   const [page, setPage] = useState(1);
   const [size, setSize] = useState(9);
   const [meta, setMeta] = useState([]);
+  const theme = useTheme();
 
   const getUserContracts = async () => {
     try {
@@ -79,14 +80,14 @@ const ListSmartContract = ({ data, status }) => {
               sx={{
                 '& .MuiPagination-ul': {
                   '& .Mui-selected': {
-                    backgroundColor: '#F07D60',
+                    backgroundColor: theme.palette.primary.main,
                     color: 'white',
                   },
                   '& .Mui-selected:hover': {
-                    backgroundColor: '#F07D60',
+                    backgroundColor: theme.palette.primary.main,
                   },
                   '& .MuiPaginationItem-icon': {
-                    color: '#F07D60',
+                    color: theme.palette.primary.main,
                   },
                 },
               }}

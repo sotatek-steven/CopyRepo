@@ -18,7 +18,7 @@ const tabs = [
 ];
 
 const MenuContainer = styled('div')(({ theme }) => ({
-  background: theme.palette.mode === 'dark' ? '#595655' : '#595655',
+  background: theme.palette.background.light,
   display: 'flex',
   padding: '0px 25px',
   justifyContent: 'space-between',

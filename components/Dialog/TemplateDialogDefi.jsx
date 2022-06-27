@@ -1,4 +1,15 @@
-import { Dialog, DialogTitle, Box, Typography, IconButton, DialogContent, Grid, Radio, Button } from '@mui/material';
+import {
+  Dialog,
+  DialogTitle,
+  Box,
+  Typography,
+  IconButton,
+  DialogContent,
+  Grid,
+  Radio,
+  Button,
+  useTheme,
+} from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,6 +24,7 @@ const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
   const templateList = useSelector((state) => state.template);
   const [templateState, setTemplateState] = useState([]);
   const [idTemplate, setIdTemplate] = useState(null);
+  const theme = useTheme();
 
   useEffect(() => {
     const fetchTemplate = async () => {
@@ -112,7 +124,7 @@ const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
               sx={{
                 width: '589px',
                 height: '548px',
-                background: '#3D3D3E',
+                background: theme.palette.background.default,
               }}>
               <Grid container>
                 <Grid item xs={12}></Grid>

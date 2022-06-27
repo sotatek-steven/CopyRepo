@@ -13,9 +13,9 @@ const RightSide = styled('div')(() => ({
 }));
 
 const TextStyle = styled('span')(({ theme }) => ({
-  fontSize: '22px',
-  fontWeight: 500,
-  color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#E1E1E1',
+  fontSize: '1.375rem', //22px
+  fontWeight: theme.typography.fontWeightMedium,
+  color: theme.palette.text.primary,
 }));
 
 const BurgerMenu = ({ contractName }) => {

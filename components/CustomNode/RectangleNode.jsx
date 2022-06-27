@@ -20,31 +20,31 @@ const Card = styled('div')(({ theme, color }) => ({
 
 const CardTitle = styled('div')(({ theme }) => ({
   padding: '10px',
-  color: theme.palette.mode === 'dark' ? '#2E2E30' : '#2E2E30',
+  color: theme.palette.background.dark,
   fontSize: 14,
   fontWeight: 600,
-  ...theme.components.Truncate.singleLineEllipsis,
+  ...theme.components.truncate.singleLineEllipsis,
 }));
 
 const CardBody = styled('div')(({ theme }) => ({
   borderRadius: '0px 0px 4px 4px',
   padding: '10px',
-  backgroundColor: theme.palette.mode === 'dark' ? '#2E2E30' : '#2E2E30',
+  backgroundColor: theme.palette.background.dark,
 }));
 
 const Label = styled('div')(({ theme }) => ({
-  fontSize: '10px',
+  fontSize: '12px',
   fontWeight: 600,
-  fontFamily: '"Noto Sans", sans-serif',
+  fontFamily: 'Segoe UI',
   marginBottom: '5px',
   color: theme.palette.mode === 'dark' ? '#FFFFFF' : '#FFFFFF',
 }));
 
 const Description = styled('div')(({ theme }) => ({
   fontSize: 12,
-  fontFamily: '"Noto Sans", sans-serif',
+  fontFamily: 'Segoe UI',
   fontWeight: 300,
-  ...theme.components.Truncate.threeLineEllipsis,
+  ...theme.components.truncate.threeLineEllipsis,
 }));
 
 const CloseBtn = styled('div')(({ theme }) => ({
@@ -52,7 +52,7 @@ const CloseBtn = styled('div')(({ theme }) => ({
   color: 'white',
   transition: 'color, 0.2s',
   ':hover': {
-    color: '#e1e1e19c',
+    color: `${theme.palette.text.primary}9c`,
   },
 }));
 

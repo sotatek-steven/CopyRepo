@@ -3,8 +3,8 @@ import { Box, styled } from '@mui/system';
 import React from 'react';
 
 const ButtonStatusCustom = styled(Box)(({ theme, status }) => ({
-  border: `1px solid ${status ? '#95D5B2' : '#FFD33F'}`,
-  color: `${status ? '#95D5B2' : '#FFD33F'} !important`,
+  border: `1px solid ${status ? theme.palette.success.main : theme.palette.warning.main}`,
+  color: `${status ? theme.palette.success.main : theme.palette.warning.main} !important`,
   borderRadius: '20px',
   padding: '4px 8px !important',
   fontSize: '12px',

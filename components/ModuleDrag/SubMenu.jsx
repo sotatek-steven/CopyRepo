@@ -4,10 +4,10 @@ import SearchModule from './SearchModule';
 import CreateButton from './CreateBtn';
 
 const LeftSide = styled('div')(({ theme }) => ({
-  color: theme.palette.mode === 'dark' ? '#E5C2B9' : '#E5C2B9',
+  color: theme.palette.primary.light,
   fontSize: '18px',
-  fontWeight: 400,
-  fontFamily: '"Noto Sans", sans-serif',
+  fontWeight: theme.typography.fontWeightRegular,
+  fontFamily: 'Segoe UI',
 }));
 
 const SubMenu = () => {

@@ -1,4 +1,4 @@
-import { Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography, useTheme } from '@mui/material';
 import { Box } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
@@ -6,6 +6,7 @@ import TemplateDialogDefi from '../Dialog/TemplateDialogDefi';
 import TemplateDialogNFT from '../Dialog/TemplateDialogNFT';
 
 const BusinessDomain = ({ data, setOpenListDefi, setOpenListNFT, setOpenCreate }) => {
+  const theme = useTheme();
   const handleClick = () => {
     if (data.name === 'Defi') {
       setOpenListDefi(true);
@@ -18,7 +19,7 @@ const BusinessDomain = ({ data, setOpenListDefi, setOpenListNFT, setOpenCreate }
     <>
       <Box
         sx={{
-          background: '#3D3D3E',
+          background: theme.palette.background.default,
           padding: '24px 24px 24px 32px',
           my: 3,
           maxWidth: '450px',
@@ -33,7 +34,7 @@ const BusinessDomain = ({ data, setOpenListDefi, setOpenListNFT, setOpenCreate }
             </Avatar>
           </Grid>
           <Grid item xs={10}>
-            <Typography sx={{ color: '#E5C2B9' }}>{data.name}</Typography>
+            <Typography sx={{ color: theme.palette.primary.light }}>{data.name}</Typography>
             <Typography sx={{ fontSize: '12px', py: 1 }}>{data.description}</Typography>
           </Grid>
         </Grid>

@@ -13,9 +13,9 @@ const Item = styled('div')(({ disable }) => ({
 const Text = styled('div')(({ theme }) => ({
   fontSize: '14px',
   fontWeight: '400',
-  fontFamily: '"Noto Sans", sans-serif',
-  color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#E1E1E1',
-  ...theme.components.Truncate.singleLineEllipsis,
+  fontFamily: 'Segoe UI',
+  color: theme.palette.text.primary,
+  ...theme.components.truncate.singleLineEllipsis,
 }));
 
 const ModuleItem = ({ data, nodeType }) => {

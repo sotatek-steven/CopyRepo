@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-globals */
-import { ListItemButton, ListItemIcon, ListItemText } from '@mui/material';
+import { ListItemButton, ListItemIcon, ListItemText, useTheme } from '@mui/material';
 // import {
 //   ClientsIcon,
 //   DocumentsIcon,
@@ -15,6 +15,7 @@ const IconNavBar = ({ name, path }) => {
   const [isSelected, setIsSelected] = useState(false);
   const router = useRouter();
   const { pathname } = router;
+  const theme = useTheme();
 
   useEffect(() => {
     setIsSelected(path !== '/' && pathname.includes(path));
@@ -48,7 +49,7 @@ const IconNavBar = ({ name, path }) => {
     <ListItemButton
       sx={{
         ...styles.listItemBtn,
-        backgroundColor: isSelected ? '#F07D60' : 'transparent',
+        backgroundColor: isSelected ? theme.palette.primary.main : 'transparent',
         borderRadius: '0 4px 4px 0',
       }}
       onClick={() => {
@@ -59,8 +60,12 @@ const IconNavBar = ({ name, path }) => {
         sx={{
           ...styles.listItemIcon,
         }}>
-        {name === 'Dashboard' && <LayersIcon sx={{ color: isSelected ? '#161616' : '#F07D60' }} fontSize="medium" />}
-        {name === 'Language' && <LanguageIcon sx={{ color: isSelected ? '#161616' : '#F07D60' }} fontSize="medium" />}
+        {name === 'Dashboard' && (
+          <LayersIcon sx={{ color: isSelected ? '#161616' : theme.palette.primary.main }} fontSize="medium" />
+        )}
+        {name === 'Language' && (
+          <LanguageIcon sx={{ color: isSelected ? '#161616' : theme.palette.primary.main }} fontSize="medium" />
+        )}
       </ListItemIcon>
     </ListItemButton>
   );

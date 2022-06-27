@@ -1,5 +1,5 @@
 import { Provider } from 'react-redux';
-import React from 'react';
+import React, { useState } from 'react';
 import { ThemeProvider } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
 import { CacheProvider } from '@emotion/react';
@@ -9,7 +9,6 @@ import { Web3Provider } from '@ethersproject/providers';
 import NProgress from 'nprogress';
 import Head from 'next/head';
 import Router from 'next/router';
-import { theme } from '../theme/index.js';
 import { createEmotionCache } from '@/utils/create-emotion-cache.js';
 import AutoSwitchNetwork from '@/components/atom/AutoSwitchNetwork.jsx';
 import Layout from '@/components/layout/PageLayout';
@@ -18,6 +17,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'public/static/css/base.css';
 import { BrowserRouter } from 'react-router-dom';
 import HomePage from './index.jsx';
+import { darkTheme } from 'theme/DarkTheme.js';
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -37,7 +37,7 @@ const getLibrary = (provider) => {
 function App(props) {
   const { Component, emotionCache = clientSideEmotionCache, pageProps } = props;
   const store = useStore(pageProps.initialReduxState);
-
+  const [activeTheme, setActiveTheme] = useState(darkTheme);
   return (
     <>
       <Head>
@@ -60,15 +60,17 @@ function App(props) {
         {/* <BrowserRouter> */}
         <Web3ReactProvider getLibrary={getLibrary}>
           <CacheProvider value={emotionCache}>
-            <ThemeProvider theme={theme}>
+            <ThemeProvider theme={activeTheme}>
               <ToastContainer />
               <CssBaseline />
               <div suppressHydrationWarning>
                 {
                   // eslint-disable-next-line no-nested-ternary
-                  typeof window === 'undefined' ? null : <Component.PageLayout>
-                    <Component {...pageProps} />
-                  </Component.PageLayout>
+                  typeof window === 'undefined' ? null : (
+                    <Component.PageLayout>
+                      <Component {...pageProps} />
+                    </Component.PageLayout>
+                  )
                 }
               </div>
             </ThemeProvider>

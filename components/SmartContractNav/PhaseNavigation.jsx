@@ -4,7 +4,7 @@ import DesignIcon from '../../assets/icon/design.svg';
 import SearchIcon from '../../assets/icon/search-zoom-out.svg';
 import SecurityIcon from '../../assets/icon/security.svg';
 import RocketIcon from '../../assets/icon/rocket.svg';
-import { styled } from '@mui/material/styles';
+import { styled, useTheme } from '@mui/material/styles';
 
 const Line = styled('div')(({ theme }) => ({
   width: '80%',
@@ -13,7 +13,7 @@ const Line = styled('div')(({ theme }) => ({
   top: '19px',
   left: '50%',
   transform: 'translate(-50%, 0%)',
-  backgroundColor: theme.palette.mode === 'dark' ? 'white' : 'white',
+  backgroundColor: theme.palette.text.primary,
 }));
 
 const NavigationContainer = styled('div')(() => ({
@@ -26,13 +26,14 @@ const NavigationContainer = styled('div')(() => ({
 }));
 
 const PhaseNavigation = () => {
+  const theme = useTheme();
   return (
     <NavigationContainer>
       <Line />
-      <PhaseItem label="Design Phase" icon={<DesignIcon fill="#64F5A6" />} isActive={true} />
-      <PhaseItem label="Validation Phase" icon={<SearchIcon fill="#FFD33F" />} isActive={false} />
-      <PhaseItem label="Security Phase" icon={<SecurityIcon fill="#FFD33F" />} isActive={false} />
-      <PhaseItem label="Deployment Phase" icon={<RocketIcon stroke="#FFD33F" />} isActive={false} />
+      <PhaseItem label="Design Phase" icon={<DesignIcon fill={theme.palette.success.main} />} isActive={true} />
+      <PhaseItem label="Validation Phase" icon={<SearchIcon fill={theme.palette.warning.main} />} isActive={false} />
+      <PhaseItem label="Security Phase" icon={<SecurityIcon fill={theme.palette.warning.main} />} isActive={false} />
+      <PhaseItem label="Deployment Phase" icon={<RocketIcon stroke={theme.palette.warning.main} />} isActive={false} />
     </NavigationContainer>
   );
 };

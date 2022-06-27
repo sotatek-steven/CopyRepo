@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Modal } from '@mui/material';
-import styled from '@emotion/styled';
+import { styled } from '@mui/material/styles';
 import { PrimaryButton, SecondaryButton } from '../ButtonStyle';
 import { Input } from '../Input';
 import Scrollbars from 'react-custom-scrollbars';
@@ -13,15 +13,22 @@ const Box = styled('div')(({ theme }) => ({
   left: '50%',
   transform: 'translate(-50%, -50%)',
   width: 600,
-  backgroundColor: theme.palette.mode === 'dark' ? '#3D3D3E' : '#3D3D3E',
+  backgroundColor: theme.palette.background.default,
   boxShadow: 24,
   padding: '35px 35px',
 }));
 
+const HeaderModal = styled('div')(({ theme }) => ({
+  color: theme.palette.text.primary,
+  display: 'flex',
+  justifyContent: 'space-between',
+  fontSize: 25,
+}));
+
 const Title = styled('div')(({ theme }) => ({
-  color: theme.palette.mode === 'dark' ? '#E1E1E1' : '#E1E1E1',
+  color: theme.palette.text.primary,
   fontSize: 22,
-  fontWeight: 600,
+  fontWeight: theme.typography.fontWeightBold,
   marginBottom: 30,
 }));
 
@@ -70,52 +77,23 @@ const DeployContractModal = ({ open, onClose, onDeploy }) => {
         aria-labelledby="modal-modal-title"
         aria-describedby="modal-modal-description">
         <Box>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+          <HeaderModal>
             <Title>Parameters</Title>
             <CloseButton onClick={onClose}>
-              <CloseIcon sx={{ fontSize: 25, color: '#fff' }} />
+              <CloseIcon />
             </CloseButton>
-          </div>
+          </HeaderModal>
           <Scrollbars autoHeight autoHeightMin="100%" autoHeightMax="500px" autoHide>
             <div style={{ padding: '0px 20px' }}>
               {parameters.map((parameter) => {
                 const { label, type, _id } = parameter;
                 const _label = `${label}(${type})`;
-                // const _name = label.toLowerCase();
-                // const _type = type.includes('uint') ? 'number' : 'text';
                 return (
                   <InputWrapper key={_id}>
-                    <Input
-                      // type={_type}
-                      label={_label}
-                      id={_id}
-                      name={label}
-                      isRequired={true}
-                      onChange={handleParametersChange}
-                    />
+                    <Input label={_label} id={_id} name={label} isRequired={true} onChange={handleParametersChange} />
                   </InputWrapper>
                 );
               })}
-              {/* <InputWrapper>
-                <Input
-                  label="owner(address)"
-                  id="owner"
-                  name="owner"
-                  isRequired={true}
-                  // value={owner}
-                  onchange={handleParametersChange}
-                />
-              </InputWrapper>
-              <InputWrapper>
-                <Input
-                  label="owner1(address)"
-                  id="owner1"
-                  name="owner1"
-                  isRequired={true}
-                  // value={owner}
-                  onchange={handleParametersChange}
-                />
-              </InputWrapper> */}
             </div>
           </Scrollbars>
           <div
