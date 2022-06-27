@@ -11,6 +11,7 @@ const LoadingButton = styled('button')(({ theme, width }) => ({
   right: 0,
   bottom: 0,
   zIndex: 100,
+  opacity: 0.6,
   color: theme.palette.text.primary,
   fontWeight: theme.typography.fontWeightBold,
   backgroundColor: theme.palette.background.light,
