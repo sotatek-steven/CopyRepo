@@ -3,27 +3,12 @@ import { deleteRequest, getRequest, postRequest } from '../../utils/httpRequest'
 
 const userContract = createModel({
   state: {
-    listUserContract: [],
-    listUserContractDraff: [],
-    listUserContractDeployed: [],
     keywords: null,
   },
   reducers: {
     update: (state, data) => ({
       ...state,
       ...data,
-    }),
-    setListContract: (state, listUserContract) => ({
-      ...state,
-      listUserContract,
-    }),
-    setListContractDraff: (state, listUserContractDraff) => ({
-      ...state,
-      listUserContractDraff,
-    }),
-    setListContractDeployed: (state, listUserContractDeployed) => ({
-      ...state,
-      listUserContractDeployed,
     }),
     setKeywords: (state, keywords) => ({
       ...state,
@@ -32,13 +17,6 @@ const userContract = createModel({
     clearKeyowrds: () => {
       return {
         keywords: null,
-      };
-    },
-    clearAll: () => {
-      return {
-        listUserContract: [],
-        listUserContractDraff: [],
-        listUserContractDeployed: [],
       };
     },
   },
@@ -60,7 +38,6 @@ const userContract = createModel({
             userModoel,
           });
           return { meta, data };
-          // userContract.setListContract(data || []);
         } catch (error) {
           console.log('error: ', error);
           userContract.setListContract([]);
@@ -81,10 +58,8 @@ const userContract = createModel({
             userModoel,
           });
           return { meta, data };
-          // userContract.setListContractDraff(data || []);
         } catch (error) {
           console.log('error: ', error);
-          userContract.setListContractDraff([]);
         }
       },
       async getUserContractDeployed(payload, state) {
@@ -102,10 +77,8 @@ const userContract = createModel({
             userModoel,
           });
           return { meta, data };
-          // userContract.setListContractDeployed(data || []);
         } catch (error) {
           console.log('error: ', error);
-          userContract.setListContractDeployed([]);
         }
       },
       async createSmartContract(body, state) {
