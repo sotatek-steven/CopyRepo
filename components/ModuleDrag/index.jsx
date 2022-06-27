@@ -12,7 +12,7 @@ const DragArea = styled('div')(({ theme }) => ({
 
 const ModuleDrag = () => {
   const contractState = useSelector((state) => state.contract);
-  const { moduleApi } = useDispatch();
+  const { userModule } = useDispatch();
   const [modules, setModules] = useState([]);
   const [paging, setPaging] = useState({
     count: 0,
@@ -24,7 +24,7 @@ const ModuleDrag = () => {
   const fetchModules = async () => {
     console.log('fetchModules');
     try {
-      const { data: modulesData } = await moduleApi.getModules(-1);
+      const { data: modulesData } = await userModule.getModules(-1);
 
       const modules = modulesData.map((moduleData) => {
         return {
@@ -58,7 +58,7 @@ const ModuleDrag = () => {
     });
 
     setModules(newState);
-  }
+  };
 
   useEffect(() => {
     updateModules();
