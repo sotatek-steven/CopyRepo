@@ -16,7 +16,7 @@ import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 import { styled } from '@mui/material/styles';
 import _ from 'lodash';
 
-const CheckBoxStyled = styled(Card)((theme) => ({
+const CheckBoxStyled = styled(Card)(({ theme }) => ({
   minWidth: 500,
   px: 1.5,
   borderRadius: '4px',
@@ -25,7 +25,7 @@ const CheckBoxStyled = styled(Card)((theme) => ({
   marginTop: '24px',
 }));
 
-const RadioCustom = styled(Radio)((theme) => ({
+const RadioCustom = styled(Radio)(({ theme }) => ({
   color: '#64F5A6',
   '&.Mui-checked': {
     color: theme.palette.success.main,
