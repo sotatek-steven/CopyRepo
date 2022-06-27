@@ -108,7 +108,7 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
       const dataJson = event.dataTransfer.getData('foo');
       const data = JSON.parse(dataJson);
 
-      const { modules } = contractState;
+      const { modules } = contractState.current;
       if (modules.some((item) => item === data._id)) return;
 
       //add new node
@@ -143,24 +143,19 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
       //update contract state
       addNewModuleToContract(data, position);
     },
-    [reactFlowInstance, setNodes, contractState.modules, nodes]
+    [reactFlowInstance, setNodes, contractState.current.modules, nodes]
   );
 
   const updateContractState = (modules, coordinates) => {
-    const newContract = {
-      ...contractState,
-      modules,
-      coordinates,
-    };
-
-    contract.update(newContract);
-    // contract.updateContract(newContract);
+    contract.setModules(modules);
+    contract.setCoordinates(coordinates);
   };
 
   const addNewModuleToContract = (moduleInfo, position) => {
+    console.log('module info:', moduleInfo);
     if (!moduleInfo) return;
 
-    let { modules, coordinates } = contractState;
+    let { modules, coordinates } = contractState.current;
 
     //update moudles feild
     const { _id } = moduleInfo;
@@ -181,7 +176,7 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
   };
 
   const removeModuleFromContract = (moduleId) => {
-    let { modules, coordinates } = contractState;
+    let { modules, coordinates } = contractState.current;
 
     //update moudles feild
     const newModules = modules.filter((id) => id !== moduleId);
@@ -198,7 +193,7 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
 
   const onNodeDragStop = (event, node) => {
     const { data, position } = node;
-    const { coordinates, modules } = contractState;
+    const { coordinates, modules } = contractState.current;
     const moduleIndex = modules.findIndex((moduleId) => moduleId === data._id);
     const module = coordinates[moduleIndex];
     const { x: left, y: top } = position;
@@ -210,7 +205,7 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
       },
     };
 
-    contract.update({ ...contractState, coordinates });
+    contract.updateCurrent({ ...contractState.current, coordinates });
   };
 
   const onEdgeUpdate = (oldEdge, newConnection) => {

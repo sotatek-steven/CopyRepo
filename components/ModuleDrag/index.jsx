@@ -22,27 +22,17 @@ const ModuleDrag = () => {
   });
 
   const fetchModules = async () => {
-    const { page } = paging;
+    console.log('fetchModules');
     try {
-      const { meta, data: modulesData } = await moduleApi.getModules(page);
-      let { modules: activeModules } = contractState;
-
-      if (!activeModules) {
-        const contractDetail = await contract.getDetailContract(id);
-        activeModules = contractDetail.modules;
-      }
+      const { data: modulesData } = await moduleApi.getModules(-1);
 
       const modules = modulesData.map((moduleData) => {
-        const { _id } = moduleData;
-        const disable = activeModules.includes(_id);
         return {
           ...moduleData,
-          disable,
+          disable: false,
         };
       });
-
       setModules(modules);
-      setPaging(meta);
     } catch (error) {
       console.log('Failed to fetch modules');
     }
@@ -53,7 +43,11 @@ const ModuleDrag = () => {
   }, []);
 
   useEffect(() => {
-    const { modules: activeModules } = contractState;
+    updateModules();
+  }, [modules.length]);
+
+  const updateModules = () => {
+    const activeModules = contractState.current?.modules || [];
     const newState = modules.map((data) => {
       const { _id } = data;
       const disable = activeModules.includes(_id);
@@ -64,7 +58,11 @@ const ModuleDrag = () => {
     });
 
     setModules(newState);
-  }, [contractState]);
+  }
+
+  useEffect(() => {
+    updateModules();
+  }, [contractState.current?.module_keys]);
 
   return (
     <DragArea>

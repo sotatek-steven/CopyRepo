@@ -5,6 +5,7 @@ import SearchIcon from '../../assets/icon/search-zoom-out.svg';
 import SecurityIcon from '../../assets/icon/security.svg';
 import RocketIcon from '../../assets/icon/rocket.svg';
 import { styled, useTheme } from '@mui/material/styles';
+import { useSelector } from 'react-redux';
 
 const Line = styled('div')(({ theme }) => ({
   width: '80%',
@@ -26,14 +27,15 @@ const NavigationContainer = styled('div')(() => ({
 }));
 
 const PhaseNavigation = () => {
+  const contractState = useSelector((state) => state.contract);
   const theme = useTheme();
   return (
     <NavigationContainer>
       <Line />
-      <PhaseItem label="Design Phase" icon={<DesignIcon fill={theme.palette.success.main} />} isActive={true} />
+      <PhaseItem label="Design Phase" icon={<DesignIcon fill={theme.palette.success.main} />} isActive={contractState.current?.status !== 'deployed'} />
       <PhaseItem label="Validation Phase" icon={<SearchIcon fill={theme.palette.warning.main} />} isActive={false} />
       <PhaseItem label="Security Phase" icon={<SecurityIcon fill={theme.palette.warning.main} />} isActive={false} />
-      <PhaseItem label="Deployment Phase" icon={<RocketIcon stroke={theme.palette.warning.main} />} isActive={false} />
+      <PhaseItem label="Deployment Phase" icon={<RocketIcon stroke={theme.palette.warning.main} />} isActive={contractState.current?.status === 'deployed'} />
     </NavigationContainer>
   );
 };

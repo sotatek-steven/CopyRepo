@@ -10,7 +10,7 @@ const moduleApi = createModel({
       async getModules(page, state) {
         const { meta, data } = await getRequest({
           url: '/api/v1/modules',
-          params: { page },
+          params: { size: -1 },
           userState: state.player,
           userModoel: player,
         })

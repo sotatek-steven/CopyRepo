@@ -43,10 +43,8 @@ const DesignSmartContractNav = () => {
   };
 
   useEffect(() => {
-    if (contractState.status === 'init') {
-      setInfoContractModalOpen(true);
-    }
-  }, [contractState.status]);
+    setInfoContractModalOpen(contractState.current.status === 'init');
+  }, [contractState.current.status]);
 
   const handleDeployContractModalClose = (_, reason) => {
     if (reason === 'backdropClick') return;
@@ -82,7 +80,7 @@ const DesignSmartContractNav = () => {
   };
 
   const handleAgreeDeploy = async () => {
-    if (!account || !library || !contractState.abi || !contractState.bytecode) {
+    if (!account || !library || !contractState.current.abi || !contractState.current.bytecode) {
       return;
     }
     const signer = await library.getSigner(account);
@@ -92,11 +90,11 @@ const DesignSmartContractNav = () => {
   return (
     <div style={{ height: 74 }}>
       <NavbarContainer>
-        <BurgerMenu contractName={contractState.name || 'New Contract'} />
+        <BurgerMenu contractName={contractState.current.name || 'New Contract'} />
         <PhaseNavigation />
         <RightSide>
           <PrimaryButton onClick={() => setInfoContractModalOpen(true)}>Edit Info</PrimaryButton>
-          {contractState.status !== 'deployed' && (
+          {contractState.current.status !== 'deployed' && (
             <>
               <PrimaryButton onClick={() => setDeployContractModalOpen(true)}>Next</PrimaryButton>
               <SaveContractButton />
@@ -109,9 +107,9 @@ const DesignSmartContractNav = () => {
       <EditInfoContractModal
         open={infoContractModalOpen}
         onClose={handleInfoContractModalClose}
-        nameValue={contractState.name}
-        data={contractState}
-        readOnly={contractState.status === 'deployed'}
+        nameValue={contractState.current.name}
+        data={contractState.current}
+        readOnly={contractState.current.status === 'deployed'}
       />
       <DeployContractModal
         open={deployContractModalOpen}
@@ -126,8 +124,8 @@ const DesignSmartContractNav = () => {
       />
 
       <ContractDeployedAlert
-        txHash={contractState.transaction}
-        address={contractState.address}
+        txHash={contractState.current.transaction}
+        address={contractState.current.address}
         open={contractDeployedAlertOpen}
         onClose={handleContractDeployedAlertClose}
       />
