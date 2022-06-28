@@ -47,12 +47,12 @@ const TemplateItem = ({ data }) => {
     <Card
       sx={{ maxWidth: 440, px: 1.5, maxHeight: '200px', height: '100%', background: theme.palette.background.dark }}>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2 }}>
-        <Typography sx={{ fontSize: '16px' }}>{data.domain}</Typography>
+        <Typography sx={{ fontSize: '16px', fontFamily: 'Segoe UI' }}>{data.domain}</Typography>
         <ButtonStatus status={data.status} />
       </Box>
       <CardContent sx={{ padding: '0 16px', cursor: 'pointer' }}>
         <Typography
-          sx={{ color: 'primary.light', fontSize: '20px', marginBottom: '5px' }}
+          sx={{ color: 'primary.light', fontSize: '20px', marginBottom: '5px', fontFamily: 'Segoe UI' }}
           onClick={() => {
             router.push(`/smartcontract/${data._id}`);
           }}>
@@ -71,6 +71,7 @@ const TemplateItem = ({ data }) => {
                 lineClamp: 2,
                 WebkitBoxOrient: 'vertical',
                 minHeight: '45px',
+                fontFamily: 'Segoe UI',
               }}
               color="text.secondary"
               onClick={() => {
