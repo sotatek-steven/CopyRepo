@@ -1,9 +1,16 @@
-import { Dialog, DialogContent, DialogTitle, Grid, IconButton, Typography, useTheme } from '@mui/material';
-import { Box } from '@mui/system';
+import { Dialog, DialogContent, DialogTitle, Grid, IconButton, styled, Typography, useTheme } from '@mui/material';
+import { Box, padding } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
 import TemplateDialogDefi from '../Dialog/TemplateDialogDefi';
 import TemplateDialogNFT from '../Dialog/TemplateDialogNFT';
+
+const Description = styled('div')(({ theme }) => ({
+  fontSize: '14px',
+  padding: 1,
+  fontFamily: 'Segoe UI',
+  ...theme.components.truncate.twoLineEllipsis,
+}));
 
 const BusinessDomain = ({ data, setOpenListDefi, setOpenListNFT, setOpenCreate }) => {
   const theme = useTheme();
@@ -35,7 +42,7 @@ const BusinessDomain = ({ data, setOpenListDefi, setOpenListNFT, setOpenCreate }
           </Grid>
           <Grid item xs={10}>
             <Typography sx={{ color: theme.palette.primary.light }}>{data.name}</Typography>
-            <Typography sx={{ fontSize: '12px', py: 1 }}>{data.description}</Typography>
+            <Description>{data.description}</Description>
           </Grid>
         </Grid>
       </Box>

@@ -18,7 +18,7 @@ import TabPanel from '@mui/lab/TabPanel';
 import { styled } from '@mui/system';
 import SearchIcon from '@mui/icons-material/Search';
 import Layout from '@/components/layout/PageLayout';
-import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import CloseIcon from '../../assets/icon/close-circle.svg';
 import BusinessDomain from '@/components/BusinessDomain/BusinessDomain';
 import ListSmartContract from '@/components/ListSmartContract/ListSmartContract';
 import { useDispatch, useSelector } from 'react-redux';
@@ -137,7 +137,7 @@ const Dashboard = () => {
         <DialogTitle sx={{ textAlign: 'left', mb: 2 }} id="responsive-dialog-title">
           <Box>
             <Typography sx={{ fontSize: '22px' }}>Create Smart Contract</Typography>
-            <Typography sx={{ fontSize: '12px', py: 1 }}>
+            <Typography sx={{ fontSize: '14px', py: 1, fontFamily: 'Segoe UI' }}>
               Please go through the following questionnaire and identify the appropriate match for your requirement.
             </Typography>
           </Box>
@@ -148,9 +148,8 @@ const Dashboard = () => {
               position: 'absolute',
               right: 8,
               top: 8,
-              color: (theme) => theme.palette.primary.contrastText,
             }}>
-            <CancelOutlinedIcon />
+            <CloseIcon />
           </IconButton>
         </DialogTitle>
         <DialogContent>
@@ -165,7 +164,7 @@ const Dashboard = () => {
               }}
               item
               xs={6}>
-              <Typography sx={{ fontSize: '12px', py: 1 }}>
+              <Typography sx={{ fontSize: '14px', py: 1, fontFamily: 'Segoe UI' }}>
                 Choose the business domain that you are creating for this smart contract
               </Typography>
               {dataCreate.map((item) => {
