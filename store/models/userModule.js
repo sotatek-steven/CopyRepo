@@ -36,12 +36,16 @@ const userModule = createModel({
         return { meta, data };
       },
       async getDetailModule(id, state) {
-        const { data } = await getRequest({
+        const { code, data, message } = await getRequest({
           url: `/api/v1/modules/${id}`,
           userState: state.player,
           userModoel: player,
         });
-        userModule.update(data);
+
+        if (code !== 200) {
+          toast.error(message);
+          return;
+        }
         return data;
       },
       async updateModule({ moduleId, moduleInfo }, state) {
@@ -55,7 +59,7 @@ const userModule = createModel({
           toast.error(message);
           return;
         }
-        return { code, data };
+        return data;
       },
     };
   },

@@ -5,7 +5,9 @@ import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Popover from '@mui/material/Popover';
 import { PrimaryButton } from '../ButtonStyle';
 import ModuleInfoModal from './ModuleInfoModal';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import ConfirmDialog from '../atom/Dialog/ConfirmDialog';
+import { useRouter } from 'next/router';
 
 const Wrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -50,7 +52,33 @@ const moreVertIconStyle = {
 const ModuleControl = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
+  const [saveChangeDialogOpen, setSaveChangeDialogOpen] = useState(false);
+
+  const route = useRouter();
+  const { userModule } = useDispatch();
   const moduleState = useSelector((state) => state.userModule);
+  const contractState = useSelector((state) => state.contract);
+
+  const redirectToContractPage = () => {
+    const { _id: id } = contractState.current;
+    if (!id) return;
+    route.push(`/smartcontract/${id}`);
+    // route.back();
+  };
+
+  const handleConfirm = async () => {
+    const moduleData = await userModule.getDetailModule(moduleState._id);
+    if (JSON.stringify({ ...moduleData, updatedAt: '' }) === JSON.stringify({ ...moduleState, updatedAt: '' })) {
+      redirectToContractPage();
+      return;
+    }
+    setSaveChangeDialogOpen(true);
+  };
+
+  const saveChangeAndRedirect = async () => {
+    await userModule.updateModule({ moduleId: moduleState._id, moduleInfo: moduleState });
+    redirectToContractPage();
+  };
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -71,7 +99,7 @@ const ModuleControl = () => {
   return (
     <>
       <Wrapper>
-        <IconWrapper>
+        <IconWrapper onClick={handleConfirm}>
           <ArrowBackIosIcon sx={arrowIconStyle} />
         </IconWrapper>
         <span>{moduleState.name}</span>
@@ -92,6 +120,16 @@ const ModuleControl = () => {
       </Wrapper>
 
       <ModuleInfoModal open={infoModalOpen} onClose={() => setInfoModalOpen(false)} data={moduleState} />
+
+      <ConfirmDialog
+        open={saveChangeDialogOpen}
+        onClose={() => setSaveChangeDialogOpen(false)}
+        onDisagree={redirectToContractPage}
+        onAgree={saveChangeAndRedirect}
+        title="You have unsave changes"
+        closeText="Discard"
+        agreeText="Save"
+      />
     </>
   );
 };
