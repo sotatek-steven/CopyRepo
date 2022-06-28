@@ -3,6 +3,7 @@ import DesignLayout from '@/components/layout/DesignLayout';
 import ModuleControl from '@/components/ModulePage/ModuleControl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
+import ModuleActionList from '@/components/ModulePage/ModuleActionList';
 
 const ModulePage = () => {
   const { userModule } = useDispatch();
@@ -24,4 +25,4 @@ const ModulePage = () => {
 
 export default ModulePage;
 
-ModulePage.PageLayout = DesignLayout;
+ModulePage.PageLayout = (props) => DesignLayout({ children: props.children, actionList: <ModuleActionList /> });

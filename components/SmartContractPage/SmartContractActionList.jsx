@@ -1,42 +1,29 @@
+import { styled } from '@mui/material';
 import React, { useState, useEffect } from 'react';
-import BurgerMenu from './BurgerMenu';
-import PhaseNavigation from './PhaseNavigation';
-import ExitButton from './ExitButton';
-import SaveContractButton from './SaveContractButton';
-import { styled } from '@mui/material/styles';
-import { useSelector } from 'react-redux';
-import EditInfoContractModal from '../EditInfoContractModal';
-import { PrimaryButton } from '../ButtonStyle';
-import DeployContractModal from './DeployContractModal';
-import ContractDeployedAlert from '../Dialog/ContractDeployedAlert';
-import { useWeb3React } from '@web3-react/core';
-import { useDispatch } from 'react-redux';
-import SavingScreen from '../Saving';
+import { useDispatch, useSelector } from 'react-redux';
 import ConfirmDialog from '../atom/Dialog/ConfirmDialog';
-const NavbarContainer = styled('div')(({ theme }) => ({
-  height: '100%',
-  display: 'flex',
-  justifyContent: 'space-between',
-  padding: '10px 0px',
-  backgroundColor: theme.palette.background.dark,
-}));
+import { PrimaryButton } from '../ButtonStyle';
+import ContractDeployedAlert from '../Dialog/ContractDeployedAlert';
+import EditInfoContractModal from '../EditInfoContractModal';
+import SavingScreen from '../Saving';
+import DeployContractModal from '../SmartContractNav/DeployContractModal';
+import ExitButton from '../SmartContractNav/ExitButton';
+import SaveContractButton from '../SmartContractNav/SaveContractButton';
 
-const RightSide = styled('div')(() => ({
+const Container = styled('div')(() => ({
   display: 'flex',
   gap: '23px',
-  alignItems: 'center',
-  padding: '0 27px',
 }));
 
-const DesignSmartContractNav = () => {
+const SmartContractActionList = () => {
   const contractState = useSelector((state) => state.contract);
   const { contract } = useDispatch();
   const [loading, setLoading] = useState(false);
+
   const [infoContractModalOpen, setInfoContractModalOpen] = useState(false);
   const [deployContractModalOpen, setDeployContractModalOpen] = useState(false);
   const [confirmDeployModalOpen, setConfirmDeployModalOpen] = useState(false);
   const [contractDeployedAlertOpen, setContractDeployedAlertOpen] = useState(false);
-  const { account, library } = useWeb3React();
   const handleInfoContractModalClose = (_, reason) => {
     if (reason === 'backdropClick') return;
     setInfoContractModalOpen(false);
@@ -86,23 +73,18 @@ const DesignSmartContractNav = () => {
     const signer = await library.getSigner(account);
     await contract.deployContract({ signer, deploying, deployed });
   };
-
   return (
-    <div style={{ height: 74 }}>
-      <NavbarContainer>
-        <BurgerMenu contractName={contractState.current.name || 'New Contract'} />
-        <PhaseNavigation />
-        <RightSide>
-          <PrimaryButton onClick={() => setInfoContractModalOpen(true)}>Edit Info</PrimaryButton>
-          {contractState.current.status !== 'deployed' && (
-            <>
-              <PrimaryButton onClick={() => setDeployContractModalOpen(true)}>Next</PrimaryButton>
-              <SaveContractButton />
-            </>
-          )}
-          <ExitButton />
-        </RightSide>
-      </NavbarContainer>
+    <>
+      <Container>
+        <PrimaryButton onClick={() => setInfoContractModalOpen(true)}>Edit Info</PrimaryButton>
+        {contractState.current.status !== 'deployed' && (
+          <>
+            <PrimaryButton onClick={() => setDeployContractModalOpen(true)}>Next</PrimaryButton>
+            <SaveContractButton />
+          </>
+        )}
+        <ExitButton />
+      </Container>
 
       <EditInfoContractModal
         open={infoContractModalOpen}
@@ -130,8 +112,8 @@ const DesignSmartContractNav = () => {
         onClose={handleContractDeployedAlertClose}
       />
       {loading && <SavingScreen title="Loading" />}
-    </div>
+    </>
   );
 };
 
-export default DesignSmartContractNav;
+export default SmartContractActionList;
