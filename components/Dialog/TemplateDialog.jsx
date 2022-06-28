@@ -207,8 +207,8 @@ const TemplateDialog = ({ open, setOpen, type }) => {
                             )
                           }
                           onClick={() => setIsShowCollapse(!isShowCollapse)}>
-                          <Typography sx={{ pt: 0.5, color: theme.palette.primary.light }}>
-                            {dataDetails?.owner}
+                          <Typography sx={{ pt: 0.5, color: theme.palette.primary.light, textTransform: 'capitalize' }}>
+                            {dataDetails?.name}
                           </Typography>
                         </Button>
                         <Box sx={{ display: 'flex', fontSize: '14px', px: 3 }}>
