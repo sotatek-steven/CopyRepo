@@ -1,3 +1,4 @@
+import { ELEMENT_TYPE } from '@/config/constant/common';
 import { useState } from 'react';
 
 export const useForm = ({ initialValues, validate }) => {
@@ -15,21 +16,37 @@ export const useForm = ({ initialValues, validate }) => {
 
     return result.length !== 0;
   };
-  const handleChange = (e) => {
-    const currentValues = {
-      ...values,
-      [e.target.name]: e.target.value,
-    };
-    const _errors = validate(currentValues);
+  const handleChange = (e, field, type) => {
+    let valueField = {};
+    if (type === ELEMENT_TYPE.INPUT) {
+      valueField = {
+        [field]: e.target.value,
+      };
+    }
+    if (type === ELEMENT_TYPE.SELECT) {
+      valueField = {
+        [field]: e.target.value,
+      };
+    }
+    if (type === ELEMENT_TYPE.TAG) {
+      valueField = {
+        [field]: e?.map((tag) => ({
+          value: tag.value.toLowerCase(),
+          label: tag.label,
+        })),
+      };
+    }
 
-    setValues(currentValues);
+    const _errors = validate(valueField, errors);
+
+    setValues((prev) => ({ ...prev, ...valueField }));
     setErrors(_errors);
   };
 
   const handleSubmit = (e, onSubmit) => {
     e.preventDefault();
 
-    const currentErrors = validate(values);
+    const currentErrors = validate(values, errors);
     setErrors(currentErrors);
 
     if (hasError(currentErrors)) return;
@@ -37,5 +54,5 @@ export const useForm = ({ initialValues, validate }) => {
     onSubmit();
   };
 
-  return [values, setValues, handleChange, handleSubmit, errors];
+  return [values, setValues, handleChange, handleSubmit, errors, setErrors];
 };

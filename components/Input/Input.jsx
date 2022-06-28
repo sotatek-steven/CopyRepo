@@ -22,7 +22,13 @@ const InputBasic = styled('input')(({ theme }) => ({
   fontFamily: theme.typography.fontFamily,
 }));
 
-const Input = ({ label, value, isRequired, id, name, type = 'text', onChange, readOnly }) => {
+const Error = styled('div')(({ theme }) => ({
+  color: theme.palette.error.main,
+  fontSize: 14,
+  marginTop: 8,
+}));
+
+const Input = ({ label, value, isRequired, id, name, type = 'text', onChange, readOnly, errorText }) => {
   return (
     <>
       <Label htmlFor={id}>
@@ -30,6 +36,7 @@ const Input = ({ label, value, isRequired, id, name, type = 'text', onChange, re
         {isRequired && '*'}
       </Label>
       <InputBasic type={type} name={name} id={id} value={value} onChange={onChange} readOnly={readOnly} />
+      {!!errorText && <Error>{errorText}</Error>}
     </>
   );
 };

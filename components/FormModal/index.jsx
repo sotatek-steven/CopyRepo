@@ -4,7 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { BodyContent, CloseButton, Footer, Header, ModalBox, Title } from './FormModal.style';
 import { PrimaryButton, SecondaryButton } from '../ButtonStyle';
 
-const CustomModal = ({ children, open, onClose, title, onConfirm, closeText, confirmText, showFooter = true }) => {
+const FormModal = ({ children, open, onClose, title, onConfirm, closeText, confirmText, showFooter = true }) => {
   return (
     <Modal open={open} onClose={onClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <ModalBox>
@@ -26,4 +26,4 @@ const CustomModal = ({ children, open, onClose, title, onConfirm, closeText, con
   );
 };
 
-export default CustomModal;
+export default FormModal;
