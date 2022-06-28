@@ -108,7 +108,7 @@ const Dashboard = () => {
 
           <Box sx={{ pl: 3, pr: 1 }}>
             <Button
-              sx={{ color: theme.palette.primary.contrastText }}
+              sx={{ color: theme.palette.primary.contrastText, fontWeight: 600, fontSize: '14px' }}
               variant="contained"
               startIcon={<AddCircleOutlineOutlinedIcon sx={{ color: theme.palette.background.dark }} />}
               onClick={() => setOpenCreate(true)}>
