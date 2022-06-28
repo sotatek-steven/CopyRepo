@@ -47,36 +47,39 @@ const TemplateItem = ({ data }) => {
     <Card
       sx={{ maxWidth: 440, px: 1.5, maxHeight: '200px', height: '100%', background: theme.palette.background.dark }}>
       <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', p: 2 }}>
-        <Typography sx={{ fontSize: '12px' }}>{data.domain}</Typography>
+        <Typography sx={{ fontSize: '16px' }}>{data.domain}</Typography>
         <ButtonStatus status={data.status} />
       </Box>
       <CardContent sx={{ padding: '0 16px', cursor: 'pointer' }}>
         <Typography
-          sx={{ color: 'primary.light', fontSize: '20px' }}
+          sx={{ color: 'primary.light', fontSize: '20px', marginBottom: '5px' }}
           onClick={() => {
             router.push(`/smartcontract/${data._id}`);
           }}>
           {data.name}
         </Typography>
         <Grid container alignItems="flex-end" justifyContent="space-around">
-          <Grid item xs={10}>
+          <Grid item xs={11}>
             <Typography
               sx={{
-                fontSize: '12px',
+                fontSize: '14px',
                 paddingRight: '32px',
                 overflow: 'hidden',
                 textOverflow: 'ellipsis',
                 display: '-webkit-box',
-                WebkitLineClamp: 3,
-                lineClamp: 3,
+                WebkitLineClamp: 2,
+                lineClamp: 2,
                 WebkitBoxOrient: 'vertical',
                 minHeight: '45px',
               }}
-              color="text.secondary">
+              color="text.secondary"
+              onClick={() => {
+                router.push(`/smartcontract/${data._id}`);
+              }}>
               {data.description}
             </Typography>
           </Grid>
-          <Grid item xs={2} sx={{ textAlign: 'right' }}>
+          <Grid item xs={1} sx={{ textAlign: 'right' }}>
             {data.status !== 'deployed' ? (
               <DeleteIconWithX
                 onClick={() => {
@@ -89,7 +92,7 @@ const TemplateItem = ({ data }) => {
       </CardContent>
       <CardActions sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', py: 2 }}>
         <BoxBottom>
-          <Typography sx={{ fontSize: '12px', color: '#ffffff', px: 1 }}>Last Modified At</Typography>{' '}
+          <Typography sx={{ fontSize: '14px', color: '#ffffff', px: 1 }}>Last Modified At</Typography>{' '}
           <Typography>{moment(data.updatedAt).format('LLL')}</Typography>
         </BoxBottom>
       </CardActions>
