@@ -121,7 +121,7 @@ const TemplateDialog = ({ open, setOpen, type }) => {
       });
     options = options.join(', ');
     return options;
-  });
+  }, [dataDetails]);
 
   const getParametersName = useMemo(() => {
     const options = [];
@@ -131,13 +131,13 @@ const TemplateDialog = ({ open, setOpen, type }) => {
       });
     options = options.join(', ');
     return options;
-  });
+  }, [dataDetails]);
 
   const getLibrariesName = useMemo(() => {
     if (!dataDetails) return '';
     const libraries = dataDetails.libraries.join('\n');
     return libraries;
-  });
+  }, [dataDetails]);
 
   return (
     <Dialog
