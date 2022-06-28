@@ -1,5 +1,6 @@
-import { getRequest } from '@/utils/httpRequest';
+import { getRequest, putRequest } from '@/utils/httpRequest';
 import { createModel } from '@rematch/core';
+import { toast } from 'react-toastify';
 
 const userModule = createModel({
   state: {
@@ -44,20 +45,17 @@ const userModule = createModel({
         return data;
       },
       async updateModule({ moduleId, moduleInfo }, state) {
-        // const { _id, ...other } = payload && payload._id ? payload : state.contract.current;
         const { code, data, message } = await putRequest({
           url: `/api/v1/modules/${moduleId}`,
           userModoel: player,
           userState: state.player,
           body: moduleInfo,
         });
-        if (code != 200) {
+        if (code !== 200) {
           toast.error(message);
           return;
         }
-        console.log('code: ', code);
-        console.log('data: ', data);
-        // return { code: 200, data: null };
+        return { code, data };
       },
     };
   },

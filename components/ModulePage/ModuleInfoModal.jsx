@@ -63,8 +63,7 @@ const ModuleInfoModal = ({ open, onClose, data, readOnly = false }) => {
   const updateModule = (e) => {
     const newModule = { ...data, ...values };
     userModule.update(newModule);
-    if (!onClose) return;
-    onClose();
+    handleClose();
   };
 
   const handleClose = () => {
@@ -74,6 +73,12 @@ const ModuleInfoModal = ({ open, onClose, data, readOnly = false }) => {
     onClose();
   };
 
+  useEffect(() => {
+    if (!data) return;
+    const initialValues = getInitialValues(data);
+    setValues(initialValues);
+  }, [data]);
+
   return (
     <FormModal
       open={open}
@@ -81,7 +86,9 @@ const ModuleInfoModal = ({ open, onClose, data, readOnly = false }) => {
       title={'Module Info'}
       closeText={'Cancel'}
       confirmText={'Save'}
-      onConfirm={(e) => handleSubmit(e, updateModule)}>
+      onConfirm={(e) => {
+        handleSubmit(e, updateModule);
+      }}>
       <InputWrapper>
         <Input
           label="Name"
