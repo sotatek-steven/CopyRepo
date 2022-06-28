@@ -1,38 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { Modal, useTheme } from '@mui/material';
+import { useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import Creatable from 'react-select/creatable';
 import colourStyles from '../EditInfoContractModal/tagStyle';
 import { useDispatch } from 'react-redux';
-import { PrimaryButton, SecondaryButton } from '../ButtonStyle';
 import { Input, TextArea } from '../Input';
-import CloseIcon from '@mui/icons-material/Close';
-
-const Box = styled('div')(({ theme }) => ({
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
-  width: 600,
-  backgroundColor: theme.palette.background.default,
-  boxShadow: 24,
-  padding: '35px 35px',
-  outline: 'none',
-}));
-
-const HeaderModal = styled('div')(({ theme }) => ({
-  color: theme.palette.text.primary,
-  display: 'flex',
-  justifyContent: 'space-between',
-  fontSize: 25,
-}));
-
-const Title = styled('div')(({ theme }) => ({
-  color: theme.palette.text.primary,
-  fontSize: 20,
-  fontWeight: 600,
-  marginBottom: 30,
-}));
+import FormModal from '../FormModal';
+import { useForm } from '@/hooks/useForm';
+import { ELEMENT_TYPE } from '@/config/constant/common';
 
 const InputWrapper = styled('div')(() => ({
   marginBottom: 20,
@@ -45,137 +20,116 @@ const Label = styled('div')(({ theme }) => ({
   marginBottom: 3,
 }));
 
-const Error = styled('div')(({ theme }) => ({
-  color: theme.palette.error.main,
-  fontSize: 14,
-  marginTop: 8,
-}));
+const getInitialValues = (data) => {
+  const { name: _name, description: _description, domain: _domain, tags } = data;
+  const _tags = tags?.map((tag) => ({
+    value: tag.toLowerCase(),
+    label: tag,
+  }));
+  return {
+    name: _name || '',
+    description: _description || '',
+    domain: _domain || '',
+    tags: _tags || [],
+  };
+};
 
-const CloseButton = styled('div')(({ theme }) => ({
-  transition: 'all 0.2s',
-  ':hover': {
-    cursor: 'pointer',
-    transform: 'scale(1.05)',
-  },
-}));
+const validateInfo = (values, errors) => {
+  let tempError = { ...errors };
+  const { name, domain } = values;
+
+  if (typeof name !== 'undefined') {
+    tempError = {
+      ...tempError,
+      name: name?.trim() ? '' : 'This field is required',
+    };
+  }
+
+  if (typeof domain !== 'undefined') {
+    tempError = {
+      ...tempError,
+      domain: domain?.trim() ? '' : 'This field is required',
+    };
+  }
+  return tempError;
+};
 
 const EditInfoContractModal = ({ open, onClose, data, readOnly = false }) => {
-  const [name, setName] = useState('');
-  const [description, setDescription] = useState('');
-  const [domain, setDomain] = useState('');
-  const [tags, setTags] = useState([]);
-  const [tagOptions, setTagOptions] = useState([]);
   const { contract } = useDispatch();
   const theme = useTheme();
-
-  useEffect(() => {
-    const tagList = tags.map((tag) => ({
-      value: tag.toLowerCase(),
-      label: tag,
-    }));
-
-    setTagOptions(tagList);
-  }, [tags]);
-
-  const handleChange = (newValue) => {
-    const value = newValue.map((item) => item.label);
-    setTags(value);
-  };
+  const { values, setValues, handleChange, handleSubmit, errors, setErrors } = useForm({
+    initialValues: getInitialValues(data),
+    validate: validateInfo,
+  });
 
   const updateContract = () => {
-    const newContract = { ...data, name, description, tags, domain };
+    const newContract = { ...values };
     contract.updateCurrent(newContract);
     if (!onClose) return;
     onClose();
   };
 
-  useEffect(() => {
-    if (!data) return;
-    const { name: _name, description: _description, domain: _domain, tags: _tags } = data;
-    setName(_name);
-    setDescription(_description);
-    setDomain(_domain);
-    setTags(_tags);
-  }, [data]);
+  const handleClose = () => {
+    if (!onClose) return;
+    setErrors({});
+    setValues(getInitialValues(data));
+    onClose();
+  };
 
   return (
-    <>
-      <Modal
-        open={open}
-        onClose={onClose}
-        aria-labelledby="modal-modal-title"
-        aria-describedby="modal-modal-description">
-        <Box>
-          <HeaderModal>
-            <Title>Smart Contract Info</Title>
-            <CloseButton onClick={onClose}>
-              <CloseIcon />
-            </CloseButton>
-          </HeaderModal>
-          <div style={{ padding: '0px 20px' }}>
-            <InputWrapper>
-              <Input
-                label="Name"
-                id="name"
-                name="name"
-                isRequired={true}
-                value={name}
-                onChange={(event) => setName(event.target.value)}
-                readOnly={readOnly}
-              />
-            </InputWrapper>
-
-            <InputWrapper>
-              <TextArea
-                label="Description"
-                name="description"
-                id="description"
-                value={description}
-                onChange={(event) => setDescription(event.target.value)}
-                readOnly={readOnly}
-              />
-            </InputWrapper>
-
-            <InputWrapper>
-              <Input
-                label="Domain"
-                name="domain"
-                id="domain"
-                isRequired={true}
-                value={domain}
-                onChange={(event) => setDomain(event.target.value)}
-                readOnly={readOnly}
-              />
-            </InputWrapper>
-
-            <InputWrapper>
-              <Label htmlFor="name">Tags</Label>
-              <Creatable
-                isMulti
-                onChange={handleChange}
-                options={tagOptions}
-                value={tagOptions}
-                styles={colourStyles(theme)}
-                isDisabled={readOnly}
-              />
-            </InputWrapper>
-
-            {!readOnly && (
-              <div
-                style={{
-                  display: 'flex',
-                  justifyContent: 'flex-end',
-                  gap: '20px',
-                  marginTop: 30,
-                }}>
-                <SecondaryButton onClick={onClose}>Cancel</SecondaryButton>
-                <PrimaryButton onClick={updateContract}>Continue</PrimaryButton>
-              </div>
-            )}
-          </div>
-        </Box>
-      </Modal>
-    </>
+    <FormModal
+      open={open}
+      onClose={handleClose}
+      title={'Smart Contract Info'}
+      closeText={'Cancel'}
+      confirmText={'Continue'}
+      onConfirm={(e) => handleSubmit(e, updateContract)}>
+      <InputWrapper>
+        <Input
+          label="Name"
+          id="name"
+          name="name"
+          isRequired={true}
+          value={values?.name}
+          onChange={(e) => handleChange(e, 'name', ELEMENT_TYPE.INPUT)}
+          readOnly={readOnly}
+          errorText={errors?.name}
+        />
+      </InputWrapper>
+      <InputWrapper>
+        <TextArea
+          label="Description"
+          name="description"
+          id="description"
+          value={values?.description}
+          onChange={(e) => handleChange(e, 'description', ELEMENT_TYPE.INPUT)}
+          readOnly={readOnly}
+        />
+      </InputWrapper>
+      <InputWrapper>
+        <Input
+          label="Domain"
+          name="domain"
+          id="domain"
+          isRequired={true}
+          value={values?.domain}
+          onChange={(e) => handleChange(e, 'domain', ELEMENT_TYPE.INPUT)}
+          readOnly={readOnly}
+          errorText={errors?.domain}
+        />
+      </InputWrapper>
+      <InputWrapper>
+        <Label htmlFor="name">Tags</Label>
+        <Creatable
+          isMulti
+          onChange={(e) => handleChange(e, 'tags', ELEMENT_TYPE.TAG)}
+          options={values?.tags}
+          value={values.tags}
+          styles={colourStyles(theme)}
+          isDisabled={readOnly}
+        />
+      </InputWrapper>
+    </FormModal>
   );
 };
 
