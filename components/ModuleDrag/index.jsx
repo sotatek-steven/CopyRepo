@@ -33,6 +33,7 @@ const ModuleDrag = () => {
         };
       });
       setModules(modules);
+      console.log('load module complete: ', modules.length);
     } catch (error) {
       console.log('Failed to fetch modules');
     }
