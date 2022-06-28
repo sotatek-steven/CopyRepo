@@ -90,6 +90,7 @@ const EditInfoContractModal = ({ open, onClose, data, readOnly = false }) => {
   };
 
   useEffect(() => {
+    if (!data) return;
     const { name: _name, description: _description, domain: _domain, tags: _tags } = data;
     setName(_name);
     setDescription(_description);

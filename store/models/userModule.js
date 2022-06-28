@@ -1,11 +1,26 @@
 import { getRequest } from '@/utils/httpRequest';
 import { createModel } from '@rematch/core';
 
-const moduleApi = createModel({
-  state: {},
-  reducers: {},
+const userModule = createModel({
+  state: {
+    _id: null,
+    owner: null,
+    code: null,
+    name: null,
+    description: null,
+    domain: null,
+    tags: [],
+    color: null,
+    domainId: null,
+  },
+  reducers: {
+    update: (state, data) => ({
+      ...state,
+      ...data,
+    }),
+  },
   effects: (dispatch) => {
-    const { player } = dispatch;
+    const { userModule, player } = dispatch;
     return {
       async getModules(page, state) {
         const { meta, data } = await getRequest({
@@ -13,7 +28,7 @@ const moduleApi = createModel({
           params: { size: -1 },
           userState: state.player,
           userModoel: player,
-        })
+        });
         return { meta, data };
       },
       async getDetailModule(id, state) {
@@ -22,10 +37,11 @@ const moduleApi = createModel({
           userState: state.player,
           userModoel: player,
         });
-        return { data };
+        userModule.update(data);
+        return data;
       },
-    }
-  }
+    };
+  },
 });
 
-export default moduleApi;
+export default userModule;

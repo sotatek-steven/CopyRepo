@@ -1,15 +1,8 @@
 import ticket from './ticket';
 import contract from './contract';
-import moduleApi from './moduleApi';
+import userModule from './userModule';
 import player from './player';
 import userContract from './userContract';
 import template from './template';
 
-export {
-  ticket,
-  contract,
-  player,
-  moduleApi,
-  userContract,
-  template
-};
+export { ticket, contract, player, userModule, userContract, template };
