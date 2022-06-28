@@ -36,10 +36,10 @@ const PhaseNavigation = () => {
   return (
     <NavigationContainer>
       <Line />
-      <PhaseItem label="Design Phase" icon={<DesignIcon fill={colors[contractState.current?.status !== 'deployed']} />} isActive={contractState.current?.status !== 'deployed'} />
-      <PhaseItem label="Validation Phase" icon={<SearchIcon fill={colors[false]} />} isActive={false} />
-      <PhaseItem label="Security Phase" icon={<SecurityIcon fill={colors[false]} />} isActive={false} />
-      <PhaseItem label="Deployment Phase" icon={<RocketIcon stroke={colors[contractState.current?.status === 'deployed']} />} isActive={contractState.current?.status === 'deployed'} />
+      <PhaseItem label="Design" icon={<DesignIcon fill={colors[contractState.current?.status !== 'deployed']} />} isActive={contractState.current?.status !== 'deployed'} />
+      <PhaseItem label="Validation" icon={<SearchIcon fill={colors[false]} />} isActive={false} />
+      <PhaseItem label="Security" icon={<SecurityIcon fill={colors[false]} />} isActive={false} />
+      <PhaseItem label="Deployment" icon={<RocketIcon stroke={colors[contractState.current?.status === 'deployed']} />} isActive={contractState.current?.status === 'deployed'} />
     </NavigationContainer>
   );
 };
