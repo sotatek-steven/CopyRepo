@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import SearchModule from './SearchModule';
 import CreateButton from './CreateBtn';
+import ModuleInfoModal from '../ModulePage/ModuleInfoModal';
 
 const LeftSide = styled('div')(({ theme }) => ({
   color: theme.palette.primary.light,
@@ -11,6 +12,12 @@ const LeftSide = styled('div')(({ theme }) => ({
 }));
 
 const SubMenu = () => {
+  const [open, setOpen] = useState(false);
+
+  const handleOpen = () => {
+    setOpen(!open);
+  };
+
   return (
     <div
       style={{
@@ -26,9 +33,10 @@ const SubMenu = () => {
           gap: '18px',
           alignItems: 'center',
         }}>
-        <CreateButton />
+        <CreateButton handleOpen={handleOpen} />
         <SearchModule />
       </div>
+      <ModuleInfoModal open={open} onClose={handleOpen} data={{}} />
     </div>
   );
 };
