@@ -21,11 +21,8 @@ const Label = styled('div')(({ theme }) => ({
 }));
 
 const getInitialValues = (data) => {
-  const { name: _name, description: _description, domain: _domain, tags } = data;
-  const _tags = tags?.map((tag) => ({
-    value: tag.toLowerCase(),
-    label: tag,
-  }));
+  const { name: _name, description: _description, domain: _domain, tags: _tags } = data;
+
   return {
     name: _name || '',
     description: _description || '',
@@ -41,14 +38,14 @@ const validateInfo = (values, errors) => {
   if (typeof name !== 'undefined') {
     tempError = {
       ...tempError,
-      name: name?.trim() ? '' : 'This field is required',
+      name: name?.trim() ? null : 'This field is required',
     };
   }
 
   if (typeof domain !== 'undefined') {
     tempError = {
       ...tempError,
-      domain: domain?.trim() ? '' : 'This field is required',
+      domain: domain?.trim() ? null : 'This field is required',
     };
   }
   return tempError;
@@ -61,6 +58,10 @@ const EditInfoContractModal = ({ open, onClose, data, readOnly = false }) => {
     initialValues: getInitialValues(data),
     validate: validateInfo,
   });
+
+  useEffect(() => {
+    setValues(getInitialValues(data));
+  }, [data]);
 
   const updateContract = () => {
     const newContract = { ...values };
@@ -123,8 +124,14 @@ const EditInfoContractModal = ({ open, onClose, data, readOnly = false }) => {
         <Creatable
           isMulti
           onChange={(e) => handleChange(e, 'tags', ELEMENT_TYPE.TAG)}
-          options={values?.tags}
-          value={values.tags}
+          options={values?.tags?.map((tag) => ({
+            value: tag.toLowerCase(),
+            label: tag,
+          }))}
+          value={values.tags?.map((tag) => ({
+            value: tag.toLowerCase(),
+            label: tag,
+          }))}
           styles={colourStyles(theme)}
           isDisabled={readOnly}
         />

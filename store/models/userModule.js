@@ -1,5 +1,6 @@
-import { getRequest } from '@/utils/httpRequest';
+import { getRequest, putRequest } from '@/utils/httpRequest';
 import { createModel } from '@rematch/core';
+import { toast } from 'react-toastify';
 
 const userModule = createModel({
   state: {
@@ -16,6 +17,9 @@ const userModule = createModel({
   reducers: {
     update: (state, data) => ({
       ...state,
+      ...data,
+    }),
+    set: (state, data) => ({
       ...data,
     }),
   },
@@ -39,6 +43,19 @@ const userModule = createModel({
         });
         userModule.update(data);
         return data;
+      },
+      async updateModule({ moduleId, moduleInfo }, state) {
+        const { code, data, message } = await putRequest({
+          url: `/api/v1/modules/${moduleId}`,
+          userModoel: player,
+          userState: state.player,
+          body: moduleInfo,
+        });
+        if (code !== 200) {
+          toast.error(message);
+          return;
+        }
+        return { code, data };
       },
     };
   },
