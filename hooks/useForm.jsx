@@ -54,5 +54,5 @@ export const useForm = ({ initialValues, validate }) => {
     onSubmit();
   };
 
-  return [values, setValues, handleChange, handleSubmit, errors, setErrors];
+  return { values, setValues, handleChange, handleSubmit, errors, setErrors };
 };

@@ -37,13 +37,16 @@ const validateInfo = (values, errors) => {
 };
 
 const getInitialValues = (data) => {
-  const { name: _name, description: _description, domain: _domain, tags: _tags } = data;
+  const { name: _name, description: _description, domain: _domain, tags } = data;
+  const _tags = tags?.map((tag) => ({
+    value: tag.toLowerCase(),
+    label: tag,
+  }));
   return {
     name: _name || '',
     description: _description || '',
     domain: _domain || '',
     tags: _tags || [],
-    test: '',
   };
 };
 
@@ -51,7 +54,7 @@ const ModuleInfoModal = ({ open, onClose, data, readOnly = false }) => {
   const { userModule } = useDispatch();
   const theme = useTheme();
 
-  const [values, setValues, handleChange, handleSubmit, errors, setErrors] = useForm({
+  const { values, setValues, handleChange, handleSubmit, errors, setErrors } = useForm({
     initialValues: getInitialValues(data),
     validate: validateInfo,
   });
