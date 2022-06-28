@@ -24,6 +24,7 @@ const Title = styled('div')(({ theme }) => ({
 
 const CreateContract = () => {
   const contract = useSelector((state) => state.contract);
+  const { template } = useDispatch();
   const [isOpenCreateModal, setIsOpenCreateModal] = useState(contract.status === 'init');
 
   const handleClose = (_, reason) => {

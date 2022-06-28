@@ -20,9 +20,18 @@ const CheckBoxStyled = styled(Card)(({ theme }) => ({
   minWidth: 500,
   px: 1.5,
   borderRadius: '4px',
-  borderRight: '2px solid',
-  borderColor: theme.palette.background.default,
   marginTop: '24px',
+  marginRight: '30px',
+  '@media screen and (max-width:1200px )': {
+    minWidth: '400px',
+    width: '150px',
+  },
+  '@media screen and (max-width:900px )': {
+    minWidth: '320px',
+  },
+  '@media screen and (max-width:600px )': {
+    minWidth: '200px',
+  },
 }));
 
 const RadioCustom = styled(Radio)(({ theme }) => ({
@@ -40,7 +49,7 @@ const Description = styled('div')(({ theme }) => ({
   ...theme.components.truncate.threeLineEllipsis,
 }));
 
-const CheckboxChoose = ({ options, name, handleChange }) => {
+const CheckboxChoose = ({ options, name, handleChange, idTemplate, dataDetails }) => {
   const theme = useTheme();
   return _.isArray(options) && options.length > 0 ? (
     <FormControl>
@@ -50,19 +59,49 @@ const CheckboxChoose = ({ options, name, handleChange }) => {
         defaultValue={options[0]._id}>
         {options.map((option) => (
           <div key={option._id}>
-            <CheckBoxStyled>
-              <Box sx={{ display: 'flex', alignItems: 'center', py: 2 }}>
-                <FormControlLabel
-                  sx={{ margin: '0 0 0 8px' }}
-                  key={option._id}
-                  value={option._id}
-                  onChange={handleChange}
-                  control={<RadioCustom icon={<CircleOutlinedIcon />} checkedIcon={<CheckCircleIcon />} />}
-                />
-                <Typography sx={{ color: theme.palette.primary.light }}>{option?.name}</Typography>
+            <CheckBoxStyled
+              sx={{ borderRight: option._id === idTemplate ? `2px solid ${theme.palette.primary.main}` : 'none' }}>
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                <Box sx={{ display: 'flex', alignItems: 'center', py: 2 }}>
+                  <FormControlLabel
+                    sx={{ margin: '0 0 0 8px' }}
+                    key={option._id}
+                    value={option._id}
+                    onChange={handleChange}
+                    control={<RadioCustom icon={<CircleOutlinedIcon />} checkedIcon={<CheckCircleIcon />} />}
+                  />
+                  <Typography sx={{ color: theme.palette.primary.light }}>{option?.name}</Typography>
+                </Box>
+
+                <Typography sx={{ pr: 6, fontSize: '14px', color: '#64F5A6', fontWeight: '400' }}>
+                  Gas fee: {dataDetails?.gasFee}
+                </Typography>
               </Box>
-              <CardContent sx={{ padding: '0 16px' }}>
-                <Description>{option?.description}</Description>
+              <CardContent
+                sx={{
+                  padding: '0 16px',
+                  maxHeight: '131px',
+                  height: '100%',
+                  width: '431px',
+                }}>
+                <Typography
+                  sx={{
+                    fontSize: '12px',
+                    paddingRight: '32px',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                    display: '-webkit-box',
+                    WebkitLineClamp: 3,
+                    lineClamp: 3,
+                    WebkitBoxOrient: 'vertical',
+                    minHeight: '45px',
+                    '@media screen and (max-width:900px )': {
+                      width: '50%',
+                    },
+                  }}
+                  color="text.secondary">
+                  {option?.description}
+                </Typography>
               </CardContent>
             </CheckBoxStyled>
           </div>
