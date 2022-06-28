@@ -49,7 +49,7 @@ const Description = styled('div')(({ theme }) => ({
   ...theme.components.truncate.threeLineEllipsis,
 }));
 
-const CheckboxChoose = ({ options, name, handleChange, idTemplate }) => {
+const CheckboxChoose = ({ options, name, handleChange, idTemplate, dataDetails }) => {
   const theme = useTheme();
   return _.isArray(options) && options.length > 0 ? (
     <FormControl>
@@ -73,7 +73,9 @@ const CheckboxChoose = ({ options, name, handleChange, idTemplate }) => {
                   <Typography sx={{ color: theme.palette.primary.light }}>{option?.name}</Typography>
                 </Box>
 
-                <Typography sx={{ pr: 6, fontSize: '14px', color: '#64F5A6', fontWeight: '400' }}>Gas fee:</Typography>
+                <Typography sx={{ pr: 6, fontSize: '14px', color: '#64F5A6', fontWeight: '400' }}>
+                  Gas fee: {dataDetails?.gasFee}
+                </Typography>
               </Box>
               <CardContent
                 sx={{

@@ -30,7 +30,7 @@ const TemplateDialog = ({ open, setOpen, type }) => {
   // const [templateState, setTemplateState] = useState([]);
   const [idTemplate, setIdTemplate] = useState(null);
   const [dataDetails, setDataDetails] = useState(null);
-  const [isShowCollapse, setIsShowCollapse] = useState(false);
+  const [isShowCollapse, setIsShowCollapse] = useState(true);
   const theme = useTheme();
 
   useEffect(() => {
@@ -89,12 +89,16 @@ const TemplateDialog = ({ open, setOpen, type }) => {
   const handleClose = () => {
     setOpen(false);
     setIdTemplate(null);
+    setDataDetails(null);
     template.clearAll();
   };
 
   useEffect(() => {
     if (!open) return;
-    if (!idTemplate) return;
+    if (!idTemplate) {
+      setDataDetails(null);
+      return;
+    }
     const fetchTemplateDetails = async () => {
       try {
         const data = await template.getTemplateDetails(idTemplate);
@@ -108,6 +112,32 @@ const TemplateDialog = ({ open, setOpen, type }) => {
     };
     fetchTemplateDetails();
   }, [idTemplate, template, open]);
+
+  const getFunctionName = useMemo(() => {
+    const options = [];
+    dataDetails &&
+      dataDetails.functions.forEach((item) => {
+        options.push(item.name);
+      });
+    options = options.join(', ');
+    return options;
+  });
+
+  const getParametersName = useMemo(() => {
+    const options = [];
+    dataDetails &&
+      dataDetails.parameters.forEach((item) => {
+        options.push(item.label);
+      });
+    options = options.join(', ');
+    return options;
+  });
+
+  const getLibrariesName = useMemo(() => {
+    if (!dataDetails) return '';
+    const libraries = dataDetails.libraries.join('\n');
+    return libraries;
+  });
 
   return (
     <Dialog
@@ -151,6 +181,7 @@ const TemplateDialog = ({ open, setOpen, type }) => {
               options={listTemplate}
               handleChange={handeSetIdTemplate}
               idTemplate={idTemplate}
+              dataDetails={dataDetails}
             />
           </Grid>
           <Grid item xs={6}>
@@ -161,66 +192,68 @@ const TemplateDialog = ({ open, setOpen, type }) => {
                 overflowY: 'hidden',
                 background: theme.palette.background.default,
               }}>
-              <Grid container>
-                <Scrollbars autoHeight autoHeightMin="100%" autoHeightMax="450px" autoHide>
-                  <Grid item xs={12} sx={{ height: '500px' }}>
-                    <Box
-                      sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pt: 3, px: 1.5 }}>
-                      <Button
-                        startIcon={
-                          isShowCollapse ? (
-                            <ExpandCircleDownIcon sx={{ color: '#64F5A6' }} />
-                          ) : (
-                            <ExpandCircleDownIcon sx={{ transform: 'rotate(180deg)', color: '#64F5A6' }} />
-                          )
-                        }
-                        onClick={() => setIsShowCollapse(!isShowCollapse)}>
-                        <Typography sx={{ pt: 0.5, color: theme.palette.primary.light }}>
-                          {dataDetails?.owner}
-                        </Typography>
-                      </Button>
-                      <Box sx={{ display: 'flex', fontSize: '14px', px: 3 }}>
-                        <Typography sx={{ color: '#EF6BFE', px: 2, textDecoration: 'underline' }}>
-                          {dataDetails?.parameters.length} paramester
-                        </Typography>
-                        <Typography sx={{ color: '#FFD33F', textDecoration: 'underline' }}> 2 Libraries</Typography>
-                      </Box>
-                    </Box>
-                    <Collapse in={isShowCollapse} timeout="auto" unmountOnExit sx={{ px: 4 }}>
-                      <Grid container sx={{ fontSize: '14px' }} rowSpacing={3}>
-                        <Grid item>
-                          <Typography sx={{ color: '#FA6E6E' }}>Functions</Typography>
-                          <Typography>getReleasedTokens, getUserContribute, setCrowdsaleStage</Typography>
-                        </Grid>
-                        <Grid item>
-                          <Typography sx={{ color: '#DD90E5' }}>Parameters Inclued</Typography>
-                          <Typography>
-                            rate, wallet,token, cap, openingTime, closingTime, goal, foundersFund, foundationFund,
-                            partnersFund, releaseTime
+              {dataDetails ? (
+                <Grid container>
+                  <Scrollbars autoHeight autoHeightMin="100%" autoHeightMax="450px" autoHide>
+                    <Grid item xs={12} sx={{ height: '500px' }}>
+                      <Box
+                        sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pt: 3, px: 1.5 }}>
+                        <Button
+                          startIcon={
+                            isShowCollapse ? (
+                              <ExpandCircleDownIcon sx={{ color: '#64F5A6' }} />
+                            ) : (
+                              <ExpandCircleDownIcon sx={{ transform: 'rotate(180deg)', color: '#64F5A6' }} />
+                            )
+                          }
+                          onClick={() => setIsShowCollapse(!isShowCollapse)}>
+                          <Typography sx={{ pt: 0.5, color: theme.palette.primary.light }}>
+                            {dataDetails?.owner}
                           </Typography>
+                        </Button>
+                        <Box sx={{ display: 'flex', fontSize: '14px', px: 3 }}>
+                          <Typography sx={{ color: '#EF6BFE', px: 2, textDecoration: 'underline' }}>
+                            {dataDetails?.parameters.length} Paramester
+                          </Typography>
+                          <Typography sx={{ color: '#FFD33F', textDecoration: 'underline' }}>
+                            {' '}
+                            {dataDetails?.libraries.length} Libraries
+                          </Typography>
+                        </Box>
+                      </Box>
+                      <Collapse in={isShowCollapse} timeout="auto" unmountOnExit sx={{ px: 4 }}>
+                        <Grid container sx={{ fontSize: '14px' }} rowSpacing={3}>
+                          <Grid item>
+                            <Typography sx={{ color: '#FA6E6E' }}>Functions</Typography>
+                            <Typography>{getFunctionName}</Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography sx={{ color: '#DD90E5' }}>Parameters Inclued</Typography>
+                            <Typography>{getParametersName}</Typography>
+                          </Grid>
+                          <Grid item>
+                            <Typography sx={{ color: '#FFD33F' }}>Libraries</Typography>
+                            <Typography>{getLibrariesName}</Typography>
+                          </Grid>
                         </Grid>
-                        <Grid item>
-                          <Typography sx={{ color: '#FFD33F' }}>Libraries</Typography>
-                          <Typography>openzeppelin-solidity/contracts/token/ERC20/ERC20.sol</Typography>
-                        </Grid>
-                      </Grid>
-                    </Collapse>
+                      </Collapse>
+                    </Grid>
+                  </Scrollbars>
+                  <Grid item xs={12} sx={{ mr: 2 }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                      <Button
+                        variant="outlined"
+                        sx={{ color: '#fff', border: '1px solid #fff', minWidth: '114px', mx: 1 }}>
+                        Skip
+                      </Button>
+                      <Button variant="contained" type="submit">
+                        {' '}
+                        Let do this
+                      </Button>
+                    </Box>
                   </Grid>
-                </Scrollbars>
-                <Grid item xs={12} sx={{ mr: 2 }}>
-                  <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                    <Button
-                      variant="outlined"
-                      sx={{ color: '#fff', border: '1px solid #fff', minWidth: '114px', mx: 1 }}>
-                      Skip
-                    </Button>
-                    <Button variant="contained" type="submit">
-                      {' '}
-                      Let do this
-                    </Button>
-                  </Box>
                 </Grid>
-              </Grid>
+              ) : null}
             </Box>
           </Grid>
         </Grid>
