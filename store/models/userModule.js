@@ -18,6 +18,9 @@ const userModule = createModel({
       ...state,
       ...data,
     }),
+    set: (state, data) => ({
+      ...data,
+    }),
   },
   effects: (dispatch) => {
     const { userModule, player } = dispatch;
@@ -39,6 +42,22 @@ const userModule = createModel({
         });
         userModule.update(data);
         return data;
+      },
+      async updateModule({ moduleId, moduleInfo }, state) {
+        // const { _id, ...other } = payload && payload._id ? payload : state.contract.current;
+        const { code, data, message } = await putRequest({
+          url: `/api/v1/modules/${moduleId}`,
+          userModoel: player,
+          userState: state.player,
+          body: moduleInfo,
+        });
+        if (code != 200) {
+          toast.error(message);
+          return;
+        }
+        console.log('code: ', code);
+        console.log('data: ', data);
+        // return { code: 200, data: null };
       },
     };
   },
