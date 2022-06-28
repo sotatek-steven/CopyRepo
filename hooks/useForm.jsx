@@ -3,11 +3,7 @@ import { useState } from 'react';
 
 export const useForm = ({ initialValues, validate }) => {
   const [values, setValues] = useState(initialValues);
-  const [errors, setErrors] = useState(() => {
-    const initialErrors = {};
-    Object.entries(initialValues).forEach(([key]) => (initialErrors[key] = null));
-    return initialErrors;
-  });
+  const [errors, setErrors] = useState({});
 
   const hasError = (errors) => {
     const result = Object.entries(errors).filter(([key, value]) => {
@@ -30,10 +26,7 @@ export const useForm = ({ initialValues, validate }) => {
     }
     if (type === ELEMENT_TYPE.TAG) {
       valueField = {
-        [field]: e?.map((tag) => ({
-          value: tag.value.toLowerCase(),
-          label: tag.label,
-        })),
+        [field]: e?.map((tag) => tag.value),
       };
     }
 
