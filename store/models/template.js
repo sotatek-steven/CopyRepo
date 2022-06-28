@@ -5,6 +5,7 @@ const template = createModel({
   state: {
     listTemplate: [],
     listDomain: [],
+    templateDetails: [],
   },
   reducers: {
     update: (state, data) => ({

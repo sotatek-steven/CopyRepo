@@ -9,6 +9,10 @@ import {
   Radio,
   Button,
   useTheme,
+  Accordion,
+  AccordionSummary,
+  AccordionDetails,
+  Collapse,
 } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -16,13 +20,17 @@ import CheckboxChoose from '../Shared/CheckboxChoose';
 import _ from 'lodash';
 import { useRouter } from 'next/router';
 import CloseIcon from '../../assets/icon/close-circle.svg';
+import ExpandCircleDownIcon from '@mui/icons-material/ExpandCircleDown';
+import Scrollbars from 'react-custom-scrollbars';
 
 const TemplateDialog = ({ open, setOpen, type }) => {
   const { template, userContract } = useDispatch();
   const router = useRouter();
-  const templateList = useSelector((state) => state.template);
-  const [templateState, setTemplateState] = useState([]);
+  const { listTemplate } = useSelector((state) => state.template);
+  // const [templateState, setTemplateState] = useState([]);
   const [idTemplate, setIdTemplate] = useState(null);
+  const [dataDetails, setDataDetails] = useState(null);
+  const [isShowCollapse, setIsShowCollapse] = useState(false);
   const theme = useTheme();
 
   useEffect(() => {
@@ -31,7 +39,7 @@ const TemplateDialog = ({ open, setOpen, type }) => {
       try {
         const data = await template.getTemplate(domain);
         if (data?.length > 0) {
-          setTemplateState(data);
+          // setTemplateState(data);
           setIdTemplate(data[0]._id);
         }
       } catch (error) {
@@ -46,16 +54,12 @@ const TemplateDialog = ({ open, setOpen, type }) => {
     setIdTemplate(e.target.value);
   };
 
-  useEffect(() => {
-    idTemplate && template.getTemplateDetails(idTemplate);
-  }, [idTemplate, templateState, template]);
-
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (!_.isArray(templateState)) return;
+    if (!_.isArray(listTemplate)) return;
 
     const submitCreateSC = async () => {
-      const dataTemplateBody = _.find(templateState, (item) => {
+      const dataTemplateBody = _.find(listTemplate, (item) => {
         return item._id === idTemplate;
       });
       const { _id, modules, name, domain, tags, description } = dataTemplateBody;
@@ -84,8 +88,26 @@ const TemplateDialog = ({ open, setOpen, type }) => {
 
   const handleClose = () => {
     setOpen(false);
+    setIdTemplate(null);
     template.clearAll();
   };
+
+  useEffect(() => {
+    if (!open) return;
+    if (!idTemplate) return;
+    const fetchTemplateDetails = async () => {
+      try {
+        const data = await template.getTemplateDetails(idTemplate);
+        if (data) {
+          setDataDetails(data);
+        }
+      } catch (error) {
+        console.log(error);
+        console.log('Failed to fetch template details');
+      }
+    };
+    fetchTemplateDetails();
+  }, [idTemplate, template, open]);
 
   return (
     <Dialog
@@ -120,21 +142,71 @@ const TemplateDialog = ({ open, setOpen, type }) => {
             sx={{
               '&:hover': { opacity: 0.7 },
               paddingTop: '24px',
+              overflow: 'hidden',
             }}
             item
             xs={6}>
-            <CheckboxChoose name="template" options={templateState} handleChange={handeSetIdTemplate} />
+            <CheckboxChoose
+              name="template"
+              options={listTemplate}
+              handleChange={handeSetIdTemplate}
+              idTemplate={idTemplate}
+            />
           </Grid>
           <Grid item xs={6}>
             <Box
               sx={{
-                width: '589px',
-                height: '548px',
+                width: '575px',
+                height: '500px',
+                overflowY: 'hidden',
                 background: theme.palette.background.default,
               }}>
               <Grid container>
-                <Grid item xs={12}></Grid>
-                <Grid item xs={12} sx={{ height: '500px' }}></Grid>
+                <Scrollbars autoHeight autoHeightMin="100%" autoHeightMax="450px" autoHide>
+                  <Grid item xs={12} sx={{ height: '500px' }}>
+                    <Box
+                      sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pt: 3, px: 1.5 }}>
+                      <Button
+                        startIcon={
+                          isShowCollapse ? (
+                            <ExpandCircleDownIcon sx={{ color: '#64F5A6' }} />
+                          ) : (
+                            <ExpandCircleDownIcon sx={{ transform: 'rotate(180deg)', color: '#64F5A6' }} />
+                          )
+                        }
+                        onClick={() => setIsShowCollapse(!isShowCollapse)}>
+                        <Typography sx={{ pt: 0.5, color: theme.palette.primary.light }}>
+                          {dataDetails?.owner}
+                        </Typography>
+                      </Button>
+                      <Box sx={{ display: 'flex', fontSize: '14px', px: 3 }}>
+                        <Typography sx={{ color: '#EF6BFE', px: 2, textDecoration: 'underline' }}>
+                          {dataDetails?.parameters.length} paramester
+                        </Typography>
+                        <Typography sx={{ color: '#FFD33F', textDecoration: 'underline' }}> 2 Libraries</Typography>
+                      </Box>
+                    </Box>
+                    <Collapse in={isShowCollapse} timeout="auto" unmountOnExit sx={{ px: 4 }}>
+                      <Grid container sx={{ fontSize: '14px' }} rowSpacing={3}>
+                        <Grid item>
+                          <Typography sx={{ color: '#FA6E6E' }}>Functions</Typography>
+                          <Typography>getReleasedTokens, getUserContribute, setCrowdsaleStage</Typography>
+                        </Grid>
+                        <Grid item>
+                          <Typography sx={{ color: '#DD90E5' }}>Parameters Inclued</Typography>
+                          <Typography>
+                            rate, wallet,token, cap, openingTime, closingTime, goal, foundersFund, foundationFund,
+                            partnersFund, releaseTime
+                          </Typography>
+                        </Grid>
+                        <Grid item>
+                          <Typography sx={{ color: '#FFD33F' }}>Libraries</Typography>
+                          <Typography>openzeppelin-solidity/contracts/token/ERC20/ERC20.sol</Typography>
+                        </Grid>
+                      </Grid>
+                    </Collapse>
+                  </Grid>
+                </Scrollbars>
                 <Grid item xs={12} sx={{ mr: 2 }}>
                   <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                     <Button
