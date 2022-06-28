@@ -11,12 +11,11 @@ import {
   useTheme,
 } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
-import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
 import { useDispatch, useSelector } from 'react-redux';
-import { Formik, Form, Field } from 'formik';
 import CheckboxChoose from '../Shared/CheckboxChoose';
 import _ from 'lodash';
 import { useRouter } from 'next/router';
+import CloseIcon from '../../assets/icon/close-circle.svg';
 
 const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
   const { template, userContract } = useDispatch();
@@ -92,7 +91,7 @@ const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
       <DialogTitle sx={{ textAlign: 'left', mb: 2 }} id="responsive-dialog-title">
         <Box>
           <Typography sx={{ fontSize: '22px' }}>Suggested Smart Contracts for you</Typography>
-          <Typography sx={{ fontSize: '12px', py: 1 }}>
+          <Typography sx={{ fontSize: '14px', py: 1, fontFamily: 'Segoe UI' }}>
             Please go through the following questionnaire and identify the appropriate match for your requirement.
           </Typography>
         </Box>
@@ -103,9 +102,8 @@ const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
             position: 'absolute',
             right: 8,
             top: 8,
-            color: (theme) => theme.palette.primary.contrastText,
           }}>
-          <CancelOutlinedIcon />
+          <CloseIcon />
         </IconButton>
       </DialogTitle>
       <DialogContent>

@@ -32,6 +32,14 @@ const RadioCustom = styled(Radio)(({ theme }) => ({
   },
 }));
 
+const Description = styled('div')(({ theme }) => ({
+  fontSize: '14px',
+  paddingRight: '32px',
+  fontFamily: 'Segoe UI',
+  color: theme.palette.text.primary,
+  ...theme.components.truncate.threeLineEllipsis,
+}));
+
 const CheckboxChoose = ({ options, name, handleChange }) => {
   const theme = useTheme();
   return _.isArray(options) && options.length > 0 ? (
@@ -54,9 +62,7 @@ const CheckboxChoose = ({ options, name, handleChange }) => {
                 <Typography sx={{ color: theme.palette.primary.light }}>{option?.name}</Typography>
               </Box>
               <CardContent sx={{ padding: '0 16px' }}>
-                <Typography sx={{ fontSize: '12px', paddingRight: '32px' }} color="text.secondary">
-                  {option?.description}
-                </Typography>
+                <Description>{option?.description}</Description>
               </CardContent>
             </CheckBoxStyled>
           </div>

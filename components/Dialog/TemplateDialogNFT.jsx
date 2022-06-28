@@ -1,6 +1,6 @@
 import { Dialog, DialogTitle, Box, Typography, IconButton, DialogContent, Grid, Button, useTheme } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import CancelOutlinedIcon from '@mui/icons-material/CancelOutlined';
+import CloseIcon from '../../assets/icon/close-circle.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import CheckboxChoose from '../Shared/CheckboxChoose';
 import { useRouter } from 'next/router';
@@ -79,7 +79,7 @@ const TemplateDialogDefi = ({ openListNFT, setOpenListNFT }) => {
       <DialogTitle sx={{ textAlign: 'left', mb: 2 }} id="responsive-dialog-title">
         <Box>
           <Typography sx={{ fontSize: '22px' }}>Create Smart Contract</Typography>
-          <Typography sx={{ fontSize: '12px', py: 1 }}>
+          <Typography sx={{ fontSize: '14px', py: 1, fontFamily: 'Segoe UI' }}>
             Please go through the following questionnaire and identify the appropriate match for your requirement.
           </Typography>
         </Box>
@@ -90,9 +90,8 @@ const TemplateDialogDefi = ({ openListNFT, setOpenListNFT }) => {
             position: 'absolute',
             right: 8,
             top: 8,
-            color: (theme) => theme.palette.primary.contrastText,
           }}>
-          <CancelOutlinedIcon />
+          <CloseIcon />
         </IconButton>
       </DialogTitle>
       <DialogContent>
