@@ -24,7 +24,7 @@ const ModuleDrag = () => {
   const fetchModules = async () => {
     console.log('fetchModules');
     try {
-      const { data: modulesData } = await userModule.getModules(-1);
+      const { data: modulesData } = await userModule.getModules();
 
       const modules = modulesData.map((moduleData) => {
         return {
@@ -42,11 +42,8 @@ const ModuleDrag = () => {
     fetchModules();
   }, []);
 
-  useEffect(() => {
-    updateModules();
-  }, [modules.length]);
-
   const updateModules = () => {
+    console.log('Update modules: ', modules.length);
     const activeModules = contractState.current?.modules || [];
     const newState = modules.map((data) => {
       const { _id } = data;
@@ -62,7 +59,7 @@ const ModuleDrag = () => {
 
   useEffect(() => {
     updateModules();
-  }, [contractState.current?.module_keys]);
+  }, [contractState.current?.module_keys, modules.length]);
 
   return (
     <DragArea>
