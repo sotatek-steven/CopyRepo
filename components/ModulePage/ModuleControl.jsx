@@ -8,6 +8,7 @@ import ModuleInfoModal from './ModuleInfoModal';
 import { useDispatch, useSelector } from 'react-redux';
 import ConfirmDialog from '../atom/Dialog/ConfirmDialog';
 import { useRouter } from 'next/router';
+import { MODE } from '@/config/constant/common';
 
 const Wrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -119,7 +120,12 @@ const ModuleControl = () => {
         </Popover>
       </Wrapper>
 
-      <ModuleInfoModal open={infoModalOpen} onClose={() => setInfoModalOpen(false)} data={moduleState} />
+      <ModuleInfoModal
+        mode={MODE.EDIT}
+        open={infoModalOpen}
+        onClose={() => setInfoModalOpen(false)}
+        data={moduleState}
+      />
 
       <ConfirmDialog
         open={saveChangeDialogOpen}

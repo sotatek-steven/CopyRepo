@@ -1,4 +1,4 @@
-import { getRequest, putRequest } from '@/utils/httpRequest';
+import { getRequest, postRequest, putRequest } from '@/utils/httpRequest';
 import { createModel } from '@rematch/core';
 import { toast } from 'react-toastify';
 
@@ -47,6 +47,23 @@ const userModule = createModel({
           return;
         }
         return data;
+      },
+      async createModule({ moduleInfo }, state) {
+        try {
+          const { code, data, message } = await postRequest({
+            url: `/api/v1/modules`,
+            userModoel: player,
+            userState: state.player,
+            body: moduleInfo,
+          });
+          if (code !== 200) {
+            toast.error(message);
+            return;
+          }
+          return { code, data };
+        } catch (error) {
+          console.log('error: ', error);
+        }
       },
       async updateModule({ moduleId, moduleInfo }, state) {
         const { code, data, message } = await putRequest({

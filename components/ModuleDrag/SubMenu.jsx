@@ -3,6 +3,7 @@ import { styled } from '@mui/material/styles';
 import SearchModule from './SearchModule';
 import CreateButton from './CreateBtn';
 import ModuleInfoModal from '../ModulePage/ModuleInfoModal';
+import { MODE } from '@/config/constant/common';
 
 const LeftSide = styled('div')(({ theme }) => ({
   color: theme.palette.primary.light,
@@ -36,7 +37,7 @@ const SubMenu = () => {
         <CreateButton handleOpen={handleOpen} />
         <SearchModule />
       </div>
-      <ModuleInfoModal open={open} onClose={handleOpen} data={{}} />
+      <ModuleInfoModal mode={MODE.CREATE} open={open} onClose={handleOpen} data={{}} />
     </div>
   );
 };
