@@ -22,24 +22,9 @@ import CloseIcon from '../../assets/icon/close-circle.svg';
 import BusinessDomain from '@/components/BusinessDomain/BusinessDomain';
 import ListSmartContract from '@/components/ListSmartContract/ListSmartContract';
 import { useDispatch, useSelector } from 'react-redux';
-import TemplateDialogDefi from '@/components/Dialog/TemplateDialogDefi';
-import TemplateDialogNFT from '@/components/Dialog/TemplateDialogNFT';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-
-const dataCreate = [
-  {
-    id: 1,
-    name: 'Defi',
-    description:
-      'A smart contract is a computer program or transaction protocol which is intended to automatically execute.',
-  },
-  {
-    id: 2,
-    name: 'NFT',
-    description:
-      'A smart contract is a computer program or transaction protocol which is intended to automatically execute.',
-  },
-];
+import TemplateDialog from '@/components/Dialog/TemplateDialog';
+import _ from 'lodash';
 
 const TabPanelCustom = styled(TabPanel)(({ theme }) => ({
   ...theme.mixins.toolbar,
@@ -51,20 +36,26 @@ const TabPanelCustom = styled(TabPanel)(({ theme }) => ({
 const MemoizedSubComponent = React.memo(ListSmartContract);
 
 const Dashboard = () => {
-  const { userContract } = useDispatch();
+  const { template, userContract } = useDispatch();
   const userContractState = useSelector((state) => state.userContract);
   const userState = useSelector((state) => state.player);
   const [value, setValue] = useState('All');
   const [openCreate, setOpenCreate] = useState(false);
-  const [openListDefi, setOpenListDefi] = useState(false);
-  const [openListNFT, setOpenListNFT] = useState(false);
   const [expand, setExpand] = useState(false);
   const [keywords, setKeywords] = useState(null);
+  const [open, setOpen] = useState(false);
+  const [type, setType] = useState('');
+  const { listDomain } = useSelector((state) => state.template);
   const theme = useTheme();
 
   const handleSearch = () => {
     console.log(keywords);
   };
+
+  useEffect(() => {
+    if (!openCreate) return;
+    template.getTemplateDomain({ size: -1 });
+  }, [template, openCreate]);
 
   return (
     <Box
@@ -167,22 +158,24 @@ const Dashboard = () => {
               <Typography sx={{ fontSize: '14px', py: 1, fontFamily: 'Segoe UI' }}>
                 Choose the business domain that you are creating for this smart contract
               </Typography>
-              {dataCreate.map((item) => {
-                return (
-                  <BusinessDomain
-                    setOpenListDefi={setOpenListDefi}
-                    setOpenListNFT={setOpenListNFT}
-                    setOpenCreate={setOpenCreate}
-                    key={item.id}
-                    data={item}></BusinessDomain>
-                );
-              })}
+              {_.isArray(listDomain) &&
+                listDomain.map((item) => {
+                  return (
+                    <BusinessDomain
+                      setOpen={setOpen}
+                      setType={setType}
+                      setOpenCreate={setOpenCreate}
+                      key={item._id}
+                      data={item}></BusinessDomain>
+                  );
+                })}
             </Grid>
           </Grid>
         </DialogContent>
       </Dialog>
-      <TemplateDialogDefi openListDefi={openListDefi} setOpenListDefi={setOpenListDefi} />
-      <TemplateDialogNFT openListNFT={openListNFT} setOpenListNFT={setOpenListNFT} />
+      <TemplateDialog open={open} setOpen={setOpen} type={type}></TemplateDialog>
+      {/* <TemplateDialogDefi openListDefi={openListDefi} setOpenListDefi={setOpenListDefi} />
+      <TemplateDialogNFT openListNFT={openListNFT} setOpenListNFT={setOpenListNFT} /> */}
     </Box>
   );
 };

@@ -2,8 +2,7 @@ import { Dialog, DialogContent, DialogTitle, Grid, IconButton, styled, Typograph
 import { Box, padding } from '@mui/system';
 import React, { useEffect, useState } from 'react';
 import Avatar from '@mui/material/Avatar';
-import TemplateDialogDefi from '../Dialog/TemplateDialogDefi';
-import TemplateDialogNFT from '../Dialog/TemplateDialogNFT';
+import { useDispatch } from 'react-redux';
 
 const Description = styled('div')(({ theme }) => ({
   fontSize: '14px',
@@ -12,16 +11,16 @@ const Description = styled('div')(({ theme }) => ({
   ...theme.components.truncate.twoLineEllipsis,
 }));
 
-const BusinessDomain = ({ data, setOpenListDefi, setOpenListNFT, setOpenCreate }) => {
+const BusinessDomain = ({ data, setOpenCreate, setOpen, setType }) => {
   const theme = useTheme();
+
   const handleClick = () => {
-    if (data.name === 'Defi') {
-      setOpenListDefi(true);
-    } else {
-      setOpenListNFT(true);
-    }
+    setType(data.name);
+    setOpen(true);
     setOpenCreate(false);
+    // template.clearDomain();
   };
+
   return (
     <>
       <Box
@@ -42,7 +41,7 @@ const BusinessDomain = ({ data, setOpenListDefi, setOpenListNFT, setOpenCreate }
           </Grid>
           <Grid item xs={10}>
             <Typography sx={{ color: theme.palette.primary.light }}>{data.name}</Typography>
-            <Description>{data.description}</Description>
+            <Typography sx={{ fontSize: '12px', py: 1 }}>{data.decription}</Typography>
           </Grid>
         </Grid>
       </Box>

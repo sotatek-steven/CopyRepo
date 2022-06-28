@@ -17,7 +17,7 @@ import _ from 'lodash';
 import { useRouter } from 'next/router';
 import CloseIcon from '../../assets/icon/close-circle.svg';
 
-const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
+const TemplateDialog = ({ open, setOpen, type }) => {
   const { template, userContract } = useDispatch();
   const router = useRouter();
   const templateList = useSelector((state) => state.template);
@@ -27,12 +27,11 @@ const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
 
   useEffect(() => {
     const fetchTemplate = async () => {
-      const domain = 'defi';
+      const domain = type;
       try {
         const data = await template.getTemplate(domain);
         if (data?.length > 0) {
           setTemplateState(data);
-
           setIdTemplate(data[0]._id);
         }
       } catch (error) {
@@ -40,12 +39,16 @@ const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
         console.log('Failed to fetch template');
       }
     };
-    openListDefi && fetchTemplate();
-  }, [openListDefi, setIdTemplate]);
+    open && fetchTemplate();
+  }, [open, setIdTemplate, type]);
 
   const handeSetIdTemplate = (e) => {
     setIdTemplate(e.target.value);
   };
+
+  useEffect(() => {
+    idTemplate && template.getTemplateDetails(idTemplate);
+  }, [idTemplate, templateState, template]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -69,14 +72,19 @@ const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
           const { _id } = res.data;
           _id && router.push(`/smartcontract/${_id}`);
         }
-        setOpenListDefi(false);
+        setOpen(false);
       } catch (error) {
         console.log(error);
         console.log('Failed to submit');
-        setOpenListDefi(false);
+        setOpen(false);
       }
     };
     submitCreateSC();
+  };
+
+  const handleClose = () => {
+    setOpen(false);
+    template.clearAll();
   };
 
   return (
@@ -85,8 +93,8 @@ const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
       onSubmit={handleSubmit}
       fullWidth
       maxWidth="lg"
-      open={openListDefi}
-      onClose={() => setOpenListDefi(false)}
+      open={open}
+      onClose={handleClose}
       aria-labelledby="responsive-dialog-title">
       <DialogTitle sx={{ textAlign: 'left', mb: 2 }} id="responsive-dialog-title">
         <Box>
@@ -97,7 +105,7 @@ const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
         </Box>
         <IconButton
           aria-label="close"
-          onClick={() => setOpenListDefi(false)}
+          onClick={handleClose}
           sx={{
             position: 'absolute',
             right: 8,
@@ -149,4 +157,4 @@ const TemplateDialogDefi = ({ openListDefi, setOpenListDefi }) => {
   );
 };
 
-export default TemplateDialogDefi;
+export default TemplateDialog;
