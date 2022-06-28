@@ -14,12 +14,6 @@ const ModuleDrag = () => {
   const contractState = useSelector((state) => state.contract);
   const { userModule } = useDispatch();
   const [modules, setModules] = useState([]);
-  const [paging, setPaging] = useState({
-    count: 0,
-    size: 20,
-    totalPage: 0,
-    page: 0,
-  });
 
   const fetchModules = async () => {
     console.log('fetchModules');
@@ -44,8 +38,11 @@ const ModuleDrag = () => {
   }, []);
 
   const updateModules = () => {
-    console.log('Update modules: ', modules.length);
     const activeModules = contractState.current?.modules || [];
+    console.log('Update modules: ', modules.length, activeModules.length);
+    if(!modules.length){
+      return;
+    }
     const newState = modules.map((data) => {
       const { _id } = data;
       const disable = activeModules.includes(_id);
@@ -54,10 +51,10 @@ const ModuleDrag = () => {
         disable,
       };
     });
-
+    console.log('Update modules: ', modules.length, activeModules.length);
     setModules(newState);
   };
-
+  
   useEffect(() => {
     updateModules();
   }, [contractState.current?.module_keys, modules.length]);
