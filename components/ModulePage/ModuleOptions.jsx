@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Popover, styled } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import StructIcon from '../../assets/icon/struct.svg';
-import LibraryIcon from '../../assets/icon/struct.svg';
+import LibraryIcon from '../../assets/icon/library.svg';
 import OptionItem from './OptionItem';
 
 const MoreButton = styled('div')(({ theme }) => ({
