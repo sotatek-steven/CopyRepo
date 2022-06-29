@@ -8,6 +8,7 @@ import { Input, TextArea } from '../Input';
 import FormModal from '../FormModal';
 import { useForm } from '@/hooks/useForm';
 import { ELEMENT_TYPE } from '@/config/constant/common';
+import Select from '../Select';
 
 const InputWrapper = styled('div')(() => ({
   marginBottom: 20,
@@ -21,12 +22,13 @@ const Label = styled('div')(({ theme }) => ({
 }));
 
 const getInitialValues = (data) => {
-  const { name: _name, description: _description, domain: _domain, tags: _tags } = data;
+  const { name: _name, description: _description, domainId: _id, tags: _tags } = data;
+  console.log('domain', _id);
 
   return {
     name: _name || '',
     description: _description || '',
-    domain: _domain || '',
+    domainId: _id || '',
     tags: _tags || [],
   };
 };
@@ -52,7 +54,8 @@ const validateInfo = (values, errors) => {
 };
 
 const EditInfoContractModal = ({ open, onClose, data, readOnly = false }) => {
-  const { contract } = useDispatch();
+  const { contract, template } = useDispatch();
+  const [optionDomain, setOptionDomain] = useState([]);
   const theme = useTheme();
   const { values, setValues, handleChange, handleSubmit, errors, setErrors } = useForm({
     initialValues: getInitialValues(data),
@@ -76,6 +79,29 @@ const EditInfoContractModal = ({ open, onClose, data, readOnly = false }) => {
     setValues(getInitialValues(data));
     onClose();
   };
+
+  const getListDomain = async () => {
+    try {
+      const data = await template.getTemplateDomain({ size: -1 });
+      if (data.length) {
+        const domains = data.map((item) => ({
+          value: item._id,
+          label: item.name,
+        }));
+        setOptionDomain(domains);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    getListDomain();
+  }, []);
+
+  console.log(data._id);
+  console.log(values);
+  console.log(optionDomain);
 
   return (
     <FormModal
@@ -109,15 +135,13 @@ const EditInfoContractModal = ({ open, onClose, data, readOnly = false }) => {
         />
       </InputWrapper>
       <InputWrapper>
-        <Input
-          label="Domain"
-          name="domain"
-          id="domain"
-          isRequired={true}
-          value={values?.domain}
-          onChange={(e) => handleChange(e, 'domain', ELEMENT_TYPE.INPUT)}
-          readOnly={readOnly}
-          errorText={errors?.domain}
+        <Select
+          isMulti
+          onChange={(e) => handleChange(e, 'domainId', ELEMENT_TYPE.SELECT)}
+          options={optionDomain}
+          value={values?.domainId}
+          styles={colourStyles(theme)}
+          isDisabled={readOnly}
         />
       </InputWrapper>
       <InputWrapper>

@@ -1,7 +1,7 @@
 import { Button, SvgIcon, useTheme } from '@mui/material';
 import React, { useState, useEffect } from 'react';
-import rightArrowIcon from 'assets/icon/right-arrow.svg';
-import xButton from 'assets/icon/xbutton.svg';
+import RightArrowIcon from 'assets/icon/right-arrow.svg';
+import XButton from 'assets/icon/xbutton.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import ConfirmDialog from '../atom/Dialog/ConfirmDialog';
 import { PrimaryButton } from '../ButtonStyle';
@@ -14,6 +14,7 @@ import SaveContractButton from '../SmartContractNav/SaveContractButton';
 import ClearIcon from '@mui/icons-material/Clear';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Box, styled } from '@mui/system';
+import { useRouter } from 'next/router';
 
 const Container = styled('div')(() => ({
   display: 'flex',
@@ -37,7 +38,7 @@ const SmartContractActionList = () => {
   const contractState = useSelector((state) => state.contract);
   const { contract } = useDispatch();
   const [loading, setLoading] = useState(false);
-  const theme = useTheme();
+  const route = useRouter();
 
   // const [infoContractModalOpen, setInfoContractModalOpen] = useState(false);
   const [deployContractModalOpen, setDeployContractModalOpen] = useState(false);
@@ -100,13 +101,16 @@ const SmartContractActionList = () => {
           <>
             {/* <PrimaryButton onClick={() => setDeployContractModalOpen(true)}>Next</PrimaryButton> */}
             <ButtonBox>
-              <ArrowForwardIcon sx={{ fontSize: '20px' }} />
+              <RightArrowIcon />
             </ButtonBox>
             <SaveContractButton />
           </>
         )}
-        <ButtonBox>
-          <ClearIcon sx={{ fontSize: '20px' }} />
+        <ButtonBox
+          onClick={() => {
+            route.push('/');
+          }}>
+          <XButton />
         </ButtonBox>
         {/* <ExitButton /> */}
       </Container>
