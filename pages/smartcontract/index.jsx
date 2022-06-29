@@ -174,8 +174,6 @@ const Dashboard = () => {
         </DialogContent>
       </Dialog>
       <TemplateDialog open={open} setOpen={setOpen} type={type}></TemplateDialog>
-      {/* <TemplateDialogDefi openListDefi={openListDefi} setOpenListDefi={setOpenListDefi} />
-      <TemplateDialogNFT openListNFT={openListNFT} setOpenListNFT={setOpenListNFT} /> */}
     </Box>
   );
 };
