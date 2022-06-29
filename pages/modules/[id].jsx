@@ -1,13 +1,24 @@
 import React, { useEffect } from 'react';
 import DesignLayout from '@/components/layout/DesignLayout';
 import ModuleControl from '@/components/ModulePage/ModuleControl';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch } from 'react-redux';
 import { useRouter } from 'next/router';
+import { styled } from '@mui/material';
+import ModulesSidebar from '@/components/ModulePage/ModulesSidebar';
 import ModuleActionList from '@/components/ModulePage/ModuleActionList';
+
+const Container = styled('div')(({ theme }) => ({
+  display: 'flex',
+  height: '100%',
+  position: 'relative',
+}));
+
+const ContentWapper = styled('div')(({ theme }) => ({
+  flexGrow: 1,
+}));
 
 const ModulePage = () => {
   const { userModule } = useDispatch();
-  const moduleState = useSelector((state) => state.userModule);
   const router = useRouter();
   const { id } = router.query;
 
@@ -22,9 +33,12 @@ const ModulePage = () => {
   }, [id]);
 
   return (
-    <div style={{ position: 'relative' }}>
-      <ModuleControl />
-    </div>
+    <Container>
+      <ContentWapper>
+        <ModuleControl />
+      </ContentWapper>
+      <ModulesSidebar />
+    </Container>
   );
 };
 

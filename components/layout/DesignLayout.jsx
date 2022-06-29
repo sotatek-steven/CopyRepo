@@ -48,7 +48,7 @@ function DesignLayout(props) {
             <ActionContainer>{props.actionList}</ActionContainer>
           </NavbarContainer>
         </div>
-        <Box sx={{ flexGrow: 1 }}>{props.children}</Box>
+        <Box sx={{ height: 'calc(100vh - 74px)' }}>{props.children}</Box>
       </PageContainer>
     </div>
   );
