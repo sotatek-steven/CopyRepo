@@ -13,6 +13,19 @@ const Container = styled('div')(({ theme }) => ({
   padding: '55px 90px',
 }));
 
+const CloseButton = styled('div')(({ theme }) => ({
+  color: theme.palette.text.primary,
+  fontSize: 22,
+  position: 'absolute',
+  right: 15,
+  top: 15,
+  transition: 'transform 0.3s',
+  ':hover': {
+    transform: 'scale(1.1)',
+    cursor: 'pointer',
+  },
+}));
+
 const Title = styled('div')(({ theme }) => ({
   color: theme.palette.text.primary,
   fontSize: 20,
@@ -29,10 +42,10 @@ const ContentText = styled('div')(({ theme }) => ({
   marginBottom: 30,
 }));
 
-const BoxActions = styled('div')(({ theme }) => ({
+const BoxActions = styled('div')(() => ({
   display: 'flex',
   justifyContent: 'center',
   gap: '25px',
 }));
 
-export { Container, Title, ContentText, BoxActions };
+export { Container, Title, ContentText, BoxActions, CloseButton };

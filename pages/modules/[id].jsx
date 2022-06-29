@@ -12,8 +12,13 @@ const ModulePage = () => {
   const { id } = router.query;
 
   useEffect(() => {
-    if (!id) return;
-    userModule.getDetailModule(id);
+    const fetchDetailModule = async (id) => {
+      if (!id) return;
+      const data = await userModule.getDetailModule(id);
+      userModule.set(data);
+    };
+
+    fetchDetailModule(id);
   }, [id]);
 
   return (

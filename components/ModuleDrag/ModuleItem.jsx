@@ -2,6 +2,7 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
 import DragIcon from '../../assets/icon/drag.svg';
+import { useRouter } from 'next/router';
 
 const Item = styled('div')(({ disable }) => ({
   gap: '17px',
@@ -19,6 +20,8 @@ const Text = styled('div')(({ theme }) => ({
 }));
 
 const ModuleItem = ({ data, nodeType }) => {
+  const route = useRouter();
+
   const onDragStart = (event, nodeType) => {
     event.dataTransfer?.setData('application/reactflow', nodeType);
     const dataJson = JSON.stringify(data);
@@ -26,12 +29,20 @@ const ModuleItem = ({ data, nodeType }) => {
     event.dataTransfer.effectAllowed = 'move';
   };
 
+  const redirectToModulePage = () => {
+    console.log('data: ', data);
+    const { _id } = data;
+    console.log('replace');
+    route.push(`/modules/${_id}`);
+  };
+
   return (
     <Item
       onDragStart={(event) => onDragStart(event, nodeType)}
       draggable
       key={data.id}
-      disable={data.disable.toString()}>
+      disable={data.disable.toString()}
+      onClick={redirectToModulePage}>
       <div>
         <DragIcon />
       </div>
