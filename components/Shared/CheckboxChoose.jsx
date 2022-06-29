@@ -22,6 +22,7 @@ const CheckBoxStyled = styled(Card)(({ theme }) => ({
   borderRadius: '4px',
   marginTop: '24px',
   marginRight: '30px',
+  cursor: 'pointer',
   '@media screen and (max-width:1200px )': {
     minWidth: '400px',
     width: '150px',
@@ -56,23 +57,26 @@ const CheckboxChoose = ({ options, name, handleChange, idTemplate, dataDetails }
       <RadioGroup
         aria-labelledby="demo-radio-buttons-group-label"
         name="radio-buttons-group"
-        defaultValue={options[0]._id}>
+        defaultValue={options[0]._id}
+        value={idTemplate}>
         {options.map((option) => (
           <div key={option._id}>
             <CheckBoxStyled
-              sx={{ borderRight: option._id === idTemplate ? `2px solid ${theme.palette.primary.main}` : 'none' }}>
+              onClick={() => handleChange(option._id)}
+              sx={{
+                '&:hover': { opacity: 0.7 },
+                borderRight: option._id === idTemplate ? `2px solid ${theme.palette.primary.main}` : 'none',
+              }}>
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <Box sx={{ display: 'flex', alignItems: 'center', py: 2 }}>
                   <FormControlLabel
                     sx={{ margin: '0 0 0 8px' }}
                     key={option._id}
                     value={option._id}
-                    onChange={handleChange}
                     control={<RadioCustom icon={<CircleOutlinedIcon />} checkedIcon={<CheckCircleIcon />} />}
                   />
                   <Typography sx={{ color: theme.palette.primary.light }}>{option?.name}</Typography>
                 </Box>
-
                 <Typography sx={{ pr: 6, fontSize: '14px', color: '#64F5A6', fontWeight: '400' }}>
                   Gas fee: {dataDetails?.gasFee}
                 </Typography>

@@ -50,8 +50,8 @@ const TemplateDialog = ({ open, setOpen, type }) => {
     open && fetchTemplate();
   }, [open, setIdTemplate, type]);
 
-  const handeSetIdTemplate = (e) => {
-    setIdTemplate(e.target.value);
+  const handeSetIdTemplate = (id) => {
+    setIdTemplate(id);
   };
 
   const handleSubmit = (e) => {
