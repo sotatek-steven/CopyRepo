@@ -1,77 +1,45 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
-import { useDispatch, useSelector } from 'react-redux';
-import SubMenu from './SubMenu';
-import Menu from './Menu';
-import ModuleItem from './ModuleItem';
+import Tabs from '../Tabs';
+import ModulesTabPanel from './ModulesTabPanel';
 
 const DragArea = styled('div')(({ theme }) => ({
   height: '100%',
   backgroundColor: theme.palette.background.dark,
 }));
 
+const TabWrapper = styled('div')(({ theme }) => ({
+  backgroundColor: theme.palette.background.light,
+  position: 'relative',
+}));
+
+const tabs = [
+  {
+    id: 'modules',
+    label: 'Modules',
+    tabPanel: <ModulesTabPanel />,
+  },
+  {
+    id: 'analytics',
+    label: 'Analytics',
+    tabPanel: 'Analytics',
+  },
+  {
+    id: 'api',
+    label: 'API Services',
+    tabPanel: 'API Services list',
+  },
+];
+
 const ModuleDrag = () => {
-  const contractState = useSelector((state) => state.contract);
-  const { userModule } = useDispatch();
-  const [modules, setModules] = useState([]);
-
-  const fetchModules = async () => {
-    console.log('fetchModules');
-    try {
-      const { data: modulesData } = await userModule.getModules();
-
-      const modules = modulesData.map((moduleData) => {
-        return {
-          ...moduleData,
-          disable: false,
-        };
-      });
-      setModules(modules);
-      console.log('load module complete: ', modules.length);
-    } catch (error) {
-      console.log('Failed to fetch modules');
-    }
-  };
-
-  useEffect(() => {
-    fetchModules();
-  }, []);
-
-  const updateModules = () => {
-    const activeModules = contractState.current?.modules || [];
-    console.log('Update modules: ', modules.length, activeModules.length);
-    if(!modules.length){
-      return;
-    }
-    const newState = modules.map((data) => {
-      const { _id } = data;
-      const disable = activeModules.includes(_id);
-      return {
-        ...data,
-        disable,
-      };
-    });
-    console.log('Update modules: ', modules.length, activeModules.length);
-    setModules(newState);
-  };
-  
-  useEffect(() => {
-    updateModules();
-  }, [contractState.current?.module_keys, modules.length]);
+  const [activeTab, setActiveTab] = useState(tabs[0]);
 
   return (
     <DragArea>
-      <Menu />
-      <SubMenu />
-      <div>
-        {modules.length <= 0 ? (
-          <div> Module not found</div>
-        ) : (
-          modules.map((item, index) => {
-            return <ModuleItem key={index} data={item} nodeType="rectangle" />;
-          })
-        )}
-      </div>
+      <TabWrapper>
+        <Tabs initialTabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} tabStyle={{ padding: '0px 25px' }} />
+      </TabWrapper>
+      {activeTab.tabPanel}
     </DragArea>
   );
 };

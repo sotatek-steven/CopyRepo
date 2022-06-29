@@ -1,7 +1,6 @@
-import { styled, Typography } from '@mui/material';
+import { styled } from '@mui/material';
 import React, { useState } from 'react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
-import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import Popover from '@mui/material/Popover';
 import { PrimaryButton } from '../ButtonStyle';
 import ModuleInfoModal from './ModuleInfoModal';
@@ -9,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ConfirmDialog from '../atom/Dialog/ConfirmDialog';
 import { useRouter } from 'next/router';
 import { MODE } from '@/config/constant/common';
+import BackButton from '../atom/BackButton';
 
 const Wrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -21,26 +21,6 @@ const Wrapper = styled('div')(({ theme }) => ({
   ...theme.typography.h2,
   fontFamily: 'Segoe UI',
 }));
-
-const IconWrapper = styled('div')(({ theme }) => ({
-  display: 'flex',
-  width: 26,
-  height: 26,
-  overflow: 'hidden',
-  border: 'solid 1px',
-  borderColor: theme.palette.primary.main,
-  color: theme.palette.primary.main,
-  borderRadius: theme.shape.borderRadius,
-  cursor: 'pointer',
-}));
-
-const arrowIconStyle = {
-  fontSize: 17,
-  position: 'relative',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-30%, -50%)',
-};
 
 const moreVertIconStyle = {
   fontSize: 23,
@@ -96,9 +76,7 @@ const ModuleControl = () => {
   return (
     <>
       <Wrapper>
-        <IconWrapper onClick={handleConfirm}>
-          <ArrowBackIosIcon sx={arrowIconStyle} />
-        </IconWrapper>
+        <BackButton onClick={handleConfirm} />
         <span>{moduleState.name}</span>
         <MoreVertIcon sx={moreVertIconStyle} onClick={handleClick} />
         <Popover

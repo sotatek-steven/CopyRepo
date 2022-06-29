@@ -50,6 +50,7 @@ export const darkTheme = createTheme({
   },
   shape: {
     borderRadius: 4,
+    borderColor: '#8C8C8C',
   },
   typography: {
     fontSize: '0.875rem', //14px

@@ -4,6 +4,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import StructIcon from '../../assets/icon/struct.svg';
 import LibraryIcon from '../../assets/icon/library.svg';
 import OptionItem from './OptionItem';
+import { ModuleMode } from '@/store/models/moduleDesignMode';
 
 const MoreButton = styled('div')(({ theme }) => ({
   fontSize: 25,
@@ -26,14 +27,16 @@ const Divide = styled('div')(() => ({
 
 const options = [
   {
-    id: 'liraries',
+    id: 'libraries',
     label: 'Libraries',
     icon: <LibraryIcon />,
+    mode: ModuleMode.LIBRARY,
   },
   {
     id: 'structs',
     label: 'Structs',
     icon: <StructIcon />,
+    mode: ModuleMode.STRUCT,
   },
 ];
 
@@ -51,9 +54,6 @@ const ModuleOptions = () => {
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
 
-  const handleInfoModalOpen = () => {
-    handlePopoverClose();
-  };
   return (
     <div>
       <MoreButton onClick={handleClick}>
@@ -74,10 +74,10 @@ const ModuleOptions = () => {
         }}>
         <Container>
           {options.map((item, index) => {
-            const { id, label, icon } = item;
+            const { id, label, icon, mode } = item;
             return (
               <div key={id}>
-                <OptionItem label={label} icon={icon} onClick={handleInfoModalOpen} />
+                <OptionItem key={id} mode={mode} label={label} icon={icon} />
                 {index !== options.length - 1 && <Divide />}
               </div>
             );

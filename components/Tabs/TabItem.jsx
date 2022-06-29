@@ -1,6 +1,13 @@
 import React from 'react';
 import { styled } from '@mui/material/styles';
 
+const Wrapper = styled('div')(() => ({
+  cursor: 'pointer',
+  display: 'flex',
+  justifyContent: 'flex-end',
+  flexDirection: 'column',
+}));
+
 const Text = styled('div')(({ theme, isactive }) => ({
   fontSize: '16px',
   color: isactive === 'true' ? theme.palette.primary.main : theme.palette.text.primary,
@@ -12,16 +19,16 @@ const Line = styled('div')(({ theme, isactive }) => ({
   backgroundColor: isactive === 'true' ? theme.palette.primary.main : `${theme.palette.primary.main}00`,
   height: '4px',
   width: '100%',
+  zIndex: 1,
 }));
 
-const TabItem = ({ text, label, isActive, setActiveTab }) => {
+const TabItem = ({ tab, isActive, setActiveTab }) => {
+  const { label } = tab;
   return (
-    <div
-      style={{ cursor: 'pointer', display: 'flex', justifyContent: 'flex-end', flexDirection: 'column' }}
-      onClick={() => setActiveTab(label)}>
-      <Text isactive={`${isActive.toString()}`}> {text} </Text>
+    <Wrapper onClick={() => setActiveTab(tab)}>
+      <Text isactive={`${isActive.toString()}`}> {label} </Text>
       <Line isactive={`${isActive.toString()}`} />
-    </div>
+    </Wrapper>
   );
 };
 

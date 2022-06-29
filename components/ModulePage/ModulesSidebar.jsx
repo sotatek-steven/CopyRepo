@@ -1,17 +1,18 @@
 import { styled } from '@mui/material';
 import React, { useState } from 'react';
-import ModuleTabs from './ModuleTabs';
+import Tabs from '../Tabs';
+import ModuleOptions from './ModuleOptions';
 
 const tabs = [
   {
-    label: 'function',
-    text: 'Function',
-    content: 'function list',
+    id: 'function',
+    label: 'Function',
+    tabPanel: 'function list',
   },
   {
-    label: 'api',
-    text: 'API Service',
-    content: 'api service list',
+    id: 'api',
+    label: 'API Service',
+    tabPanel: 'api service list',
   },
 ];
 
@@ -20,12 +21,28 @@ const Container = styled('div')(({ theme }) => ({
   background: theme.palette.background.dark,
 }));
 
+const TabWrapper = styled('div')(({ theme }) => ({
+  backgroundColor: theme.palette.background.light,
+  position: 'relative',
+}));
+
+const OptionWrapper = styled('div')(() => ({
+  position: 'absolute',
+  bottom: 0,
+  right: 0,
+}));
+
 const ModulesSidebar = () => {
-  const [activeTab, setActiveTab] = useState(tabs[0].label);
+  const [activeTab, setActiveTab] = useState(tabs[0]);
   return (
     <Container>
-      <ModuleTabs initialTabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
-      <div>{activeTab}</div>
+      <TabWrapper>
+        <Tabs initialTabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} tabStyle={{ padding: '0px 25px' }} />
+        <OptionWrapper>
+          <ModuleOptions />
+        </OptionWrapper>
+      </TabWrapper>
+      {activeTab.tabPanel}
     </Container>
   );
 };
