@@ -1,12 +1,14 @@
-import { MenuItem, Select, styled, useTheme } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { styled, useTheme } from '@mui/material';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import { Input, TextArea } from '../Input';
 import Creatable from 'react-select/creatable';
 import { useDispatch } from 'react-redux';
 import colourStyles from '../EditInfoContractModal/tagStyle';
 import { useForm } from '@/hooks/useForm';
 import FormModal from '../FormModal';
-import { ELEMENT_TYPE } from '@/config/constant/common';
+import { ELEMENT_TYPE, HTTP_CODE, MODE } from '@/config/constant/common';
+import { ROUTE } from '@/config/constant/routeConstant';
 
 const InputWrapper = styled('div')(() => ({
   marginBottom: 20,
@@ -47,7 +49,8 @@ const getInitialValues = (data) => {
   };
 };
 
-const ModuleInfoModal = ({ open, onClose, data, readOnly = false }) => {
+const ModuleInfoModal = ({ mode, open, onClose, data, readOnly = false }) => {
+  const router = useRouter();
   const { userModule } = useDispatch();
   const theme = useTheme();
 
@@ -57,13 +60,32 @@ const ModuleInfoModal = ({ open, onClose, data, readOnly = false }) => {
   });
 
   useEffect(() => {
-    setValues(getInitialValues(data));
+    if (!data) return;
+    const initialValues = getInitialValues(data);
+    setValues(initialValues);
   }, [data]);
 
-  const updateModule = (e) => {
+  const createModule = async () => {
+    const res = await userModule.createModule({ moduleInfo: values });
+    if (res.code === HTTP_CODE.SUCCESS && res.data?._id) {
+      const { _id } = res.data;
+      router.push(`${ROUTE.MODULES}/${_id}`);
+    }
+  };
+
+  const updateModule = () => {
     const newModule = { ...data, ...values };
     userModule.update(newModule);
     handleClose();
+  };
+
+  const handleSave = () => {
+    if (mode === MODE.CREATE) {
+      createModule();
+    }
+    if (mode === MODE.EDIT) {
+      updateModule();
+    }
   };
 
   const handleClose = () => {
@@ -73,12 +95,6 @@ const ModuleInfoModal = ({ open, onClose, data, readOnly = false }) => {
     onClose();
   };
 
-  useEffect(() => {
-    if (!data) return;
-    const initialValues = getInitialValues(data);
-    setValues(initialValues);
-  }, [data]);
-
   return (
     <FormModal
       open={open}
@@ -87,7 +103,7 @@ const ModuleInfoModal = ({ open, onClose, data, readOnly = false }) => {
       closeText={'Cancel'}
       confirmText={'Save'}
       onConfirm={(e) => {
-        handleSubmit(e, updateModule);
+        handleSubmit(e, handleSave);
       }}>
       <InputWrapper>
         <Input
