@@ -1,5 +1,7 @@
-import { styled } from '@mui/material';
+import { Button, SvgIcon, useTheme } from '@mui/material';
 import React, { useState, useEffect } from 'react';
+import rightArrowIcon from 'assets/icon/right-arrow.svg';
+import xButton from 'assets/icon/xbutton.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import ConfirmDialog from '../atom/Dialog/ConfirmDialog';
 import { PrimaryButton } from '../ButtonStyle';
@@ -9,28 +11,45 @@ import SavingScreen from '../Saving';
 import DeployContractModal from '../SmartContractNav/DeployContractModal';
 import ExitButton from '../SmartContractNav/ExitButton';
 import SaveContractButton from '../SmartContractNav/SaveContractButton';
+import ClearIcon from '@mui/icons-material/Clear';
+import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
+import { Box, styled } from '@mui/system';
 
 const Container = styled('div')(() => ({
   display: 'flex',
   gap: '23px',
 }));
 
+const ButtonBox = styled(Box)(({ theme }) => ({
+  backgroundColor: theme.palette.primary.main,
+  color: theme.palette.primary.contrastText,
+  width: '36px',
+  height: '36px',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  borderRadius: '4px',
+  cursor: 'pointer',
+  '&:hover': { opacity: 0.7 },
+}));
+
 const SmartContractActionList = () => {
   const contractState = useSelector((state) => state.contract);
   const { contract } = useDispatch();
   const [loading, setLoading] = useState(false);
+  const theme = useTheme();
 
-  const [infoContractModalOpen, setInfoContractModalOpen] = useState(false);
+  // const [infoContractModalOpen, setInfoContractModalOpen] = useState(false);
   const [deployContractModalOpen, setDeployContractModalOpen] = useState(false);
   const [confirmDeployModalOpen, setConfirmDeployModalOpen] = useState(false);
   const [contractDeployedAlertOpen, setContractDeployedAlertOpen] = useState(false);
   const handleInfoContractModalClose = (_, reason) => {
     if (reason === 'backdropClick') return;
-    setInfoContractModalOpen(false);
+    contract.setInfoContractModalOpen(false);
   };
 
   useEffect(() => {
-    setInfoContractModalOpen(contractState.current.status === 'init');
+    contract.setInfoContractModalOpen(contractState.current.status === 'init');
   }, [contractState.current.status]);
 
   const handleDeployContractModalClose = (_, reason) => {
@@ -76,18 +95,24 @@ const SmartContractActionList = () => {
   return (
     <>
       <Container>
-        <PrimaryButton onClick={() => setInfoContractModalOpen(true)}>Edit Info</PrimaryButton>
+        {/* <PrimaryButton onClick={() => contract.setInfoContractModalOpen(true)}>Edit Info</PrimaryButton> */}
         {contractState.current.status !== 'deployed' && (
           <>
-            <PrimaryButton onClick={() => setDeployContractModalOpen(true)}>Next</PrimaryButton>
+            {/* <PrimaryButton onClick={() => setDeployContractModalOpen(true)}>Next</PrimaryButton> */}
+            <ButtonBox>
+              <ArrowForwardIcon sx={{ fontSize: '20px' }} />
+            </ButtonBox>
             <SaveContractButton />
           </>
         )}
-        <ExitButton />
+        <ButtonBox>
+          <ClearIcon sx={{ fontSize: '20px' }} />
+        </ButtonBox>
+        {/* <ExitButton /> */}
       </Container>
 
       <EditInfoContractModal
-        open={infoContractModalOpen}
+        open={contractState.infoContractModalOpen}
         onClose={handleInfoContractModalClose}
         nameValue={contractState.current.name}
         data={contractState.current}

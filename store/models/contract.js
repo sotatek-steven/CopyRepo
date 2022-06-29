@@ -21,7 +21,8 @@ const contract = createModel({
       address: '',
       transaction: '',
       module_keys: '',
-    }
+    },
+    infoContractModalOpen: false,
   },
   reducers: {
     update: (state, data) => ({
@@ -41,7 +42,7 @@ const contract = createModel({
       return {
         ...state,
         current: { ...state.current, modules, module_keys },
-      }
+      };
     },
     setCoordinates: (state, coordinates) => ({
       ...state,
@@ -54,6 +55,10 @@ const contract = createModel({
     updateCurrent: (state, data) => ({
       ...state,
       current: { ...state.current, ...data },
+    }),
+    setInfoContractModalOpen: (state, data) => ({
+      ...state,
+      infoContractModalOpen: data,
     }),
   },
   effects: (dispatch) => {
@@ -95,7 +100,7 @@ const contract = createModel({
         contract.setAddress(depoyedContract.address);
         contract.setTransaction(depoyedContract.deployTransaction.hash);
         console.log(depoyedContract);
-        toast.success('Deploy success')
+        toast.success('Deploy success');
         deployed();
       },
     };

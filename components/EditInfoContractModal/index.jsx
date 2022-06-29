@@ -84,6 +84,7 @@ const EditInfoContractModal = ({ open, onClose, data, readOnly = false }) => {
       title={'Smart Contract Info'}
       closeText={'Cancel'}
       confirmText={'Continue'}
+      showFooter={!readOnly}
       onConfirm={(e) => handleSubmit(e, updateContract)}>
       <InputWrapper>
         <Input
