@@ -20,9 +20,9 @@ const CloseButton = styled('div')(({ theme }) => ({
   right: 15,
   top: 15,
   transition: 'transform 0.3s',
+  cursor: 'pointer',
   ':hover': {
     transform: 'scale(1.1)',
-    cursor: 'pointer',
   },
 }));
 

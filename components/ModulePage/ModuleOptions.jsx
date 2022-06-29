@@ -9,9 +9,9 @@ const MoreButton = styled('div')(({ theme }) => ({
   fontSize: 25,
   color: '#292D32',
   transition: 'color 0.3s',
+  cursor: 'pointer',
   ':hover': {
     color: theme.palette.text.primary,
-    cursor: 'pointer',
   },
 }));
 

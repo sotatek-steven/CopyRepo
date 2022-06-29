@@ -10,8 +10,8 @@ const Item = styled('div')(({ theme, disable }) => ({
   padding: '11px 19px',
   display: disable === 'true' ? 'none' : 'flex',
   transition: 'background 0.2s',
+  cursor: 'pointer',
   ':hover': {
-    cursor: 'pointer',
     background: theme.palette.background.default,
   },
 }));

@@ -19,9 +19,7 @@ const style = {
 
 const CloseBtn = styled('div')(() => ({
   color: 'white',
-  ':hover': {
-    cursor: 'pointer',
-  },
+  cursor: 'pointer',
 }));
 
 const SmartContractModal = ({ openDefault = false }) => {
