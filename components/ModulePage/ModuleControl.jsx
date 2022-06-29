@@ -31,9 +31,7 @@ const IconWrapper = styled('div')(({ theme }) => ({
   borderColor: theme.palette.primary.main,
   color: theme.palette.primary.main,
   borderRadius: theme.shape.borderRadius,
-  ':hover': {
-    cursor: 'pointer',
-  },
+  cursor: 'pointer',
 }));
 
 const arrowIconStyle = {
@@ -46,9 +44,7 @@ const arrowIconStyle = {
 
 const moreVertIconStyle = {
   fontSize: 23,
-  ':hover': {
-    cursor: 'pointer',
-  },
+  cursor: 'pointer',
 };
 const ModuleControl = () => {
   const [anchorEl, setAnchorEl] = useState(null);

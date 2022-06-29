@@ -28,7 +28,6 @@ const IconNavBar = ({ name, path }) => {
         justifyContent: open ? 'initial' : 'center',
         px: 2.5,
         marginRight: '8px',
-
         cursor: 'pointer',
       },
       listItemIcon: {

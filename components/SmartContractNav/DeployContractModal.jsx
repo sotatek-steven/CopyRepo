@@ -38,8 +38,8 @@ const InputWrapper = styled('div')(() => ({
 
 const CloseButton = styled('div')(({ theme }) => ({
   transition: 'all 0.2s',
+  cursor: 'pointer',
   ':hover': {
-    cursor: 'pointer',
     transform: 'scale(1.05)',
   },
 }));

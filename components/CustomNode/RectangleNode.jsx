@@ -9,9 +9,7 @@ const Card = styled('div')(({ theme, color }) => ({
   borderRadius: '4px',
   width: '260px',
   backgroundColor: theme.palette.mode === 'dark' ? '#BEA75A' : '',
-  ':hover': {
-    cursor: 'pointer',
-  },
+  cursor: 'pointer',
 }));
 
 // const Item = styled('div')(({ theme }) => ({

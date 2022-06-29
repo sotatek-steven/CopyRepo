@@ -13,9 +13,9 @@ const Container = styled('div')(() => ({
   alignItems: 'center',
   padding: '23px 29px',
   gap: 20,
+  cursor: 'pointer',
   transition: 'background 0.2s',
   ':hover': {
-    cursor: 'pointer',
     background: '#4b4b4c',
   },
 }));

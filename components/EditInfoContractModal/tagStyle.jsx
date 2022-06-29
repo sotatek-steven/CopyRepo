@@ -46,11 +46,11 @@ const colourStyles = (theme) => ({
   }),
   multiValueRemove: (styles, { data }) => ({
     ...styles,
+    cursor: 'pointer',
     color: theme.palette.text.primary,
     ':hover': {
       backgroundColor: '#fdb4a1',
       color: theme.palette.text.primary,
-      cursor: 'pointer',
     },
   }),
 });
