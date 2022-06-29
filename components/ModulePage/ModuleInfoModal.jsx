@@ -1,5 +1,5 @@
 import { styled, useTheme } from '@mui/material';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Input, TextArea } from '../Input';
 import Creatable from 'react-select/creatable';
@@ -9,18 +9,22 @@ import { useForm } from '@/hooks/useForm';
 import FormModal from '../FormModal';
 import { ELEMENT_TYPE, HTTP_CODE, MODE } from '@/config/constant/common';
 import { ROUTE } from '@/config/constant/routeConstant';
+import Select from '../Select';
 
 const InputWrapper = styled('div')(() => ({
   marginBottom: 20,
 }));
 
 const Label = styled('div')(({ theme }) => ({
+  color: theme.palette.text.primary,
+  fontSize: 18,
+  fontWeight: 600,
   marginBottom: 3,
 }));
 
 const validateInfo = (values, errors) => {
   let tempError = { ...errors };
-  const { name, description, domain } = values;
+  const { name, domain } = values;
 
   if (typeof name !== 'undefined') {
     tempError = {
@@ -39,31 +43,50 @@ const validateInfo = (values, errors) => {
 };
 
 const getInitialValues = (data) => {
-  const { name: _name, description: _description, domain: _domain, tags: _tags } = data;
+  const { name: _name, description: _description, domainId: _domainId, tags: _tags } = data;
 
   return {
     name: _name || '',
     description: _description || '',
-    domain: _domain || '',
+    domainId: _domainId || '',
     tags: _tags || [],
   };
 };
 
-const ModuleInfoModal = ({ mode, open, onClose, data, readOnly = false }) => {
+const ModuleInfoModal = ({ mode, open, onClose, data }) => {
   const router = useRouter();
-  const { userModule } = useDispatch();
+  const { userModule, template } = useDispatch();
   const theme = useTheme();
-
   const { values, setValues, handleChange, handleSubmit, errors, setErrors } = useForm({
     initialValues: getInitialValues(data),
     validate: validateInfo,
   });
+  const [optionDomain, setOptionDomain] = useState([]);
+
+  useEffect(() => {
+    getListDomain();
+  }, []);
 
   useEffect(() => {
     if (!data) return;
     const initialValues = getInitialValues(data);
     setValues(initialValues);
   }, [data]);
+
+  const getListDomain = async () => {
+    try {
+      const data = await template.getTemplateDomain({ size: -1 });
+      if (data.length) {
+        const domains = data.map((item) => ({
+          value: item._id,
+          label: item.name,
+        }));
+        setOptionDomain(domains);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const createModule = async () => {
     const res = await userModule.createModule({ moduleInfo: values });
@@ -80,11 +103,15 @@ const ModuleInfoModal = ({ mode, open, onClose, data, readOnly = false }) => {
   };
 
   const handleSave = () => {
-    if (mode === MODE.CREATE) {
-      createModule();
-    }
-    if (mode === MODE.EDIT) {
-      updateModule();
+    switch (mode) {
+      case MODE.CREATE:
+        createModule();
+        break;
+      case MODE.EDIT:
+        updateModule();
+        break;
+      default:
+        break;
     }
   };
 
@@ -126,13 +153,12 @@ const ModuleInfoModal = ({ mode, open, onClose, data, readOnly = false }) => {
         />
       </InputWrapper>
       <InputWrapper>
-        <Input
+        <Select
           label="Domain"
-          name="domain"
-          id="domain"
           isRequired={true}
-          value={values?.domain}
-          onChange={(e) => handleChange(e, 'domain', ELEMENT_TYPE.INPUT)}
+          options={optionDomain}
+          value={values?.domainId}
+          onChange={(e) => handleChange(e, 'domainId', ELEMENT_TYPE.SELECT)}
           errorText={errors?.domain}
         />
       </InputWrapper>
