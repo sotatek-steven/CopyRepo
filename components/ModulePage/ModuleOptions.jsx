@@ -20,7 +20,7 @@ const Container = styled('div')(({ theme }) => ({
   width: 372,
 }));
 
-const Divide = styled('div')(({ theme }) => ({
+const Divide = styled('div')(() => ({
   borderBottom: '0.5px dashed #8C8C8C',
 }));
 
@@ -76,10 +76,10 @@ const ModuleOptions = () => {
           {options.map((item, index) => {
             const { id, label, icon } = item;
             return (
-              <>
-                <OptionItem key={id} label={label} icon={icon} onClick={handleInfoModalOpen} />
+              <div key={id}>
+                <OptionItem label={label} icon={icon} onClick={handleInfoModalOpen} />
                 {index !== options.length - 1 && <Divide />}
-              </>
+              </div>
             );
           })}
         </Container>
