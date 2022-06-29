@@ -4,11 +4,16 @@ import { styled } from '@mui/material/styles';
 import DragIcon from '../../assets/icon/drag.svg';
 import { useRouter } from 'next/router';
 
-const Item = styled('div')(({ disable }) => ({
+const Item = styled('div')(({ theme, disable }) => ({
   gap: '17px',
   alignContent: 'center',
   padding: '11px 19px',
   display: disable === 'true' ? 'none' : 'flex',
+  transition: 'background 0.2s',
+  ':hover': {
+    cursor: 'pointer',
+    background: theme.palette.background.default,
+  },
 }));
 
 const Text = styled('div')(({ theme }) => ({
