@@ -5,7 +5,7 @@ import ModuleActionList from '@/components/ModulePage/ModuleActionList';
 import Tabs from '@/components/Tabs';
 import { ModuleMode } from '@/store/models/moduleDesignMode';
 import { styled } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 const ButtonWrapper = styled('div')(() => ({
@@ -45,9 +45,19 @@ const getActiveTab = (mode) => {
 };
 
 const Library = () => {
+  const { library } = useDispatch();
   const moduleDesignModeState = useSelector((state) => state.moduleDesignMode);
   const { moduleDesignMode } = useDispatch();
   const [activeTab, setActiveTab] = useState(getActiveTab(moduleDesignModeState));
+
+  useEffect(() => {
+    const fetchImportedLibraries = async () => {
+      const { data } = await library.getAllUserLibraries();
+      library.update(data);
+    };
+
+    fetchImportedLibraries();
+  }, []);
 
   return (
     <Container>
