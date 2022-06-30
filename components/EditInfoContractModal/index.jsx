@@ -99,10 +99,6 @@ const EditInfoContractModal = ({ open, onClose, data, readOnly = false }) => {
     getListDomain();
   }, []);
 
-  console.log(data._id);
-  console.log(values);
-  console.log(optionDomain);
-
   return (
     <FormModal
       open={open}

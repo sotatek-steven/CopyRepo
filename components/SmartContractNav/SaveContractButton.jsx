@@ -1,3 +1,4 @@
+import { makeStyles } from '@mui/styles';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -7,8 +8,19 @@ import { toast } from 'react-toastify';
 import { PrimaryButton } from '../ButtonStyle';
 import SavingScreen from '../Saving';
 
+const useStyles = makeStyles(() => ({
+  gasFeeToast: {
+    background: '#E5C2B9 !important',
+    borderLeft: '4px solid #FA6E6E !important',
+    width: '444px',
+    right: '115px',
+  },
+}));
+
 const SaveContractButton = () => {
   const [loading, setLoading] = useState(false);
+  const classes = useStyles();
+  const contractStore = useSelector((state) => state.contract);
   const { contract } = useDispatch();
 
   const saveContract = async () => {
@@ -17,6 +29,16 @@ const SaveContractButton = () => {
     setLoading(false);
     if (code == 200) {
       toast.success('Save contract success');
+      contractStore.current.gasFee &&
+        toast(`GAS FEE OF THIS SMART CONTRACT: ${contractStore.current.gasFee}`, {
+          position: 'bottom-right',
+          autoClose: 5000,
+          hideProgressBar: true,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          className: classes.gasFeeToast,
+        });
       return;
     }
     toast.error('saving contract failed!', message);
