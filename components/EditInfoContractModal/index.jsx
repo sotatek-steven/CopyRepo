@@ -23,7 +23,6 @@ const Label = styled('div')(({ theme }) => ({
 
 const getInitialValues = (data) => {
   const { name: _name, description: _description, domainId: _id, tags: _tags } = data;
-  console.log('domain', _id);
 
   return {
     name: _name || '',
