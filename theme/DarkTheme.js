@@ -137,5 +137,8 @@ export const darkTheme = createTheme({
         whiteSpace: 'normal',
       },
     },
+    border: {
+      dark: '#8C8C8C',
+    },
   },
 });

@@ -13,6 +13,10 @@ export const PrimaryButton = styled('button')(
     color: theme.palette.primary.contrastText,
     backgroundColor: theme.palette.primary.main,
     transition: 'opacity 0.15s ease-in-out',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    gap: 8,
     cursor: 'pointer',
     ':hover': {
       opacity: 0.9,
@@ -32,6 +36,10 @@ export const SecondaryButton = styled('button')(({ theme, width = 105, padding =
   padding: padding,
   color: theme.palette.text.primary,
   transition: 'opacity 0.15s ease-in-out',
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  gap: 8,
   cursor: 'pointer',
   ':hover': {
     opacity: 0.9,
