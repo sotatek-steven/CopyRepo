@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PrimaryButton } from '../ButtonStyle';
 import StructItem from './StructItem';
 import AddIcon from 'assets/icon/addIcon.svg';
@@ -35,7 +35,7 @@ const StructPage = () => {
         ))}
       </BodyContent>
       <Footer>
-        <PrimaryButton width="150px" onClick={handelAddStruct}>
+        <PrimaryButton width="150px" height="45px" onClick={handelAddStruct}>
           <AddIcon />
           Add Struct
         </PrimaryButton>

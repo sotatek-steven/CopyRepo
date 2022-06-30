@@ -8,6 +8,7 @@ import ModulesSidebar from '@/components/ModulePage/ModulesSidebar';
 import ModuleActionList from '@/components/ModulePage/ModuleActionList';
 import Library from '@/components/Library';
 import { ModuleMode } from '@/store/models/moduleMode';
+import useStructPage from '@/components/StructTabPanel/hooks/useStructPage';
 
 const Container = styled('div')(() => ({
   display: 'flex',
@@ -20,16 +21,20 @@ const ContentWapper = styled('div')(() => ({
 }));
 
 const ModulePage = () => {
-  const { userModule } = useDispatch();
+  const { userModule, struct } = useDispatch();
   const router = useRouter();
   const { id } = router.query;
   const moduleModeState = useSelector((state) => state.moduleMode);
   const { moduleMode } = useDispatch();
+  const moduleDesignMode = useSelector((state) => state.moduleDesignMode);
+  const { getStructs } = useStructPage();
 
   useEffect(() => {
     const fetchDetailModule = async (id) => {
       if (!id) return;
       const data = await userModule.getDetailModule(id);
+
+      getStructs(data?.sources?.structs);
       userModule.set(data);
     };
 

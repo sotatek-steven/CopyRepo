@@ -29,6 +29,13 @@ const userModule = createModel({
         libraries: data,
       },
     }),
+    updateStructs: (state, structs) => ({
+      ...state,
+      sources: {
+        ...state.sources,
+        structs,
+      },
+    }),
   },
   effects: (dispatch) => {
     const { userModule, player } = dispatch;
@@ -72,18 +79,23 @@ const userModule = createModel({
           console.log('error: ', error);
         }
       },
-      async updateModule({ moduleId, moduleInfo }, state) {
+      async updateModule(payload, state) {
+        const { _id, ...dataModule } = state.userModule;
+
+        const body = { ...dataModule };
         const { code, data, message } = await putRequest({
-          url: `/api/v1/modules/${moduleId}`,
+          url: `/api/v1/modules/${_id}`,
           userModoel: player,
           userState: state.player,
-          body: moduleInfo,
+          body: body,
         });
         if (code !== 200) {
           toast.error(message);
-          return;
+          return { code };
+        } else {
+          toast.success('Save Successfully!');
         }
-        return data;
+        return { code, data };
       },
     };
   },

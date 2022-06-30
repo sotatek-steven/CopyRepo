@@ -12,3 +12,6 @@ export const MODE = {
 export const HTTP_CODE = {
   SUCCESS: 200,
 };
+
+export const NEW_ID = 'NEW_ID';
+export const EDIT_ID = 'EDIT_ID';

@@ -6,5 +6,6 @@ import userContract from './userContract';
 import template from './template';
 import moduleMode from './moduleMode';
 import library from './library';
+import struct from './struct';
 
-export { ticket, contract, player, userModule, userContract, template, moduleMode, library };
+export { ticket, contract, player, userModule, userContract, template, moduleMode, library, struct };
