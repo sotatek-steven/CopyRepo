@@ -6,7 +6,14 @@ const Header = styled('div')(({ theme }) => ({
   fontStyle: 'normal',
   fontWeight: 700,
   fontSize: 28,
-  marginBottom: 15,
+  margin: '20px 0',
+}));
+
+const Label = styled('div')(({ theme }) => ({
+  color: theme.palette.text.primary,
+  fontSize: 18,
+  fontWeight: 600,
+  marginBottom: 3,
 }));
 
 const BodyContent = styled('div')(({ theme }) => ({}));
@@ -41,6 +48,7 @@ const ItemContent = styled('div')(({ theme }) => ({
   display: 'flex',
   marginLeft: 50,
   gap: 40,
+  marginTop: 20,
   ':last-child': {
     '& > .action-variable': {
       width: '10%',
@@ -66,4 +74,10 @@ const ItemContent = styled('div')(({ theme }) => ({
   },
 }));
 
-export { Header, BodyContent, Footer, ItemContainer, ItemTitle, ItemContent };
+const Error = styled('div')(({ theme }) => ({
+  color: theme.palette.error.main,
+  fontSize: 14,
+  marginTop: 8,
+}));
+
+export { Header, Label, BodyContent, Footer, ItemContainer, ItemTitle, ItemContent, Error };

@@ -7,6 +7,7 @@ import { ModuleMode } from '@/store/models/moduleDesignMode';
 import { styled } from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import StructTabPanel from '../StructTabPanel';
 
 const ButtonWrapper = styled('div')(() => ({
   position: 'absolute',
@@ -34,7 +35,7 @@ const tabs = [
   {
     label: 'Structs',
     id: 'structs',
-    tabPanel: 'api service list',
+    tabPanel: <StructTabPanel />,
     mode: ModuleMode.STRUCT,
   },
 ];

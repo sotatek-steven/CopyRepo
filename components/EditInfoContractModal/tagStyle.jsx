@@ -40,6 +40,12 @@ const colourStyles = (theme) => ({
     fontWeight: 600,
     fontSize: 14,
   }),
+  singleValue: (styles, { data }) => ({
+    ...styles,
+    color: theme.palette.text.primary,
+    fontWeight: 600,
+    fontSize: 14,
+  }),
   multiValueLabel: (styles, { data }) => ({
     ...styles,
     color: theme.palette.text.primary,
