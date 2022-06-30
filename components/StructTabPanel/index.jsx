@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { PrimaryButton } from '../ButtonStyle';
 import StructItem from './StructItem';
 import AddIcon from 'assets/icon/addIcon.svg';
@@ -6,19 +6,31 @@ import { BodyContent, Footer, Header } from './StructItem.style';
 import useStructPage from './hooks/useStructPage';
 
 const StructPage = () => {
-  const { structs, handelAddStruct, handelRemoveStruct, handelAddVariable, handleChange } = useStructPage();
+  const {
+    structs,
+    types,
+    handelAddStruct,
+    handelRemoveStruct,
+    handelAddVariable,
+    handelRemoveVariable,
+    handleChangeNameStruct,
+    handleChangeVariable,
+  } = useStructPage();
 
   return (
     <>
       <Header>Create Struct</Header>
       <BodyContent>
-        {structs.map((struct) => (
+        {structs?.map((struct) => (
           <StructItem
             key={struct._id}
             struct={struct}
+            types={types}
             handelRemoveStruct={handelRemoveStruct}
             handelAddVariable={handelAddVariable}
-            handleChange={handleChange}
+            handelRemoveVariable={handelRemoveVariable}
+            handleChangeNameStruct={handleChangeNameStruct}
+            handleChangeVariable={handleChangeVariable}
           />
         ))}
       </BodyContent>

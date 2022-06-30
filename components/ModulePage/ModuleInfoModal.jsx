@@ -24,7 +24,7 @@ const Label = styled('div')(({ theme }) => ({
 
 const validateInfo = (values, errors) => {
   let tempError = { ...errors };
-  const { name, domain } = values;
+  const { name, domainId } = values;
 
   if (typeof name !== 'undefined') {
     tempError = {
@@ -33,10 +33,10 @@ const validateInfo = (values, errors) => {
     };
   }
 
-  if (typeof domain !== 'undefined') {
+  if (typeof domainId !== 'undefined') {
     tempError = {
       ...tempError,
-      domain: domain?.trim() ? null : 'This field is required',
+      domainId: domainId?.trim() ? null : 'This field is required',
     };
   }
   return tempError;
@@ -90,7 +90,7 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
 
   const createModule = async () => {
     const res = await userModule.createModule({ moduleInfo: values });
-    if (res.code === HTTP_CODE.SUCCESS && res.data?._id) {
+    if (res?.code === HTTP_CODE.SUCCESS && res?.data?._id) {
       const { _id } = res.data;
       router.push(`${ROUTE.MODULES}/${_id}`);
     }
@@ -159,7 +159,7 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
           options={optionDomain}
           value={values?.domainId}
           onChange={(e) => handleChange(e, 'domainId', ELEMENT_TYPE.SELECT)}
-          errorText={errors?.domain}
+          errorText={errors?.domainId}
         />
       </InputWrapper>
       <InputWrapper>
