@@ -1,8 +1,8 @@
 import { styled } from '@mui/material';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 
 const Label = styled('div')(({ theme }) => ({
-  fontSize: 25,
   color: theme.palette.text.primary,
   fontSize: theme.typography.fontSize,
   fontWeight: theme.typography.fontWeightRegular,
@@ -20,9 +20,15 @@ const Container = styled('div')(() => ({
   },
 }));
 
-const OptionItem = ({ label, icon }) => {
+const OptionItem = ({ label, icon, mode }) => {
+  const { moduleDesignMode } = useDispatch();
+
+  const handleClick = () => {
+    moduleDesignMode.setModuleDesignMode(mode);
+  };
+
   return (
-    <Container>
+    <Container onClick={handleClick}>
       {icon}
       <Label>{label}</Label>
     </Container>
