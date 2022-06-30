@@ -1,15 +1,25 @@
 {
-  "extends": ["eslint:recommended", "plugin:react/recommended", "prettier"],
-  "parserOptions": {
-    "ecmaFeatures": {
-      "jsx": true
-    },
-    "ecmaVersion": 12,
-    "sourceType": "module"
-  },
-  "plugins": ["react"],
+  "extends": ["next/core-web-vitals", "prettier"],
   "rules": {
-    "react/prop-types": "off",
-    "react/react-in-jsx-scope": "off"
+    "@next/next/no-img-element": "off",
+    "import/no-unresolved": "off",
+    "import/extensions": "off",
+    "jsx-a11y/alt-text": "off",
+    "react/display-name": "off",
+    "react-hooks/exhaustive-deps": "off",
+    "no-shadow": "off",
+    "no-console": "off",
+    "no-underscore-dangle": "off",
+    "import/prefer-default-export": "off",
+    "react-hooks/exhaustive-depfs": "off",
+    "react/jsx-max-props-per-line": [
+      1,
+      {
+        "maximum": 5
+      }
+    ],
+    "nonblock-statement-body-position": "off",
+    "curly": "off",
+    "import/no-extraneous-dependencies": "error"
   }
 }
