@@ -57,9 +57,9 @@ const contract = createModel({
       ...state,
       current: { ...state.current, ...data },
     }),
-    setInfoContractModalOpen: (state, data) => ({
+    setInfoContractModalOpen: (state, infoContractModalOpen) => ({
       ...state,
-      infoContractModalOpen: data,
+      infoContractModalOpen,
     }),
   },
   effects: (dispatch) => {

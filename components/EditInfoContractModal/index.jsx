@@ -131,7 +131,6 @@ const EditInfoContractModal = ({ open, onClose, data, readOnly = false }) => {
       </InputWrapper>
       <InputWrapper>
         <Select
-          isMulti
           onChange={(e) => handleChange(e, 'domainId', ELEMENT_TYPE.SELECT)}
           options={optionDomain}
           value={values?.domainId}

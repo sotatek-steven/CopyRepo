@@ -1,4 +1,4 @@
-import { makeStyles } from '@mui/styles';
+import { useTheme } from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -8,18 +8,10 @@ import { toast } from 'react-toastify';
 import { PrimaryButton } from '../ButtonStyle';
 import SavingScreen from '../Saving';
 
-const useStyles = makeStyles(() => ({
-  gasFeeToast: {
-    background: '#E5C2B9 !important',
-    borderLeft: '4px solid #FA6E6E !important',
-    width: '444px',
-    right: '115px',
-  },
-}));
-
 const SaveContractButton = () => {
+  const theme = useTheme();
+
   const [loading, setLoading] = useState(false);
-  const classes = useStyles();
   const contractStore = useSelector((state) => state.contract);
   const { contract } = useDispatch();
 
@@ -37,7 +29,12 @@ const SaveContractButton = () => {
           closeOnClick: true,
           pauseOnHover: true,
           draggable: true,
-          className: classes.gasFeeToast,
+          style: {
+            background: theme.palette.primary.light,
+            borderLeft: `4px solid ${theme.palette.primary.light2} `,
+            width: '444px',
+            right: '110px',
+          },
         });
       return;
     }
