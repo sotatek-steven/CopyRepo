@@ -4,7 +4,7 @@ import ImportedLibraries from './ImportedLibraries';
 import ImportLibraries from './ImportLibraries';
 
 const Container = styled('div')(() => ({
-  padding: '20px 60px',
+  padding: '20px 40px',
   display: 'flex',
   height: '100%',
   gap: 31,

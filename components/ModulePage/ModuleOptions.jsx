@@ -5,6 +5,7 @@ import StructIcon from '../../assets/icon/struct.svg';
 import LibraryIcon from '../../assets/icon/library.svg';
 import OptionItem from './OptionItem';
 import { ModuleMode } from '@/store/models/moduleDesignMode';
+import { DashedDivider } from '../atom/Divider';
 
 const MoreButton = styled('div')(({ theme }) => ({
   fontSize: 25,
@@ -19,10 +20,6 @@ const MoreButton = styled('div')(({ theme }) => ({
 const Container = styled('div')(({ theme }) => ({
   background: theme.palette.background.default,
   width: 372,
-}));
-
-const Divide = styled('div')(() => ({
-  borderBottom: '0.5px dashed #8C8C8C',
 }));
 
 const options = [
@@ -78,7 +75,7 @@ const ModuleOptions = () => {
             return (
               <div key={id}>
                 <OptionItem key={id} mode={mode} label={label} icon={icon} />
-                {index !== options.length - 1 && <Divide />}
+                {index !== options.length - 1 && <DashedDivider />}
               </div>
             );
           })}
