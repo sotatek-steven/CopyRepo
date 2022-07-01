@@ -22,6 +22,13 @@ const userModule = createModel({
     set: (state, data) => ({
       ...data,
     }),
+    updateLibraries: (state, data) => ({
+      ...state,
+      sources: {
+        ...state.sources,
+        libraries: data,
+      },
+    }),
   },
   effects: (dispatch) => {
     const { userModule, player } = dispatch;

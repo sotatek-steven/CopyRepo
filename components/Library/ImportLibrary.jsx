@@ -1,7 +1,8 @@
 import { styled } from '@mui/material';
 import React from 'react';
 
-const Text = styled('div')(({ theme }) => ({
+const Text = styled('div')(({ theme, hidden }) => ({
+  display: hidden ? 'hidden!imported' : 'block',
   padding: '12px 0px',
   fontFamily: 'Segoe UI',
   height: 42,
@@ -15,8 +16,8 @@ const Text = styled('div')(({ theme }) => ({
   borderColor: theme.shape.borderColor,
   ...theme.components.truncate.singleLineEllipsis,
 }));
-const ImportLibrary = ({ name }) => {
-  return <Text>{name}</Text>;
+const ImportLibrary = ({ name, hidden }) => {
+  return <Text hidden={hidden}>{name}</Text>;
 };
 
 export default ImportLibrary;
