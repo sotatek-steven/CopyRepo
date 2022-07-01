@@ -1,7 +1,9 @@
+import { HTTP_CODE } from '@/config/constant/common';
 import { styled } from '@mui/material';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { PrimaryButton } from '../ButtonStyle';
+import useStructPage from '../StructTabPanel/hooks/useStructPage';
 
 const Container = styled('div')(() => ({
   display: 'flex',
@@ -9,10 +11,19 @@ const Container = styled('div')(() => ({
 }));
 
 const ModuleActionList = () => {
-  const { userModule } = useDispatch();
-  const moduleState = useSelector((state) => state.userModule);
-  const saveModule = () => {
-    userModule.updateModule({ moduleId: moduleState._id, moduleInfo: moduleState });
+  const { userModule, struct } = useDispatch();
+  const { handleErrorStructs } = useStructPage();
+
+  const saveModule = async () => {
+    const isErrorStruct = handleErrorStructs();
+    if (isErrorStruct) {
+      return;
+    }
+
+    const { code } = await userModule.updateModule();
+    if (code === HTTP_CODE.SUCCESS) {
+      struct.setIsChanged(false);
+    }
   };
 
   return (

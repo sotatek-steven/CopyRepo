@@ -5,8 +5,9 @@ import ModuleActionList from '@/components/ModulePage/ModuleActionList';
 import Tabs from '@/components/Tabs';
 import { ModuleMode } from '@/store/models/moduleMode';
 import { styled } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import StructTabPanel from '../StructTabPanel';
 
 const ButtonWrapper = styled('div')(() => ({
@@ -48,16 +49,44 @@ const getActiveTab = (mode) => {
 const Library = () => {
   const moduleModeState = useSelector((state) => state.moduleMode);
   const { moduleMode } = useDispatch();
+  const { library } = useDispatch();
+  const { isChanged } = useSelector((state) => state.struct);
   const [activeTab, setActiveTab] = useState(getActiveTab(moduleModeState));
 
+  useEffect(() => {
+    const fetchImportedLibraries = async () => {
+      const { data } = await library.getAllUserLibraries();
+      library.update(data);
+    };
+
+    fetchImportedLibraries();
+  }, []);
+
+  const handleBackToDesign = () => {
+    if (isChanged) {
+      toast.error('You must save the module before leaving', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        draggable: true,
+        progress: true,
+      });
+      return;
+    }
+    moduleMode.update(ModuleMode.DESIGN);
+  };
+
   return (
-    <Container>
-      <ButtonWrapper>
-        <BackButton onClick={() => moduleMode.update(ModuleMode.DESIGN)} />
-      </ButtonWrapper>
-      <Tabs initialTabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
-      {activeTab.tabPanel}
-    </Container>
+    <>
+      <Container>
+        <ButtonWrapper>
+          <BackButton onClick={handleBackToDesign} />
+        </ButtonWrapper>
+        <Tabs initialTabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
+        {activeTab.tabPanel}
+      </Container>
+    </>
   );
 };
 

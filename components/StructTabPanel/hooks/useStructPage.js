@@ -1,30 +1,8 @@
-import { ELEMENT_TYPE } from '@/config/constant/common';
+import { ELEMENT_TYPE, NEW_ID, EDIT_ID } from '@/config/constant/common';
 import { useState } from 'react';
-
-const NEW_ID = 'ITEM';
+import { useDispatch, useSelector } from 'react-redux';
 
 const TYPES = ['int', 'boolean', 'string'];
-
-const STRUCTS = [
-  {
-    name: '',
-    _id: 1,
-    errorName: false,
-    variables: [
-      {
-        _id: 1,
-        type: {
-          value: [],
-          errorType: false,
-        },
-        name: {
-          value: '',
-          errorName: false,
-        },
-      },
-    ],
-  },
-];
 
 const STRUCT = {
   name: '',
@@ -55,71 +33,128 @@ const VARIABLE = {
 };
 
 const useStructPage = () => {
-  const [structs, setStructs] = useState(JSON.parse(JSON.stringify(STRUCTS)));
+  const { structs } = useSelector((state) => state.struct);
+  const { struct, userModule } = useDispatch();
+
   const [types, setTypes] = useState(TYPES);
   const [count, setCount] = useState(0);
 
-  const handelAddStruct = () => {
-    const struct = JSON.parse(JSON.stringify(STRUCT));
+  const getStructs = (lstStruct) => {
+    const data = lstStruct?.map((struct, idxStruct) => {
+      const variables = struct.content.map((content, idxContent) => {
+        return {
+          _id: `${EDIT_ID}_${idxStruct}_${idxContent}`,
+          type: {
+            value: [content?.type],
+          },
+          name: {
+            value: content?.label,
+          },
+        };
+      });
 
-    setStructs((prev) => {
-      const temp = [...prev];
-      temp.push({ ...struct, _id: `${NEW_ID}_${count}` });
-      return temp;
+      return {
+        _id: `${EDIT_ID}_${idxStruct}`,
+        name: struct?.name,
+        variables: variables,
+      };
     });
+    struct.setOriginStructs(data);
+    struct.setStructs(data);
+    userModule.updateStructs(convertStructs(data));
+  };
+
+  const convertStructs = (data) => {
+    return data?.map((struct) => {
+      const content = struct?.variables?.map((variable) => {
+        return {
+          type: variable?.type.value[0],
+          label: variable?.name.value,
+        };
+      });
+
+      return {
+        name: struct?.name,
+        content: content,
+      };
+    });
+  };
+
+  const handelAddStruct = () => {
+    const init = JSON.parse(JSON.stringify(STRUCT));
+    const data = [...structs];
+    data.push({ ...init, _id: `${NEW_ID}_${count}` });
+    struct.setStructs(data);
+    userModule.updateStructs(convertStructs(data));
+    struct.setIsChanged(true);
     setCount((prev) => prev + 1);
   };
 
   const handelRemoveStruct = (structId) => {
     const iStruct = structs.findIndex(({ _id }) => _id === structId);
-    setStructs((prev) => {
-      const temp = [...prev];
-      temp.splice(iStruct, 1);
-      return temp;
-    });
+    const data = [...structs];
+    data.splice(iStruct, 1);
+
+    struct.setStructs(data);
+    userModule.updateStructs(convertStructs(data));
+    struct.setIsChanged(true);
   };
 
   const handelAddVariable = (structId) => {
     const variable = JSON.parse(JSON.stringify(VARIABLE));
     const iStruct = structs.findIndex(({ _id }) => _id === structId);
+    const data = [...structs];
+    data[iStruct]?.variables?.push({ ...variable, _id: `${NEW_ID}_${count}` });
 
-    setStructs((prev) => {
-      const temp = [...prev];
-      temp[iStruct]?.variables?.push({ ...variable, _id: `${NEW_ID}_${count}` });
-      return temp;
-    });
+    struct.setStructs(data);
+    userModule.updateStructs(convertStructs(data));
+    struct.setIsChanged(true);
     setCount((prev) => prev + 1);
   };
 
   const handelRemoveVariable = (structId, variableId) => {
     const iStruct = structs.findIndex(({ _id }) => _id === structId);
     const iVariable = structs[iStruct]?.variables.findIndex(({ _id }) => _id === variableId);
-    setStructs((prev) => {
-      const temp = [...prev];
-      temp[iStruct]?.variables?.splice(iVariable, 1);
-      return temp;
-    });
+    const data = [...structs];
+    data[iStruct]?.variables?.splice(iVariable, 1);
+
+    struct.setStructs(data);
+    userModule.updateStructs(convertStructs(data));
+    struct.setIsChanged(true);
   };
 
   const handleChangeNameStruct = (structId, e) => {
     const value = e.target.value;
     const iStruct = structs.findIndex(({ _id }) => _id === structId);
-    const temp = [...structs];
-    temp[iStruct].name = value;
-    temp[iStruct].errorName = !value?.trim() && 'This is field required';
+    const data = [...structs];
+    data[iStruct].name = value;
+    data[iStruct].errorName = !value?.trim() && 'This is field required';
 
-    setStructs(temp);
+    struct.setStructs(data);
+    userModule.updateStructs(convertStructs(data));
+    struct.setIsChanged(true);
+  };
+
+  const checkDuplicateName = (variables, item) => {
+    const index = variables.findIndex(({ _id, name }) => name?.value === item?.name?.value && _id !== item?._id);
+    console.log(index);
+    return index !== -1;
   };
 
   const handleChangeVariable = (structId, variableId, e, type) => {
     const iStruct = structs.findIndex(({ _id }) => _id === structId);
     const iVariable = structs[iStruct]?.variables.findIndex(({ _id }) => _id === variableId);
-    const temp = [...structs];
+    const data = [...structs];
 
     switch (type) {
       case ELEMENT_TYPE.INPUT:
-        temp[iStruct].variables[iVariable].name.value = e.target.value;
-        temp[iStruct].variables[iVariable].name.errorName = !e.target.value?.trim() && 'This is field required';
+        data[iStruct].variables[iVariable].name.value = e.target.value;
+        data[iStruct].variables[iVariable].name.errorName = false;
+        if (!e.target.value?.trim()) {
+          data[iStruct].variables[iVariable].name.errorName = 'This is field required';
+        } else if (checkDuplicateName(data[iStruct].variables, data[iStruct].variables[iVariable])) {
+          data[iStruct].variables[iVariable].name.errorName = 'Variable name cannot be duplicated';
+        }
         break;
       case ELEMENT_TYPE.TAG:
         if (!types.includes(e.value)) {
@@ -129,17 +164,19 @@ const useStructPage = () => {
             return temp;
           });
         }
-        temp[iStruct].variables[iVariable].type.value = [e.value];
-        temp[iStruct].variables[iVariable].type.errorType = !e.value?.trim() && 'This is field required';
+        data[iStruct].variables[iVariable].type.value = [e.value];
+        data[iStruct].variables[iVariable].type.errorType = !e.value?.trim() && 'This is field required';
         break;
       default:
         break;
     }
 
-    setStructs(temp);
+    struct.setStructs(data);
+    userModule.updateStructs(convertStructs(data));
+    struct.setIsChanged(true);
   };
 
-  const handleError = () => {
+  const handleErrorStructs = () => {
     let isError = false;
     const lstStruct = JSON.parse(JSON.stringify(structs));
     lstStruct?.forEach((item) => {
@@ -160,7 +197,8 @@ const useStructPage = () => {
     });
 
     if (isError) {
-      setStructs(lstStruct);
+      struct.setStructs(lstStruct);
+      userModule.updateStructs(convertStructs(data));
     }
 
     return isError;
@@ -169,14 +207,15 @@ const useStructPage = () => {
   return {
     structs,
     types,
-    setStructs,
+    getStructs,
+    convertStructs,
     handelAddStruct,
     handelRemoveStruct,
     handelAddVariable,
     handelRemoveVariable,
     handleChangeNameStruct,
     handleChangeVariable,
-    handleError,
+    handleErrorStructs,
   };
 };
 

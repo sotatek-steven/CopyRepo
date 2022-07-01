@@ -35,7 +35,7 @@ const StructItem = ({
           />
         </div>
         <div className="action-remove-struct">
-          <PrimaryButton width="150px" onClick={() => handelRemoveStruct(struct?._id)}>
+          <PrimaryButton width="150px" height="45px" onClick={() => handelRemoveStruct(struct?._id)}>
             <RemoveIcon />
             Remove Struct
           </PrimaryButton>
@@ -74,7 +74,7 @@ const StructItem = ({
             />
           </div>
           <div className="action-variable" onClick={() => handelRemoveVariable(struct?._id, _id)}>
-            <RemoveIcon />
+            {struct?.variables?.length > 1 && <RemoveIcon />}
           </div>
         </ItemContent>
       ))}
