@@ -73,16 +73,22 @@ const StructItem = ({
               onChange={(e) => handleChangeVariable(struct?._id, _id, e, ELEMENT_TYPE.INPUT)}
             />
           </div>
-          <div className="action-variable" onClick={() => handelRemoveVariable(struct?._id, _id)}>
-            {struct?.variables?.length > 1 && <RemoveIcon />}
+          <div className="action-variable">
+            {struct?.variables?.length > 1 && (
+              <div className="action-icon" onClick={() => handelRemoveVariable(struct?._id, _id)}>
+                <RemoveIcon />
+              </div>
+            )}
           </div>
         </ItemContent>
       ))}
       <ItemContent>
         <div className="type"></div>
         <div className="name-variable"></div>
-        <div className="action-variable" onClick={() => handelAddVariable(struct?._id)}>
-          <AddIcon />
+        <div className="action-variable">
+          <div className="action-icon" onClick={() => handelAddVariable(struct?._id)}>
+            <AddIcon />
+          </div>
         </div>
       </ItemContent>
     </ItemContainer>

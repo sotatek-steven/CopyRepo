@@ -198,7 +198,7 @@ const useStructPage = () => {
 
     if (isError) {
       struct.setStructs(lstStruct);
-      userModule.updateStructs(convertStructs(data));
+      userModule.updateStructs(convertStructs(lstStruct));
     }
 
     return isError;
