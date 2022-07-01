@@ -144,7 +144,7 @@ const Dashboard = () => {
           </IconButton>
         </DialogTitle>
         <DialogContent>
-          <Grid container sx={{ borderTop: '1px solid #8C8C8C' }}>
+          <Grid container sx={{ borderTop: '1px solid', borderColor: theme.shape.borderColor }}>
             <Grid item xs={6}>
               <Box sx={{ width: '589px', height: '548px', background: theme.palette.background.default }}></Box>
             </Grid>

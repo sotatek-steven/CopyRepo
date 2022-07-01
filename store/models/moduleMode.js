@@ -9,7 +9,7 @@ export const ModuleMode = {
 const moduleMode = createModel({
   state: ModuleMode.DESIGN,
   reducers: {
-    setModuleDesignMode: (state, data) => data,
+    update: (state, data) => data,
   },
 });
 

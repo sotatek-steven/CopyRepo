@@ -1,4 +1,4 @@
-import { Box, Tab, Tabs } from '@mui/material';
+import { Box, Tab, Tabs, useTheme } from '@mui/material';
 import React from 'react';
 
 const Navbars = ['All', 'Drafts', 'Deployed'];
@@ -27,6 +27,7 @@ const styles = {
 };
 
 const TabsBar = ({ tab, setTab }) => {
+  const theme = useTheme();
   const handleChange = (event, newValue) => {
     setTab(newValue);
   };
@@ -41,7 +42,8 @@ const TabsBar = ({ tab, setTab }) => {
           '.MuiTabs-indicator': {
             height: '5px',
           },
-          borderBottom: '1px solid #8C8C8C',
+          borderBottom: '1px solid',
+          borderColor: theme.shape.borderColor,
           pt: 1,
         }}>
         {Navbars.map((navbar) => (

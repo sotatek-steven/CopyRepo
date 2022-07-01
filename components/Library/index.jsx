@@ -3,9 +3,9 @@ import DesignLayout from '@/components/layout/DesignLayout';
 import LibrariesTabPanel from '@/components/Library/LibrariesTabPanel';
 import ModuleActionList from '@/components/ModulePage/ModuleActionList';
 import Tabs from '@/components/Tabs';
-import { ModuleMode } from '@/store/models/moduleDesignMode';
+import { ModuleMode } from '@/store/models/moduleMode';
 import { styled } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import StructTabPanel from '../StructTabPanel';
 
@@ -46,24 +46,14 @@ const getActiveTab = (mode) => {
 };
 
 const Library = () => {
-  const { library } = useDispatch();
-  const moduleDesignModeState = useSelector((state) => state.moduleDesignMode);
-  const { moduleDesignMode } = useDispatch();
-  const [activeTab, setActiveTab] = useState(getActiveTab(moduleDesignModeState));
-
-  useEffect(() => {
-    const fetchImportedLibraries = async () => {
-      const { data } = await library.getAllUserLibraries();
-      library.update(data);
-    };
-
-    fetchImportedLibraries();
-  }, []);
+  const moduleModeState = useSelector((state) => state.moduleMode);
+  const { moduleMode } = useDispatch();
+  const [activeTab, setActiveTab] = useState(getActiveTab(moduleModeState));
 
   return (
     <Container>
       <ButtonWrapper>
-        <BackButton onClick={() => moduleDesignMode.setModuleDesignMode(ModuleMode.DESIGN)} />
+        <BackButton onClick={() => moduleMode.update(ModuleMode.DESIGN)} />
       </ButtonWrapper>
       <Tabs initialTabs={tabs} activeTab={activeTab} setActiveTab={setActiveTab} />
       {activeTab.tabPanel}

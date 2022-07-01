@@ -14,7 +14,7 @@ const Title = styled('h1')(({ theme }) => ({
 }));
 
 const TextContainer = styled('div')(() => ({
-  height: '100%',
+  height: '80%',
   display: 'flex',
   alignItems: 'center',
   justifyContent: 'center',
@@ -22,22 +22,19 @@ const TextContainer = styled('div')(() => ({
 
 const ImportedLibraries = () => {
   const userModuleState = useSelector((state) => state.userModule);
-  const libraries = userModuleState.sources.structs.libraries;
+  const libraries = userModuleState.sources?.libraries;
   return (
     <>
       <Title>Imported libraries</Title>
 
       <DashedDivider />
       {libraries ? (
-        libraries.map((library) => {
-          const { _id, name } = library;
-          return (
-            <div key={_id}>
-              <ImportedLibrary name={name} />
-              <DashedDivider />
-            </div>
-          );
-        })
+        libraries.map((library) => (
+          <div key={library}>
+            <ImportedLibrary name={library} />
+            <DashedDivider />
+          </div>
+        ))
       ) : (
         <TextContainer>
           <p>No libraries imported</p>

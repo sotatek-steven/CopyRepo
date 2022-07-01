@@ -7,7 +7,7 @@ import { styled } from '@mui/material';
 import ModulesSidebar from '@/components/ModulePage/ModulesSidebar';
 import ModuleActionList from '@/components/ModulePage/ModuleActionList';
 import Library from '@/components/Library';
-import { ModuleMode } from '@/store/models/moduleDesignMode';
+import { ModuleMode } from '@/store/models/moduleMode';
 
 const Container = styled('div')(() => ({
   display: 'flex',
@@ -23,7 +23,8 @@ const ModulePage = () => {
   const { userModule } = useDispatch();
   const router = useRouter();
   const { id } = router.query;
-  const moduleDesignMode = useSelector((state) => state.moduleDesignMode);
+  const moduleModeState = useSelector((state) => state.moduleMode);
+  const { moduleMode } = useDispatch();
 
   useEffect(() => {
     const fetchDetailModule = async (id) => {
@@ -35,7 +36,11 @@ const ModulePage = () => {
     fetchDetailModule(id);
   }, [id]);
 
-  if (moduleDesignMode !== ModuleMode.DESIGN) return <Library />;
+  useEffect(() => {
+    moduleMode.update(ModuleMode.DESIGN);
+  }, []);
+
+  if (moduleModeState !== ModuleMode.DESIGN) return <Library />;
   return (
     <Container>
       <ContentWapper>

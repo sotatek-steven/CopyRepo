@@ -167,7 +167,7 @@ const TemplateDialog = ({ open, setOpen, type }) => {
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <Grid container sx={{ borderTop: '1px solid #8C8C8C' }}>
+        <Grid container sx={{ borderTop: '1px solid', borderColor: theme.shape.borderColor }}>
           <Grid
             sx={{
               '&:hover': { opacity: 0.7 },

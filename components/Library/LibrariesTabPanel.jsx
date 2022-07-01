@@ -13,11 +13,13 @@ const Container = styled('div')(() => ({
 const LeftSide = styled('div')(({ theme }) => ({
   width: 444,
   background: theme.palette.background.dark,
+  flexShrink: 0,
 }));
 
 const RightSide = styled('div')(({ theme }) => ({
   flexGrow: 1,
   background: theme.palette.background.light,
+  padding: 18,
 }));
 
 const LibrariesTabPanel = () => {

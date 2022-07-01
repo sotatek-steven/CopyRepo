@@ -21,10 +21,10 @@ const Container = styled('div')(() => ({
 }));
 
 const OptionItem = ({ label, icon, mode }) => {
-  const { moduleDesignMode } = useDispatch();
+  const { moduleMode } = useDispatch();
 
   const handleClick = () => {
-    moduleDesignMode.setModuleDesignMode(mode);
+    moduleMode.update(mode);
   };
 
   return (
