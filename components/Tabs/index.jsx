@@ -6,9 +6,9 @@ const Wrapper = styled('div')(() => ({
   position: 'relative',
 }));
 
-const TabContainer = styled('div')(({ tabStyle }) => ({
+const TabContainer = styled('div')(({ tabstyle }) => ({
   display: 'flex',
-  ...tabStyle,
+  ...tabstyle,
   height: 46,
   gap: 27,
   flexGrow: 1,
@@ -25,7 +25,7 @@ const Divider = styled('div')(({ theme }) => ({
 const Tabs = ({ initialTabs, activeTab, setActiveTab, tabStyle }) => {
   return (
     <Wrapper>
-      <TabContainer tabStyle={tabStyle}>
+      <TabContainer tabstyle={tabStyle}>
         {initialTabs.map((tab) => {
           const { id } = tab;
           return <TabItem key={id} tab={tab} isActive={id === activeTab.id} setActiveTab={setActiveTab} />;

@@ -33,6 +33,8 @@ const SectionWrapper = styled('div')(() => ({
 
 const ImportLibraries = () => {
   const libraryState = useSelector((state) => state.library);
+  const moduleState = useSelector((state) => state.userModule);
+  const { libraries } = moduleState.sources;
   const { library } = useDispatch();
 
   useEffect(() => {
@@ -90,7 +92,8 @@ const ImportLibraries = () => {
           <SectionWrapper>
             {libraryState.map((library) => {
               const { name, _id } = library;
-              return <ImportLibrary key={_id} name={name} />;
+              const hidden = libraries.filter((item) => item === name).length !== 0 ? true : false;
+              return <ImportLibrary key={_id} name={name} hidden={hidden} />;
             })}
           </SectionWrapper>
         </Scrollbars>

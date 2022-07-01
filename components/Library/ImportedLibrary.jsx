@@ -1,6 +1,7 @@
 import { styled } from '@mui/material';
 import React from 'react';
 import CloseIcon from '@mui/icons-material/Close';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Container = styled('div')(() => ({
   padding: '18px 40px',
@@ -23,10 +24,19 @@ const Text = styled('div')(({ theme }) => ({
 }));
 
 const ImportedLibrary = ({ name }) => {
+  const { userModule } = useDispatch();
+  const userModuleState = useSelector((state) => state.userModule);
+
+  const removeLibrary = () => {
+    const { libraries } = userModuleState.sources;
+    const updatedLibraries = libraries.filter((library) => library !== name);
+    userModule.updateLibraries(updatedLibraries);
+  };
+
   return (
     <Container>
       <Text>{name}</Text>
-      <CloseIcon sx={{ fontSize: 20 }} />
+      <CloseIcon sx={{ fontSize: 20, cursor: 'pointer' }} onClick={removeLibrary} />
     </Container>
   );
 };
