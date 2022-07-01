@@ -77,8 +77,8 @@ const CheckboxChoose = ({ options, name, handleChange, idTemplate, dataDetails }
                   />
                   <Typography sx={{ color: theme.palette.primary.light }}>{option?.name}</Typography>
                 </Box>
-                <Typography sx={{ pr: 6, fontSize: '14px', color: '#64F5A6', fontWeight: '400' }}>
-                  Gas fee: {dataDetails?.gasFee}
+                <Typography sx={{ pr: 6, fontSize: '14px', color: theme.palette.success.main, fontWeight: '400' }}>
+                  Gas fee: {dataDetails?.gasFee} Gwei
                 </Typography>
               </Box>
               <CardContent

@@ -201,9 +201,11 @@ const TemplateDialog = ({ open, setOpen, type }) => {
                         <Button
                           startIcon={
                             isShowCollapse ? (
-                              <ExpandCircleDownIcon sx={{ color: '#64F5A6' }} />
+                              <ExpandCircleDownIcon sx={{ color: theme.palette.success.main }} />
                             ) : (
-                              <ExpandCircleDownIcon sx={{ transform: 'rotate(180deg)', color: '#64F5A6' }} />
+                              <ExpandCircleDownIcon
+                                sx={{ transform: 'rotate(180deg)', color: theme.palette.success.main }}
+                              />
                             )
                           }
                           onClick={() => setIsShowCollapse(!isShowCollapse)}>
@@ -222,7 +224,7 @@ const TemplateDialog = ({ open, setOpen, type }) => {
                         </Box>
                       </Box>
                       <Collapse in={isShowCollapse} timeout="auto" unmountOnExit sx={{ px: 4 }}>
-                        <Grid container sx={{ fontSize: '14px' }} rowSpacing={3}>
+                        <Grid container sx={{ fontSize: '14px', pt: 2 }} rowSpacing={3}>
                           <Grid item>
                             <Typography sx={{ color: '#FA6E6E' }}>Functions</Typography>
                             <Typography>{getFunctionName}</Typography>

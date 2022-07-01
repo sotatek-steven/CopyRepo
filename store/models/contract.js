@@ -21,7 +21,6 @@ const contract = createModel({
       address: '',
       transaction: '',
       module_keys: '',
-      gasFee: '',
     },
     infoContractModalOpen: false,
   },

@@ -93,6 +93,11 @@ const SmartContractActionList = () => {
     const signer = await library.getSigner(account);
     await contract.deployContract({ signer, deploying, deployed });
   };
+
+  const saveContract = async () => {
+    await contract.updateContract();
+    route.push('/');
+  };
   return (
     <>
       <Container>
@@ -106,10 +111,7 @@ const SmartContractActionList = () => {
             <SaveContractButton />
           </>
         )}
-        <ButtonBox
-          onClick={() => {
-            route.push('/');
-          }}>
+        <ButtonBox onClick={saveContract}>
           <XButton />
         </ButtonBox>
         {/* <ExitButton /> */}
