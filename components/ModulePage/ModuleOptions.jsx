@@ -4,7 +4,7 @@ import MoreVertIcon from '@mui/icons-material/MoreVert';
 import StructIcon from '../../assets/icon/struct.svg';
 import LibraryIcon from '../../assets/icon/library.svg';
 import OptionItem from './OptionItem';
-import { ModuleMode } from '@/store/models/moduleDesignMode';
+import { ModuleMode } from '@/store/models/moduleMode';
 import { DashedDivider } from '../atom/Divider';
 
 const MoreButton = styled('div')(({ theme }) => ({

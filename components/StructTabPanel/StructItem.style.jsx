@@ -27,7 +27,7 @@ const ItemContainer = styled('div')(({ theme }) => ({
   color: theme.palette.text.primary,
   fontSize: 18,
   marginBottom: 20,
-  borderBottom: `1px solid ${theme.components.border.dark}`,
+  borderBottom: `1px solid ${theme.shape.borderColor}`,
 }));
 
 const ItemTitle = styled('div')(({ theme }) => ({

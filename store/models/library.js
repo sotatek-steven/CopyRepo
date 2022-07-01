@@ -5,6 +5,7 @@ const library = createModel({
   state: [],
   reducers: {
     update: (state, data) => data,
+    // add: (state, data) => [...state, ...data],
   },
   effects: (dispatch) => {
     const { player } = dispatch;
