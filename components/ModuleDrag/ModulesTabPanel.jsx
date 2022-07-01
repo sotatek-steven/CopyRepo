@@ -1,3 +1,4 @@
+import { Box, useTheme } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ModuleItem from './ModuleItem';
@@ -7,6 +8,9 @@ const ModulesTab = () => {
   const contractState = useSelector((state) => state.contract);
   const { userModule } = useDispatch();
   const [modules, setModules] = useState([]);
+  const theme = useTheme();
+
+  console.log(contractState);
 
   const fetchModules = async () => {
     try {
@@ -58,6 +62,23 @@ const ModulesTab = () => {
             return <ModuleItem key={index} data={item} nodeType="rectangle" />;
           })
         )}
+        {contractState.current.gasFee > -1 ? (
+          <Box
+            sx={{
+              position: 'absolute',
+              bottom: '30px',
+              background: theme.palette.primary.light,
+              borderLeft: `7px solid ${theme.palette.primary.light2} `,
+              width: '444px',
+              height: '82px',
+              color: theme.palette.common.black,
+              display: 'flex',
+              alignItems: 'center',
+              paddingLeft: '10px',
+            }}>
+            GAS FEE OF THIS SMART CONTRACT: {contractState.current.gasFee}
+          </Box>
+        ) : null}
       </div>
     </div>
   );

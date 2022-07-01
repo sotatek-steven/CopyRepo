@@ -41,25 +41,7 @@ const SaveContractButton = () => {
     const { code, message } = await contract.updateContract();
     setLoading(false);
     if (code == 200) {
-      toast.success('Save contract success');
-      contractStore.current.gasFee &&
-        toast(`GAS FEE OF THIS SMART CONTRACT: ${contractStore.current.gasFee}`, {
-          position: 'bottom-right',
-          autoClose: 5000,
-          hideProgressBar: true,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          closeButton: false,
-          style: {
-            background: theme.palette.primary.light,
-            borderLeft: `4px solid ${theme.palette.primary.light2} `,
-            width: '444px',
-            right: '110px',
-          },
-        });
-
-      contractStore.current.errors &&
+      if (contractStore.current.errors.length > 0) {
         toast(
           <>
             <Box sx={{ fontSize: '14px' }}>
@@ -115,6 +97,23 @@ const SaveContractButton = () => {
             },
           }
         );
+      } else toast.success('Save contract success');
+      // contractStore.current.gasFee &&
+      //   toast(`GAS FEE OF THIS SMART CONTRACT: ${contractStore.current.gasFee}`, {
+      //     position: 'bottom-right',
+      //     autoClose: 5000,
+      //     hideProgressBar: true,
+      //     closeOnClick: true,
+      //     pauseOnHover: true,
+      //     draggable: true,
+      //     closeButton: false,
+      //     style: {
+      // background: theme.palette.primary.light,
+      // borderLeft: `4px solid ${theme.palette.primary.light2} `,
+      // width: '444px',
+      // right: '110px',
+      //     },
+      //   });
       return;
     }
     toast.error('saving contract failed!', message);
