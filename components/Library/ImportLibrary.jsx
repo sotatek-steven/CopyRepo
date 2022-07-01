@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
 import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Text = styled('div')(({ theme, hidden }) => ({
   display: hidden ? 'hidden!imported' : 'block',
@@ -17,7 +18,19 @@ const Text = styled('div')(({ theme, hidden }) => ({
   ...theme.components.truncate.singleLineEllipsis,
 }));
 const ImportLibrary = ({ name, hidden }) => {
-  return <Text hidden={hidden}>{name}</Text>;
+  const { userModule } = useDispatch();
+  const userModuleState = useSelector((state) => state.userModule);
+
+  const importLibrary = () => {
+    const { libraries } = userModuleState.sources;
+    libraries.unshift(name);
+    userModule.updateLibraries(libraries);
+  };
+  return (
+    <Text hidden={hidden} onClick={importLibrary}>
+      {name}
+    </Text>
+  );
 };
 
 export default ImportLibrary;
