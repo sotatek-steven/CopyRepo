@@ -30,7 +30,7 @@ const TemplateDialog = ({ open, setOpen, type }) => {
   // const [templateState, setTemplateState] = useState([]);
   const [idTemplate, setIdTemplate] = useState(null);
   const [dataDetails, setDataDetails] = useState(null);
-  const [isShowCollapse, setIsShowCollapse] = useState(true);
+  const [isShowCollapse, setIsShowCollapse] = useState({});
   const theme = useTheme();
 
   useEffect(() => {
@@ -113,31 +113,102 @@ const TemplateDialog = ({ open, setOpen, type }) => {
     fetchTemplateDetails();
   }, [idTemplate, template, open]);
 
-  const getFunctionName = useMemo(() => {
-    const options = [];
-    dataDetails &&
-      dataDetails.functions.forEach((item) => {
-        options.push(item.name);
-      });
-    options = options.join(', ');
-    return options;
-  }, [dataDetails]);
+  const modulesByTemplate = useMemo(() => {
+    if (!listTemplate) return;
 
-  const getParametersName = useMemo(() => {
-    const options = [];
-    dataDetails &&
-      dataDetails.parameters.forEach((item) => {
-        options.push(item.label);
-      });
-    options = options.join(', ');
-    return options;
-  }, [dataDetails]);
+    const filterModules = listTemplate.find((item) => item._id === idTemplate);
+    return filterModules?.modules;
+  }, [idTemplate, listTemplate]);
 
-  const getLibrariesName = useMemo(() => {
-    if (!dataDetails) return '';
-    const libraries = dataDetails.libraries.join('\n');
-    return libraries;
-  }, [dataDetails]);
+  const DetailsTemplate = useMemo(() => {
+    return modulesByTemplate ? (
+      <Grid container>
+        <Scrollbars autoHeight autoHeightMin="100%" autoHeightMax="450px" autoHide>
+          <Grid item xs={12} sx={{ height: '500px' }}>
+            {modulesByTemplate?.length > 0 &&
+              modulesByTemplate.map((item, index) => {
+                const listFunctions = [];
+                const listParameters = [];
+                const listLibrary = item.sources.libraries.join('\n');
+
+                item.sources.functions.forEach((i) => {
+                  listFunctions.push(i.name);
+                });
+
+                item.sources.contructorParams.forEach((i) => {
+                  listParameters.push(i.label);
+                });
+                return (
+                  <>
+                    <Box
+                      key={item._id}
+                      sx={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        pt: 3,
+                        px: 1.5,
+                      }}>
+                      <Button
+                        startIcon={
+                          isShowCollapse[item._id] ? (
+                            <ExpandCircleDownIcon sx={{ color: theme.palette.success.main }} />
+                          ) : (
+                            <ExpandCircleDownIcon
+                              sx={{ transform: 'rotate(180deg)', color: theme.palette.success.main }}
+                            />
+                          )
+                        }
+                        onClick={() => setIsShowCollapse({ [item._id]: !isShowCollapse[item._id] })}>
+                        <Typography sx={{ pt: 0.5, color: theme.palette.primary.light, textTransform: 'capitalize' }}>
+                          {item?.name}
+                        </Typography>
+                      </Button>
+                      <Box sx={{ display: 'flex', fontSize: '14px', px: 3 }}>
+                        <Typography sx={{ color: '#EF6BFE', px: 2, textDecoration: 'underline' }}>
+                          {item?.sources?.contructorParams?.length} Paramester
+                        </Typography>
+                        <Typography sx={{ color: '#FFD33F', textDecoration: 'underline' }}>
+                          {' '}
+                          {item?.sources?.libraries.length} Libraries
+                        </Typography>
+                      </Box>
+                    </Box>
+                    <Collapse in={isShowCollapse[item._id]} timeout="auto" unmountOnExit sx={{ px: 4 }}>
+                      <Grid container sx={{ fontSize: '14px', pt: 2 }} rowSpacing={3}>
+                        <Grid item xs={12}>
+                          <Typography sx={{ color: '#FA6E6E' }}>Functions</Typography>
+                          <Typography>{listFunctions.join(', ')}</Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Typography sx={{ color: '#DD90E5' }}>Parameters Inclued</Typography>
+                          <Typography>{listParameters.join(', ')}</Typography>
+                        </Grid>
+                        <Grid item xs={12}>
+                          <Typography sx={{ color: '#FFD33F' }}>Libraries</Typography>
+                          <Typography>{listLibrary}</Typography>
+                        </Grid>
+                      </Grid>
+                    </Collapse>
+                  </>
+                );
+              })}
+          </Grid>
+        </Scrollbars>
+        <Grid item xs={12} sx={{ mr: 2 }}>
+          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Button variant="outlined" sx={{ color: '#fff', border: '1px solid #fff', minWidth: '114px', mx: 1 }}>
+              Skip
+            </Button>
+            <Button variant="contained" type="submit">
+              {' '}
+              Let do this
+            </Button>
+          </Box>
+        </Grid>
+      </Grid>
+    ) : null;
+  }, [modulesByTemplate, isShowCollapse]);
 
   return (
     <Dialog
@@ -181,7 +252,6 @@ const TemplateDialog = ({ open, setOpen, type }) => {
               options={listTemplate}
               handleChange={handeSetIdTemplate}
               idTemplate={idTemplate}
-              dataDetails={dataDetails}
             />
           </Grid>
           <Grid item xs={6}>
@@ -192,70 +262,7 @@ const TemplateDialog = ({ open, setOpen, type }) => {
                 overflowY: 'hidden',
                 background: theme.palette.background.default,
               }}>
-              {dataDetails ? (
-                <Grid container>
-                  <Scrollbars autoHeight autoHeightMin="100%" autoHeightMax="450px" autoHide>
-                    <Grid item xs={12} sx={{ height: '500px' }}>
-                      <Box
-                        sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pt: 3, px: 1.5 }}>
-                        <Button
-                          startIcon={
-                            isShowCollapse ? (
-                              <ExpandCircleDownIcon sx={{ color: theme.palette.success.main }} />
-                            ) : (
-                              <ExpandCircleDownIcon
-                                sx={{ transform: 'rotate(180deg)', color: theme.palette.success.main }}
-                              />
-                            )
-                          }
-                          onClick={() => setIsShowCollapse(!isShowCollapse)}>
-                          <Typography sx={{ pt: 0.5, color: theme.palette.primary.light, textTransform: 'capitalize' }}>
-                            {dataDetails?.name}
-                          </Typography>
-                        </Button>
-                        <Box sx={{ display: 'flex', fontSize: '14px', px: 3 }}>
-                          <Typography sx={{ color: '#EF6BFE', px: 2, textDecoration: 'underline' }}>
-                            {dataDetails?.parameters.length} Paramester
-                          </Typography>
-                          <Typography sx={{ color: '#FFD33F', textDecoration: 'underline' }}>
-                            {' '}
-                            {dataDetails?.libraries.length} Libraries
-                          </Typography>
-                        </Box>
-                      </Box>
-                      <Collapse in={isShowCollapse} timeout="auto" unmountOnExit sx={{ px: 4 }}>
-                        <Grid container sx={{ fontSize: '14px', pt: 2 }} rowSpacing={3}>
-                          <Grid item>
-                            <Typography sx={{ color: '#FA6E6E' }}>Functions</Typography>
-                            <Typography>{getFunctionName}</Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography sx={{ color: '#DD90E5' }}>Parameters Inclued</Typography>
-                            <Typography>{getParametersName}</Typography>
-                          </Grid>
-                          <Grid item>
-                            <Typography sx={{ color: '#FFD33F' }}>Libraries</Typography>
-                            <Typography>{getLibrariesName}</Typography>
-                          </Grid>
-                        </Grid>
-                      </Collapse>
-                    </Grid>
-                  </Scrollbars>
-                  <Grid item xs={12} sx={{ mr: 2 }}>
-                    <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                      <Button
-                        variant="outlined"
-                        sx={{ color: '#fff', border: '1px solid #fff', minWidth: '114px', mx: 1 }}>
-                        Skip
-                      </Button>
-                      <Button variant="contained" type="submit">
-                        {' '}
-                        Let do this
-                      </Button>
-                    </Box>
-                  </Grid>
-                </Grid>
-              ) : null}
+              {DetailsTemplate}
             </Box>
           </Grid>
         </Grid>
