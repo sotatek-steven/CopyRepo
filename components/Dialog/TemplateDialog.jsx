@@ -6,12 +6,8 @@ import {
   IconButton,
   DialogContent,
   Grid,
-  Radio,
   Button,
   useTheme,
-  Accordion,
-  AccordionSummary,
-  AccordionDetails,
   Collapse,
 } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -27,10 +23,8 @@ const TemplateDialog = ({ open, setOpen, type }) => {
   const { template, userContract } = useDispatch();
   const router = useRouter();
   const { listTemplate } = useSelector((state) => state.template);
-  // const [templateState, setTemplateState] = useState([]);
   const [idTemplate, setIdTemplate] = useState(null);
-  const [dataDetails, setDataDetails] = useState(null);
-  const [isShowCollapse, setIsShowCollapse] = useState({});
+  const [openCollapse, setOpenCollapse] = useState([]);
   const theme = useTheme();
 
   useEffect(() => {
@@ -39,7 +33,6 @@ const TemplateDialog = ({ open, setOpen, type }) => {
       try {
         const data = await template.getTemplate(domain);
         if (data?.length > 0) {
-          // setTemplateState(data);
           setIdTemplate(data[0]._id);
         }
       } catch (error) {
@@ -53,6 +46,10 @@ const TemplateDialog = ({ open, setOpen, type }) => {
   const handeSetIdTemplate = (id) => {
     setIdTemplate(id);
   };
+
+  useEffect(() => {
+    setOpenCollapse([]);
+  }, [idTemplate]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -89,29 +86,8 @@ const TemplateDialog = ({ open, setOpen, type }) => {
   const handleClose = () => {
     setOpen(false);
     setIdTemplate(null);
-    setDataDetails(null);
     template.clearAll();
   };
-
-  useEffect(() => {
-    if (!open) return;
-    if (!idTemplate) {
-      setDataDetails(null);
-      return;
-    }
-    const fetchTemplateDetails = async () => {
-      try {
-        const data = await template.getTemplateDetails(idTemplate);
-        if (data) {
-          setDataDetails(data);
-        }
-      } catch (error) {
-        console.log(error);
-        console.log('Failed to fetch template details');
-      }
-    };
-    fetchTemplateDetails();
-  }, [idTemplate, template, open]);
 
   const modulesByTemplate = useMemo(() => {
     if (!listTemplate) return;
@@ -119,6 +95,19 @@ const TemplateDialog = ({ open, setOpen, type }) => {
     const filterModules = listTemplate.find((item) => item._id === idTemplate);
     return filterModules?.modules;
   }, [idTemplate, listTemplate]);
+
+  const handleClick = (clickedIndex) => {
+    if (openCollapse.includes(clickedIndex)) {
+      const openCopy = openCollapse.filter((element) => {
+        return element !== clickedIndex;
+      });
+      setOpenCollapse(openCopy);
+    } else {
+      const openCopy = [...openCollapse];
+      openCopy.push(clickedIndex);
+      setOpenCollapse(openCopy);
+    }
+  };
 
   const DetailsTemplate = useMemo(() => {
     return modulesByTemplate ? (
@@ -151,7 +140,7 @@ const TemplateDialog = ({ open, setOpen, type }) => {
                       }}>
                       <Button
                         startIcon={
-                          isShowCollapse[item._id] ? (
+                          openCollapse.includes(item._id) ? (
                             <ExpandCircleDownIcon sx={{ color: theme.palette.success.main }} />
                           ) : (
                             <ExpandCircleDownIcon
@@ -159,7 +148,8 @@ const TemplateDialog = ({ open, setOpen, type }) => {
                             />
                           )
                         }
-                        onClick={() => setIsShowCollapse({ [item._id]: !isShowCollapse[item._id] })}>
+                        // onClick={() => setIsShowCollapse({ [item._id]: !isShowCollapse[item._id] })}>
+                        onClick={() => handleClick(item._id)}>
                         <Typography sx={{ pt: 0.5, color: theme.palette.primary.light, textTransform: 'capitalize' }}>
                           {item?.name}
                         </Typography>
@@ -174,7 +164,7 @@ const TemplateDialog = ({ open, setOpen, type }) => {
                         </Typography>
                       </Box>
                     </Box>
-                    <Collapse in={isShowCollapse[item._id]} timeout="auto" unmountOnExit sx={{ px: 4 }}>
+                    <Collapse in={openCollapse.includes(item._id)} timeout="auto" unmountOnExit sx={{ px: 4 }}>
                       <Grid container sx={{ fontSize: '14px', pt: 2 }} rowSpacing={3}>
                         <Grid item xs={12}>
                           <Typography sx={{ color: '#FA6E6E' }}>Functions</Typography>
@@ -208,7 +198,7 @@ const TemplateDialog = ({ open, setOpen, type }) => {
         </Grid>
       </Grid>
     ) : null;
-  }, [modulesByTemplate, isShowCollapse]);
+  }, [modulesByTemplate, openCollapse]);
 
   return (
     <Dialog
