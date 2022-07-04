@@ -66,7 +66,7 @@ const ItemContent = styled('div')(({ theme }) => ({
     width: '10%',
     marginTop: 42,
 
-    '& > svg': {
+    '& .action-icon > svg': {
       backgroundColor: theme.palette.primary.main,
       borderRadius: '50%',
       cursor: 'pointer',
