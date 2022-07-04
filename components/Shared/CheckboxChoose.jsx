@@ -36,7 +36,7 @@ const CheckBoxStyled = styled(Card)(({ theme }) => ({
 }));
 
 const RadioCustom = styled(Radio)(({ theme }) => ({
-  color: '#64F5A6',
+  color: theme.palette.primary.green1,
   '&.Mui-checked': {
     color: theme.palette.success.main,
   },
@@ -50,7 +50,7 @@ const Description = styled('div')(({ theme }) => ({
   ...theme.components.truncate.threeLineEllipsis,
 }));
 
-const CheckboxChoose = ({ options, name, handleChange, idTemplate, dataDetails }) => {
+const CheckboxChoose = ({ options, name, handleChange, idTemplate }) => {
   const theme = useTheme();
   return _.isArray(options) && options.length > 0 ? (
     <FormControl>
@@ -77,8 +77,8 @@ const CheckboxChoose = ({ options, name, handleChange, idTemplate, dataDetails }
                   />
                   <Typography sx={{ color: theme.palette.primary.light }}>{option?.name}</Typography>
                 </Box>
-                <Typography sx={{ pr: 6, fontSize: '14px', color: '#64F5A6', fontWeight: '400' }}>
-                  Gas fee: {dataDetails?.gasFee}
+                <Typography sx={{ pr: 6, fontSize: '14px', color: theme.palette.success.main, fontWeight: '400' }}>
+                  Gas fee: {option?.gasFee} Gwei
                 </Typography>
               </Box>
               <CardContent
