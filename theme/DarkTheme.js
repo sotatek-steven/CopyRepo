@@ -59,6 +59,11 @@ export const darkTheme = createTheme({
     borderRadius: 4,
     borderColor: '#8C8C8C',
   },
+  hover: {
+    background: {
+      dark: '#4b4b4c',
+    },
+  },
   typography: {
     fontSize: '0.875rem', //14px
     fontFamily:

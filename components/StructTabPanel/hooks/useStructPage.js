@@ -59,7 +59,8 @@ const useStructPage = () => {
         variables: variables,
       };
     });
-    struct.setOriginStructs(data);
+    const dataOrigin = JSON.parse(JSON.stringify(data));
+    struct.setOriginStructs(dataOrigin);
     struct.setStructs(data);
     userModule.updateStructs(convertStructs(data));
   };

@@ -12,6 +12,7 @@ const Container = styled('div')(() => ({
 
 const ModuleActionList = () => {
   const { userModule, struct } = useDispatch();
+  const { structs } = useSelector((state) => state.struct);
   const { handleErrorStructs } = useStructPage();
 
   const saveModule = async () => {
@@ -22,7 +23,7 @@ const ModuleActionList = () => {
 
     const { code } = await userModule.updateModule();
     if (code === HTTP_CODE.SUCCESS) {
-      struct.setIsChanged(false);
+      struct.setOriginStructs(JSON.parse(JSON.stringify(structs)));
     }
   };
 
