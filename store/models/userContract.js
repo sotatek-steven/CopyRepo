@@ -3,32 +3,20 @@ import { deleteRequest, getRequest, postRequest } from '../../utils/httpRequest'
 
 const userContract = createModel({
   state: {
-    listUserContract: [],
-    listUserContractDraff: [],
-    listUserContractDeployed: [],
+    keywords: null,
   },
   reducers: {
     update: (state, data) => ({
       ...state,
       ...data,
     }),
-    setListContract: (state, listUserContract) => ({
+    setKeywords: (state, keywords) => ({
       ...state,
-      listUserContract,
+      keywords,
     }),
-    setListContractDraff: (state, listUserContractDraff) => ({
-      ...state,
-      listUserContractDraff,
-    }),
-    setListContractDeployed: (state, listUserContractDeployed) => ({
-      ...state,
-      listUserContractDeployed,
-    }),
-    clearAll: () => {
+    clearKeyowrds: () => {
       return {
-        listUserContract: [],
-        listUserContractDraff: [],
-        listUserContractDeployed: [],
+        keywords: null,
       };
     },
   },
@@ -40,12 +28,16 @@ const userContract = createModel({
         try {
           const { meta, data } = await getRequest({
             url: '/api/v1/user-contracts',
-            params: { page: payload.page, size: payload.size },
+            params: {
+              page: payload.page,
+              size: payload.size,
+              description_like: payload.keywords,
+              name_like: payload.keywords,
+            },
             userState: state.player,
             userModoel,
           });
           return { meta, data };
-          // userContract.setListContract(data || []);
         } catch (error) {
           console.log('error: ', error);
           userContract.setListContract([]);
@@ -55,30 +47,38 @@ const userContract = createModel({
         try {
           const { meta, data } = await getRequest({
             url: '/api/v1/user-contracts',
-            params: { status: 'draff', page: payload.page, size: payload.size },
+            params: {
+              status: 'draff',
+              page: payload.page,
+              size: payload.size,
+              description_like: payload.keywords,
+              name_like: payload.keywords,
+            },
             userState: state.player,
             userModoel,
           });
           return { meta, data };
-          // userContract.setListContractDraff(data || []);
         } catch (error) {
           console.log('error: ', error);
-          userContract.setListContractDraff([]);
         }
       },
       async getUserContractDeployed(payload, state) {
         try {
           const { meta, data } = await getRequest({
             url: '/api/v1/user-contracts',
-            params: { status: 'deployed', page: payload.page, size: payload.size },
+            params: {
+              status: 'deployed',
+              page: payload.page,
+              size: payload.size,
+              description_like: payload.keywords,
+              name_like: payload.keywords,
+            },
             userState: state.player,
             userModoel,
           });
           return { meta, data };
-          // userContract.setListContractDeployed(data || []);
         } catch (error) {
           console.log('error: ', error);
-          userContract.setListContractDeployed([]);
         }
       },
       async createSmartContract(body, state) {
@@ -86,8 +86,15 @@ const userContract = createModel({
         return res;
       },
       async deleteSmartContract({ _id }, state) {
-        const res = deleteRequest({ url: `/api/v1/user-contracts/${_id}`, userState: state.player, userModoel: player });
+        const res = deleteRequest({
+          url: `/api/v1/user-contracts/${_id}`,
+          userState: state.player,
+          userModoel: player,
+        });
         return res;
+      },
+      async changeKeywordsSearch(keywords, state) {
+        userContract.setKeywords(keywords);
       },
     };
   },

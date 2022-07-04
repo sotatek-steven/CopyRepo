@@ -14,6 +14,7 @@ const ListSmartContract = ({ data, status }) => {
   const [size, setSize] = useState(9);
   const [meta, setMeta] = useState([]);
   const theme = useTheme();
+  const userContractState = useSelector((state) => state.userContract);
 
   const getUserContracts = async () => {
     try {
@@ -22,16 +23,19 @@ const ListSmartContract = ({ data, status }) => {
         res = await userContract.getAllUserContracts({
           page: page - 1, //cause page default start at 0
           size: size,
+          keywords: userContractState.keywords,
         });
       } else if (status === 'drafts') {
         res = await userContract.getUserContractDraff({
           page: page - 1, //cause page default start at 0
           size: size,
+          keywords: userContractState.keywords,
         });
       } else {
         res = await userContract.getUserContractDeployed({
           page: page - 1, //cause page default start at 0
           size: size,
+          keywords: userContractState.keywords,
         });
       }
 
@@ -50,7 +54,7 @@ const ListSmartContract = ({ data, status }) => {
       return;
     }
     userState.playerInfo && getUserContracts();
-  }, [page, userState.playerAuth?._id, userState.playerInfo]);
+  }, [page, userState.playerAuth?._id, userState.playerInfo, userContractState.keywords]);
 
   return (
     <Grid container columnSpacing={2}>

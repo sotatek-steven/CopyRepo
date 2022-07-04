@@ -96,6 +96,10 @@ const TemplateDialog = ({ open, setOpen, type }) => {
     return filterModules?.modules;
   }, [idTemplate, listTemplate]);
 
+  useEffect(() => {
+    _.isArray(modulesByTemplate) && setOpenCollapse([modulesByTemplate[0]._id]);
+  }, [modulesByTemplate]);
+
   const handleClick = (clickedIndex) => {
     if (openCollapse.includes(clickedIndex)) {
       const openCopy = openCollapse.filter((element) => {

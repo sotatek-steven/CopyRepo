@@ -9,13 +9,15 @@ import {
   IconButton,
   TextField,
   useTheme,
+  InputAdornment,
+  ButtonBase,
+  InputBase,
 } from '@mui/material';
 import React, { useEffect, useRef, useState } from 'react';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import TabsBar from 'components/layout/TabsBar';
 import TabContext from '@mui/lab/TabContext';
 import TabPanel from '@mui/lab/TabPanel';
-import { styled } from '@mui/system';
 import SearchIcon from '@mui/icons-material/Search';
 import Layout from '@/components/layout/PageLayout';
 import CloseIcon from '../../assets/icon/close-circle.svg';
@@ -25,12 +27,68 @@ import { useDispatch, useSelector } from 'react-redux';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import TemplateDialog from '@/components/Dialog/TemplateDialog';
 import _ from 'lodash';
+import { borderRadius, boxSizing } from '@mui/system';
+import XbuttonIcon from '../../assets/icon/xbutton.svg';
+import DeleteIcon from '../../assets/icon/delete.svg';
+import { styled, alpha } from '@mui/material/styles';
 
 const TabPanelCustom = styled(TabPanel)(({ theme }) => ({
   ...theme.mixins.toolbar,
   paddingBottom: 0,
   paddingLeft: '8px',
   fontSize: '16px',
+}));
+
+const Search = styled('div')(({ theme }) => ({
+  position: 'relative',
+  borderRadius: theme.shape.borderRadius,
+  marginLeft: 0,
+  width: '100%',
+  [theme.breakpoints.up('sm')]: {
+    marginLeft: theme.spacing(1),
+    width: 'auto',
+  },
+  '& .Mui-focused': {
+    '& .xIcon': {
+      display: 'inherit',
+    },
+  },
+}));
+
+const SearchIconWrapper = styled('div')(({ theme }) => ({
+  padding: theme.spacing(0, 2),
+  height: '100%',
+  position: 'absolute',
+  pointerEvents: 'none',
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  cursor: 'pointer',
+}));
+
+const StyledInputBase = styled(InputBase)(({ theme }) => ({
+  color: 'inherit',
+
+  '& .xIcon': {
+    display: 'none',
+  },
+  '& .MuiInputBase-input': {
+    padding: theme.spacing(1, 1, 1, 0),
+    // vertical padding + font size from searchIcon
+    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
+    transition: theme.transitions.create('width'),
+    width: '100%',
+    // height: '36px',
+    [theme.breakpoints.up('sm')]: {
+      width: '0',
+
+      '&:focus': {
+        width: '208px',
+        borderRadius: '20px',
+        background: '#2E2E30',
+      },
+    },
+  },
 }));
 
 const MemoizedSubComponent = React.memo(ListSmartContract);
@@ -42,14 +100,18 @@ const Dashboard = () => {
   const [value, setValue] = useState('All');
   const [openCreate, setOpenCreate] = useState(false);
   const [expand, setExpand] = useState(false);
+  const [openListDefi, setOpenListDefi] = useState(false);
+  const [openListNFT, setOpenListNFT] = useState(false);
   const [keywords, setKeywords] = useState(null);
   const [open, setOpen] = useState(false);
   const [type, setType] = useState('');
   const { listDomain } = useSelector((state) => state.template);
   const theme = useTheme();
 
-  const handleSearch = () => {
-    console.log(keywords);
+  const onEnter = (e) => {
+    if (e.keyCode == 13) {
+      keywords && userContract.changeKeywordsSearch(keywords.trim());
+    }
   };
 
   useEffect(() => {
@@ -64,39 +126,25 @@ const Dashboard = () => {
       }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <TabsBar setTab={setValue} tab={value} />
-
         <Box sx={{ display: 'flex', alignItems: 'center', pt: 2, mx: 2 }}>
-          <Box>
-            <TextField
-              sx={{
-                width: expand ? '200px' : '0',
-                display: expand ? 'block' : 'none',
-                transition: 'width .4s ease-in-out',
-              }}
-              type="search"
-              size="small"
-              fullWidth
+          <Search>
+            <SearchIconWrapper>
+              <SearchIcon sx={{ color: '#F07D60', zIndex: 2 }} />
+            </SearchIconWrapper>
+            <StyledInputBase
               onChange={(e) => setKeywords(e.target.value)}
-              InputProps={{
-                endAdornment: expand ? (
-                  <SearchIcon onClick={handleSearch} sx={{ color: theme.palette.primary.main, cursor: 'pointer' }} />
-                ) : null,
-              }}
+              onKeyDown={onEnter}
+              type="search"
+              placeholder="Search Smart Contract"
+              // endAdornment={
+              //   <InputAdornment
+              //     position="start"
+              //     sx={{ position: 'absolute', right: '8px', cursor: 'pointer' }}
+              //     className="xIcon"></InputAdornment>
+              // }
+              // inputProps={{}}
             />
-          </Box>
-          {!expand ? (
-            <SearchIcon
-              onClick={() => setExpand(!expand)}
-              sx={{ color: theme.palette.primary.main, cursor: 'pointer' }}
-            />
-          ) : (
-            <ArrowForwardIosIcon
-              size="small"
-              onClick={() => setExpand(!expand)}
-              sx={{ color: theme.palette.primary.main, cursor: 'pointer', fontSize: '17px', mx: 1 }}
-            />
-          )}
-
+          </Search>
           <Box sx={{ pl: 3, pr: 1 }}>
             <Button
               sx={{ color: theme.palette.primary.contrastText, fontWeight: 600, fontSize: '14px' }}
@@ -110,7 +158,7 @@ const Dashboard = () => {
       </Box>
       <TabContext value={value}>
         <TabPanelCustom value="All">
-          <MemoizedSubComponent status="all" handleSearch={() => handleSearch(keywords)} />
+          <MemoizedSubComponent status="all" />
         </TabPanelCustom>
         <TabPanelCustom value="Drafts">
           <MemoizedSubComponent status="drafts" />

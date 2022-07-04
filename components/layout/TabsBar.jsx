@@ -1,5 +1,6 @@
 import { Box, Tab, Tabs, useTheme } from '@mui/material';
 import React from 'react';
+import { useDispatch } from 'react-redux';
 
 const Navbars = ['All', 'Drafts', 'Deployed'];
 
@@ -28,8 +29,10 @@ const styles = {
 
 const TabsBar = ({ tab, setTab }) => {
   const theme = useTheme();
+  const { userContract } = useDispatch();
   const handleChange = (event, newValue) => {
     setTab(newValue);
+    userContract.clearKeyowrds();
   };
   return (
     <Box sx={{ paddingBottom: '1px', width: '90%' }}>
