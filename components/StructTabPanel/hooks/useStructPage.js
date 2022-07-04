@@ -1,5 +1,5 @@
 import { ELEMENT_TYPE, NEW_ID, EDIT_ID } from '@/config/constant/common';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 const TYPES = ['int', 'boolean', 'string'];
@@ -86,7 +86,6 @@ const useStructPage = () => {
     data.push({ ...init, _id: `${NEW_ID}_${count}` });
     struct.setStructs(data);
     userModule.updateStructs(convertStructs(data));
-    struct.setIsChanged(true);
     setCount((prev) => prev + 1);
   };
 
@@ -97,7 +96,6 @@ const useStructPage = () => {
 
     struct.setStructs(data);
     userModule.updateStructs(convertStructs(data));
-    struct.setIsChanged(true);
   };
 
   const handelAddVariable = (structId) => {
@@ -108,7 +106,6 @@ const useStructPage = () => {
 
     struct.setStructs(data);
     userModule.updateStructs(convertStructs(data));
-    struct.setIsChanged(true);
     setCount((prev) => prev + 1);
   };
 
@@ -118,9 +115,14 @@ const useStructPage = () => {
     const data = [...structs];
     data[iStruct]?.variables?.splice(iVariable, 1);
 
+    const duplicateArr = checkDuplicateName(data[iStruct].variables);
+
+    data[iStruct].variables.forEach(({ name }) => {
+      name.errorName = !!duplicateArr?.includes(name.value) && 'Variable name cannot be duplicated';
+    });
+
     struct.setStructs(data);
     userModule.updateStructs(convertStructs(data));
-    struct.setIsChanged(true);
   };
 
   const handleChangeNameStruct = (structId, e) => {
@@ -132,13 +134,11 @@ const useStructPage = () => {
 
     struct.setStructs(data);
     userModule.updateStructs(convertStructs(data));
-    struct.setIsChanged(true);
   };
 
-  const checkDuplicateName = (variables, item) => {
-    const index = variables.findIndex(({ _id, name }) => name?.value === item?.name?.value && _id !== item?._id);
-    console.log(index);
-    return index !== -1;
+  const checkDuplicateName = (variables) => {
+    const duplicateNames = variables.map(({ name }) => name.value).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i);
+    return duplicateNames;
   };
 
   const handleChangeVariable = (structId, variableId, e, type) => {
@@ -152,9 +152,13 @@ const useStructPage = () => {
         data[iStruct].variables[iVariable].name.errorName = false;
         if (!e.target.value?.trim()) {
           data[iStruct].variables[iVariable].name.errorName = 'This is field required';
-        } else if (checkDuplicateName(data[iStruct].variables, data[iStruct].variables[iVariable])) {
-          data[iStruct].variables[iVariable].name.errorName = 'Variable name cannot be duplicated';
         }
+        const duplicateArr = checkDuplicateName(data[iStruct].variables);
+
+        data[iStruct].variables.forEach(({ name }) => {
+          name.errorName = !!duplicateArr?.includes(name.value) && 'Variable name cannot be duplicated';
+        });
+
         break;
       case ELEMENT_TYPE.TAG:
         if (!types.includes(e.value)) {
@@ -173,7 +177,6 @@ const useStructPage = () => {
 
     struct.setStructs(data);
     userModule.updateStructs(convertStructs(data));
-    struct.setIsChanged(true);
   };
 
   const handleErrorStructs = () => {
