@@ -20,6 +20,10 @@ export const darkTheme = createTheme({
       light2: '#FA6E6E',
       red1: '#CC2222',
       grey1: '#8C8C8C',
+      purple: '#EF6BFE',
+      purple2: '#DD90E5',
+      yellow: '#FFD33F',
+      green1: '#64F5A6',
     },
     success: {
       main: '#95D5B2',

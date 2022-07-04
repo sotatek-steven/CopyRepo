@@ -155,10 +155,10 @@ const TemplateDialog = ({ open, setOpen, type }) => {
                         </Typography>
                       </Button>
                       <Box sx={{ display: 'flex', fontSize: '14px', px: 3 }}>
-                        <Typography sx={{ color: '#EF6BFE', px: 2, textDecoration: 'underline' }}>
+                        <Typography sx={{ color: theme.palette.primary.purple, px: 2, textDecoration: 'underline' }}>
                           {item?.sources?.contructorParams?.length} Paramester
                         </Typography>
-                        <Typography sx={{ color: '#FFD33F', textDecoration: 'underline' }}>
+                        <Typography sx={{ color: theme.palette.primary.yellow, textDecoration: 'underline' }}>
                           {' '}
                           {item?.sources?.libraries.length} Libraries
                         </Typography>
@@ -167,15 +167,15 @@ const TemplateDialog = ({ open, setOpen, type }) => {
                     <Collapse in={openCollapse.includes(item._id)} timeout="auto" unmountOnExit sx={{ px: 4 }}>
                       <Grid container sx={{ fontSize: '14px', pt: 2 }} rowSpacing={3}>
                         <Grid item xs={12}>
-                          <Typography sx={{ color: '#FA6E6E' }}>Functions</Typography>
+                          <Typography sx={{ color: theme.palette.primary.light2 }}>Functions</Typography>
                           <Typography>{listFunctions.join(', ')}</Typography>
                         </Grid>
                         <Grid item xs={12}>
-                          <Typography sx={{ color: '#DD90E5' }}>Parameters Inclued</Typography>
+                          <Typography sx={{ color: theme.palette.primary.purple2 }}>Parameters Inclued</Typography>
                           <Typography>{listParameters.join(', ')}</Typography>
                         </Grid>
                         <Grid item xs={12}>
-                          <Typography sx={{ color: '#FFD33F' }}>Libraries</Typography>
+                          <Typography sx={{ color: theme.palette.warning.main }}>Libraries</Typography>
                           <Typography>{listLibrary}</Typography>
                         </Grid>
                       </Grid>

@@ -36,7 +36,7 @@ const CheckBoxStyled = styled(Card)(({ theme }) => ({
 }));
 
 const RadioCustom = styled(Radio)(({ theme }) => ({
-  color: '#64F5A6',
+  color: theme.palette.primary.green1,
   '&.Mui-checked': {
     color: theme.palette.success.main,
   },
