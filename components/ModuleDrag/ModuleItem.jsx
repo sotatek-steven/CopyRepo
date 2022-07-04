@@ -3,6 +3,7 @@ import React from 'react';
 import { styled } from '@mui/material/styles';
 import DragIcon from '../../assets/icon/drag.svg';
 import { useRouter } from 'next/router';
+import { MODULE_OWNER } from '@/config/constant/common';
 
 const Item = styled('div')(({ theme, disable }) => ({
   gap: '17px',
@@ -21,6 +22,17 @@ const Text = styled('div')(({ theme }) => ({
   fontWeight: '400',
   fontFamily: 'Segoe UI',
   color: theme.palette.text.primary,
+  ...theme.components.truncate.singleLineEllipsis,
+}));
+
+const TextOwner = styled('div')(({ theme }) => ({
+  fontSize: '14px',
+  fontWeight: '400',
+  fontFamily: 'Segoe UI',
+  color: theme.palette.text.primary,
+  padding: '0px 10px',
+  borderRadius: 7,
+  background: theme.palette.background.light,
   ...theme.components.truncate.singleLineEllipsis,
 }));
 
@@ -52,6 +64,9 @@ const ModuleItem = ({ data, nodeType }) => {
         <DragIcon />
       </div>
       <Text>{data.name}</Text>
+      <TextOwner>
+        {data.owner.toUpperCase() === MODULE_OWNER.SYSTEM ? MODULE_OWNER.MODULE_SYSTEM : MODULE_OWNER.CUSTOM_MODULE}
+      </TextOwner>
     </Item>
   );
 };
