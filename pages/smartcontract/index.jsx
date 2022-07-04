@@ -49,7 +49,8 @@ const Dashboard = () => {
   const theme = useTheme();
 
   const handleSearch = () => {
-    console.log(keywords);
+    // const trimInput = keywords.replace(/\s+/g, ' ');
+    userContract.changeKeywordsSearch(keywords.trim());
   };
 
   useEffect(() => {
@@ -110,7 +111,7 @@ const Dashboard = () => {
       </Box>
       <TabContext value={value}>
         <TabPanelCustom value="All">
-          <MemoizedSubComponent status="all" handleSearch={() => handleSearch(keywords)} />
+          <MemoizedSubComponent status="all" />
         </TabPanelCustom>
         <TabPanelCustom value="Drafts">
           <MemoizedSubComponent status="drafts" />

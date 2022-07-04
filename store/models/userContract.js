@@ -6,6 +6,7 @@ const userContract = createModel({
     listUserContract: [],
     listUserContractDraff: [],
     listUserContractDeployed: [],
+    keywords: null,
   },
   reducers: {
     update: (state, data) => ({
@@ -24,6 +25,15 @@ const userContract = createModel({
       ...state,
       listUserContractDeployed,
     }),
+    setKeywords: (state, keywords) => ({
+      ...state,
+      keywords,
+    }),
+    clearKeyowrds: () => {
+      return {
+        keywords: null,
+      };
+    },
     clearAll: () => {
       return {
         listUserContract: [],
@@ -40,7 +50,12 @@ const userContract = createModel({
         try {
           const { meta, data } = await getRequest({
             url: '/api/v1/user-contracts',
-            params: { page: payload.page, size: payload.size },
+            params: {
+              page: payload.page,
+              size: payload.size,
+              description_like: payload.keywords,
+              name_like: payload.keywords,
+            },
             userState: state.player,
             userModoel,
           });
@@ -55,7 +70,13 @@ const userContract = createModel({
         try {
           const { meta, data } = await getRequest({
             url: '/api/v1/user-contracts',
-            params: { status: 'draff', page: payload.page, size: payload.size },
+            params: {
+              status: 'draff',
+              page: payload.page,
+              size: payload.size,
+              description_like: payload.keywords,
+              name_like: payload.keywords,
+            },
             userState: state.player,
             userModoel,
           });
@@ -70,7 +91,13 @@ const userContract = createModel({
         try {
           const { meta, data } = await getRequest({
             url: '/api/v1/user-contracts',
-            params: { status: 'deployed', page: payload.page, size: payload.size },
+            params: {
+              status: 'deployed',
+              page: payload.page,
+              size: payload.size,
+              description_like: payload.keywords,
+              name_like: payload.keywords,
+            },
             userState: state.player,
             userModoel,
           });
@@ -86,8 +113,15 @@ const userContract = createModel({
         return res;
       },
       async deleteSmartContract({ _id }, state) {
-        const res = deleteRequest({ url: `/api/v1/user-contracts/${_id}`, userState: state.player, userModoel: player });
+        const res = deleteRequest({
+          url: `/api/v1/user-contracts/${_id}`,
+          userState: state.player,
+          userModoel: player,
+        });
         return res;
+      },
+      async changeKeywordsSearch(keywords, state) {
+        userContract.setKeywords(keywords);
       },
     };
   },
