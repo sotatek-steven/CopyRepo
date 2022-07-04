@@ -50,7 +50,7 @@ const Library = () => {
   const moduleModeState = useSelector((state) => state.moduleMode);
   const { moduleMode } = useDispatch();
   const { library } = useDispatch();
-  const { isChanged } = useSelector((state) => state.struct);
+  const { originStructs, structs } = useSelector((state) => state.struct);
   const [activeTab, setActiveTab] = useState(getActiveTab(moduleModeState));
 
   useEffect(() => {
@@ -63,7 +63,7 @@ const Library = () => {
   }, []);
 
   const handleBackToDesign = () => {
-    if (isChanged) {
+    if (JSON.stringify(originStructs) !== JSON.stringify(structs)) {
       toast.error('You must save the module before leaving', {
         position: 'top-right',
         autoClose: 5000,
