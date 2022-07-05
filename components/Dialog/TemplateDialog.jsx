@@ -96,10 +96,6 @@ const TemplateDialog = ({ open, setOpen, type }) => {
     return filterModules?.modules;
   }, [idTemplate, listTemplate]);
 
-  useEffect(() => {
-    _.isArray(modulesByTemplate) && setOpenCollapse([modulesByTemplate[0]._id]);
-  }, [modulesByTemplate]);
-
   const handleClick = (clickedIndex) => {
     if (openCollapse.includes(clickedIndex)) {
       const openCopy = openCollapse.filter((element) => {
@@ -145,11 +141,11 @@ const TemplateDialog = ({ open, setOpen, type }) => {
                       <Button
                         startIcon={
                           openCollapse.includes(item._id) ? (
-                            <ExpandCircleDownIcon sx={{ color: theme.palette.success.main }} />
-                          ) : (
                             <ExpandCircleDownIcon
                               sx={{ transform: 'rotate(180deg)', color: theme.palette.success.main }}
                             />
+                          ) : (
+                            <ExpandCircleDownIcon sx={{ color: theme.palette.success.main }} />
                           )
                         }
                         // onClick={() => setIsShowCollapse({ [item._id]: !isShowCollapse[item._id] })}>
@@ -175,7 +171,7 @@ const TemplateDialog = ({ open, setOpen, type }) => {
                           <Typography>{listFunctions.join(', ')}</Typography>
                         </Grid>
                         <Grid item xs={12}>
-                          <Typography sx={{ color: theme.palette.primary.purple2 }}>Parameters Inclued</Typography>
+                          <Typography sx={{ color: theme.palette.primary.purple2 }}>Parameters Included</Typography>
                           <Typography>{listParameters.join(', ')}</Typography>
                         </Grid>
                         <Grid item xs={12}>
