@@ -1,5 +1,5 @@
-import React from 'react';
-import { styled, useTheme } from '@mui/material';
+import React, { useState } from 'react';
+import { styled } from '@mui/material';
 import Head from 'next/head';
 import { useEagerConnect, useInactiveListener } from '@/hooks/hooks';
 import useUserActive from '@/hooks/useUserActive';
@@ -7,6 +7,7 @@ import { Box } from '@mui/system';
 import BurgerMenu from '../SmartContractNav/BurgerMenu';
 import PhaseNavigation from '../SmartContractNav/PhaseNavigation';
 import { useSelector } from 'react-redux';
+import SideNavigation from '../SideNavigation';
 
 const NavbarContainer = styled('div')(({ theme }) => ({
   height: '100%',
@@ -34,7 +35,12 @@ function DesignLayout(props) {
   const triedEager = useEagerConnect();
   useInactiveListener(!triedEager);
   useUserActive();
-  const theme = useTheme();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+
+  const handleSidebarOpen = () => {
+    setSidebarOpen(!sidebarOpen);
+  };
+
   return (
     <div>
       <Head>
@@ -43,11 +49,15 @@ function DesignLayout(props) {
       <PageContainer>
         <div style={{ height: 74 }}>
           <NavbarContainer>
-            <BurgerMenu contractName={contractState.current.name || 'New Contract'} />
+            <BurgerMenu
+              setSidebarOpen={handleSidebarOpen}
+              contractName={contractState.current.name || 'New Contract'}
+            />
             <PhaseNavigation />
             <ActionContainer>{props.actionList}</ActionContainer>
           </NavbarContainer>
         </div>
+        <SideNavigation open={sidebarOpen} />
         <Box sx={{ height: 'calc(100vh - 74px)' }}>{props.children}</Box>
       </PageContainer>
     </div>

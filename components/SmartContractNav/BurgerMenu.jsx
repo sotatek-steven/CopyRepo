@@ -1,9 +1,8 @@
 import React from 'react';
-// import BurgerIcon from '../../assets/icon/menu.svg';
-import KebabIcon from '../../assets/icon/kebab.svg';
+import BurgerIcon from '../../assets/icon/menu.svg';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { styled } from '@mui/material/styles';
-import { Box, Button, IconButton, Popover, Typography, useTheme } from '@mui/material';
+import { Box, IconButton, Popover, useTheme } from '@mui/material';
 import { useDispatch } from 'react-redux';
 
 const RightSide = styled('div')(() => ({
@@ -21,7 +20,11 @@ const TextStyle = styled('span')(({ theme }) => ({
   color: theme.palette.text.primary,
 }));
 
-const BurgerMenu = ({ contractName }) => {
+const BurgerIconWrapper = styled('div')(() => ({
+  cursor: 'pointer',
+}));
+
+const BurgerMenu = ({ contractName, setSidebarOpen }) => {
   const { contract } = useDispatch();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const theme = useTheme();
@@ -42,7 +45,9 @@ const BurgerMenu = ({ contractName }) => {
   };
   return (
     <RightSide>
-      {/* <BurgerIcon /> */}
+      <BurgerIconWrapper onClick={setSidebarOpen}>
+        <BurgerIcon />
+      </BurgerIconWrapper>
       <TextStyle> {contractName} </TextStyle>
       <IconButton
         aria-label="delete"
