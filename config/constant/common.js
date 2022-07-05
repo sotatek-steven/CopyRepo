@@ -21,3 +21,10 @@ export const MODULE_OWNER = {
   MODULE_SYSTEM: 'System module',
   CUSTOM_MODULE: 'Custom module',
 };
+
+export const MODE_ACTION_MODULE = {
+  DETAILS: 'Details',
+  DESIGN: 'Design',
+  CLONE: 'Clone',
+  DELETE: 'Delete',
+};

@@ -1,29 +1,32 @@
 import { styled } from '@mui/material/styles';
 
-const ModalBox = styled('div')(({ theme }) => ({
+const ModalBox = styled('div')(({ theme, height, width = 600 }) => ({
   position: 'absolute',
   top: '50%',
   left: '50%',
   transform: 'translate(-50%, -50%)',
-  width: 600,
   backgroundColor: theme.palette.background.default,
   boxShadow: 24,
   padding: '35px 35px',
   outline: 'none',
+  height: height,
+  width: width,
 }));
 
-const Header = styled('div')(({ theme }) => ({
+const Header = styled('div')(({ theme, showFooter }) => ({
   color: theme.palette.text.primary,
   display: 'flex',
   justifyContent: 'space-between',
   fontSize: 25,
+  marginBottom: 20,
+  borderBottom: !showFooter ? `1px solid ${theme.shape.borderColor}` : 'unset',
 }));
 
 const Title = styled('div')(({ theme }) => ({
   color: theme.palette.text.primary,
   fontSize: 20,
   fontWeight: 600,
-  marginBottom: 30,
+  marginBottom: 20,
 }));
 
 const CloseButton = styled('div')(({ theme }) => ({
