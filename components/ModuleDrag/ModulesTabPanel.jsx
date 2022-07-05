@@ -76,7 +76,7 @@ const ModulesTab = () => {
               alignItems: 'center',
               paddingLeft: '10px',
             }}>
-            GAS FEE OF THIS SMART CONTRACT: {contractState.current.gasFee}
+            GAS FEE OF THIS SMART CONTRACT: {contractState.current.gasFee} Gwei
           </Box>
         ) : null}
       </div>

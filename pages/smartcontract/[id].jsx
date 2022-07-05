@@ -33,7 +33,7 @@ const Design = () => {
   useEffect(() => {
     if (!id) return;
     contract.getDetailContract(id);
-  }, [id]);
+  }, [id, contract]);
   useEffect(() => {
     if (!contractState.current?._id) return;
     const { coordinates: modulesData } = contractState.current;
