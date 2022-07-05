@@ -95,7 +95,7 @@ const SmartContractActionList = () => {
   };
 
   const saveContract = async () => {
-    await contract.updateContract();
+    contractState.current.status !== 'deployed' && (await contract.updateContract());
     route.push('/');
   };
   return (
