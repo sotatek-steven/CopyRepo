@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import SearchIcon from '@mui/icons-material/Search';
 import { styled } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Container = styled('div')(({ theme }) => ({
   background: theme.palette.background.light,
@@ -31,9 +32,26 @@ const IconWrapper = styled('div')(({ hidden }) => ({
 const SearchLibrary = () => {
   const [value, setValue] = useState('');
   const [closeIconHidden, setCloseIconHidden] = useState(true);
+  const { library } = useDispatch();
+  const libraryState = useSelector((state) => state.library);
 
   useEffect(() => {
     setCloseIconHidden(!value);
+    const filterLibraries = (userInput) => {
+      var filteredValues = libraryState.map((library) => {
+        const libraryName = library.name.toLowerCase();
+        const textInput = userInput.toLowerCase();
+
+        return {
+          ...library,
+          hidden: !libraryName.includes(textInput),
+        };
+      });
+      return filteredValues;
+    };
+
+    const filteredLibraries = filterLibraries(value);
+    library.update(filteredLibraries);
   }, [value]);
 
   const handleChange = (e) => {

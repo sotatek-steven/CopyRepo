@@ -15,16 +15,30 @@ const Text = styled('div')(({ theme, hidden }) => ({
   wordBreak: 'break-all',
   borderBottom: 'solid 1px',
   borderColor: theme.shape.borderColor,
+  cursor: 'pointer',
   ...theme.components.truncate.singleLineEllipsis,
 }));
+
 const ImportLibrary = ({ name, hidden }) => {
-  const { userModule } = useDispatch();
+  const { userModule, library } = useDispatch();
   const userModuleState = useSelector((state) => state.userModule);
+  const libraryState = useSelector((state) => state.library);
 
   const importLibrary = () => {
     const { libraries } = userModuleState.sources;
     libraries.unshift(name);
     userModule.updateLibraries(libraries);
+
+    const librariesArr = libraryState.map((library) => {
+      const { name } = library;
+      const hidden = libraries.filter((item) => item === name).length !== 0;
+      return {
+        ...library,
+        hidden,
+      };
+    });
+
+    library.update(librariesArr);
   };
   return (
     <Text hidden={hidden} onClick={importLibrary}>

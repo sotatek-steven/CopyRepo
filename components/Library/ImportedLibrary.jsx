@@ -9,11 +9,11 @@ const Container = styled('div')(() => ({
   alignItems: 'center',
   justifyContent: 'space-between',
   gap: 25,
+  height: 78,
 }));
 
 const Text = styled('div')(({ theme }) => ({
   fontFamily: 'Segoe UI',
-  height: 42,
   boxSizing: 'border-box',
   fontSize: 14,
   fontWeight: theme.typography.fontWeightRegular,
@@ -26,11 +26,22 @@ const Text = styled('div')(({ theme }) => ({
 const ImportedLibrary = ({ name }) => {
   const { userModule } = useDispatch();
   const userModuleState = useSelector((state) => state.userModule);
+  const libraryState = useSelector((state) => state.library);
+  const { library } = useDispatch();
 
   const removeLibrary = () => {
     const { libraries } = userModuleState.sources;
     const updatedLibraries = libraries.filter((library) => library !== name);
     userModule.updateLibraries(updatedLibraries);
+
+    const updatedLibrary = libraryState.map((item) => {
+      const { name: nameItem, hidden } = item;
+      return {
+        ...item,
+        hidden: nameItem === name ? false : hidden,
+      };
+    });
+    library.update(updatedLibrary);
   };
 
   return (
