@@ -1,7 +1,7 @@
 import { styled } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Scrollbars from 'react-custom-scrollbars';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import ImportLibrary from './ImportLibrary';
 import SearchLibrary from './SearchLibrary';
 
@@ -33,18 +33,7 @@ const SectionWrapper = styled('div')(() => ({
 
 const ImportLibraries = () => {
   const libraryState = useSelector((state) => state.library);
-  const moduleState = useSelector((state) => state.userModule);
-  const { libraries } = moduleState.sources;
-  const { library } = useDispatch();
 
-  useEffect(() => {
-    const fetchLiraries = async () => {
-      const { data } = await library.getAllUserLibraries();
-      library.update(data);
-    };
-
-    fetchLiraries();
-  }, []);
   // const [scrollTopProgess, setScrollTopProgess] = useState(0);
   // const [paging, setPaging] = useState({
   //   page: 0,
@@ -91,8 +80,7 @@ const ImportLibraries = () => {
         >
           <SectionWrapper>
             {libraryState.map((library) => {
-              const { name, _id } = library;
-              const hidden = libraries.filter((item) => item === name).length !== 0 ? true : false;
+              const { name, _id, hidden } = library;
               return <ImportLibrary key={_id} name={name} hidden={hidden} />;
             })}
           </SectionWrapper>

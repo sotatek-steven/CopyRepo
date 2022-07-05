@@ -48,6 +48,7 @@ const getActiveTab = (mode) => {
 
 const Library = () => {
   const moduleModeState = useSelector((state) => state.moduleMode);
+  const userModuleState = useSelector((state) => state.userModule);
   const { moduleMode } = useDispatch();
   const { library } = useDispatch();
   const { originStructs, structs } = useSelector((state) => state.struct);
@@ -56,9 +57,18 @@ const Library = () => {
   useEffect(() => {
     const fetchImportedLibraries = async () => {
       const { data } = await library.getAllUserLibraries();
-      library.update(data);
-    };
+      const { libraries } = userModuleState.sources;
+      const librariesArr = data.map((library) => {
+        const { name } = library;
+        const hidden = libraries.filter((item) => item === name).length !== 0;
+        return {
+          ...library,
+          hidden,
+        };
+      });
 
+      library.update(librariesArr);
+    };
     fetchImportedLibraries();
   }, []);
 
