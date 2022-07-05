@@ -11,17 +11,15 @@ const ApproveButton = ({ setAllowance }) => {
   const { account } = useWeb3React();
   const [loading, setLoading] = useState(false);
   const contractState = useSelector((state) => state.contract);
-  const { onApprove } = useApprove(
-    contractState.mainContract,
-    contractState.useContract,
-    AppConfig.maxLimit,
-  );
+  const { onApprove } = useApprove(contractState.mainContract, contractState.useContract, AppConfig.maxLimit);
 
   const handleApprove = useCallback(async () => {
     setLoading(true);
     try {
       await onApprove();
-      toast.success('Approved Successfully !');
+      toast.success('Approved Successfully !', {
+        style: { top: '3.5em' },
+      });
       setAllowance(true);
       setLoading(false);
     } catch (e) {
@@ -31,7 +29,7 @@ const ApproveButton = ({ setAllowance }) => {
     }
   }, [onApprove]);
   if (!account) {
-    return (<ConnectWallet />);
+    return <ConnectWallet />;
   }
   return (
     <LoadingButton
@@ -41,8 +39,7 @@ const ApproveButton = ({ setAllowance }) => {
       style={{ height: 50, width: 200 }}
       color="success"
       variant="contained"
-      sx={{ mt: { xs: 2, md: 0 }, width: { xs: '100%', md: 'auto' } }}
-    >
+      sx={{ mt: { xs: 2, md: 0 }, width: { xs: '100%', md: 'auto' } }}>
       Approve
     </LoadingButton>
   );

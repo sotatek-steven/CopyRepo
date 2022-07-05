@@ -10,8 +10,6 @@ const ModulesTab = () => {
   const [modules, setModules] = useState([]);
   const theme = useTheme();
 
-  console.log(contractState);
-
   const fetchModules = async () => {
     try {
       const { data: modulesData } = await userModule.getModules();
@@ -67,8 +65,8 @@ const ModulesTab = () => {
             sx={{
               position: 'absolute',
               bottom: '30px',
-              background: theme.palette.primary.light,
-              borderLeft: `7px solid ${theme.palette.primary.light2} `,
+              background: theme.palette.success.main,
+              // borderLeft: `7px solid ${theme.palette.primary.light2} `,
               width: '444px',
               height: '82px',
               color: theme.palette.common.black,

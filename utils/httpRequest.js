@@ -27,7 +27,7 @@ export const getRequest = async ({
   } else if (res.code >= 3000 && userState?.playerAuth) {
     // token expired
     console.log('res code clear all');
-    userModoel.clearAll();
+    // userModoel.clearAll();
   }
   return res;
 };
@@ -64,7 +64,7 @@ export const postRequest = async ({
     return res;
   } else if (res.code >= 3000) {
     // token expired
-    userModoel.clearAll();
+    // userModoel.clearAll();
   }
   return res;
 };
@@ -101,7 +101,7 @@ export const putRequest = async ({
     return res;
   } else if (res.code >= 3000) {
     // token expired
-    userModoel.clearAll();
+    // userModoel.clearAll();
   }
   return res;
 };
@@ -135,7 +135,7 @@ export const deleteRequest = async ({
     return res;
   } else if (res.code >= 3000) {
     // token expired
-    userModoel.clearAll();
+    // userModoel.clearAll();
   }
   return res;
 };

@@ -100,7 +100,9 @@ const contract = createModel({
         contract.setAddress(depoyedContract.address);
         contract.setTransaction(depoyedContract.deployTransaction.hash);
         console.log(depoyedContract);
-        toast.success('Deploy success');
+        toast.success('Deploy success', {
+          style: { top: '3.5em' },
+        });
         deployed();
       },
     };
