@@ -99,6 +99,9 @@ const TemplateItem = ({ data }) => {
       </CardActions>
       <ConfirmDeleteDialog
         open={confirmDelOpen}
+        title={'Are you sure?'}
+        cancelText={'No'}
+        agreeText={'Yes'}
         onClose={handleCancel}
         onAgree={handleAgreeDel}
         desciption="Do you really want to delete these records? This process cannot be undone."

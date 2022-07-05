@@ -3,10 +3,13 @@ import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import DragIcon from '../../assets/icon/drag.svg';
 import { useRouter } from 'next/router';
-import { MODE_ACTION_MODULE, MODULE_OWNER } from '@/config/constant/common';
+import { HTTP_CODE, MODE, MODE_ACTION_MODULE, MODULE_OWNER } from '@/config/constant/common';
 import { IconButton, Popover } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ModuleDetail from '../ModulePage/ModuleDetail';
+import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import ConfirmDeleteDialog from '../atom/Dialog/ConfirmDeleteDialog';
 
 const Item = styled('div')(({ theme, disable }) => ({
   gap: '17px',
@@ -98,10 +101,12 @@ const options = [
   },
 ];
 
-const ModuleItem = ({ data, nodeType }) => {
+const ModuleItem = ({ data, nodeType, fetchModules, setDataClone, setIsOpenModuleInfo }) => {
   const route = useRouter();
+  const { userModule } = useDispatch();
   const [anchorEl, setAnchorEl] = useState(null);
   const [isOpenModuleDetail, setIsOpenModuleDetail] = useState(false);
+  const [isOpenConfirmDelete, setIsOpenConfirmDelete] = useState(false);
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
@@ -134,9 +139,36 @@ const ModuleItem = ({ data, nodeType }) => {
         setIsOpenModuleDetail(true);
         setAnchorEl(null);
         break;
-
+      case MODE_ACTION_MODULE.DESIGN:
+        redirectToModulePage();
+        setAnchorEl(null);
+        break;
+      case MODE_ACTION_MODULE.CLONE:
+        const { _id, owner, ...dataModule } = data;
+        setDataClone({ ...dataModule, name: `${dataModule.name}${Math.floor(Date.now() / 1000)}` });
+        setIsOpenModuleInfo(true);
+        setAnchorEl(null);
+        break;
+      case MODE_ACTION_MODULE.DELETE:
+        setIsOpenConfirmDelete(true);
+        setAnchorEl(null);
+        break;
       default:
         break;
+    }
+  };
+
+  const handleDeleteModule = async () => {
+    try {
+      const { code } = await userModule.deleteModule({ _id: data?._id });
+      if (code === HTTP_CODE.SUCCESS) {
+        toast.success('Delete Successfully!');
+
+        fetchModules();
+      }
+    } catch (error) {
+    } finally {
+      setIsOpenConfirmDelete(false);
     }
   };
 
@@ -198,6 +230,14 @@ const ModuleItem = ({ data, nodeType }) => {
         </div>
       </div>
       <ModuleDetail open={isOpenModuleDetail} onClose={() => setIsOpenModuleDetail(false)} moduleId={data._id} />
+      <ConfirmDeleteDialog
+        open={isOpenConfirmDelete}
+        onClose={() => setIsOpenConfirmDelete(false)}
+        onAgree={handleDeleteModule}
+        desciption={'Are you sure you want to delete this module?'}
+        cancelText={'Cancel'}
+        agreeText={'Delete'}
+      />
     </Item>
   );
 };

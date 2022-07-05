@@ -1,6 +1,8 @@
+import { MODE } from '@/config/constant/common';
 import { Box, useTheme } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import ModuleInfoModal from '../ModulePage/ModuleInfoModal';
 import ModuleItem from './ModuleItem';
 import SubMenu from './SubMenu';
 
@@ -8,6 +10,9 @@ const ModulesTab = () => {
   const contractState = useSelector((state) => state.contract);
   const { userModule } = useDispatch();
   const [modules, setModules] = useState([]);
+  const [dataClone, setDataClone] = useState({});
+  const [isOpenModuleInfo, setIsOpenModuleInfo] = useState(false);
+
   const theme = useTheme();
 
   console.log(contractState);
@@ -48,6 +53,11 @@ const ModulesTab = () => {
     setModules(newState);
   };
 
+  const handleOpenModuleInfo = () => {
+    setDataClone({});
+    setIsOpenModuleInfo(!isOpenModuleInfo);
+  };
+
   useEffect(() => {
     updateModules();
   }, [contractState.current?.module_keys, modules.length]);
@@ -59,7 +69,16 @@ const ModulesTab = () => {
           <div> Module not found</div>
         ) : (
           modules.map((item, index) => {
-            return <ModuleItem key={index} data={item} nodeType="rectangle" />;
+            return (
+              <ModuleItem
+                key={index}
+                data={item}
+                fetchModules={fetchModules}
+                nodeType="rectangle"
+                setDataClone={setDataClone}
+                setIsOpenModuleInfo={setIsOpenModuleInfo}
+              />
+            );
           })
         )}
         {contractState.current.gasFee > -1 ? (
@@ -80,6 +99,7 @@ const ModulesTab = () => {
           </Box>
         ) : null}
       </div>
+      <ModuleInfoModal mode={MODE.CLONE} open={isOpenModuleInfo} onClose={handleOpenModuleInfo} data={dataClone} />
     </div>
   );
 };

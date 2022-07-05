@@ -9,6 +9,7 @@ import ModuleActionList from '@/components/ModulePage/ModuleActionList';
 import Library from '@/components/Library';
 import { ModuleMode } from '@/store/models/moduleMode';
 import useStructPage from '@/components/StructTabPanel/hooks/useStructPage';
+import { MODULE_OWNER } from '@/config/constant/common';
 
 const Container = styled('div')(() => ({
   display: 'flex',
@@ -21,12 +22,12 @@ const ContentWapper = styled('div')(() => ({
 }));
 
 const ModulePage = () => {
-  const { userModule, struct } = useDispatch();
+  const { userModule } = useDispatch();
   const router = useRouter();
   const { id } = router.query;
   const moduleModeState = useSelector((state) => state.moduleMode);
+  const moduleState = useSelector((state) => state.userModule);
   const { moduleMode } = useDispatch();
-  const moduleDesignMode = useSelector((state) => state.moduleDesignMode);
   const { getStructs } = useStructPage();
 
   useEffect(() => {
@@ -51,7 +52,7 @@ const ModulePage = () => {
       <ContentWapper>
         <ModuleControl />
       </ContentWapper>
-      <ModulesSidebar />
+      {moduleState?.owner?.toUpperCase() !== MODULE_OWNER.SYSTEM && <ModulesSidebar />}
     </Container>
   );
 };
