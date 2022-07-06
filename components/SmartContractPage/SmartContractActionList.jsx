@@ -105,7 +105,7 @@ const SmartContractActionList = () => {
         {contractState.current.status !== 'deployed' && (
           <>
             {/* <PrimaryButton onClick={() => setDeployContractModalOpen(true)}>Next</PrimaryButton> */}
-            <ButtonBox>
+            <ButtonBox onClick={() => setDeployContractModalOpen(true)}>
               <RightArrowIcon />
             </ButtonBox>
             <SaveContractButton />
