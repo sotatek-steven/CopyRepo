@@ -5,7 +5,7 @@ import React from 'react';
 const Container = styled('div')(({ theme, active }) => ({
   borderRadius: '0px 4px 4px 0px',
   display: 'flex',
-  height: 40,
+  height: 50,
   justifyContent: 'center',
   alignItems: 'center',
   cursor: 'pointer',

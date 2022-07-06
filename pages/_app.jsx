@@ -61,7 +61,7 @@ function App(props) {
         <Web3ReactProvider getLibrary={getLibrary}>
           <CacheProvider value={emotionCache}>
             <ThemeProvider theme={activeTheme}>
-              <ToastContainer />
+              <ToastContainer style={{ top: 74 }} />
               <CssBaseline />
               <div suppressHydrationWarning>
                 {

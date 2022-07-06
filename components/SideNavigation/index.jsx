@@ -13,7 +13,7 @@ const Wrapper = styled('div')(({ theme, open }) => ({
   background: theme.palette.background.dark,
   zIndex: 10,
   flexDirection: 'column',
-  padding: '27px 8px 27px 0px',
+  padding: '17px 8px 17px 0px',
   opacity: !open ? '0' : '1',
   transform: open ? 'translateX(0)' : 'translateX(-200%)',
   transition: 'all 0.5s',
