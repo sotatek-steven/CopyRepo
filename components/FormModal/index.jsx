@@ -15,7 +15,7 @@ const FormModal = ({
   showFooter = true,
   height,
   width,
-  showSave,
+  showSave = true,
 }) => {
   return (
     <Modal open={open} onClose={onClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
