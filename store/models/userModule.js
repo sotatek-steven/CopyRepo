@@ -1,4 +1,4 @@
-import { getRequest, postRequest, putRequest } from '@/utils/httpRequest';
+import { deleteRequest, getRequest, postRequest, putRequest } from '@/utils/httpRequest';
 import { createModel } from '@rematch/core';
 import { toast } from 'react-toastify';
 
@@ -94,6 +94,21 @@ const userModule = createModel({
           return { code };
         } else {
           toast.success('Save Successfully!');
+        }
+        return { code, data };
+      },
+      async deleteModule(payload, state) {
+        const { _id } = payload;
+
+        const { code, data, message } = await deleteRequest({
+          url: `/api/v1/modules/${_id}`,
+          userModoel: player,
+          userState: state.player,
+        });
+
+        if (code !== 200) {
+          toast.error(message);
+          return { code };
         }
         return { code, data };
       },

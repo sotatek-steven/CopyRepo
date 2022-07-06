@@ -1,6 +1,44 @@
+import { styled } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import FormModal from '../FormModal';
+
+const Container = styled('div')(({ theme }) => ({
+  fontSize: '14px',
+  fontWeight: '400',
+  fontFamily: 'Segoe UI',
+  color: theme.palette.text.primary,
+  ...theme.components.truncate.singleLineEllipsis,
+}));
+
+const GasContainer = styled('div')(({ theme }) => ({
+  display: 'flex',
+  gap: 10,
+  marginBottom: 17,
+  '& > .title': {
+    color: theme.palette.success.main,
+  },
+}));
+
+const FunctionContainer = styled('div')(({ theme }) => ({
+  marginBottom: 17,
+  '& > .title': {
+    color: theme.palette.primary.light2,
+  },
+}));
+
+const ParamContainer = styled('div')(({ theme }) => ({
+  marginBottom: 17,
+  '& > .title': {
+    color: theme.palette.primary.purple,
+  },
+}));
+
+const LibraryContainer = styled('div')(({ theme }) => ({
+  '& > .title': {
+    color: theme.palette.primary.yellow,
+  },
+}));
 
 const ModuleDetail = ({ open, onClose, moduleId }) => {
   const { userModule } = useDispatch();
@@ -8,7 +46,9 @@ const ModuleDetail = ({ open, onClose, moduleId }) => {
   useEffect(async () => {
     if (open && moduleId) {
       const data = await userModule.getDetailModule(moduleId);
-      setModuleInfo(data);
+      if (data) {
+        setModuleInfo(data);
+      }
     }
   }, [open, moduleId]);
 
@@ -20,7 +60,28 @@ const ModuleDetail = ({ open, onClose, moduleId }) => {
       onClose={onClose}
       title={'Mintable Token Details'}
       showFooter={false}>
-      <div>Module Detail</div>
+      <Container>
+        <GasContainer>
+          <div className="title">Gas fee:</div>
+          <div className="content">3000</div>
+        </GasContainer>
+        <FunctionContainer>
+          <div className="title">Functions</div>
+          <div className="content">{moduleInfo?.sources?.functions?.toString()}</div>
+        </FunctionContainer>
+        <ParamContainer>
+          <div className="title">Parameters Included</div>
+          <div className="content">{moduleInfo?.sources?.contructorParams?.toString()}</div>
+        </ParamContainer>
+        <LibraryContainer>
+          <div className="title">Libraries</div>
+          <div className="content">
+            {moduleInfo?.sources?.libraries?.map((item) => {
+              return <div key={item}>{item}</div>;
+            })}
+          </div>
+        </LibraryContainer>
+      </Container>
     </FormModal>
   );
 };

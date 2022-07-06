@@ -7,7 +7,7 @@ import { useDispatch } from 'react-redux';
 import colourStyles from '../EditInfoContractModal/tagStyle';
 import { useForm } from '@/hooks/useForm';
 import FormModal from '../FormModal';
-import { ELEMENT_TYPE, HTTP_CODE, MODE } from '@/config/constant/common';
+import { ELEMENT_TYPE, HTTP_CODE, MODE, MODULE_OWNER } from '@/config/constant/common';
 import { ROUTE } from '@/config/constant/routeConstant';
 import Select from '../Select';
 
@@ -110,6 +110,9 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
       case MODE.EDIT:
         updateModule();
         break;
+      case MODE.CLONE:
+        createModule();
+        break;
       default:
         break;
     }
@@ -128,7 +131,8 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
       onClose={handleClose}
       title={'Module Info'}
       closeText={'Cancel'}
-      confirmText={'Save'}
+      confirmText={mode === MODE.CLONE ? 'Clone' : 'Save'}
+      showSave={data?.owner?.toUpperCase() !== MODULE_OWNER.SYSTEM}
       onConfirm={(e) => {
         handleSubmit(e, handleSave);
       }}>
@@ -138,6 +142,7 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
           id="name"
           name="name"
           isRequired={true}
+          readOnly={data?.owner?.toUpperCase() === MODULE_OWNER.SYSTEM}
           value={values?.name}
           onChange={(e) => handleChange(e, 'name', ELEMENT_TYPE.INPUT)}
           errorText={errors?.name}
@@ -149,6 +154,7 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
           name="description"
           id="description"
           value={values?.description}
+          readOnly={data?.owner?.toUpperCase() === MODULE_OWNER.SYSTEM}
           onChange={(e) => handleChange(e, 'description', ELEMENT_TYPE.INPUT)}
         />
       </InputWrapper>
@@ -158,6 +164,7 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
           isRequired={true}
           options={optionDomain}
           value={values?.domainId}
+          disabled={data?.owner?.toUpperCase() === MODULE_OWNER.SYSTEM}
           onChange={(e) => handleChange(e, 'domainId', ELEMENT_TYPE.SELECT)}
           errorText={errors?.domainId}
         />
@@ -176,6 +183,7 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
             label: tag,
           }))}
           styles={colourStyles(theme)}
+          isDisabled={data?.owner?.toUpperCase() === MODULE_OWNER.SYSTEM}
         />
       </InputWrapper>
     </FormModal>

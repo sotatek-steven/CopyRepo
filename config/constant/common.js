@@ -7,6 +7,7 @@ export const ELEMENT_TYPE = {
 export const MODE = {
   CREATE: 'CREATE',
   EDIT: 'EDIT',
+  CLONE: 'CLONE',
 };
 
 export const HTTP_CODE = {

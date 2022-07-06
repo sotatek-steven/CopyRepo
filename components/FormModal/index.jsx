@@ -15,6 +15,7 @@ const FormModal = ({
   showFooter = true,
   height,
   width,
+  showSave,
 }) => {
   return (
     <Modal open={open} onClose={onClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
@@ -29,7 +30,7 @@ const FormModal = ({
         {showFooter && (
           <Footer>
             <SecondaryButton onClick={onClose}>{closeText}</SecondaryButton>
-            <PrimaryButton onClick={onConfirm}>{confirmText}</PrimaryButton>
+            {showSave && <PrimaryButton onClick={onConfirm}>{confirmText}</PrimaryButton>}
           </Footer>
         )}
       </ModalBox>
