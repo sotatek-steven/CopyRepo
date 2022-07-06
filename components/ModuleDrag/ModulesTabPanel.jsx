@@ -1,14 +1,16 @@
 import { MODE } from '@/config/constant/common';
 import { Box, styled, useTheme } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import Scrollbars from 'react-custom-scrollbars';
 import { useDispatch, useSelector } from 'react-redux';
 import ModuleInfoModal from '../ModulePage/ModuleInfoModal';
 import ModuleItem from './ModuleItem';
 import SubMenu from './SubMenu';
 
 const ModuleContainer = styled('div')(({ theme }) => ({
-  height: '80vh',
-  overflowY: 'scroll',
+  flexGrow: 1,
+  display: 'flex',
+  flexDirection: 'column',
 }));
 
 const ModulesTab = () => {
@@ -65,45 +67,45 @@ const ModulesTab = () => {
     updateModules();
   }, [contractState.current?.module_keys, modules.length]);
   return (
-    <div>
+    <ModuleContainer>
       <SubMenu />
-      <ModuleContainer>
-        {modules.length <= 0 ? (
-          <div> Module not found</div>
-        ) : (
-          modules.map((item, index) => {
-            return (
-              <ModuleItem
-                key={index}
-                data={item}
-                fetchModules={fetchModules}
-                nodeType="rectangle"
-                setDataClone={setDataClone}
-                setIsOpenModuleInfo={setIsOpenModuleInfo}
-              />
-            );
-          })
-        )}
-        {contractState.current.gasFee > -1 ? (
-          <Box
-            sx={{
-              position: 'absolute',
-              bottom: '30px',
-              background: theme.palette.success.main,
-              // borderLeft: `7px solid ${theme.palette.primary.light2} `,
-              width: '444px',
-              height: '82px',
-              color: theme.palette.common.black,
-              display: 'flex',
-              alignItems: 'center',
-              paddingLeft: '10px',
-            }}>
-            GAS FEE OF THIS SMART CONTRACT: {contractState.current.gasFee} Gwei
-          </Box>
-        ) : null}
-      </ModuleContainer>
+      <div style={{ flexGrow: 1 }}>
+        <Scrollbars autoHide>
+          {modules.length <= 0 ? (
+            <div> Module not found</div>
+          ) : (
+            modules.map((item, index) => {
+              return (
+                <ModuleItem
+                  key={index}
+                  data={item}
+                  fetchModules={fetchModules}
+                  nodeType="rectangle"
+                  setDataClone={setDataClone}
+                  setIsOpenModuleInfo={setIsOpenModuleInfo}
+                />
+              );
+            })
+          )}
+        </Scrollbars>
+      </div>
+      {contractState.current.gasFee > -1 ? (
+        <Box
+          sx={{
+            background: theme.palette.success.main,
+            // borderLeft: `7px solid ${theme.palette.primary.light2} `,
+            width: '444px',
+            height: '82px',
+            color: theme.palette.common.black,
+            display: 'flex',
+            alignItems: 'center',
+            paddingLeft: '10px',
+          }}>
+          GAS FEE OF THIS SMART CONTRACT: {contractState.current.gasFee} Gwei
+        </Box>
+      ) : null}
       <ModuleInfoModal mode={MODE.CLONE} open={isOpenModuleInfo} onClose={handleOpenModuleInfo} data={dataClone} />
-    </div>
+    </ModuleContainer>
   );
 };
 
