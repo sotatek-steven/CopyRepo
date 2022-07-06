@@ -1,10 +1,15 @@
 import { MODE } from '@/config/constant/common';
-import { Box, useTheme } from '@mui/material';
+import { Box, styled, useTheme } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import ModuleInfoModal from '../ModulePage/ModuleInfoModal';
 import ModuleItem from './ModuleItem';
 import SubMenu from './SubMenu';
+
+const ModuleContainer = styled('div')(({ theme }) => ({
+  height: '80vh',
+  overflowY: 'scroll',
+}));
 
 const ModulesTab = () => {
   const contractState = useSelector((state) => state.contract);
@@ -62,7 +67,7 @@ const ModulesTab = () => {
   return (
     <div>
       <SubMenu />
-      <div>
+      <ModuleContainer>
         {modules.length <= 0 ? (
           <div> Module not found</div>
         ) : (
@@ -96,7 +101,7 @@ const ModulesTab = () => {
             GAS FEE OF THIS SMART CONTRACT: {contractState.current.gasFee} Gwei
           </Box>
         ) : null}
-      </div>
+      </ModuleContainer>
       <ModuleInfoModal mode={MODE.CLONE} open={isOpenModuleInfo} onClose={handleOpenModuleInfo} data={dataClone} />
     </div>
   );
