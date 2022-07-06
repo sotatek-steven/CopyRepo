@@ -85,9 +85,14 @@ const options = [
     mode: MODE_ACTION_MODULE.DETAILS,
   },
   {
-    id: MODE_ACTION_MODULE.DESIGN,
-    label: MODE_ACTION_MODULE.DESIGN,
-    mode: MODE_ACTION_MODULE.DESIGN,
+    id: MODE_ACTION_MODULE.CUSTOM_DESIGN,
+    label: MODE_ACTION_MODULE.CUSTOM_DESIGN,
+    mode: MODE_ACTION_MODULE.CUSTOM_DESIGN,
+  },
+  {
+    id: MODE_ACTION_MODULE.SYSTEM_DESIGN,
+    label: MODE_ACTION_MODULE.SYSTEM_DESIGN,
+    mode: MODE_ACTION_MODULE.SYSTEM_DESIGN,
   },
   {
     id: MODE_ACTION_MODULE.CLONE,
@@ -139,7 +144,8 @@ const ModuleItem = ({ data, nodeType, fetchModules, setDataClone, setIsOpenModul
         setIsOpenModuleDetail(true);
         setAnchorEl(null);
         break;
-      case MODE_ACTION_MODULE.DESIGN:
+      case MODE_ACTION_MODULE.CUSTOM_DESIGN:
+      case MODE_ACTION_MODULE.SYSTEM_DESIGN:
         redirectToModulePage();
         setAnchorEl(null);
         break;
@@ -213,17 +219,25 @@ const ModuleItem = ({ data, nodeType, fetchModules, setDataClone, setIsOpenModul
             <Container>
               {options.map((item, index) => {
                 const { id, label, mode } = item;
-                if (data?.owner.toUpperCase() === MODULE_OWNER.SYSTEM && mode === MODE_ACTION_MODULE.DELETE) {
-                  return;
+                if (data?.owner.toUpperCase() === MODULE_OWNER.SYSTEM) {
+                  if (mode === MODE_ACTION_MODULE.DELETE || mode === MODE_ACTION_MODULE.CUSTOM_DESIGN) {
+                    return;
+                  }
+                  return (
+                    <div key={id} className="item" onClick={() => handleClickActionMenu(mode)}>
+                      <Label>{label}</Label>
+                    </div>
+                  );
+                } else {
+                  if (mode === MODE_ACTION_MODULE.CLONE || mode === MODE_ACTION_MODULE.SYSTEM_DESIGN) {
+                    return;
+                  }
+                  return (
+                    <div key={id} className="item" onClick={() => handleClickActionMenu(mode)}>
+                      <Label>{label}</Label>
+                    </div>
+                  );
                 }
-                if (data?.owner.toUpperCase() !== MODULE_OWNER.SYSTEM && mode === MODE_ACTION_MODULE.CLONE) {
-                  return;
-                }
-                return (
-                  <div key={id} className="item" onClick={() => handleClickActionMenu(mode)}>
-                    <Label>{label}</Label>
-                  </div>
-                );
               })}
             </Container>
           </Popover>

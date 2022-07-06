@@ -1,13 +1,14 @@
 import { styled } from '@mui/material';
 import React, { useState } from 'react';
 import Tabs from '../Tabs';
+import FunctionTabPanel from './FunctionTabPanel';
 import ModuleOptions from './ModuleOptions';
 
 const tabs = [
   {
     id: 'function',
     label: 'Function',
-    tabPanel: 'function list',
+    tabPanel: <FunctionTabPanel />,
   },
   {
     id: 'api',

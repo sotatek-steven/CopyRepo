@@ -25,7 +25,8 @@ export const MODULE_OWNER = {
 
 export const MODE_ACTION_MODULE = {
   DETAILS: 'Details',
-  DESIGN: 'Design',
+  CUSTOM_DESIGN: 'Design',
+  SYSTEM_DESIGN: 'Show Design',
   CLONE: 'Clone',
   DELETE: 'Delete',
 };

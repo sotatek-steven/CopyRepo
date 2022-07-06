@@ -105,13 +105,11 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
   const handleSave = () => {
     switch (mode) {
       case MODE.CREATE:
+      case MODE.CLONE:
         createModule();
         break;
       case MODE.EDIT:
         updateModule();
-        break;
-      case MODE.CLONE:
-        createModule();
         break;
       default:
         break;
