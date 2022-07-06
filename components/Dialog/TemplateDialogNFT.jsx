@@ -123,7 +123,7 @@ const TemplateDialogDefi = ({ openListNFT, setOpenListNFT }) => {
                       Skip
                     </Button>
                     <Button variant="contained" type="submit">
-                      Let's do this
+                      Let&apos;s do this
                     </Button>
                   </Box>
                 </Grid>

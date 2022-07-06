@@ -65,11 +65,14 @@ const contract = createModel({
     const { contract, player } = dispatch;
     return {
       async getDetailContract(id, state) {
-        const { data } = await getRequest({
+        const { data, code } = await getRequest({
           url: `/api/v1/user-contracts/${id}`,
           userModoel: player,
           userState: state.player,
         });
+        if(code !== 200){
+          return null;
+        }
         const module_keys = (data.modules || []).join('-');
         contract.setCurrent({ ...data, module_keys });
         return data;
