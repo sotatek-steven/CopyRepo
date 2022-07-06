@@ -15,6 +15,7 @@ import ClearIcon from '@mui/icons-material/Clear';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Box, styled } from '@mui/system';
 import { useRouter } from 'next/router';
+import { useWeb3React } from '@web3-react/core';
 
 const Container = styled('div')(() => ({
   display: 'flex',
@@ -37,6 +38,7 @@ const ButtonBox = styled(Box)(({ theme }) => ({
 const SmartContractActionList = () => {
   const contractState = useSelector((state) => state.contract);
   const { contract } = useDispatch();
+  const { account, library } = useWeb3React();
   const [loading, setLoading] = useState(false);
   const route = useRouter();
 
