@@ -192,7 +192,7 @@ const TemplateDialog = ({ open, setOpen, type }) => {
             </Button>
             <Button variant="contained" type="submit">
               {' '}
-              Let do this
+              Let's do this
             </Button>
           </Box>
         </Grid>
