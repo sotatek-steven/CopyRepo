@@ -60,7 +60,7 @@ const Design = () => {
   return (
     <Box className="test">
       <TabContext value={value}>
-        <Box sx={{ borderBottom: 0, paddingTop: '14px', position: 'absolute', zIndex: '10', paddingLeft: '40px' }}>
+        <Box sx={{ borderBottom: 0, paddingTop: '14px', position: 'absolute', zIndex: '10', left: '80px' }}>
           <TabList
             onChange={handleChange}
             aria-label="lab API tabs example"
