@@ -97,7 +97,10 @@ const SaveContractButton = () => {
             },
           }
         );
-      } else toast.success('Save contract success');
+      } else
+        toast.success('Save contract success', {
+          style: { top: '3.5em' },
+        });
       // contractStore.current.gasFee &&
       //   toast(`GAS FEE OF THIS SMART CONTRACT: ${contractStore.current.gasFee}`, {
       //     position: 'bottom-right',

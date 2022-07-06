@@ -100,7 +100,7 @@ const Design = () => {
               height: 'calc(100vh - 74px)',
             }}>
             <div style={{ flexGrow: 1 }}>{nodes && <ModuleDrop initialNodes={nodes} initialEdges={edges} />}</div>
-            {contractState.current.status !== 'deployed' && (
+            {contractState.current.status !== 'deployed' ? (
               <div
                 style={{
                   height: '100%',
@@ -108,7 +108,24 @@ const Design = () => {
                 }}>
                 <ModuleDrag />
               </div>
-            )}
+            ) : contractState.current.gasFee > -1 ? (
+              <Box
+                sx={{
+                  position: 'absolute',
+                  top: '4.5em',
+                  right: 0,
+                  background: theme.palette.success.main,
+                  // borderLeft: `7px solid ${theme.palette.primary.light2} `,
+                  width: '444px',
+                  height: '82px',
+                  color: theme.palette.common.black,
+                  display: 'flex',
+                  alignItems: 'center',
+                  paddingLeft: '10px',
+                }}>
+                GAS FEE OF THIS SMART CONTRACT: {contractState.current.gasFee} Gwei
+              </Box>
+            ) : null}
           </div>
         </TabPanel>
         <TabPanel value="2" sx={{ padding: '0 !important' }}>

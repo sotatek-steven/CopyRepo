@@ -93,7 +93,9 @@ const userModule = createModel({
           toast.error(message);
           return { code };
         } else {
-          toast.success('Save Successfully!');
+          toast.success('Save Successfully!', {
+            style: { top: '3.5em' },
+          });
         }
         return { code, data };
       },
