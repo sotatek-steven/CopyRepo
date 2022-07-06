@@ -13,7 +13,7 @@ const Wrapper = styled('div')(({ theme, open }) => ({
   background: theme.palette.background.dark,
   zIndex: 10,
   flexDirection: 'column',
-  padding: '17px 8px 17px 0px',
+  padding: '13px 8px 13px 0px',
   opacity: !open ? '0' : '1',
   transform: open ? 'translateX(0)' : 'translateX(-200%)',
   transition: 'all 0.5s',
@@ -23,12 +23,12 @@ const data = [
   {
     id: 'contractListPage',
     icon: <LayerIcon />,
-    link: '/',
+    link: '/smartcontract',
   },
   {
     id: 'marketPlace',
     icon: <GlobalIcon />,
-    link: '/',
+    link: '/language',
   },
 ];
 
