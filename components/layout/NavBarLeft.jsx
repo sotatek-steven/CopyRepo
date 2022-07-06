@@ -1,18 +1,7 @@
 import { Box, List } from '@mui/material';
 import React from 'react';
-import IconNavBar from './IconNavBar';
 import NextLink from 'next/link';
-
-const NavbarData = [
-  {
-    label: 'Dashboard',
-    path: '/smartcontract',
-  },
-  {
-    label: 'Language',
-    path: '/language',
-  },
-];
+import SideNavigation from '../SideNavigation';
 
 const NavBarLeft = () => {
   return (
@@ -28,11 +17,7 @@ const NavBarLeft = () => {
             />
           </NextLink>
         </Box>
-        <Box>
-          {NavbarData.map((item, key) => (
-            <IconNavBar key={key} name={item.label} path={`${item.path}`} />
-          ))}
-        </Box>
+        <SideNavigation open={true} />
       </List>
     </>
   );
