@@ -6,6 +6,9 @@ import ModulesTabPanel from './ModulesTabPanel';
 const DragArea = styled('div')(({ theme }) => ({
   height: '100%',
   backgroundColor: theme.palette.background.dark,
+  overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'column',
 }));
 
 const TabWrapper = styled('div')(({ theme }) => ({
