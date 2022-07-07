@@ -139,6 +139,8 @@ const ModuleItem = ({ data, nodeType, fetchModules, setDataClone, setIsOpenModul
   };
 
   const handleClickActionMenu = (mode) => {
+    if (!data) return;
+    const { _id, owner, ...dataModule } = data;
     switch (mode) {
       case MODE_ACTION_MODULE.DETAILS:
         setIsOpenModuleDetail(true);
@@ -150,7 +152,6 @@ const ModuleItem = ({ data, nodeType, fetchModules, setDataClone, setIsOpenModul
         setAnchorEl(null);
         break;
       case MODE_ACTION_MODULE.CLONE:
-        const { _id, owner, ...dataModule } = data;
         setDataClone({ ...dataModule, name: `${dataModule.name}${Math.floor(Date.now() / 1000)}` });
         setIsOpenModuleInfo(true);
         setAnchorEl(null);
@@ -173,6 +174,7 @@ const ModuleItem = ({ data, nodeType, fetchModules, setDataClone, setIsOpenModul
         fetchModules();
       }
     } catch (error) {
+        toast.error('Delete failed!');
     } finally {
       setIsOpenConfirmDelete(false);
     }

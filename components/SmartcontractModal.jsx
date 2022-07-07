@@ -32,10 +32,6 @@ const SmartContractModal = ({ openDefault = false }) => {
     }
   };
 
-  const handleListItemClick = (value) => {
-    onClose(value);
-  };
-
   return (
     <Modal
       open={open}

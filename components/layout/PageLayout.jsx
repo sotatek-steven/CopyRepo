@@ -39,7 +39,6 @@ function Layout(props) {
                 width: '100%',
                 height: '100%',
                 mt: 1,
-                overflow: 'auto',
                 bgcolor: '#3d3d3E',
                 overflow: 'height',
               }}>

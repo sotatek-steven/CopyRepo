@@ -146,6 +146,7 @@ const useStructPage = () => {
     const iStruct = structs.findIndex(({ _id }) => _id === structId);
     const iVariable = structs[iStruct]?.variables.findIndex(({ _id }) => _id === variableId);
     const data = [...structs];
+    let duplicateArr = [];
 
     switch (type) {
       case ELEMENT_TYPE.INPUT:
@@ -154,7 +155,7 @@ const useStructPage = () => {
         if (!e.target.value?.trim()) {
           data[iStruct].variables[iVariable].name.errorName = 'This is field required';
         }
-        const duplicateArr = checkDuplicateName(data[iStruct].variables);
+        duplicateArr = checkDuplicateName(data[iStruct].variables);
 
         data[iStruct].variables.forEach(({ name }) => {
           name.errorName = !!duplicateArr?.includes(name.value) && 'Variable name cannot be duplicated';

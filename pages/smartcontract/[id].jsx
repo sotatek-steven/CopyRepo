@@ -45,7 +45,7 @@ const Design = () => {
   }, [contractState.current]);
 
   const allLines = useMemo(() => {
-    const lines = '';
+    let lines = '';
     if (!sources) return;
 
     _.isArray(sources) &&
