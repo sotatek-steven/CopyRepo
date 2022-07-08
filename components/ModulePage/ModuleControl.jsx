@@ -2,7 +2,6 @@ import { styled } from '@mui/material';
 import React, { useState } from 'react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import Popover from '@mui/material/Popover';
-import { PrimaryButton } from '../ButtonStyle';
 import ModuleInfoModal from './ModuleInfoModal';
 import { useDispatch, useSelector } from 'react-redux';
 import ConfirmDialog from '../atom/Dialog/ConfirmDialog';
@@ -22,10 +21,24 @@ const Wrapper = styled('div')(({ theme }) => ({
   fontFamily: 'Segoe UI',
 }));
 
+const ModuleActionItem = styled('div')(({ theme }) => ({
+  fontSize: 14,
+  fontWeight: theme.typography.fontWeightBold,
+  padding: '7px 10px',
+  color: theme.palette.primary.contrastText,
+  backgroundColor: theme.palette.primary.main,
+  transition: 'opacity 0.15s ease-in-out',
+  cursor: 'pointer',
+  ':hover': {
+    opacity: 0.9,
+  },
+}));
+
 const moreVertIconStyle = {
   fontSize: 23,
   cursor: 'pointer',
 };
+
 const ModuleControl = () => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [infoModalOpen, setInfoModalOpen] = useState(false);
@@ -40,12 +53,14 @@ const ModuleControl = () => {
     const { _id: id } = contractState.current;
     if (!id) return;
     route.push(`/smartcontract/${id}`);
-    // route.back();
   };
 
   const handleConfirm = async () => {
     const moduleData = await userModule.getDetailModule(moduleState._id);
-    if (JSON.stringify({ ...moduleData, updatedAt: '' }) === JSON.stringify({ ...moduleState, updatedAt: '' })) {
+    if (
+      moduleState.owner === 'system' ||
+      JSON.stringify({ ...moduleData, updatedAt: '' }) === JSON.stringify({ ...moduleState, updatedAt: '' })
+    ) {
       redirectToContractPage();
       return;
     }
@@ -80,6 +95,11 @@ const ModuleControl = () => {
         <span>{moduleState.name}</span>
         <MoreVertIcon sx={moreVertIconStyle} onClick={handleClick} />
         <Popover
+          sx={{
+            '& .MuiPopover-paper': {
+              borderRadius: 0,
+            },
+          }}
           id={id}
           open={open}
           anchorEl={anchorEl}
@@ -88,9 +108,7 @@ const ModuleControl = () => {
             vertical: 'bottom',
             horizontal: 'right',
           }}>
-          <PrimaryButton width="150px" onClick={handleInfoModalOpen}>
-            Module Infomation
-          </PrimaryButton>
+          <ModuleActionItem onClick={handleInfoModalOpen}>Module Infomation</ModuleActionItem>
         </Popover>
       </Wrapper>
 

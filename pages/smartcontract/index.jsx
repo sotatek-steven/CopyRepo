@@ -7,37 +7,21 @@ import {
   DialogContent,
   Typography,
   IconButton,
-  TextField,
   useTheme,
-  InputAdornment,
-  ButtonBase,
   InputBase,
 } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
-import TabsBar from 'components/layout/TabsBar';
-import TabContext from '@mui/lab/TabContext';
-import TabPanel from '@mui/lab/TabPanel';
 import SearchIcon from '@mui/icons-material/Search';
 import Layout from '@/components/layout/PageLayout';
 import CloseIcon from '../../assets/icon/close-circle.svg';
 import BusinessDomain from '@/components/BusinessDomain/BusinessDomain';
 import ListSmartContract from '@/components/ListSmartContract/ListSmartContract';
 import { useDispatch, useSelector } from 'react-redux';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 import TemplateDialog from '@/components/Dialog/TemplateDialog';
 import _ from 'lodash';
-import { borderRadius, boxSizing } from '@mui/system';
-import XbuttonIcon from '../../assets/icon/xbutton.svg';
-import DeleteIcon from '../../assets/icon/delete.svg';
-import { styled, alpha } from '@mui/material/styles';
-
-const TabPanelCustom = styled(TabPanel)(({ theme }) => ({
-  ...theme.mixins.toolbar,
-  paddingBottom: 0,
-  paddingLeft: '8px',
-  fontSize: '16px',
-}));
+import { styled } from '@mui/material/styles';
+import Tabs from '@/components/Tabs';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -91,17 +75,32 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
   },
 }));
 
+const TabWrapper = styled('div')(() => ({
+  position: 'relative',
+  flexGrow: 1,
+}));
+
 const MemoizedSubComponent = React.memo(ListSmartContract);
+
+const tabs = [
+  {
+    id: 'all',
+    label: 'All',
+  },
+  {
+    id: 'drafts',
+    label: 'Drafts',
+  },
+  {
+    id: 'deployed',
+    label: 'Deployed',
+  },
+];
 
 const Dashboard = () => {
   const { template, userContract } = useDispatch();
-  const userContractState = useSelector((state) => state.userContract);
-  const userState = useSelector((state) => state.player);
-  const [value, setValue] = useState('All');
+  const [activeTab, setActiveTab] = useState(tabs[0]);
   const [openCreate, setOpenCreate] = useState(false);
-  const [expand, setExpand] = useState(false);
-  const [openListDefi, setOpenListDefi] = useState(false);
-  const [openListNFT, setOpenListNFT] = useState(false);
   const [keywords, setKeywords] = useState(null);
   const [open, setOpen] = useState(false);
   const [type, setType] = useState('');
@@ -125,7 +124,14 @@ const Dashboard = () => {
         padding: '20px 24px 0 24px',
       }}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
-        <TabsBar setTab={setValue} tab={value} />
+        <TabWrapper>
+          <Tabs
+            initialTabs={tabs}
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            tabStyle={{ padding: '0px 25px' }}
+          />
+        </TabWrapper>
         <Box sx={{ display: 'flex', alignItems: 'center', pt: 2, mx: 2 }}>
           <Search>
             <SearchIconWrapper>
@@ -156,17 +162,8 @@ const Dashboard = () => {
           </Box>
         </Box>
       </Box>
-      <TabContext value={value}>
-        <TabPanelCustom value="All">
-          <MemoizedSubComponent status="all" />
-        </TabPanelCustom>
-        <TabPanelCustom value="Drafts">
-          <MemoizedSubComponent status="drafts" />
-        </TabPanelCustom>
-        <TabPanelCustom value="Deployed" status="deployed">
-          <MemoizedSubComponent />
-        </TabPanelCustom>
-      </TabContext>
+
+      <MemoizedSubComponent status={activeTab.id} />
       <Dialog
         fullWidth
         maxWidth="lg"

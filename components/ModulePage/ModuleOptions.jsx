@@ -9,11 +9,11 @@ import { DashedDivider } from '../atom/Divider';
 
 const MoreButton = styled('div')(({ theme }) => ({
   fontSize: 25,
-  color: '#292D32',
+  color: theme.palette.text.primary,
   transition: 'color 0.3s',
   cursor: 'pointer',
   ':hover': {
-    color: theme.palette.text.primary,
+    color: theme.palette.background.default,
   },
 }));
 

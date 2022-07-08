@@ -1,6 +1,5 @@
 import React from 'react';
 import { Modal } from '@mui/material';
-import CloseIcon from '../../../assets/icon/close-circle.svg';
 import { BoxActions, Container, ContentText, Title } from './Dialog.style';
 import { PrimaryButton, SecondaryButton } from '@/components/ButtonStyle';
 
@@ -8,9 +7,6 @@ const ConfirmDeleteDialog = ({ open, onClose, onAgree, title, desciption, cancel
   return (
     <Modal open={open} onClose={onClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <Container>
-        <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 40 }}>
-          <CloseIcon />
-        </div>
         {title && <Title>{title}</Title>}
         <ContentText>{desciption}</ContentText>
         <BoxActions>

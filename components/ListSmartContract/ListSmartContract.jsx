@@ -54,7 +54,7 @@ const ListSmartContract = ({ data, status }) => {
       return;
     }
     userState.playerInfo && getUserContracts();
-  }, [page, userState.playerAuth?._id, userState.playerInfo, userContractState.keywords]);
+  }, [page, userState.playerAuth?._id, userState.playerInfo, userContractState.keywords, status]);
 
   return (
     <Grid container columnSpacing={2}>
