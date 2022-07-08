@@ -15,7 +15,6 @@ const Wrapper = styled('div')(({ theme }) => ({
   gap: '11px',
   position: 'absolute',
   top: 32,
-  left: 67,
   color: theme.palette.primary.light,
   ...theme.typography.h2,
   fontFamily: 'Segoe UI',
