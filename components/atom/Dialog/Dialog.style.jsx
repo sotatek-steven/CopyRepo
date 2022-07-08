@@ -8,7 +8,6 @@ const Container = styled('div')(({ theme }) => ({
   fontWeight: theme.typography.fontWeightBold,
   backgroundColor: theme.palette.background.default,
   boxShadow: 24,
-  padding: '50px 35px',
   outline: 'none',
   padding: '55px 90px',
 }));

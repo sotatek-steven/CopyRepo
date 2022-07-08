@@ -45,8 +45,7 @@ const BusinessDomain = ({ data, setOpenCreate, setOpen, setType }) => {
           </Grid>
         </Grid>
       </Box>
-      {/* <TemplateDialogDefi openListDefi={openListDefi} setOpenListDefi={setOpenListDefi} />
-      <TemplateDialogNFT openListNFT={openListNFT} setOpenListNFT={setOpenListNFT} /> */}
+      {/*<TemplateDialogNFT openListNFT={openListNFT} setOpenListNFT={setOpenListNFT} /> */}
     </>
   );
 };

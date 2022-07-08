@@ -18,7 +18,7 @@ const ListSmartContract = ({ data, status }) => {
 
   const getUserContracts = async () => {
     try {
-      const res = {};
+      let res = {};
       if (status === 'all') {
         res = await userContract.getAllUserContracts({
           page: page - 1, //cause page default start at 0
