@@ -105,8 +105,6 @@ const FunctionItem = ({ data, nodeType }) => {
     }
   };
 
-  console.log('data', data);
-
   return (
     <Item
       onDragStart={(event) => onDragStart(event, nodeType)}

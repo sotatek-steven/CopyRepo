@@ -1,8 +1,7 @@
-import { HTTP_CODE, MODE } from '@/config/constant/common';
 import { styled } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import Scrollbars from 'react-custom-scrollbars';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import FunctionItem from '../FunctionDrag/FunctionItem';
 
 const FunctionContainer = styled('div')(() => ({
@@ -30,30 +29,7 @@ const DescriptionContainer = styled('div')(({ theme }) => ({
 
 const FunctionTabPanel = () => {
   const moduleState = useSelector((state) => state.userModule);
-  const { functions } = useDispatch();
-  const [listFunction, setListFunction] = useState([]);
-
-  useEffect(() => {
-    getListFunction();
-  }, []);
-
-  const getListFunction = async () => {
-    try {
-      const { code, data } = await functions.getAllUserFunctions();
-      console.log(code, data);
-      if (code === HTTP_CODE.SUCCESS) {
-        const listFunc = data.map((item) => {
-          return {
-            ...item,
-            disable: false,
-          };
-        });
-        setListFunction(listFunc);
-      }
-    } catch (error) {
-      console.log('error');
-    }
-  };
+  const listFunction = useSelector((state) => state.functions);
 
   return (
     <div>

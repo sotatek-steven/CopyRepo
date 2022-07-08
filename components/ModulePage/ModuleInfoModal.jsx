@@ -1,9 +1,9 @@
 import { styled, useTheme } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/router';
 import { Input, TextArea } from '../Input';
 import Creatable from 'react-select/creatable';
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import colourStyles from '../EditInfoContractModal/tagStyle';
 import { useForm } from '@/hooks/useForm';
 import FormModal from '../FormModal';
@@ -55,38 +55,28 @@ const getInitialValues = (data) => {
 
 const ModuleInfoModal = ({ mode, open, onClose, data }) => {
   const router = useRouter();
-  const { userModule, template } = useDispatch();
+  const { userModule } = useDispatch();
+  const { listDomain } = useSelector((state) => state.template);
   const theme = useTheme();
   const { values, setValues, handleChange, handleSubmit, errors, setErrors } = useForm({
     initialValues: getInitialValues(data),
     validate: validateInfo,
   });
-  const [optionDomain, setOptionDomain] = useState([]);
 
-  useEffect(() => {
-    getListDomain();
-  }, []);
+  const optionDomain = useMemo(() => {
+    return listDomain.map((item) => {
+      return {
+        value: item.name,
+        label: item.name,
+      };
+    });
+  }, [listDomain]);
 
   useEffect(() => {
     if (!data) return;
     const initialValues = getInitialValues(data);
     setValues(initialValues);
   }, [data]);
-
-  const getListDomain = async () => {
-    try {
-      const data = await template.getTemplateDomain({ size: -1 });
-      if (data.length) {
-        const domains = data.map((item) => ({
-          value: item._id,
-          label: item.name,
-        }));
-        setOptionDomain(domains);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const createModule = async () => {
     const res = await userModule.createModule({ moduleInfo: values });
