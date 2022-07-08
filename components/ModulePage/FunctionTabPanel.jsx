@@ -1,11 +1,12 @@
+import { HTTP_CODE, MODE } from '@/config/constant/common';
 import { styled } from '@mui/material';
-import React from 'react';
-import { useSelector } from 'react-redux';
-import ModuleItem from '../ModuleDrag/ModuleItem';
+import React, { useEffect, useState } from 'react';
+import Scrollbars from 'react-custom-scrollbars';
+import { useDispatch, useSelector } from 'react-redux';
+import FunctionItem from '../FunctionDrag/FunctionItem';
 
-const FunctionContainer = styled('div')(({ theme }) => ({
+const FunctionContainer = styled('div')(() => ({
   height: '70vh',
-  overflowY: 'scroll',
 }));
 
 const DescriptionContainer = styled('div')(({ theme }) => ({
@@ -24,25 +25,52 @@ const DescriptionContainer = styled('div')(({ theme }) => ({
     height: '82%',
     padding: 13,
     border: `1px solid ${theme.palette.text.primary}`,
-    overflowY: 'scroll',
   },
 }));
 
 const FunctionTabPanel = () => {
   const moduleState = useSelector((state) => state.userModule);
+  const { functions } = useDispatch();
+  const [listFunction, setListFunction] = useState([]);
+
+  useEffect(() => {
+    getListFunction();
+  }, []);
+
+  const getListFunction = async () => {
+    try {
+      const { code, data } = await functions.getAllUserFunctions();
+      console.log(code, data);
+      if (code === HTTP_CODE.SUCCESS) {
+        const listFunc = data.map((item) => {
+          return {
+            ...item,
+            disable: false,
+          };
+        });
+        setListFunction(listFunc);
+      }
+    } catch (error) {
+      console.log('error');
+    }
+  };
 
   return (
     <div>
       <FunctionContainer>
-        {!moduleState?.sources?.functions?.length && <span> Function not found</span>}
-        {!!moduleState?.sources?.functions?.length?.length &&
-          moduleState?.sources?.functions?.length.map((item, index) => {
-            return <ModuleItem key={index} data={item} />;
-          })}
+        <Scrollbars autoHide>
+          {!listFunction?.length && <span> Function not found</span>}
+          {!!listFunction?.length &&
+            listFunction?.map((item, index) => {
+              return <FunctionItem key={index} data={item} />;
+            })}
+        </Scrollbars>
       </FunctionContainer>
       <DescriptionContainer>
         <div className="title">DESCRIPTION</div>
-        <div className="content">{moduleState?.description}</div>
+        <div className="content">
+          <Scrollbars autoHide>{moduleState?.description}</Scrollbars>
+        </div>
       </DescriptionContainer>
     </div>
   );

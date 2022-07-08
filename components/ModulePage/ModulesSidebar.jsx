@@ -19,6 +19,7 @@ const tabs = [
 
 const Container = styled('div')(({ theme }) => ({
   width: 444,
+  height: '100%',
   background: theme.palette.background.dark,
 }));
 
