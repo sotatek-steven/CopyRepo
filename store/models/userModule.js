@@ -60,6 +60,9 @@ const userModule = createModel({
           toast.error(message);
           return;
         }
+
+        console.log('data from api');
+        console.log(data.sources);
         return data;
       },
       async createModule({ moduleInfo }, state) {

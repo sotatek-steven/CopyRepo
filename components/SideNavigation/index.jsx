@@ -3,6 +3,7 @@ import React from 'react';
 import SidebarItem from './SidebarItem';
 import LayerIcon from './LayerIcon';
 import GlobalIcon from './GlobalIcon';
+import { useRouter } from 'next/router';
 
 const Wrapper = styled('div')(({ theme, open }) => ({
   position: 'absolute',
@@ -33,11 +34,13 @@ const data = [
 ];
 
 const SideNavigation = ({ open }) => {
+  const route = useRouter();
   return (
     <Wrapper open={open}>
-      {data.map((item) => (
-        <SidebarItem key={item.id} item={item} />
-      ))}
+      {data.map((item) => {
+        const { id, link } = item;
+        return <SidebarItem key={id} item={item} active={route.pathname === link} />;
+      })}
     </Wrapper>
   );
 };

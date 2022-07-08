@@ -9,7 +9,7 @@ const Container = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.default,
   boxShadow: 24,
   outline: 'none',
-  padding: '55px 90px',
+  padding: '50px 70px',
 }));
 
 const CloseButton = styled('div')(({ theme }) => ({
