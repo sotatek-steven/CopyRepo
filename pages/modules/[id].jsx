@@ -124,12 +124,12 @@ const TAB_LIST = [
 ];
 
 const ModulePage = () => {
-  const { userModule } = useDispatch();
+  const { userModule, functions } = useDispatch();
   const router = useRouter();
   const { id } = router.query;
   const moduleModeState = useSelector((state) => state.moduleMode);
   const moduleState = useSelector((state) => state.userModule);
-  const { moduleMode } = useDispatch();
+  const { moduleMode, template } = useDispatch();
   const { getStructs } = useStructPage();
   const [tabVertical, setTabVertical] = useState('canvas');
   const [tabHorizontal, setTabHorizontal] = useState('logic');
@@ -157,6 +157,8 @@ const ModulePage = () => {
 
   useEffect(() => {
     moduleMode.update(ModuleMode.DESIGN);
+    functions.getAllUserFunctions();
+    template.getTemplateDomain({ size: -1 });
   }, []);
 
   const handleChangeTabVertical = (e, newValue) => {
