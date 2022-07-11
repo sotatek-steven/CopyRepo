@@ -157,6 +157,7 @@ const ModulePage = () => {
 
   useEffect(() => {
     moduleMode.update(ModuleMode.DESIGN);
+    userModule.getModules();
     functions.getAllUserFunctions();
     template.getTemplateDomain({ size: -1 });
   }, []);

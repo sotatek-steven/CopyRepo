@@ -3,9 +3,11 @@ import { createModel } from '@rematch/core';
 import { toast } from 'react-toastify';
 
 const functions = createModel({
-  state: [],
+  state: {
+    functions: [],
+  },
   reducers: {
-    setFunctions: (state, functions) => functions,
+    setFunctions: (state, functions) => ({ ...state, functions }),
   },
   effects: (dispatch) => {
     const { functions, player } = dispatch;
@@ -19,16 +21,14 @@ const functions = createModel({
         if (code !== 200) {
           toast.error(message);
           return { code };
-        } else {
-          const listFunc = data.map((item) => {
-            return {
-              ...item,
-              disable: false,
-            };
-          });
-          functions.setFunctions(listFunc);
         }
-        return { code, data };
+        const listFunc = data.map((item) => {
+          return {
+            ...item,
+            disable: false,
+          };
+        });
+        functions.setFunctions(listFunc);
       },
       async getDetailUserFunction(id, state) {
         console.log('id', id);

@@ -38,7 +38,7 @@ const userModule = createModel({
     }),
   },
   effects: (dispatch) => {
-    const { userModule, player } = dispatch;
+    const { player, modules } = dispatch;
     return {
       async getModules(page, state) {
         const { meta, data } = await getRequest({
@@ -47,6 +47,7 @@ const userModule = createModel({
           userState: state.player,
           userModoel: player,
         });
+        modules.setModules(data);
         return { meta, data };
       },
       async getDetailModule(id, state) {
