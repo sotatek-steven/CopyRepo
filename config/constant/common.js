@@ -30,3 +30,25 @@ export const MODE_ACTION_MODULE = {
   CLONE: 'Clone',
   DELETE: 'Delete',
 };
+
+export const IS_ARRAY_OPTION = [
+  {
+    value: true,
+    label: 'True',
+  },
+  {
+    value: false,
+    label: 'False',
+  },
+];
+
+export const SCOPE = [
+  {
+    value: 'public',
+    label: 'Public',
+  },
+  {
+    value: 'private',
+    label: 'Private',
+  },
+];

@@ -9,6 +9,7 @@ import library from './library';
 import struct from './struct';
 import functions from './function';
 import modules from './modules';
+import object from './object';
 
 export {
   ticket,
@@ -22,4 +23,5 @@ export {
   struct,
   functions,
   modules,
+  object,
 };
