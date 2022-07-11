@@ -17,7 +17,6 @@ import SmartContractActionList from '@/components/SmartContractPage/SmartContrac
 const Design = () => {
   const { contract } = useDispatch();
   const contractState = useSelector((state) => state.contract);
-  const moduleState = useSelector((state) => state.userModule);
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const [sources, setSource] = useState(null);

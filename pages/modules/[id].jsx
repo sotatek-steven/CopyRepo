@@ -148,6 +148,7 @@ const ModulePage = () => {
   const router = useRouter();
   const { id } = router.query;
   const moduleModeState = useSelector((state) => state.moduleMode);
+  const moduleState = useSelector((state) => state.userModule);
   const { moduleMode, template } = useDispatch();
   const { getStructs } = useStructPage();
   const [tabVertical, setTabVertical] = useState('canvas');
