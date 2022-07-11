@@ -36,6 +36,20 @@ const userModule = createModel({
         structs,
       },
     }),
+    updateFunctions: (state, functions) => ({
+      ...state,
+      sources: {
+        ...state.sources,
+        functions,
+      },
+    }),
+    updateCoordinates: (state, coordinates) => ({
+      ...state,
+      sources: {
+        ...state.sources,
+        coordinates,
+      },
+    }),
   },
   effects: (dispatch) => {
     const { player, modules } = dispatch;

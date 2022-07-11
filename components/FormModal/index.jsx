@@ -20,7 +20,7 @@ const FormModal = ({
   return (
     <Modal open={open} onClose={onClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <ModalBox height={height} width={width}>
-        <Header showFooter={showFooter}>
+        <Header footer={showFooter.toString()}>
           <Title>{title}</Title>
           <CloseButton onClick={onClose}>
             <CloseIcon />

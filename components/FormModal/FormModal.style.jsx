@@ -13,13 +13,13 @@ const ModalBox = styled('div')(({ theme, height, width = 600 }) => ({
   width: width,
 }));
 
-const Header = styled('div')(({ theme, showFooter }) => ({
+const Header = styled('div')(({ theme, footer }) => ({
   color: theme.palette.text.primary,
   display: 'flex',
   justifyContent: 'space-between',
   fontSize: 25,
   marginBottom: 20,
-  borderBottom: !showFooter ? `1px solid ${theme.shape.borderColor}` : 'unset',
+  borderBottom: footer === 'false' ? `1px solid ${theme.shape.borderColor}` : 'unset',
 }));
 
 const Title = styled('div')(({ theme }) => ({
