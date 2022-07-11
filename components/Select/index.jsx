@@ -32,7 +32,7 @@ const Error = styled('div')(({ theme }) => ({
   marginTop: 8,
 }));
 
-const SelectComponent = ({ label, isRequired, value, onChange, options = [], disabled = false, errorText }) => {
+const SelectComponent = ({ label, isRequired, value = '', onChange, options = [], disabled = false, errorText }) => {
   return (
     <>
       <Label>
