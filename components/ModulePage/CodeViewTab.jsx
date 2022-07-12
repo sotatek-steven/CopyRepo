@@ -5,41 +5,32 @@ import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { a11yDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 import _ from 'lodash';
 
-const ScrollbarsContainer = styled(Scrollbars)(() => ({
-  width: '100%',
-}));
-
 const CardContainer = styled(Card)(() => ({
   marginBottom: '0px',
   overflowX: 'hidden !important',
+  height: '100%',
 }));
 
 const CodeViewTab = ({ sources }) => {
   const allLines = useMemo(() => {
     let lines = '';
     if (!sources) return;
-
-    _.isArray(sources) &&
-      sources.forEach((item, index) => {
-        const stringFile = item.lines.join('\n');
-        lines = lines.concat(stringFile).concat('\n\n');
-      });
-
+    lines = sources.join('\n');
     return lines;
   }, [sources]);
 
   return (
-    <ScrollbarsContainer>
+    <Scrollbars style={{ height: 'calc(100vh - 74px)', background: 'red' }}>
       <CardContainer>
         <SyntaxHighlighter
           language="solidity"
           style={a11yDark}
           wrapLongLines
-          customStyle={{ overflow: 'hidden', paddingTop: '60px', marginTop: 0 }}>
+          customStyle={{ overflow: 'hidden', padding: '150px 117px 0px', marginTop: 0, height: '100%' }}>
           {allLines}
         </SyntaxHighlighter>
       </CardContainer>
-    </ScrollbarsContainer>
+    </Scrollbars>
   );
 };
 

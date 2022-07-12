@@ -166,6 +166,7 @@ const ModulePage = () => {
   const [tabAddField, setTabAddField] = useState('values');
   const [nodes, setNodes] = useState([]);
   const theme = useTheme();
+  const [sources, setSource] = useState(null);
 
   useEffect(() => {
     const fetchDetailModule = async (id) => {
@@ -193,6 +194,10 @@ const ModulePage = () => {
 
     setNodes(_nodes);
   }, [moduleState.sources]);
+
+  useEffect(() => {
+    setSource(moduleState.lines);
+  }, [moduleState.lines]);
 
   const handleChangeTabVertical = (e, newValue) => {
     setTabVertical(newValue);
@@ -259,8 +264,8 @@ const ModulePage = () => {
               )}
             </ContentWapper>
           </TabPanelContent>
-          <TabPanelContent value="code">
-            <CodeViewTab sources={[]} />
+          <TabPanelContent value="code_view">
+            <CodeViewTab sources={sources} />
           </TabPanelContent>
         </TabContext>
       </TabPanelContent>
