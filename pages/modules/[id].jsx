@@ -14,17 +14,14 @@ import CodeViewTab from '@/components/ModulePage/CodeViewTab';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import IconCanvas from '../../assets/icon/IconCanvas.svg';
 import IconAddField from '../../assets/icon/IconAddField.svg';
-import FunctionDetail from '@/components/ModulePage/FunctionDetail';
-import { createEdges, createNodes } from '@/components/FunctionDrop/CreateElement';
-import FunctionDrop from '@/components/FunctionDrop';
+import { createNodes } from '@/components/FunctionCanvas/CreateElement';
+import FunctionCanvas from '@/components/FunctionCanvas';
 
 const ContentWapper = styled('div')(() => ({
   display: 'flex',
+  height: 'calc(100vh - 74px)',
   '.div-canvas': {
     flexGrow: 1,
-  },
-  '.div-func-list': {
-    height: 'calc(100vh - 74px)',
   },
 }));
 
@@ -134,14 +131,6 @@ const ModulePage = () => {
   const [tabVertical, setTabVertical] = useState('canvas');
   const [tabHorizontal, setTabHorizontal] = useState('logic');
   const [nodes, setNodes] = useState([]);
-  const [edges, setEdges] = useState([]);
-
-  useEffect(() => {
-    const _nodes = createNodes([]);
-    const _edges = createEdges(_nodes);
-    setNodes(_nodes);
-    setEdges(_edges);
-  }, []);
 
   useEffect(() => {
     const fetchDetailModule = async (id) => {
@@ -162,52 +151,20 @@ const ModulePage = () => {
     template.getTemplateDomain({ size: -1 });
   }, []);
 
+  useEffect(() => {
+    if (!moduleState || !moduleState.sources) return;
+    const { functions, coordinates } = moduleState.sources;
+    const _nodes = createNodes(functions, coordinates);
+
+    setNodes(_nodes);
+  }, [moduleState.sources]);
+
   const handleChangeTabVertical = (e, newValue) => {
     setTabVertical(newValue);
   };
 
   const handleChangeTabHorizontal = (e, newValue) => {
     setTabHorizontal(newValue);
-  };
-
-  const renderCanvas = () => {
-    return (
-      <TabContext value={tabHorizontal}>
-        <TabListContainer>
-          <ModuleControl />
-          <TabListContent onChange={handleChangeTabHorizontal} aria-label="lab API tabs example">
-            {TAB_LIST.map((tab) => (
-              <TabItem key={tab.value} label={tab.name} value={tab.value} />
-            ))}
-          </TabListContent>
-        </TabListContainer>
-        <TabPanelContent value="logic">
-          <ContentWapper>
-            <div className="div-canvas">
-              <FunctionDrop initialNodes={nodes} initialEdges={edges} />
-            </div>
-            {moduleState?.owner?.toUpperCase() !== MODULE_OWNER.SYSTEM && (
-              <div className="div-func-list">
-                <ModulesSidebar />
-              </div>
-            )}
-          </ContentWapper>
-        </TabPanelContent>
-        <TabPanelContent value="code">
-          <CodeViewTab sources={[]} />
-        </TabPanelContent>
-      </TabContext>
-    );
-  };
-
-  const renderAddField = () => {
-    return (
-      <TabContext value={tabHorizontal}>
-        <TabListContainer>
-          <ModuleControl />
-        </TabListContainer>
-      </TabContext>
-    );
   };
 
   if (moduleModeState !== ModuleMode.DESIGN) return <Library />;
@@ -224,8 +181,36 @@ const ModulePage = () => {
           ))}
         </TabListContent>
       </TabListContainer>
-      <TabPanelContent value="canvas">{renderCanvas()}</TabPanelContent>
-      <TabPanelContent value="fields">{renderAddField()}</TabPanelContent>
+      <TabPanelContent value="canvas">
+        <TabContext value={tabHorizontal}>
+          <TabListContainer>
+            <ModuleControl />
+            <TabListContent onChange={handleChangeTabHorizontal} aria-label="lab API tabs example">
+              {TAB_LIST.map((tab) => (
+                <TabItem key={tab.value} label={tab.name} value={tab.value} />
+              ))}
+            </TabListContent>
+          </TabListContainer>
+          <TabPanelContent value="logic">
+            <ContentWapper>
+              <div className="div-canvas">
+                <FunctionCanvas initialNodes={nodes} />
+              </div>
+              {moduleState?.owner?.toUpperCase() !== MODULE_OWNER.SYSTEM && <ModulesSidebar />}
+            </ContentWapper>
+          </TabPanelContent>
+          <TabPanelContent value="code">
+            <CodeViewTab sources={[]} />
+          </TabPanelContent>
+        </TabContext>
+      </TabPanelContent>
+      <TabPanelContent value="fields">
+        <TabContext value={tabHorizontal}>
+          <TabListContainer>
+            <ModuleControl />
+          </TabListContainer>
+        </TabContext>
+      </TabPanelContent>
     </TabContext>
   );
 };

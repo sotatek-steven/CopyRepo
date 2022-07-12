@@ -3,21 +3,36 @@ import { styled } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import FormModal from '../FormModal';
+import Scrollbars from 'react-custom-scrollbars';
 
-const Container = styled('div')(({ theme }) => ({
-  fontSize: '14px',
-  fontWeight: '400',
-  fontFamily: 'Segoe UI',
-  color: theme.palette.text.primary,
-  ...theme.components.truncate.singleLineEllipsis,
-}));
-
-const Content = styled('div')(({ theme }) => ({
+const Wrapper = styled('div')(() => ({
   marginBottom: 17,
-  '& > .title': {
-    color: theme.palette.primary.light,
-  },
+  fontFamily: 'Segoe UI',
 }));
+
+const Label = styled('h6')(({ theme }) => ({
+  fontSize: 16,
+  fontWeight: theme.typography.fontWeightBold,
+  color: theme.palette.primary.light,
+  margin: '0px 0px 5px',
+}));
+
+const Description = styled('p')(({ theme }) => ({
+  fontSize: 14,
+  fontWeight: theme.typography.fontWeightRegular,
+  color: theme.palette.text.primary,
+  margin: 0,
+}));
+
+const ContentItem = ({ label, description }) => {
+  if (!description) return <></>;
+  return (
+    <Wrapper>
+      <Label>{label}</Label>
+      <Description>{description}</Description>
+    </Wrapper>
+  );
+};
 
 const FunctionDetail = ({ open, onClose, functionId }) => {
   const { functions } = useDispatch();
@@ -41,28 +56,13 @@ const FunctionDetail = ({ open, onClose, functionId }) => {
 
   return (
     <FormModal height={600} width={750} open={open} onClose={onClose} title={functionInfo?.name} showFooter={false}>
-      <Container>
-        <Content>
-          <div className="title">Name</div>
-          <div className="content">{functionInfo?.name}</div>
-        </Content>
-        <Content>
-          <div className="title">Description</div>
-          <div className="content">{functionInfo?.description}</div>
-        </Content>
-        <Content>
-          <div className="title">Scope</div>
-          <div className="content">{functionInfo?.scopes?.scope}</div>
-        </Content>
-        <Content>
-          <div className="title">Parameters Included</div>
-          <div className="content">{functionInfo?.params?.map((item) => item?.label)?.toString()}</div>
-        </Content>
-        <Content>
-          <div className="title">Returns</div>
-          <div className="content">{functionInfo?.returnVariables?.toString()}</div>
-        </Content>
-      </Container>
+      <Scrollbars style={{ height: '450px' }}>
+        <ContentItem label="Name" description={functionInfo?.name} />
+        <ContentItem label="Description" description={functionInfo?.description} />
+        <ContentItem label="Type" description={functionInfo?.scopes?.type} />
+        <ContentItem label="Scope" description={functionInfo?.scopes?.scope} />
+        <ContentItem label="Modifier" description={functionInfo?.modifier?.name} />
+      </Scrollbars>
     </FormModal>
   );
 };
