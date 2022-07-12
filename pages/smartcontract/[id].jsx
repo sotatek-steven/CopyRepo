@@ -124,7 +124,7 @@ const Design = () => {
                   alignItems: 'center',
                   paddingLeft: '10px',
                 }}>
-                GAS FEE OF THIS SMART CONTRACT: {moduleState.gasFee} Gwei
+                GAS FEE OF THIS SMART CONTRACT: {contractState.current.gasFee} Gwei
               </Box>
             ) : null}
           </div>
