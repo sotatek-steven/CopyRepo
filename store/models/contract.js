@@ -70,7 +70,7 @@ const contract = createModel({
           userModoel: player,
           userState: state.player,
         });
-        if(code !== 200){
+        if (code !== 200) {
           return null;
         }
         const module_keys = (data.modules || []).join('-');
@@ -94,19 +94,27 @@ const contract = createModel({
         return { code: 200, data: null };
       },
       async deployContract({ signer, deploying, deployed }, state) {
-        const { abi, bytecode, parameters, _id } = state.contract.current;
-        let factory = new ContractFactory(abi, bytecode, signer);
-        const params = parameters.map((param) => param.value);
-        deploying();
-        const depoyedContract = await factory.deploy(...params);
-        await contract.updateContract({ _id, address: depoyedContract.address });
-        contract.setAddress(depoyedContract.address);
-        contract.setTransaction(depoyedContract.deployTransaction.hash);
-        console.log(depoyedContract);
-        toast.success('Deploy success', {
-          style: { top: '3.5em' },
-        });
-        deployed();
+        try {
+          const { abi, bytecode, parameters, _id } = state.contract.current;
+          let factory = new ContractFactory(abi, bytecode, signer);
+          const params = parameters.map((param) => (param.type.trim().endsWith('[]') ? param.value.split(',') : param.value));
+          deploying();
+          const depoyedContract = await factory.deploy(...params);
+          await contract.updateContract({ _id, address: depoyedContract.address, hash: depoyedContract.deployTransaction.hash });
+          contract.setAddress(depoyedContract.address);
+          contract.setTransaction(depoyedContract.deployTransaction.hash);
+          console.log(depoyedContract);
+          toast.success('Deploy success', {
+            style: { top: '3.5em' },
+          });
+          deployed();
+        } catch (error) {
+          console.error(error.message);
+          toast.error(error.message, {
+            style: { top: '3.5em' },
+          });
+          deployed();
+        }
       },
     };
   },

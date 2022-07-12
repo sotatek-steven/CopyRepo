@@ -28,14 +28,14 @@ const Error = styled('div')(({ theme }) => ({
   marginTop: 8,
 }));
 
-const Input = ({ label, value, isRequired, id, name, type = 'text', onChange, readOnly, errorText }) => {
+const Input = ({ label, value, isRequired, id, name, type = 'text', onChange, readOnly, errorText, placeholder }) => {
   return (
     <>
       <Label htmlFor={id}>
         {label}
         {isRequired && '*'}
       </Label>
-      <InputBasic type={type} name={name} id={id} value={value} onChange={onChange} readOnly={readOnly} />
+      <InputBasic type={type} name={name} id={id} value={value} onChange={onChange} readOnly={readOnly} placeholder={placeholder} />
       {!!errorText && <Error>{errorText}</Error>}
     </>
   );
