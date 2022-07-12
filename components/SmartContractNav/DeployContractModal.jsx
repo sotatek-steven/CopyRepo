@@ -86,11 +86,11 @@ const DeployContractModal = ({ open, onClose, onDeploy }) => {
           <Scrollbars autoHeight autoHeightMin="100%" autoHeightMax="500px" autoHide>
             <div style={{ padding: '0px 20px' }}>
               {parameters.map((parameter) => {
-                const { label, type, _id } = parameter;
+                const { label, type, _id, value } = parameter;
                 const _label = `${label}(${type})`;
                 return (
                   <InputWrapper key={_id}>
-                    <Input label={_label} id={_id} name={label} isRequired={true} onChange={handleParametersChange} />
+                    <Input label={_label} id={_id} placeholder={value || ''} name={label} isRequired={true} onChange={handleParametersChange} />
                   </InputWrapper>
                 );
               })}
