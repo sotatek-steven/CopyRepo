@@ -13,6 +13,7 @@ const userModule = createModel({
     tags: [],
     color: null,
     domainId: null,
+    gasFee: null,
   },
   reducers: {
     update: (state, data) => ({

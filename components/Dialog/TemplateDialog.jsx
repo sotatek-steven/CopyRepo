@@ -51,24 +51,23 @@ const TemplateDialog = ({ open, setOpen, type }) => {
     setOpenCollapse([]);
   }, [idTemplate]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e, type) => {
     e.preventDefault();
     if (!_.isArray(listTemplate)) return;
 
+    const dataTemplateBody = _.find(listTemplate, (item) => {
+      return item._id === idTemplate;
+    });
+    const { _id, modules, name, domain, domainId, tags, description } = dataTemplateBody;
+
     const submitCreateSC = async () => {
-      const dataTemplateBody = _.find(listTemplate, (item) => {
-        return item._id === idTemplate;
-      });
-      const { _id, modules, name, domain, tags, description } = dataTemplateBody;
       try {
-        const res = await userContract.createSmartContract({
-          template: _id,
-          modules,
-          name,
-          domain,
-          tags,
-          description,
-        });
+        const bodyData =
+          type === 'skip'
+            ? { domainId: domainId, domain }
+            : { template: _id, modules, name, domain, tags, description };
+
+        const res = await userContract.createSmartContract(bodyData);
         if (res.data) {
           const { _id } = res.data;
           _id && router.push(`/smartcontract/${_id}`);
@@ -187,10 +186,13 @@ const TemplateDialog = ({ open, setOpen, type }) => {
         </Scrollbars>
         <Grid item xs={12} sx={{ mr: 2 }}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button variant="outlined" sx={{ color: '#fff', border: '1px solid #fff', minWidth: '114px', mx: 1 }}>
+            <Button
+              variant="outlined"
+              sx={{ color: '#fff', border: '1px solid #fff', minWidth: '114px', mx: 1 }}
+              onClick={(e) => handleSubmit(e, 'skip')}>
               Skip
             </Button>
-            <Button variant="contained" type="submit">
+            <Button variant="contained" onClick={(e) => handleSubmit(e, 'create')}>
               {' '}
               Let&apos;s do this
             </Button>
@@ -203,7 +205,7 @@ const TemplateDialog = ({ open, setOpen, type }) => {
   return (
     <Dialog
       component="form"
-      onSubmit={handleSubmit}
+      // onSubmit={handleSubmit}
       fullWidth
       maxWidth="lg"
       open={open}

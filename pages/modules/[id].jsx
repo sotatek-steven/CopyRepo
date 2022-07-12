@@ -3,7 +3,7 @@ import DesignLayout from '@/components/layout/DesignLayout';
 import ModuleControl from '@/components/ModulePage/ModuleControl';
 import { useDispatch, useSelector } from 'react-redux';
 import { useRouter } from 'next/router';
-import { styled, Tab } from '@mui/material';
+import { Box, styled, Tab, useTheme } from '@mui/material';
 import ModulesSidebar from '@/components/ModulePage/ModulesSidebar';
 import ModuleActionList from '@/components/ModulePage/ModuleActionList';
 import Library from '@/components/Library';
@@ -106,6 +106,14 @@ const TabPanelContent = styled(TabPanel)(() => ({
   width: '100%',
 }));
 
+const Divider = styled('div')(({ theme }) => ({
+  width: '100vw !important',
+  position: 'absolute',
+  bottom: 0,
+  borderBottom: 'solid 1px',
+  borderColor: theme.shape.borderColor,
+}));
+
 const TAB_LIST_VERTICAL = [
   {
     name: 'Canvas',
@@ -130,6 +138,21 @@ const TAB_LIST = [
   },
 ];
 
+const TAB_ADD_FIELDS = [
+  {
+    name: 'Values',
+    value: 'values',
+  },
+  {
+    name: 'Objects',
+    value: 'objects',
+  },
+  {
+    name: 'Mappings',
+    value: 'mappings',
+  },
+];
+
 const ModulePage = () => {
   const { userModule, functions } = useDispatch();
   const router = useRouter();
@@ -140,7 +163,9 @@ const ModulePage = () => {
   const { getStructs } = useStructPage();
   const [tabVertical, setTabVertical] = useState('canvas');
   const [tabHorizontal, setTabHorizontal] = useState('logic');
+  const [tabAddField, setTabAddField] = useState('values');
   const [nodes, setNodes] = useState([]);
+  const theme = useTheme();
 
   useEffect(() => {
     const fetchDetailModule = async (id) => {
@@ -177,6 +202,10 @@ const ModulePage = () => {
     setTabHorizontal(newValue);
   };
 
+  const handleChangeTabAddField = (_, newValue) => {
+    setTabAddField(newValue);
+  };
+
   if (moduleModeState !== ModuleMode.DESIGN) return <Library />;
   return (
     <TabContext value={tabVertical}>
@@ -206,7 +235,28 @@ const ModulePage = () => {
               <div className="div-canvas">
                 <FunctionCanvas initialNodes={nodes} />
               </div>
-              {moduleState?.owner?.toUpperCase() !== MODULE_OWNER.SYSTEM && <ModulesSidebar />}
+              {moduleState?.owner?.toUpperCase() !== MODULE_OWNER.SYSTEM ? (
+                <div className="div-func-list">
+                  <ModulesSidebar />
+                </div>
+              ) : (
+                <Box
+                  sx={{
+                    background: theme.palette.success.main,
+                    // borderLeft: `7px solid ${theme.palette.primary.light2} `,
+                    width: '444px',
+                    height: '82px',
+                    color: theme.palette.common.black,
+                    display: 'flex',
+                    alignItems: 'center',
+                    paddingLeft: '10px',
+                    position: 'absolute',
+                    top: '4.5em',
+                    right: '0',
+                  }}>
+                  GAS FEE OF THIS SMART CONTRACT: Gwei
+                </Box>
+              )}
             </ContentWapper>
           </TabPanelContent>
           <TabPanelContent value="code">
@@ -215,9 +265,39 @@ const ModulePage = () => {
         </TabContext>
       </TabPanelContent>
       <TabPanelContent value="fields">
-        <TabContext value={tabHorizontal}>
+        <TabContext value={tabAddField}>
           <TabListContainer>
             <ModuleControl />
+            <Box
+              sx={{
+                paddingLeft: '50px',
+                width: '93vw',
+              }}>
+              <TabList
+                sx={{
+                  '.MuiButtonBase-root': {
+                    textTransform: 'none',
+                    fontSize: '16px',
+                    fontWeight: 600,
+                  },
+                  '.Mui-selected': {
+                    color: theme.palette.primary.main,
+                    fontWeight: theme.typography.fontWeightBold,
+                  },
+                }}
+                className="add-field"
+                onChange={handleChangeTabAddField}
+                aria-label="lab API tabs example">
+                {TAB_ADD_FIELDS.map((tab) => (
+                  <TabItem key={tab.value} label={tab.name} value={tab.value} />
+                ))}
+                <Divider />
+              </TabList>
+
+              <TabPanel value="values">Values</TabPanel>
+              <TabPanel value="objects">Objects</TabPanel>
+              <TabPanel value="mappings">Mappings</TabPanel>
+            </Box>
           </TabListContainer>
         </TabContext>
       </TabPanelContent>
