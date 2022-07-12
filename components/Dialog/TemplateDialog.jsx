@@ -83,6 +83,38 @@ const TemplateDialog = ({ open, setOpen, type }) => {
     submitCreateSC();
   };
 
+  const handleSkip = (e) => {
+    e.preventDefault();
+    if (!_.isArray(listTemplate)) return;
+
+    const submitCreateSC = async () => {
+      const dataTemplateBody = _.find(listTemplate, (item) => {
+        return item._id === idTemplate;
+      });
+
+      const { _id, modules, name, domainId, tags, description } = dataTemplateBody;
+      try {
+        const res = await userContract.createSmartContract({
+          modules,
+          name,
+          domainId: domainId,
+          tags,
+          description,
+        });
+        if (res.data) {
+          const { _id } = res.data;
+          _id && router.push(`/smartcontract/${_id}`);
+        }
+        setOpen(false);
+      } catch (error) {
+        console.log(error);
+        console.log('Failed to submit');
+        setOpen(false);
+      }
+    };
+    submitCreateSC();
+  };
+
   const handleClose = () => {
     setOpen(false);
     setIdTemplate(null);
@@ -187,7 +219,10 @@ const TemplateDialog = ({ open, setOpen, type }) => {
         </Scrollbars>
         <Grid item xs={12} sx={{ mr: 2 }}>
           <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button variant="outlined" sx={{ color: '#fff', border: '1px solid #fff', minWidth: '114px', mx: 1 }}>
+            <Button
+              variant="outlined"
+              sx={{ color: '#fff', border: '1px solid #fff', minWidth: '114px', mx: 1 }}
+              onClick={(e) => handleSkip(e)}>
               Skip
             </Button>
             <Button variant="contained" type="submit">

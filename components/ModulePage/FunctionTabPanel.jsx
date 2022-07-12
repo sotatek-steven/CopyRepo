@@ -1,15 +1,15 @@
-import { styled } from '@mui/material';
 import React, { useEffect } from 'react';
+import { Box, styled } from '@mui/material';
 import Scrollbars from 'react-custom-scrollbars';
 import { useDispatch, useSelector } from 'react-redux';
 import FunctionItem from '../FunctionDrag/FunctionItem';
 
 const FunctionContainer = styled('div')(() => ({
-  height: '70vh',
+  height: '65vh',
 }));
 
 const DescriptionContainer = styled('div')(({ theme }) => ({
-  height: '17vh',
+  height: '156px',
   padding: '11px 19px',
 
   '& .title': {
@@ -55,6 +55,8 @@ const FunctionTabPanel = () => {
     updateModules();
   }, [moduleState.sources]);
 
+  // console.log(originStructs);
+
   return (
     <div>
       <FunctionContainer>
@@ -64,6 +66,21 @@ const FunctionTabPanel = () => {
             listFunction?.map((item, index) => {
               return <FunctionItem key={index} data={item} nodeType="simpleRectangle" />;
             })}
+          <Box
+            sx={{
+              background: theme.palette.success.main,
+              // borderLeft: `7px solid ${theme.palette.primary.light2} `,
+              width: '444px',
+              height: '82px',
+              color: theme.palette.common.black,
+              display: 'flex',
+              alignItems: 'center',
+              paddingLeft: '10px',
+              position: 'absolute',
+              bottom: '0',
+            }}>
+            GAS FEE OF THIS SMART CONTRACT:{contractState.current.gasFee} Gwei
+          </Box>
         </Scrollbars>
       </FunctionContainer>
       <DescriptionContainer>
