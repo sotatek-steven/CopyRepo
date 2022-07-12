@@ -41,6 +41,9 @@ const TabListContent = styled(TabList)(({ theme }) => ({
   '.MuiTabs-indicator': {
     height: 4,
   },
+  '.MuiTab-root': {
+    fontSize: 16,
+  },
 }));
 
 const TabItem = styled(Tab)(() => ({
