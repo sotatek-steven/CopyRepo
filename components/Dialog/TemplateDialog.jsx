@@ -119,7 +119,7 @@ const TemplateDialog = ({ open, setOpen, type }) => {
                 const listParameters = [];
                 const listLibrary = item.sources.libraries.join('\n');
 
-                item.sources.functions.forEach((i) => {
+                item.sources.functionRaws.forEach((i) => {
                   listFunctions.push(i.name);
                 });
 
