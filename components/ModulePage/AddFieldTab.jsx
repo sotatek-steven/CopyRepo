@@ -3,6 +3,7 @@ import { styled, Tab } from '@mui/material';
 import React, { useState } from 'react';
 import MappingTabPanel from '../MappingTabPanel';
 import ObjectTabPanel from '../ObjectTabPanel';
+import ValuesTabPanel from '../ValuesPanel';
 
 const TAB_LIST = [
   {
@@ -71,7 +72,9 @@ const AddFieldTab = () => {
             <TabItem key={tab.id} label={tab.label} value={tab.id} />
           ))}
         </TabListContent>
-        <TabPanelContent value="values">Values</TabPanelContent>
+        <TabPanelContent value="values">
+          <ValuesTabPanel />
+        </TabPanelContent>
         <TabPanelContent value="objects">{<ObjectTabPanel />}</TabPanelContent>
         <TabPanelContent value="mappings">
           <MappingTabPanel />

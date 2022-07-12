@@ -213,10 +213,6 @@ const ModulePage = () => {
     setTabHorizontal(newValue);
   };
 
-  const handleChangeTabAddField = (_, newValue) => {
-    setTabAddField(newValue);
-  };
-
   if (moduleModeState !== ModuleMode.DESIGN) return <Library />;
   return (
     <TabContext value={tabVertical}>

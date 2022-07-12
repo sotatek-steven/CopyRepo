@@ -1,28 +1,29 @@
 import { styled } from '@mui/material/styles';
 
 const Container = styled('div')(({ theme }) => ({
-  padding: '0 20px',
+  // padding: '0 20px',
 }));
 
 const BodyContent = styled('div')(({ theme }) => ({}));
 
-const Footer = styled('div')(({ theme }) => ({
-  marginTop: 40,
-}));
-
 const ItemContainer = styled('div')(({ theme }) => ({
   display: 'flex',
-  gap: 30,
-  color: theme.palette.text.primary,
+  // gap: 25,
+  color: theme.palette.primary.light,
   marginTop: 30,
+  alignItems: 'center',
+  width: '100%',
 }));
 
 const Item = styled('div')(({ theme }) => ({
-  minWidth: '100px',
-}));
-
-const ButtonWrapper = styled('div')(({ theme }) => ({
-  marginTop: 30,
+  width: '180px !important',
+  textOverflow: 'ellipsis',
+  overflow: 'hidden',
+  marginRight: '24px',
+  fontSize: '15px',
+  '@media screen and (max-width:1500px )': {
+    fontSize: '11px',
+  },
 }));
 
 const Error = styled('div')(({ theme }) => ({
@@ -31,4 +32,4 @@ const Error = styled('div')(({ theme }) => ({
   marginTop: 8,
 }));
 
-export { Container, BodyContent, Footer, ItemContainer, Item, ButtonWrapper, Error };
+export { Container, BodyContent, ItemContainer, Item, Error };
