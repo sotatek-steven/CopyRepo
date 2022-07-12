@@ -225,7 +225,28 @@ const ModulePage = () => {
               <div className="div-canvas">
                 <FunctionCanvas initialNodes={nodes} />
               </div>
-              {moduleState?.owner?.toUpperCase() !== MODULE_OWNER.SYSTEM && <ModulesSidebar />}
+              {moduleState?.owner?.toUpperCase() !== MODULE_OWNER.SYSTEM ? (
+                <div className="div-func-list">
+                  <ModulesSidebar />
+                </div>
+              ) : (
+                <Box
+                  sx={{
+                    background: theme.palette.success.main,
+                    // borderLeft: `7px solid ${theme.palette.primary.light2} `,
+                    width: '444px',
+                    height: '82px',
+                    color: theme.palette.common.black,
+                    display: 'flex',
+                    alignItems: 'center',
+                    paddingLeft: '10px',
+                    position: 'absolute',
+                    top: '4.5em',
+                    right: '0',
+                  }}>
+                  GAS FEE OF THIS SMART CONTRACT: Gwei
+                </Box>
+              )}
             </ContentWapper>
           </TabPanelContent>
           <TabPanelContent value="code">
