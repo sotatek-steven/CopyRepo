@@ -1,4 +1,5 @@
 import React, { useEffect } from 'react';
+import { useTheme } from '@emotion/react';
 import { Box, styled } from '@mui/material';
 import Scrollbars from 'react-custom-scrollbars';
 import { useDispatch, useSelector } from 'react-redux';
@@ -31,6 +32,7 @@ const FunctionTabPanel = () => {
   const moduleState = useSelector((state) => state.userModule);
   const { functions: listFunction } = useSelector((state) => state.functions);
   const { functions } = useDispatch();
+  const theme = useTheme();
 
   useEffect(() => {
     const updateModules = () => {
