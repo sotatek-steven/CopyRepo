@@ -51,56 +51,23 @@ const TemplateDialog = ({ open, setOpen, type }) => {
     setOpenCollapse([]);
   }, [idTemplate]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e, type) => {
     e.preventDefault();
     if (!_.isArray(listTemplate)) return;
 
-    const submitCreateSC = async () => {
-      const dataTemplateBody = _.find(listTemplate, (item) => {
-        return item._id === idTemplate;
-      });
-      const { _id, modules, name, domain, tags, description } = dataTemplateBody;
-      try {
-        const res = await userContract.createSmartContract({
-          template: _id,
-          modules,
-          name,
-          domain,
-          tags,
-          description,
-        });
-        if (res.data) {
-          const { _id } = res.data;
-          _id && router.push(`/smartcontract/${_id}`);
-        }
-        setOpen(false);
-      } catch (error) {
-        console.log(error);
-        console.log('Failed to submit');
-        setOpen(false);
-      }
-    };
-    submitCreateSC();
-  };
-
-  const handleSkip = (e) => {
-    e.preventDefault();
-    if (!_.isArray(listTemplate)) return;
+    const dataTemplateBody = _.find(listTemplate, (item) => {
+      return item._id === idTemplate;
+    });
+    const { _id, modules, name, domain, domainId, tags, description } = dataTemplateBody;
 
     const submitCreateSC = async () => {
-      const dataTemplateBody = _.find(listTemplate, (item) => {
-        return item._id === idTemplate;
-      });
-
-      const { _id, modules, name, domainId, tags, description } = dataTemplateBody;
       try {
-        const res = await userContract.createSmartContract({
-          modules,
-          name,
-          domainId: domainId,
-          tags,
-          description,
-        });
+        const bodyData =
+          type === 'skip'
+            ? { domainId: domainId, domain }
+            : { template: _id, modules, name, domain, tags, description };
+
+        const res = await userContract.createSmartContract(bodyData);
         if (res.data) {
           const { _id } = res.data;
           _id && router.push(`/smartcontract/${_id}`);
@@ -222,10 +189,10 @@ const TemplateDialog = ({ open, setOpen, type }) => {
             <Button
               variant="outlined"
               sx={{ color: '#fff', border: '1px solid #fff', minWidth: '114px', mx: 1 }}
-              onClick={(e) => handleSkip(e)}>
+              onClick={(e) => handleSubmit(e, 'skip')}>
               Skip
             </Button>
-            <Button variant="contained" type="submit">
+            <Button variant="contained" onClick={(e) => handleSubmit(e, 'create')}>
               {' '}
               Let&apos;s do this
             </Button>
@@ -238,7 +205,7 @@ const TemplateDialog = ({ open, setOpen, type }) => {
   return (
     <Dialog
       component="form"
-      onSubmit={handleSubmit}
+      // onSubmit={handleSubmit}
       fullWidth
       maxWidth="lg"
       open={open}

@@ -17,6 +17,7 @@ import SmartContractActionList from '@/components/SmartContractPage/SmartContrac
 const Design = () => {
   const { contract } = useDispatch();
   const contractState = useSelector((state) => state.contract);
+  const moduleState = useSelector((state) => state.userModule);
   const [nodes, setNodes] = useState([]);
   const [edges, setEdges] = useState([]);
   const [sources, setSource] = useState(null);
@@ -108,7 +109,7 @@ const Design = () => {
                 }}>
                 <ModuleDrag />
               </div>
-            ) : contractState.current.gasFee > -1 ? (
+            ) : moduleState.gasFee > -1 ? (
               <Box
                 sx={{
                   position: 'absolute',
@@ -123,7 +124,7 @@ const Design = () => {
                   alignItems: 'center',
                   paddingLeft: '10px',
                 }}>
-                GAS FEE OF THIS SMART CONTRACT: {contractState.current.gasFee} Gwei
+                GAS FEE OF THIS SMART CONTRACT: {moduleState.gasFee} Gwei
               </Box>
             ) : null}
           </div>
