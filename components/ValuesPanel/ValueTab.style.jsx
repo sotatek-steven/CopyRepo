@@ -2,6 +2,7 @@ import { styled } from '@mui/material/styles';
 
 const Container = styled('div')(({ theme }) => ({
   // padding: '0 20px',
+  position: 'relative',
 }));
 
 const BodyContent = styled('div')(({ theme }) => ({}));

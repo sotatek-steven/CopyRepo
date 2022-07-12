@@ -1,6 +1,6 @@
 import React from 'react';
 import { PrimaryButton } from '../ButtonStyle';
-import AddIcon from 'assets/icon/addIcon.svg';
+import AddIcon from 'assets/icon/addIcon2.svg';
 import { Container, BodyContent, Footer } from './ValueTab.style';
 import ValueItem from './ValueItem';
 import useValuesTab from './hooks/useValuesTab';
@@ -20,7 +20,7 @@ const listTitle = [
 ];
 
 const ValuesTabPanel = () => {
-  const { values, handeAddValues } = useValuesTab();
+  const { values, handleAddValues, handleRemoveValue, handleChangeValue } = useValuesTab();
   const theme = useTheme();
 
   return (
@@ -48,15 +48,27 @@ const ValuesTabPanel = () => {
 
       <BodyContent>
         {values?.map((value) => (
-          <ValueItem key={value?._id} value={value} />
+          <ValueItem
+            key={value?._id}
+            value={value}
+            handleRemoveValue={handleRemoveValue}
+            handleChangeValue={handleChangeValue}
+          />
         ))}
       </BodyContent>
-      {/* <Footer>
-        <PrimaryButton width="150px" height="45px" onClick={handleAddObject}>
-          <AddIcon />
-          Add Object
-        </PrimaryButton>
-      </Footer> */}
+      <Box
+        sx={{
+          position: 'absolute',
+          right: '9%',
+          paddingY: 2,
+          '@media screen and (max-width:1500px )': {
+            right: '4%',
+          },
+        }}>
+        <IconButton aria-label="delete" onClick={handleAddValues}>
+          <AddIcon sx={{ color: theme.palette.primary.main }} />
+        </IconButton>
+      </Box>
     </Container>
   );
 };

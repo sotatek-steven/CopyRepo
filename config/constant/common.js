@@ -53,6 +53,17 @@ export const SCOPE = [
   },
 ];
 
+export const BOOLEAN_OPTIONS = [
+  {
+    value: true,
+    label: 'True',
+  },
+  {
+    value: false,
+    label: 'False',
+  },
+];
+
 export const VALUE_TYPE_OPTIONS = [
   {
     value: 'adress',

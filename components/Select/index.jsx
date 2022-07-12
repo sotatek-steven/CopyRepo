@@ -42,6 +42,14 @@ const MenuProps = {
   },
 };
 
+const MenuSimpeProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 3.7 + ITEM_PADDING_TOP,
+    },
+  },
+};
+
 const SelectComponent = ({
   multiple = false,
   label,
@@ -51,6 +59,7 @@ const SelectComponent = ({
   options = [],
   disabled = false,
   errorText,
+  menuProps = false,
 }) => {
   return (
     <>
@@ -59,7 +68,13 @@ const SelectComponent = ({
         {isRequired && '*'}
       </Label>
       {!multiple && (
-        <SelectBasic value={value} onChange={onChange} disabled={disabled} displayEmpty IconComponent={ArrowDown}>
+        <SelectBasic
+          MenuProps={menuProps ? MenuSimpeProps : {}}
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          displayEmpty
+          IconComponent={ArrowDown}>
           {!!options.length &&
             options.map((option) => {
               return (

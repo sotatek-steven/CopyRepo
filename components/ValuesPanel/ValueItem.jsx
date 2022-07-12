@@ -1,44 +1,83 @@
-import { IS_ARRAY_OPTION, SCOPE, VALUE_TYPE_OPTIONS } from '@/config/constant/common';
+import { BOOLEAN_OPTIONS, ELEMENT_TYPE, SCOPE, VALUE_TYPE_OPTIONS } from '@/config/constant/common';
 import { useSelector } from 'react-redux';
-import { PrimaryButton } from '../ButtonStyle';
 import { Input } from '../Input';
 import Select from '../Select';
-import RemoveIcon from 'assets/icon/removeIcon.svg';
-import { Item, ItemContainer, ButtonWrapper } from './ValueTab.style';
+import { Item, ItemContainer } from './ValueTab.style';
 import DeleteIcon from '../../assets/icon/deleteIcon2.svg';
 import { Box, IconButton, useTheme } from '@mui/material';
+import { useMemo } from 'react';
 
-const ValuesItem = ({ value }) => {
-  const { types } = useSelector((state) => state.object);
+const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
   const theme = useTheme();
+  const moduleState = useSelector((state) => state.userModule);
+
+  const listFunction = useMemo(() => {
+    return moduleState?.sources?.functions?.map((item) => {
+      return {
+        value: item._id,
+        label: item.name,
+      };
+    });
+  }, [moduleState?.sources?.functions]);
   return (
     <ItemContainer>
       <Item>
-        <Select value={value?.valueType} options={VALUE_TYPE_OPTIONS} />
+        <Select
+          menuProps
+          value={value?.valueType}
+          options={VALUE_TYPE_OPTIONS}
+          onChange={(e) => handleChangeValue(value?._id, 'valueType', e, ELEMENT_TYPE.SELECT)}
+        />
       </Item>
       <Item>
-        <Select value={value?.isArray} options={IS_ARRAY_OPTION} />
+        <Select
+          value={value?.isArray}
+          options={BOOLEAN_OPTIONS}
+          onChange={(e) => handleChangeValue(value?._id, 'isArray', e, ELEMENT_TYPE.SELECT)}
+        />
       </Item>
       <Item>
-        <Select value={value?.scope} options={SCOPE} />
+        <Select
+          value={value?.scope}
+          options={SCOPE}
+          onChange={(e) => handleChangeValue(value?._id, 'scope', e, ELEMENT_TYPE.SELECT)}
+        />
       </Item>
       <Item>
-        <Select value={value?.isConstant} options={SCOPE} />
+        <Select
+          value={value?.isConstant}
+          options={BOOLEAN_OPTIONS}
+          onChange={(e) => handleChangeValue(value?._id, 'isConstant', e, ELEMENT_TYPE.SELECT)}
+        />
       </Item>
       <Item>
-        <Input value={value?.variableName} />
+        <Input
+          value={value?.variableName}
+          onChange={(e) => handleChangeValue(value?._id, 'variableName', e, ELEMENT_TYPE.INPUT)}
+        />
       </Item>
       <Item>
-        <Input value={value?.variableValue} />
+        <Input
+          value={value?.variableValue}
+          onChange={(e) => handleChangeValue(value?._id, 'variableValue', e, ELEMENT_TYPE.INPUT)}
+        />
       </Item>
       <Item>
-        <Input value={value?.isDefaultValue} />
+        <Select
+          value={value?.isDefaultValue}
+          options={BOOLEAN_OPTIONS}
+          onChange={(e) => handleChangeValue(value?._id, 'isDefaultValue', e, ELEMENT_TYPE.SELECT)}
+        />
       </Item>
       <Item>
-        <Select value={value?.mapToFunctions} options={IS_ARRAY_OPTION} />
+        <Select
+          value={value?.mapToFunctions}
+          options={listFunction}
+          onChange={(e) => handleChangeValue(value?._id, 'mapToFunctions', e, ELEMENT_TYPE.SELECT)}
+        />
       </Item>
       <Box>
-        <IconButton aria-label="delete">
+        <IconButton aria-label="delete" onClick={() => handleRemoveValue(value?._id)}>
           <DeleteIcon sx={{ color: theme.palette.primary.main }} />
         </IconButton>
       </Box>
