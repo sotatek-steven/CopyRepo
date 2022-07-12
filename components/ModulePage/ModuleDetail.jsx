@@ -63,7 +63,7 @@ const ModuleDetail = ({ open, onClose, moduleId }) => {
       <Container>
         <GasContainer>
           <div className="title">Gas fee:</div>
-          <div className="content">3000</div>
+          <div className="content">{moduleInfo?.gasFee}</div>
         </GasContainer>
         <FunctionContainer>
           <div className="title">Functions</div>

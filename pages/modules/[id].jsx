@@ -16,6 +16,7 @@ import IconCanvas from '../../assets/icon/IconCanvas.svg';
 import IconAddField from '../../assets/icon/IconAddField.svg';
 import { createNodes } from '@/components/FunctionCanvas/CreateElement';
 import FunctionCanvas from '@/components/FunctionCanvas';
+import AddFieldTab from '@/components/ModulePage/AddFieldTab';
 
 const ContentWapper = styled('div')(() => ({
   display: 'flex',
@@ -33,7 +34,7 @@ const TabListContainer = styled('div')(({ theme }) => ({
   left: '80px',
   '.vertical-tab': {
     position: 'absolute',
-    left: -60,
+    left: -70,
     top: 300,
     borderRadius: 'unset',
     '.Mui-selected': {
@@ -54,6 +55,15 @@ const TabListContainer = styled('div')(({ theme }) => ({
       padding: '20px 0px',
     },
   },
+}));
+
+const TabAddFieldContainer = styled('div')(({ theme }) => ({
+  borderBottom: 0,
+  paddingTop: '70px',
+  position: 'absolute',
+  zIndex: '10',
+  left: '80px',
+  width: 'calc(100% - 80px)',
 }));
 
 const TabListContent = styled(TabList)(({ theme }) => ({

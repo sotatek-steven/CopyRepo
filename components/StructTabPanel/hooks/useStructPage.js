@@ -1,8 +1,6 @@
 import { ELEMENT_TYPE, NEW_ID, EDIT_ID } from '@/config/constant/common';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-
-const TYPES = ['int', 'boolean', 'string'];
 
 const STRUCT = {
   name: '',
@@ -33,10 +31,9 @@ const VARIABLE = {
 };
 
 const useStructPage = () => {
-  const { structs } = useSelector((state) => state.struct);
+  const { structs, types } = useSelector((state) => state.struct);
   const { struct, userModule } = useDispatch();
 
-  const [types, setTypes] = useState(TYPES);
   const [count, setCount] = useState(0);
 
   const getStructs = (lstStruct) => {
@@ -164,11 +161,9 @@ const useStructPage = () => {
         break;
       case ELEMENT_TYPE.TAG:
         if (!types.includes(e.value)) {
-          setTypes((prev) => {
-            const temp = [...prev];
-            temp.push(e.value);
-            return temp;
-          });
+          const temp = [...types];
+          temp.push(e.value);
+          struct.setTypes(temp);
         }
         data[iStruct].variables[iVariable].type.value = [e.value];
         data[iStruct].variables[iVariable].type.errorType = !e.value?.trim() && 'This is field required';
