@@ -109,7 +109,7 @@ const Design = () => {
                 }}>
                 <ModuleDrag />
               </div>
-            ) : moduleState.gasFee > -1 ? (
+            ) : contractState.current.gasFee > -1 ? (
               <Box
                 sx={{
                   position: 'absolute',
