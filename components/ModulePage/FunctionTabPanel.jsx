@@ -32,6 +32,7 @@ const FunctionTabPanel = () => {
   const moduleState = useSelector((state) => state.userModule);
   const { functions: listFunction } = useSelector((state) => state.functions);
   const { functions } = useDispatch();
+  const contractState = useSelector((state) => state.contract);
   const theme = useTheme();
 
   useEffect(() => {
