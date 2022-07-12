@@ -82,7 +82,7 @@ const FunctionTabPanel = () => {
                 position: 'absolute',
                 bottom: '0',
               }}>
-              GAS FEE OF THIS SMART CONTRACT:{moduleState.gasFee} Gwei
+              GAS FEE OF THIS SMART CONTRACT: {moduleState.gasFee} Gwei
             </Box>
           ) : null}
         </Scrollbars>
