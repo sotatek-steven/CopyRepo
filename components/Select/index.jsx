@@ -4,6 +4,7 @@ import ArrowDown from 'assets/icon/arrow-down.svg';
 import React from 'react';
 
 const Label = styled('div')(({ theme }) => ({
+  fontFamily: 'Segoe UI',
   color: theme.palette.primary.light,
   fontSize: 16,
   fontWeight: 600,

@@ -2,11 +2,11 @@ import { styled } from '@mui/material/styles';
 import React from 'react';
 import IconInfo from 'assets/icon/icon-info.svg';
 import { IconButton, Tooltip } from '@mui/material';
-import { withStyles } from '@mui/styles';
 
 const Label = styled('div')(({ theme }) => ({
-  color: theme.palette.text.primary,
-  fontSize: 18,
+  fontFamily: 'Segoe UI',
+  color: theme.palette.primary.light,
+  fontSize: 16,
   fontWeight: 600,
   marginBottom: 3,
   display: 'flex',
@@ -38,13 +38,6 @@ const Error = styled('div')(({ theme }) => ({
   fontSize: 14,
   marginTop: 8,
 }));
-
-// const BlueOnGreenTooltip = withStyles({
-//   tooltip: {
-//     color: 'lightblue',
-//     backgroundColor: 'green',
-//   },
-// })(Tooltip);
 
 const Input = ({
   label,
