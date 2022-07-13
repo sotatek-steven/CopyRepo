@@ -4,8 +4,8 @@ import ArrowDown from 'assets/icon/arrow-down.svg';
 import React from 'react';
 
 const Label = styled('div')(({ theme }) => ({
-  color: theme.palette.text.primary,
-  fontSize: 18,
+  color: theme.palette.primary.light,
+  fontSize: 16,
   fontWeight: 600,
   marginBottom: 3,
 }));
