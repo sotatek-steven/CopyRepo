@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
 import React from 'react';
+import Scrollbars from 'react-custom-scrollbars';
 import { useSelector } from 'react-redux';
 import { DashedDivider } from '../atom/Divider';
 import ImportedLibrary from './ImportedLibrary';
@@ -26,20 +27,21 @@ const ImportedLibraries = () => {
   return (
     <>
       <Title>Imported libraries</Title>
-
-      <DashedDivider />
-      {libraries ? (
-        libraries.map((library) => (
-          <div key={library}>
-            <ImportedLibrary name={library} />
-            <DashedDivider />
-          </div>
-        ))
-      ) : (
-        <TextContainer>
-          <p>No libraries imported</p>
-        </TextContainer>
-      )}
+      <Scrollbars style={{ flexGrow: 1 }}>
+        <DashedDivider />
+        {libraries?.length ? (
+          libraries.map((library) => (
+            <div key={library}>
+              <ImportedLibrary name={library} />
+              <DashedDivider />
+            </div>
+          ))
+        ) : (
+          <TextContainer>
+            <p>No libraries imported</p>
+          </TextContainer>
+        )}
+      </Scrollbars>
     </>
   );
 };

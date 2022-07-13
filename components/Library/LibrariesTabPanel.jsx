@@ -14,6 +14,8 @@ const LeftSide = styled('div')(({ theme }) => ({
   width: 444,
   background: theme.palette.background.dark,
   flexShrink: 0,
+  display: 'flex',
+  flexDirection: 'column',
 }));
 
 const RightSide = styled('div')(({ theme }) => ({
