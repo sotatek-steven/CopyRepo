@@ -17,6 +17,8 @@ import IconAddField from '../../assets/icon/IconAddField.svg';
 import { createNodes } from '@/components/FunctionCanvas/CreateElement';
 import FunctionCanvas from '@/components/FunctionCanvas';
 import AddFieldTab from '@/components/ModulePage/AddFieldTab';
+import ValuesTabPanel from '@/components/ValuesPanel';
+import ObjectTabPanel from '@/components/ObjectTabPanel';
 
 const ContentWapper = styled('div')(() => ({
   display: 'flex',

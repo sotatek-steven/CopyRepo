@@ -10,6 +10,7 @@ import struct from './struct';
 import functions from './function';
 import modules from './modules';
 import object from './object';
+import value from './values';
 
 export {
   ticket,
@@ -24,4 +25,5 @@ export {
   functions,
   modules,
   object,
+  value,
 };
