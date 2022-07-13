@@ -1,6 +1,7 @@
 import { ELEMENT_TYPE, NEW_ID, EDIT_ID } from '@/config/constant/common';
-import { useState } from 'react';
+import { useMemo, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const STRUCT = {
   name: '',
@@ -32,6 +33,14 @@ const VARIABLE = {
 
 const useStructPage = () => {
   const { structs, types } = useSelector((state) => state.struct);
+  const { objects } = useSelector((state) => state.object);
+
+  const listStructUsed = useMemo(() => {
+    return objects?.map(({ item }) => item);
+  }, [objects]);
+
+  console.log(listStructUsed);
+
   const { struct, userModule } = useDispatch();
 
   const [count, setCount] = useState(0);
@@ -52,6 +61,7 @@ const useStructPage = () => {
 
       return {
         _id: `${EDIT_ID}_${idxStruct}`,
+        structId: struct?._id,
         name: struct?.name,
         variables: variables,
       };
@@ -89,6 +99,11 @@ const useStructPage = () => {
 
   const handelRemoveStruct = (structId) => {
     const iStruct = structs.findIndex(({ _id }) => _id === structId);
+
+    if (listStructUsed?.includes(structs[iStruct]?.structId)) {
+      toast.warning('This struct is used');
+      return;
+    }
     const data = [...structs];
     data.splice(iStruct, 1);
 
@@ -97,8 +112,12 @@ const useStructPage = () => {
   };
 
   const handelAddVariable = (structId) => {
-    const variable = JSON.parse(JSON.stringify(VARIABLE));
     const iStruct = structs.findIndex(({ _id }) => _id === structId);
+    if (listStructUsed?.includes(structs[iStruct]?.structId)) {
+      toast.warning('This struct is used');
+      return;
+    }
+    const variable = JSON.parse(JSON.stringify(VARIABLE));
     const data = [...structs];
     data[iStruct]?.variables?.push({ ...variable, _id: `${NEW_ID}_${count}` });
 
@@ -109,6 +128,10 @@ const useStructPage = () => {
 
   const handelRemoveVariable = (structId, variableId) => {
     const iStruct = structs.findIndex(({ _id }) => _id === structId);
+    if (listStructUsed?.includes(structs[iStruct]?.structId)) {
+      toast.warning('This struct is used');
+      return;
+    }
     const iVariable = structs[iStruct]?.variables.findIndex(({ _id }) => _id === variableId);
     const data = [...structs];
     data[iStruct]?.variables?.splice(iVariable, 1);
