@@ -26,7 +26,7 @@ const INIT_VALUES = [
 
 const value = createModel({
   state: {
-    values: [INIT_VALUES],
+    values: INIT_VALUES,
     types: TYPES,
     count: 0,
   },
