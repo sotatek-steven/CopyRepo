@@ -262,3 +262,46 @@ export const VALUE_TYPE_OPTIONS = [
     label: 'String',
   },
 ];
+
+export const TITLE_VALUES_TAB = [
+  {
+    id: 1,
+    label: 'VALUE_TYPE',
+    value: 'value_type',
+  },
+  {
+    id: 2,
+    label: 'IS_ARRAY',
+    value: 'is_array',
+  },
+  {
+    id: 3,
+    label: 'SCOPE',
+    value: 'scope',
+  },
+  {
+    id: 4,
+    label: 'IS_CONSTANT',
+    value: 'is_constant',
+  },
+  {
+    id: 5,
+    label: 'VARIABLE_NAME *',
+    value: 'variable_name',
+  },
+  {
+    id: 6,
+    label: 'VARIABLE_VALUE',
+    value: 'variable_value',
+  },
+  {
+    id: 7,
+    label: 'IS_DEFAULT_VALUE',
+    value: 'is_default_value',
+  },
+  {
+    id: 8,
+    label: 'MAP_TO_FUNCTION',
+    value: 'map_to_function',
+  },
+];

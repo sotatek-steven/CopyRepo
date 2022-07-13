@@ -1,23 +1,12 @@
 import React from 'react';
-import { PrimaryButton } from '../ButtonStyle';
 import AddIcon from 'assets/icon/addIcon2.svg';
-import { Container, BodyContent, Footer } from './ValueTab.style';
+import { Container, BodyContent } from './ValueTab.style';
 import ValueItem from './ValueItem';
 import useValuesTab from './hooks/useValuesTab';
-import { Box, Grid, IconButton, Tooltip, useTheme } from '@mui/material';
-import { Item, ItemContainer, ButtonWrapper } from './ValueTab.style';
+import { Box, IconButton, Tooltip, useTheme } from '@mui/material';
+import { Item, ItemContainer } from './ValueTab.style';
 import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
-
-const listTitle = [
-  'VALUE_TYPE',
-  'IS_ARRAY',
-  'SCOPE',
-  'IS_CONSTANT',
-  'VARIABLE_NAME *',
-  'VARIABLE_VALUE',
-  'IS_DEFAULT_VALUE',
-  'MAP_TO_FUNCTION',
-];
+import { TITLE_VALUES_TAB } from '@/config/constant/common';
 
 const ValuesTabPanel = () => {
   const { values, handleAddValues, handleRemoveValue, handleChangeValue } = useValuesTab();
@@ -32,11 +21,11 @@ const ValuesTabPanel = () => {
           borderRadius: '4px',
           width: `calc(100% - 25px)`,
         }}>
-        {listTitle.map((item, index) => (
-          <Item key={index}>
-            {item}
-            {item === 'VARIABLE_NAME *' && (
-              <Tooltip title="Somethings">
+        {TITLE_VALUES_TAB.map((item) => (
+          <Item key={item.id}>
+            {item.label}
+            {item.value === 'variable_name' && (
+              <Tooltip title="Beginning character : Must be letter. Following characters only contain: Letter, digits, (_)">
                 <IconButton>
                   <ReportGmailerrorredIcon sx={{ color: theme.palette.primary.light }} />
                 </IconButton>
