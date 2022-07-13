@@ -36,6 +36,7 @@ const TabListContainer = styled('div')(({ theme }) => ({
     position: 'absolute',
     left: -70,
     top: 300,
+    width: 88,
     borderRadius: 'unset',
     '.Mui-selected': {
       color: `${theme.palette.primary.main} !important`,
@@ -53,6 +54,9 @@ const TabListContainer = styled('div')(({ theme }) => ({
     },
     '.MuiTabs-flexContainer': {
       padding: '20px 0px',
+    },
+    '.MuiTab-root': {
+      fontSize: 12,
     },
   },
 }));
@@ -270,40 +274,11 @@ const ModulePage = () => {
         </TabContext>
       </TabPanelContent>
       <TabPanelContent value="fields">
-        <TabContext value={tabAddField}>
-          <TabListContainer>
+        <TabContext value={tabHorizontal}>
+          <TabAddFieldContainer>
             <ModuleControl />
-            <Box
-              sx={{
-                paddingLeft: '50px',
-                width: '93vw',
-              }}>
-              <TabList
-                sx={{
-                  '.MuiButtonBase-root': {
-                    textTransform: 'none',
-                    fontSize: '16px',
-                    fontWeight: 600,
-                  },
-                  '.Mui-selected': {
-                    color: theme.palette.primary.main,
-                    fontWeight: theme.typography.fontWeightBold,
-                  },
-                }}
-                className="add-field"
-                onChange={handleChangeTabAddField}
-                aria-label="lab API tabs example">
-                {TAB_ADD_FIELDS.map((tab) => (
-                  <TabItem key={tab.value} label={tab.name} value={tab.value} />
-                ))}
-                <Divider />
-              </TabList>
-
-              <TabPanel value="values">Values</TabPanel>
-              <TabPanel value="objects">Objects</TabPanel>
-              <TabPanel value="mappings">Mappings</TabPanel>
-            </Box>
-          </TabListContainer>
+            <AddFieldTab />
+          </TabAddFieldContainer>
         </TabContext>
       </TabPanelContent>
     </TabContext>

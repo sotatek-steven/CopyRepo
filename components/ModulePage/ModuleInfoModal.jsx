@@ -33,7 +33,7 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
   const theme = useTheme();
 
   const optionDomain = useMemo(() => {
-    return listDomain.map((item) => {
+    return listDomain?.map((item) => {
       return {
         value: item._id,
         label: item.name,

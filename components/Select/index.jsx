@@ -1,4 +1,4 @@
-import { MenuItem, Select } from '@mui/material';
+import { Checkbox, ListItemText, MenuItem, Select } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ArrowDown from 'assets/icon/arrow-down.svg';
 import React from 'react';
@@ -32,23 +32,63 @@ const Error = styled('div')(({ theme }) => ({
   marginTop: 8,
 }));
 
-const SelectComponent = ({ label, isRequired, value = '', onChange, options = [], disabled = false, errorText }) => {
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+    },
+  },
+};
+
+const SelectComponent = ({
+  multiple = false,
+  label,
+  isRequired,
+  value = '',
+  onChange,
+  options = [],
+  disabled = false,
+  errorText,
+}) => {
   return (
     <>
       <Label>
         {label}
         {isRequired && '*'}
       </Label>
-      <SelectBasic value={value} onChange={onChange} disabled={disabled} displayEmpty IconComponent={ArrowDown}>
-        {!!options.length &&
-          options.map((option) => {
-            return (
-              <MenuItem key={option.value} value={option.value}>
-                {option.label}
+      {!multiple && (
+        <SelectBasic value={value} onChange={onChange} disabled={disabled} displayEmpty IconComponent={ArrowDown}>
+          {!!options.length &&
+            options.map((option) => {
+              return (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              );
+            })}
+        </SelectBasic>
+      )}
+      {multiple && (
+        <SelectBasic
+          multiple
+          value={value}
+          onChange={onChange}
+          disabled={disabled}
+          displayEmpty
+          IconComponent={ArrowDown}
+          renderValue={(selected) => selected.join(', ')}
+          MenuProps={MenuProps}>
+          {!!options.length &&
+            options.map(({ value: _id, label }) => (
+              <MenuItem key={_id} value={_id}>
+                <Checkbox checked={value.indexOf(_id) > -1} />
+                <ListItemText primary={label} />
               </MenuItem>
-            );
-          })}
-      </SelectBasic>
+            ))}
+        </SelectBasic>
+      )}
       {!!errorText && <Error>{errorText}</Error>}
     </>
   );

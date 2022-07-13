@@ -6,13 +6,18 @@ import useObjectTab from './hooks/useObjectTab';
 import ObjectItem from './ObjectItem';
 
 const ObjectTabPanel = () => {
-  const { objects, handleAddObject } = useObjectTab();
+  const { objects, handleAddObject, handleRemoveObject, handleChangeObject } = useObjectTab();
 
   return (
     <Container>
       <BodyContent>
         {objects?.map((object) => (
-          <ObjectItem key={object?._id} object={object} />
+          <ObjectItem
+            key={object?._id}
+            object={object}
+            handleRemoveObject={handleRemoveObject}
+            handleChangeObject={handleChangeObject}
+          />
         ))}
       </BodyContent>
       <Footer>

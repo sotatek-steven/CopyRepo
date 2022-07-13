@@ -19,10 +19,14 @@ const ItemContainer = styled('div')(({ theme }) => ({
 
 const Item = styled('div')(({ theme }) => ({
   width: '13%',
+
+  '& > div': {
+    fontSize: '15px !important',
+  },
 }));
 
 const ButtonWrapper = styled('div')(({ theme }) => ({
-  marginTop: 30,
+  marginTop: 25,
 }));
 
 const Error = styled('div')(({ theme }) => ({

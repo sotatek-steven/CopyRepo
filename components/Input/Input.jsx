@@ -1,11 +1,22 @@
 import { styled } from '@mui/material/styles';
 import React from 'react';
+import IconInfo from 'assets/icon/icon-info.svg';
+import { IconButton, Tooltip } from '@mui/material';
+import { withStyles } from '@mui/styles';
 
 const Label = styled('div')(({ theme }) => ({
   color: theme.palette.text.primary,
   fontSize: 18,
   fontWeight: 600,
   marginBottom: 3,
+  display: 'flex',
+  justifyContent: 'space-between',
+  '.MuiIconButton-root': {
+    padding: 0,
+    '&:hover': {
+      backgroundColor: 'unset',
+    },
+  },
 }));
 
 const InputBasic = styled('input')(({ theme }) => ({
@@ -28,14 +39,50 @@ const Error = styled('div')(({ theme }) => ({
   marginTop: 8,
 }));
 
-const Input = ({ label, value, isRequired, id, name, type = 'text', onChange, readOnly, errorText, placeholder }) => {
+// const BlueOnGreenTooltip = withStyles({
+//   tooltip: {
+//     color: 'lightblue',
+//     backgroundColor: 'green',
+//   },
+// })(Tooltip);
+
+const Input = ({
+  label,
+  value,
+  isRequired,
+  tooltip,
+  id,
+  name,
+  type = 'text',
+  onChange,
+  readOnly,
+  errorText,
+  placeholder,
+}) => {
   return (
     <>
       <Label htmlFor={id}>
-        {label}
-        {isRequired && '*'}
+        <div className="title">
+          {label}
+          {isRequired && '*'}
+        </div>
+        {tooltip && (
+          <Tooltip title={tooltip} placement="top" arrow>
+            <IconButton>
+              <IconInfo />
+            </IconButton>
+          </Tooltip>
+        )}
       </Label>
-      <InputBasic type={type} name={name} id={id} value={value} onChange={onChange} readOnly={readOnly} placeholder={placeholder} />
+      <InputBasic
+        type={type}
+        name={name}
+        id={id}
+        value={value}
+        onChange={onChange}
+        readOnly={readOnly}
+        placeholder={placeholder}
+      />
       {!!errorText && <Error>{errorText}</Error>}
     </>
   );
