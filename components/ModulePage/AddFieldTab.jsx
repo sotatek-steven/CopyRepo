@@ -1,6 +1,7 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { styled, Tab } from '@mui/material';
 import React, { useState } from 'react';
+import MappingTabPanel from '../MappingTabPanel';
 import ObjectTabPanel from '../ObjectTabPanel';
 
 const TAB_LIST = [
@@ -21,11 +22,11 @@ const TAB_LIST = [
   },
 ];
 
-const Container = styled('div')(({ theme }) => ({
+const Container = styled('div')({
   width: '100%',
   height: '100%',
   padding: '0 35px',
-}));
+});
 
 const TabListContent = styled(TabList)(({ theme }) => ({
   fontFamily: theme.typography.fontFamily,
@@ -46,15 +47,15 @@ const TabListContent = styled(TabList)(({ theme }) => ({
   },
 }));
 
-const TabItem = styled(Tab)(() => ({
+const TabItem = styled(Tab)({
   fontSize: 18,
   transform: 'scale(0.85, 0.78)',
-}));
+});
 
-const TabPanelContent = styled(TabPanel)(() => ({
+const TabPanelContent = styled(TabPanel)({
   padding: '0 !important',
   width: '100%',
-}));
+});
 
 const AddFieldTab = () => {
   const [activeTab, setActiveTab] = useState('values');
@@ -72,7 +73,9 @@ const AddFieldTab = () => {
         </TabListContent>
         <TabPanelContent value="values">Values</TabPanelContent>
         <TabPanelContent value="objects">{<ObjectTabPanel />}</TabPanelContent>
-        <TabPanelContent value="mappings">Mappings</TabPanelContent>
+        <TabPanelContent value="mappings">
+          <MappingTabPanel />
+        </TabPanelContent>
       </Container>
     </TabContext>
   );
