@@ -15,11 +15,9 @@ const object = createModel({
   state: {
     objects: [],
     types: TYPES,
-    count: 0,
   },
   reducers: {
     setObjects: (state, objects) => ({ ...state, objects }),
-    setCount: (state, count) => ({ ...state, count }),
   },
   effects: (dispatch) => {
     return {};

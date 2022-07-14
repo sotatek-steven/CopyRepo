@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { PrimaryButton } from '../ButtonStyle';
 import AddIcon from 'assets/icon/addIcon.svg';
 import { Container, BodyContent, Footer } from './ObjectTab.style';
@@ -6,7 +6,15 @@ import useObjectTab from './hooks/useObjectTab';
 import ObjectItem from './ObjectItem';
 
 const ObjectTabPanel = () => {
-  const { objects, handleAddObject, handleRemoveObject, handleChangeObject } = useObjectTab();
+  const {
+    objects,
+    handleAddObject,
+    handleRemoveObject,
+    handleChangeObject,
+    handleAddAssignedValue,
+    handleRemoveAssignedValue,
+    handleChangeAssignedValues,
+  } = useObjectTab();
 
   return (
     <Container>
@@ -17,6 +25,9 @@ const ObjectTabPanel = () => {
             object={object}
             handleRemoveObject={handleRemoveObject}
             handleChangeObject={handleChangeObject}
+            handleAddAssignedValue={handleAddAssignedValue}
+            handleRemoveAssignedValue={handleRemoveAssignedValue}
+            handleChangeAssignedValues={handleChangeAssignedValues}
           />
         ))}
       </BodyContent>
