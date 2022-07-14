@@ -19,12 +19,12 @@ const Label = styled('div')(({ theme }) => ({
   },
 }));
 
-const InputBasic = styled('input')(({ theme }) => ({
+const InputBasic = styled('input')(({ theme, error }) => ({
   backgroundColor: theme.palette.background.light,
   color: theme.palette.text.primary,
   height: 45,
   borderRadius: 5,
-  border: 'none',
+  border: error ? 'solid 1px red' : `solid 1px ${theme.palette.background.light}`,
   outline: 'none',
   width: '100%',
   fontSize: 14,
@@ -39,22 +39,10 @@ const Error = styled('div')(({ theme }) => ({
   marginTop: 8,
 }));
 
-const Input = ({
-  label,
-  value,
-  isRequired,
-  tooltip,
-  id,
-  name,
-  type = 'text',
-  onChange,
-  readOnly,
-  errorText,
-  placeholder,
-}) => {
+const Input = ({ label, isRequired, tooltip, errorText, error, ...props }) => {
   return (
     <>
-      <Label htmlFor={id}>
+      <Label htmlFor={props.id}>
         <div className="title">
           {label}
           {isRequired && '*'}
@@ -67,15 +55,7 @@ const Input = ({
           </Tooltip>
         )}
       </Label>
-      <InputBasic
-        type={type}
-        name={name}
-        id={id}
-        value={value}
-        onChange={onChange}
-        readOnly={readOnly}
-        placeholder={placeholder}
-      />
+      <InputBasic error={error ? 1 : 0} {...props} />
       {!!errorText && <Error>{errorText}</Error>}
     </>
   );

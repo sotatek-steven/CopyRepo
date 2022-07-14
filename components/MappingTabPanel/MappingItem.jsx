@@ -1,7 +1,7 @@
 import { Grid } from '@mui/material';
-import React, { useState } from 'react';
-import { Input } from '../Input';
+import React, { useEffect, useState } from 'react';
 import Select from '../Select';
+import VariableNameField from './VariableNameField';
 
 const SCOPE = [
   {
@@ -14,18 +14,22 @@ const SCOPE = [
   },
 ];
 
-const TOOLTIP_NAME = 'Beginning character: Must be letter\nFollowing characters only contain: Letters, digits, (_)';
-
 const MappingItem = () => {
   const [scope, setScope] = useState(SCOPE[0].value);
   const [variableName, setVariableName] = useState('');
+  const [error, setError] = useState(true);
+
   const handleScopeChange = (event) => {
     setScope(event.target.value);
   };
 
-  const handleVariableNameChange = (event) => {
-    setVariableName(event.target.value);
+  const updateVariableName = (value) => {
+    setVariableName(value);
   };
+
+  useEffect(() => {
+    console.log('mapping has error? ', error);
+  }, [error]);
 
   return (
     <Grid container spacing={2} style={{ marginBottom: 30 }}>
@@ -33,13 +37,7 @@ const MappingItem = () => {
         <Select label={'SCOPE'} value={scope} options={SCOPE} onChange={handleScopeChange} />
       </Grid>
       <Grid item xs={4}>
-        <Input
-          isRequired={true}
-          label={'VARIABLE NAME'}
-          value={variableName}
-          tooltip={TOOLTIP_NAME}
-          onChange={handleVariableNameChange}
-        />
+        <VariableNameField value={variableName} updateValue={updateVariableName} updateError={setError} />
       </Grid>
     </Grid>
   );
