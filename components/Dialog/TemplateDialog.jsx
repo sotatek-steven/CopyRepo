@@ -123,7 +123,7 @@ const TemplateDialog = ({ open, setOpen, type }) => {
                   listFunctions.push(i.name);
                 });
 
-                item.sources.contructorParams.forEach((i) => {
+                item.sources.contructorParams?.forEach((i) => {
                   listParameters.push(i.label);
                 });
                 return (

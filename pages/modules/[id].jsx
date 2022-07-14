@@ -17,6 +17,8 @@ import IconAddField from '../../assets/icon/IconAddField.svg';
 import { createNodes } from '@/components/FunctionCanvas/CreateElement';
 import FunctionCanvas from '@/components/FunctionCanvas';
 import AddFieldTab from '@/components/ModulePage/AddFieldTab';
+import ValuesTabPanel from '@/components/ValuesPanel';
+import ObjectTabPanel from '@/components/ObjectTabPanel';
 
 const ContentWapper = styled('div')(() => ({
   display: 'flex',
@@ -211,10 +213,6 @@ const ModulePage = () => {
     setTabHorizontal(newValue);
   };
 
-  const handleChangeTabAddField = (_, newValue) => {
-    setTabAddField(newValue);
-  };
-
   if (moduleModeState !== ModuleMode.DESIGN) return <Library />;
   return (
     <TabContext value={tabVertical}>
@@ -263,7 +261,7 @@ const ModulePage = () => {
                     top: '4.5em',
                     right: '0',
                   }}>
-                  GAS FEE OF THIS SMART CONTRACT: Gwei
+                  GAS FEE OF THIS SMART CONTRACT: {moduleState.gasFee} Gwei
                 </Box>
               )}
             </ContentWapper>
