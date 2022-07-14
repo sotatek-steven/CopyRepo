@@ -13,14 +13,14 @@ const TYPES = [
 
 const INIT_VALUES = [
   {
-    valueType: '',
+    type: '',
     isArray: false,
     scope: 'public',
     isConstant: false,
     variableName: '',
     variableValue: '',
     isDefaultValue: false,
-    mapToFunctions: '',
+    functions: '',
   },
 ];
 

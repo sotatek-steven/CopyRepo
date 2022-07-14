@@ -2,14 +2,14 @@ import { ELEMENT_TYPE, NEW_ID } from '@/config/constant/common';
 import { useDispatch, useSelector } from 'react-redux';
 
 const OBJECT = {
-  valueType: '',
+  type: '',
   isArray: false,
   scope: 'public',
   isConstant: false,
   variableName: '',
   variableValue: '',
   isDefaultValue: false,
-  mapToFunctions: '',
+  functions: '',
 };
 
 const useValuesTab = () => {

@@ -24,9 +24,9 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
       <Item>
         <Select
           menuProps
-          value={value?.valueType}
+          value={value?.type}
           options={VALUE_TYPE_OPTIONS}
-          onChange={(e) => handleChangeValue(value?._id, 'valueType', e, ELEMENT_TYPE.SELECT)}
+          onChange={(e) => handleChangeValue(value?._id, 'type', e, ELEMENT_TYPE.SELECT)}
         />
       </Item>
       <Item>
@@ -71,9 +71,9 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
       </Item>
       <Item>
         <Select
-          value={value?.mapToFunctions}
+          value={value?.functions}
           options={listFunction}
-          onChange={(e) => handleChangeValue(value?._id, 'mapToFunctions', e, ELEMENT_TYPE.SELECT)}
+          onChange={(e) => handleChangeValue(value?._id, 'functions', e, ELEMENT_TYPE.SELECT)}
         />
       </Item>
       <Box>
