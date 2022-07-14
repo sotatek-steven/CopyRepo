@@ -1,6 +1,9 @@
 import { Grid } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { useMemo } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import Select from '../Select';
+import MapToFunctionField from './MapToFunctionField';
 import VariableNameField from './VariableNameField';
 
 const SCOPE = [
@@ -15,17 +18,52 @@ const SCOPE = [
 ];
 
 const MappingItem = () => {
+  const moduleState = useSelector((state) => state.userModule);
+  const { userModule } = useDispatch();
+
   const [scope, setScope] = useState(SCOPE[0].value);
-  const [variableName, setVariableName] = useState('');
+  const [variableName, setVariableName] = useState(''); //only save the valid variable name
   const [error, setError] = useState(true);
+  const [mapToFunction, setMapToFunction] = useState([]);
 
-  const handleScopeChange = (event) => {
-    setScope(event.target.value);
-  };
+  const FUNCTIONS = useMemo(() => {
+    return moduleState?.sources?.functions?.map((item) => {
+      const { _id, name } = item;
+      return {
+        value: _id,
+        label: name,
+      };
+    });
+  }, [moduleState?.sources?.functions]);
 
-  const updateVariableName = (value) => {
-    setVariableName(value);
-  };
+  useEffect(() => {
+    const updateMappingData = (scope, variableName, mapToFunction) => {
+      const {
+        variables: { mappings },
+      } = moduleState;
+      if (!mappings) return;
+
+      const updatedMappings = mappings.map((mappingData) => {
+        if (mappingData.label === variableName)
+          return {
+            label: variableName,
+            scope,
+            functions: mapToFunction,
+            type: {
+              key: 'address',
+              values: {
+                type: 'address',
+                map: {},
+              },
+            },
+          };
+        return mappingData;
+      });
+      userModule.updateMappings(updatedMappings);
+    };
+
+    updateMappingData(scope, variableName, mapToFunction);
+  }, [scope, variableName, mapToFunction]);
 
   useEffect(() => {
     console.log('mapping has error? ', error);
@@ -34,10 +72,13 @@ const MappingItem = () => {
   return (
     <Grid container spacing={2} style={{ marginBottom: 30 }}>
       <Grid item xs={4}>
-        <Select label={'SCOPE'} value={scope} options={SCOPE} onChange={handleScopeChange} />
+        <Select label={'SCOPE'} value={scope} options={SCOPE} onChange={(event) => setScope(event.target.value)} />
       </Grid>
       <Grid item xs={4}>
-        <VariableNameField value={variableName} updateValue={updateVariableName} updateError={setError} />
+        <VariableNameField updateValue={setVariableName} updateError={setError} />
+      </Grid>
+      <Grid item xs={4}>
+        <MapToFunctionField options={FUNCTIONS} updateValue={setMapToFunction} />
       </Grid>
     </Grid>
   );

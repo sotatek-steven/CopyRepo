@@ -33,13 +33,14 @@ const VariableNameField = ({ updateValue, updateError }) => {
   useEffect(() => {
     updateError(value === '' ? true : error);
     if (error) return;
+    //only update the value is valid
     updateValue(value);
   }, [value]);
 
   return (
     <Input
       isRequired={true}
-      label="VARIABLE NAME"
+      label="VARIABLE_NAME"
       value={value}
       tooltip={TOOLTIP_NAME}
       onChange={handleChange}

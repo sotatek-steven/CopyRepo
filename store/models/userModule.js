@@ -51,6 +51,13 @@ const userModule = createModel({
         coordinates,
       },
     }),
+    updateMappings: (state, mappings) => ({
+      ...state,
+      variables: {
+        ...state.variables,
+        mappings,
+      },
+    }),
   },
   effects: (dispatch) => {
     const { player, modules } = dispatch;
