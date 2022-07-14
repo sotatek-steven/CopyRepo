@@ -98,7 +98,7 @@ const SelectComponent = ({
           MenuProps={MenuProps}>
           {!!options.length &&
             options.map(({ value: _id, label }) => (
-              <MenuItem key={_id} value={_id}>
+              <MenuItem key={_id} value={label}>
                 <Checkbox checked={value.indexOf(_id) > -1} />
                 <ListItemText primary={label} />
               </MenuItem>
