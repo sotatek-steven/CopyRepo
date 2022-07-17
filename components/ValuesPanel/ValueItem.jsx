@@ -2,7 +2,7 @@ import { BOOLEAN_OPTIONS, ELEMENT_TYPE, SCOPE, VALUE_TYPE_OPTIONS } from '@/conf
 import { useSelector } from 'react-redux';
 import { Input } from '../Input';
 import Select from '../Select';
-import { Item, ItemContainer } from './ValueTab.style';
+import { Error, Item, ItemContainer } from './ValueTab.style';
 import DeleteIcon from '../../assets/icon/deleteIcon2.svg';
 import { Box, IconButton, useTheme } from '@mui/material';
 import { useMemo } from 'react';
@@ -45,21 +45,26 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
       </Item>
       <Item>
         <Select
-          value={value?.isConstant}
+          value={value?.isConst}
           options={BOOLEAN_OPTIONS}
-          onChange={(e) => handleChangeValue(value?._id, 'isConstant', e, ELEMENT_TYPE.SELECT)}
+          onChange={(e) => handleChangeValue(value?._id, 'isConst', e, ELEMENT_TYPE.SELECT)}
+          disabled={value.isArray}
         />
       </Item>
-      <Item>
-        <Input
-          value={value?.variableName}
-          onChange={(e) => handleChangeValue(value?._id, 'variableName', e, ELEMENT_TYPE.INPUT)}
-        />
-      </Item>
+      <Box>
+        <Item>
+          <Input value={value?.label} onChange={(e) => handleChangeValue(value?._id, 'label', e, ELEMENT_TYPE.INPUT)} />
+        </Item>
+        <Box sx={{ position: 'absolute', maxWidth: '200px' }}>
+          {!!value?.errorName && <Error>{value?.errorName}</Error>}
+        </Box>
+      </Box>
       <Item>
         <Input
           value={value?.variableValue}
           onChange={(e) => handleChangeValue(value?._id, 'variableValue', e, ELEMENT_TYPE.INPUT)}
+          disabled={value.isDefaultValue === true}
+          placeholder={value.isArray ? 'Separate array items with (,)' : null}
         />
       </Item>
       <Item>
