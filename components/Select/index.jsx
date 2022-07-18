@@ -2,14 +2,8 @@ import { Checkbox, ListItemText, MenuItem, Select } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ArrowDown from 'assets/icon/arrow-down.svg';
 import React from 'react';
-
-const Label = styled('div')(({ theme }) => ({
-  fontFamily: 'Segoe UI',
-  color: theme.palette.primary.light,
-  fontSize: 16,
-  fontWeight: 600,
-  marginBottom: 3,
-}));
+import Scrollbars from 'react-custom-scrollbars';
+import Label from '../atom/Label';
 
 const SelectBasic = styled(Select)(({ theme }) => ({
   backgroundColor: theme.palette.background.light,
@@ -64,10 +58,12 @@ const SelectComponent = ({
 }) => {
   return (
     <>
-      <Label>
-        {label}
-        {isRequired && '*'}
-      </Label>
+      {label && (
+        <Label>
+          {label}
+          {isRequired && '*'}
+        </Label>
+      )}
       {!multiple && (
         <SelectBasic
           MenuProps={menuProps ? MenuSimpeProps : {}}
@@ -76,14 +72,16 @@ const SelectComponent = ({
           disabled={disabled}
           displayEmpty
           IconComponent={ArrowDown}>
-          {!!options.length &&
-            options.map((option) => {
-              return (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
-                </MenuItem>
-              );
-            })}
+          <Scrollbars autoHeight>
+            {!!options.length &&
+              options.map((option) => {
+                return (
+                  <MenuItem key={option.value} value={option.value}>
+                    {option.label}
+                  </MenuItem>
+                );
+              })}
+          </Scrollbars>
         </SelectBasic>
       )}
       {multiple && (
@@ -91,18 +89,20 @@ const SelectComponent = ({
           multiple
           value={value}
           onChange={onChange}
-          disabled={disabled}
+          // disabled={disabled}
           displayEmpty
           IconComponent={ArrowDown}
           renderValue={(selected) => selected.join(', ')}
           MenuProps={MenuProps}>
-          {!!options.length &&
-            options.map(({ value: _id, label }) => (
-              <MenuItem key={_id} value={label}>
-                <Checkbox checked={value.indexOf(_id) > -1} />
-                <ListItemText primary={label} />
-              </MenuItem>
-            ))}
+          <Scrollbars autoHeight>
+            {!!options.length &&
+              options.map(({ value: _id, label, locked }) => (
+                <MenuItem key={_id} value={label} disabled={locked}>
+                  <Checkbox checked={value.indexOf(label) > -1} />
+                  <ListItemText primary={label} />
+                </MenuItem>
+              ))}
+          </Scrollbars>
         </SelectBasic>
       )}
       {!!errorText && <Error>{errorText}</Error>}

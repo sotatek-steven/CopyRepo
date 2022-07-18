@@ -14,6 +14,9 @@ const userModule = createModel({
     color: null,
     domainId: null,
     gasFee: null,
+    variables: {
+      mappings: [],
+    },
   },
   reducers: {
     update: (state, data) => ({

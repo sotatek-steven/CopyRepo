@@ -1,21 +1,39 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useMemo } from 'react';
 import SelectComponent from '../Select';
+import useMappingData from './useMappingData';
+import useMapToFunction from './useMapToFunction';
 
-const MapToFunctionField = ({ options, updateFunctions }) => {
-  const [value, setValue] = useState([]);
+const MapToFunctionField = ({ id }) => {
+  const [data, updateData] = useMappingData(id);
+  const { functions, registerMapToFunction, unregisterMapToFunction } = useMapToFunction();
 
-  const handleChange = (event) => {
-    const {
-      target: { value },
-    } = event;
+  const value = data?.func || [];
 
-    setValue(value);
+  const options = useMemo(() => {
+    return functions?.map((item) => {
+      const { id: _id, name, mappingId } = item;
+      return {
+        value: _id,
+        label: name,
+        locked: mappingId && mappingId !== id,
+      };
+    });
+  }, [functions]);
+
+  const checkRegisterFunction = (functions, selectedFunction) => {
+    return functions.some((item) => item.name === selectedFunction);
   };
 
-  useEffect(() => {
-    if (!updateFunctions) return;
-    updateFunctions(value);
-  }, [value]);
+  const handleChange = (event, child) => {
+    const functions = event.target.value;
+
+    updateData({ func: value });
+    if (!registerMapToFunction) return;
+    const selectedFunction = child.props.value;
+    if (checkRegisterFunction(functions, selectedFunction)) registerMapToFunction(selectedFunction, id);
+    else unregisterMapToFunction(selectedFunction);
+  };
 
   return (
     <SelectComponent
