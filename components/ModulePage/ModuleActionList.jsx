@@ -13,6 +13,7 @@ const Container = styled('div')(() => ({
 const ModuleActionList = () => {
   const { userModule, struct } = useDispatch();
   const { structs } = useSelector((state) => state.struct);
+  const { values } = useSelector((state) => state.value);
   const { handleErrorStructs } = useStructPage();
 
   const saveModule = async () => {
