@@ -2,13 +2,9 @@ import { styled } from '@mui/material/styles';
 import React from 'react';
 import IconInfo from 'assets/icon/icon-info.svg';
 import { IconButton, Tooltip } from '@mui/material';
+import Label from '../atom/Label';
 
-const Label = styled('div')(({ theme }) => ({
-  fontFamily: 'Segoe UI',
-  color: theme.palette.primary.light,
-  fontSize: 16,
-  fontWeight: 600,
-  marginBottom: 3,
+const LabelContainer = styled('div')({
   display: 'flex',
   justifyContent: 'space-between',
   '.MuiIconButton-root': {
@@ -17,7 +13,7 @@ const Label = styled('div')(({ theme }) => ({
       backgroundColor: 'unset',
     },
   },
-}));
+});
 
 const InputBasic = styled('input')(({ theme, error }) => ({
   backgroundColor: theme.palette.background.light,
@@ -42,11 +38,11 @@ const Error = styled('div')(({ theme }) => ({
 const Input = ({ label, isRequired, tooltip, errorText, error, ...props }) => {
   return (
     <>
-      <Label htmlFor={props.id}>
-        <div className="title">
+      <LabelContainer htmlFor={props.id}>
+        <Label className="title">
           {label}
           {isRequired && '*'}
-        </div>
+        </Label>
         {tooltip && (
           <Tooltip title={tooltip} placement="top" arrow>
             <IconButton>
@@ -54,7 +50,7 @@ const Input = ({ label, isRequired, tooltip, errorText, error, ...props }) => {
             </IconButton>
           </Tooltip>
         )}
-      </Label>
+      </LabelContainer>
       <InputBasic error={error ? 1 : 0} {...props} />
       {!!errorText && <Error>{errorText}</Error>}
     </>
