@@ -39,8 +39,6 @@ const useStructPage = () => {
     return objects?.map(({ item }) => item);
   }, [objects]);
 
-  console.log(listStructUsed);
-
   const { struct, userModule } = useDispatch();
 
   const [count, setCount] = useState(0);
@@ -220,6 +218,14 @@ const useStructPage = () => {
     });
 
     if (isError) {
+      toast.error('You must save the module before leaving', {
+        position: 'top-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        draggable: true,
+        progress: true,
+      });
       struct.setStructs(lstStruct);
       userModule.updateStructs(convertStructs(lstStruct));
     }

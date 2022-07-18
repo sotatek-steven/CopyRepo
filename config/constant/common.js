@@ -42,6 +42,11 @@ export const IS_ARRAY_OPTION = [
   },
 ];
 
+export const OBJECT_TYPE = {
+  STRUCT: 'struct',
+  ENUM: 'enum',
+};
+
 export const SCOPE = [
   {
     value: 'public',

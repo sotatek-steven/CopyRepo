@@ -2,7 +2,9 @@ import { HTTP_CODE } from '@/config/constant/common';
 import { styled } from '@mui/material';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import { PrimaryButton } from '../ButtonStyle';
+import useObjectTab from '../ObjectTabPanel/hooks/useObjectTab';
 import useStructPage from '../StructTabPanel/hooks/useStructPage';
 
 const Container = styled('div')(() => ({
@@ -15,12 +17,14 @@ const ModuleActionList = () => {
   const { structs } = useSelector((state) => state.struct);
   const { values } = useSelector((state) => state.value);
   const { handleErrorStructs } = useStructPage();
+  const { objectHasError } = useObjectTab();
 
   const saveModule = async () => {
     const isErrorStruct = handleErrorStructs();
     if (isErrorStruct) {
       return;
     }
+    if (objectHasError()) return;
 
     const { code } = await userModule.updateModule();
     if (code === HTTP_CODE.SUCCESS) {

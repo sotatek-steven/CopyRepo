@@ -90,7 +90,7 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
       if (!name?.trim()) {
         textError = 'This field is required';
       } else if (duplicateName(name)) {
-        textError = 'This name is existed';
+        textError = 'Module name is already exists';
       }
 
       tempError = {

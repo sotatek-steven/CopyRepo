@@ -1,4 +1,4 @@
-import { ELEMENT_TYPE, IS_ARRAY_OPTION, SCOPE } from '@/config/constant/common';
+import { ELEMENT_TYPE, IS_ARRAY_OPTION, OBJECT_TYPE, SCOPE } from '@/config/constant/common';
 import { useSelector } from 'react-redux';
 import { PrimaryButton } from '../ButtonStyle';
 import { Input } from '../Input';
@@ -24,19 +24,26 @@ const ObjectItem = ({
   const listStruct = useMemo(() => {
     return moduleState?.sources?.structs?.map((item) => {
       return {
-        value: item._id,
+        value: item.name,
         label: item.name,
       };
     });
   }, [moduleState?.sources?.structs]);
 
   const listFunction = useMemo(() => {
-    return moduleState?.sources?.functions?.map((item) => {
-      return {
-        value: item._id,
-        label: item.name,
-      };
-    });
+    return moduleState?.sources?.functions?.reduce((array, item) => {
+      let temp = [];
+      if (item?.globalVariables.length) {
+        const params = item?.params.map((param) => param?.label)?.toString();
+        temp = item?.globalVariables.map((variable) => {
+          return {
+            value: `${item._id}-${variable.label}`,
+            label: `(${item.name})(${params})`,
+          };
+        });
+      }
+      return array?.concat(temp);
+    }, []);
   }, [moduleState?.sources?.functions]);
 
   return (
@@ -50,7 +57,7 @@ const ObjectItem = ({
             onChange={(e) => handleChangeObject(object?._id, 'type', e, ELEMENT_TYPE.SELECT)}
           />
         </Item>
-        {object?.type === 'structs' && (
+        {object?.type === OBJECT_TYPE.STRUCT && (
           <>
             <Item>
               <Select
@@ -110,7 +117,7 @@ const ObjectItem = ({
         </ButtonWrapper>
       </ItemContainer>
 
-      {object?.type === 'structs' && object?.item && (
+      {object?.type === OBJECT_TYPE.STRUCT && object?.item && (
         <AssignedValueList>
           {object?.assignedValues?.map((assigned, index) => (
             <AssignedValuesContainer key={assigned?._id}>

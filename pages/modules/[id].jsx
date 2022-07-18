@@ -17,8 +17,7 @@ import IconAddField from '../../assets/icon/IconAddField.svg';
 import { createNodes } from '@/components/FunctionCanvas/CreateElement';
 import FunctionCanvas from '@/components/FunctionCanvas';
 import AddFieldTab from '@/components/ModulePage/AddFieldTab';
-import ValuesTabPanel from '@/components/ValuesPanel';
-import ObjectTabPanel from '@/components/ObjectTabPanel';
+import useObjectTab from '@/components/ObjectTabPanel/hooks/useObjectTab';
 
 const ContentWapper = styled('div')(() => ({
   display: 'flex',
@@ -112,14 +111,6 @@ const TabPanelContent = styled(TabPanel)(() => ({
   width: '100%',
 }));
 
-const Divider = styled('div')(({ theme }) => ({
-  width: '100vw !important',
-  position: 'absolute',
-  bottom: 0,
-  borderBottom: 'solid 1px',
-  borderColor: theme.shape.borderColor,
-}));
-
 const TAB_LIST_VERTICAL = [
   {
     name: 'Canvas',
@@ -144,32 +135,17 @@ const TAB_LIST = [
   },
 ];
 
-const TAB_ADD_FIELDS = [
-  {
-    name: 'Values',
-    value: 'values',
-  },
-  {
-    name: 'Objects',
-    value: 'objects',
-  },
-  {
-    name: 'Mappings',
-    value: 'mappings',
-  },
-];
-
 const ModulePage = () => {
-  const { userModule, functions } = useDispatch();
+  const { userModule, functions, object } = useDispatch();
   const router = useRouter();
   const { id } = router.query;
   const moduleModeState = useSelector((state) => state.moduleMode);
   const moduleState = useSelector((state) => state.userModule);
   const { moduleMode, template } = useDispatch();
   const { getStructs } = useStructPage();
+  const { objectHasError, convertToObjectShow } = useObjectTab();
   const [tabVertical, setTabVertical] = useState('canvas');
   const [tabHorizontal, setTabHorizontal] = useState('logic');
-  const [tabAddField, setTabAddField] = useState('values');
   const [nodes, setNodes] = useState([]);
   const theme = useTheme();
   const [sources, setSource] = useState(null);
@@ -177,9 +153,11 @@ const ModulePage = () => {
   useEffect(() => {
     const fetchDetailModule = async (id) => {
       if (!id) return;
+      object.setObjects([]);
       const data = await userModule.getDetailModule(id);
 
       getStructs(data?.sources?.structs);
+      convertToObjectShow(data?.variables?.structs);
       userModule.set(data);
     };
 
@@ -206,6 +184,8 @@ const ModulePage = () => {
   }, [moduleState.lines]);
 
   const handleChangeTabVertical = (e, newValue) => {
+    if (objectHasError()) return;
+
     setTabVertical(newValue);
   };
 
