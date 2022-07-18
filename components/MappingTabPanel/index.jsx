@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { PrimaryButton } from '../ButtonStyle';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { styled } from '@mui/material';
@@ -13,6 +13,44 @@ const MappingTabPanel = () => {
   const moduleState = useSelector((state) => state.userModule);
   const { userModule } = useDispatch();
   const [error, setError] = useState(true);
+  const [functions, setFunctions] = useState([]);
+
+  const registerMapToFunction = (functionId, mappingId) => {
+    const updatedFuctions = functions.map((item) => {
+      const { id } = item;
+      if (id !== functionId) return item;
+      return {
+        ...item,
+        mappingId: mappingId,
+      };
+    });
+    setFunctions(updatedFuctions);
+  };
+
+  const unregisterMapToFunction = (functionId) => {
+    const updatedFuctions = functions.map((item) => {
+      const { id } = item;
+      if (id !== functionId) return item;
+      return {
+        ...item,
+        mappingId: null,
+      };
+    });
+    setFunctions(updatedFuctions);
+  };
+
+  useEffect(() => {
+    const updateFunctions = moduleState?.sources?.functions?.map((item) => {
+      const { _id, name } = item;
+      return {
+        id: _id,
+        name,
+        mappingId: null,
+      };
+    });
+
+    setFunctions(updateFunctions);
+  }, [moduleState?.sources?.functions]);
 
   const handleClick = () => {
     const {
@@ -42,7 +80,16 @@ const MappingTabPanel = () => {
   return (
     <Container>
       {moduleState.variables.mappings.map((mappingItem, index) => {
-        return <MappingItem updateError={setError} id={mappingItem.id} key={index} />;
+        return (
+          <MappingItem
+            updateError={setError}
+            id={mappingItem.id}
+            key={index}
+            functions={functions}
+            registerMapToFunction={registerMapToFunction}
+            unregisterMapToFunction={unregisterMapToFunction}
+          />
+        );
       })}
       <PrimaryButton width={123} onClick={handleClick}>
         <AddCircleOutlineIcon style={{ fontSize: 18 }} />

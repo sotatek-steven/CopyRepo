@@ -7,7 +7,6 @@ const useMappingData = (id) => {
   const { userModule } = useDispatch();
 
   const data = mappings.find((item) => item.id === id);
-  // console.log('mappings: ', mappings);
 
   const updateValue = (newValue, oldValue) => {
     return typeof newValue !== 'undefined' ? newValue : oldValue;

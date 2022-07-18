@@ -2,11 +2,9 @@ import React from 'react';
 import { useMemo } from 'react';
 import SelectComponent from '../Select';
 import useMappingData from './useMappingData';
-import useMapToFunction from './useMapToFunction';
 
-const MapToFunctionField = ({ id }) => {
+const MapToFunctionField = ({ id, functions, registerMapToFunction, unregisterMapToFunction }) => {
   const [data, updateData] = useMappingData(id);
-  const { functions, registerMapToFunction, unregisterMapToFunction } = useMapToFunction();
 
   const value = data?.func || [];
 
@@ -16,20 +14,19 @@ const MapToFunctionField = ({ id }) => {
       return {
         value: _id,
         label: name,
-        locked: mappingId && mappingId !== id,
+        locked: !!mappingId && mappingId !== id,
       };
     });
   }, [functions]);
 
   const checkRegisterFunction = (functions, selectedFunction) => {
-    return functions.some((item) => item.name === selectedFunction);
+    return functions.some((item) => item === selectedFunction);
   };
 
   const handleChange = (event, child) => {
     const functions = event.target.value;
+    updateData({ func: functions });
 
-    updateData({ func: value });
-    if (!registerMapToFunction) return;
     const selectedFunction = child.props.value;
     if (checkRegisterFunction(functions, selectedFunction)) registerMapToFunction(selectedFunction, id);
     else unregisterMapToFunction(selectedFunction);
