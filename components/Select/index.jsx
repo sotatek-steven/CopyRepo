@@ -92,13 +92,16 @@ const SelectComponent = ({
           // disabled={disabled}
           displayEmpty
           IconComponent={ArrowDown}
-          renderValue={(selected) => selected.join(', ')}
+          renderValue={(selected) => {
+            const selectLabel = options.filter((item) => selected.includes(item?.value));
+            return selectLabel.map((item) => item.label).join(', ');
+          }}
           MenuProps={MenuProps}>
           <Scrollbars autoHeight>
             {!!options.length &&
               options.map(({ value: _id, label, locked }) => (
-                <MenuItem key={_id} value={label} disabled={locked}>
-                  <Checkbox checked={value.indexOf(label) > -1} />
+                <MenuItem key={_id} value={_id} disabled={locked}>
+                  <Checkbox checked={value.indexOf(_id) > -1} />
                   <ListItemText primary={label} />
                 </MenuItem>
               ))}

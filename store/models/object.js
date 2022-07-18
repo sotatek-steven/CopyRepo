@@ -1,12 +1,13 @@
+import { OBJECT_TYPE } from '@/config/constant/common';
 import { createModel } from '@rematch/core';
 
 const TYPES = [
   {
-    value: 'structs',
+    value: OBJECT_TYPE.STRUCT,
     label: 'Structs',
   },
   {
-    value: 'enums',
+    value: 'enum',
     label: 'Enums',
   },
 ];
