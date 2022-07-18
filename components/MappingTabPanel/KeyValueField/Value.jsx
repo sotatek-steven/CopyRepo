@@ -1,9 +1,9 @@
 import { PrimaryButton } from '@/components/ButtonStyle';
 import { styled } from '@mui/material';
 import React from 'react';
-import { PAIR_TYPE } from '.';
 import Label from '../../atom/Label';
 import Select from '../../Select';
+import { PAIR_TYPE } from '.';
 
 const VALUE_DATA = [
   {
@@ -49,9 +49,16 @@ const Line = styled('div')(({ theme }) => ({
   marginRight: 5,
 }));
 
-const Value = ({ type, lenthOfData }) => {
+const Value = ({ value, type, lenthOfData, updateValue, returnToPreviousValue, id }) => {
   const handleChange = (event) => {
     const value = event.target.value;
+    if (!updateValue) return;
+    updateValue(value);
+  };
+
+  const handleClick = () => {
+    if (!returnToPreviousValue) return;
+    returnToPreviousValue(id);
   };
 
   return (
@@ -60,13 +67,11 @@ const Value = ({ type, lenthOfData }) => {
       <LabelCustom>Value</LabelCustom>
       <div style={{ width: '24%' }}>
         {(type === PAIR_TYPE.first && lenthOfData === 1) || type === PAIR_TYPE.last ? (
-          <Select options={VALUE_DATA} onChange={handleChange} />
+          <Select value={value} options={VALUE_DATA} onChange={handleChange} menuProps={true} />
         ) : (
-          <div style={{ width: '100%' }}>
-            <PrimaryButton width={190} height={45}>
-              Return to previous value
-            </PrimaryButton>
-          </div>
+          <PrimaryButton width={190} height={45} onClick={handleClick}>
+            Return to previous value
+          </PrimaryButton>
         )}
       </div>
     </Container>

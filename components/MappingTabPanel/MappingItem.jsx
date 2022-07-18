@@ -7,7 +7,7 @@ import VariableNameField from './VariableNameField';
 
 const MappingItem = (props) => {
   return (
-    <div>
+    <div style={{ marginBottom: 60 }}>
       <Grid container spacing={2}>
         <Grid item xs={3}>
           <ScopeField {...props} />

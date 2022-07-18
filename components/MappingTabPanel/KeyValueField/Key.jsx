@@ -1,8 +1,8 @@
 import { styled } from '@mui/material';
 import React from 'react';
-import { PAIR_TYPE } from '.';
 import Label from '../../atom/Label';
 import Select from '../../Select';
+import { PAIR_TYPE } from '.';
 
 const KEY_DATA = [
   {
@@ -44,9 +44,11 @@ const Line = styled('div')(({ theme }) => ({
   marginRight: 5,
 }));
 
-const Key = ({ type }) => {
+const Key = ({ value, type, id, updateKey }) => {
   const handleChange = (event) => {
-    const value = event.target.value;
+    const currentValue = event.target.value;
+    if (!updateKey) return;
+    updateKey(id, currentValue);
   };
 
   return (
@@ -55,7 +57,7 @@ const Key = ({ type }) => {
       <LabelCustom>Key</LabelCustom>
 
       <div style={{ width: '24%' }}>
-        <Select options={KEY_DATA} onChange={handleChange} />
+        <Select options={KEY_DATA} value={value} onChange={handleChange} menuProps={true} />
       </div>
     </Container>
   );

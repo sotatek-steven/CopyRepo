@@ -2,7 +2,6 @@ import { Checkbox, ListItemText, MenuItem, Select } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ArrowDown from 'assets/icon/arrow-down.svg';
 import React from 'react';
-import Scrollbars from 'react-custom-scrollbars';
 import Label from '../atom/Label';
 
 const SelectBasic = styled(Select)(({ theme }) => ({
@@ -72,16 +71,14 @@ const SelectComponent = ({
           disabled={disabled}
           displayEmpty
           IconComponent={ArrowDown}>
-          <Scrollbars autoHeight>
-            {!!options.length &&
-              options.map((option) => {
-                return (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                );
-              })}
-          </Scrollbars>
+          {!!options.length &&
+            options.map((option) => {
+              return (
+                <MenuItem key={option.value} value={option.value}>
+                  {option.label}
+                </MenuItem>
+              );
+            })}
         </SelectBasic>
       )}
       {multiple && (
@@ -89,7 +86,6 @@ const SelectComponent = ({
           multiple
           value={value}
           onChange={onChange}
-          // disabled={disabled}
           displayEmpty
           IconComponent={ArrowDown}
           renderValue={(selected) => {
@@ -97,15 +93,13 @@ const SelectComponent = ({
             return selectLabel.map((item) => item.label).join(', ');
           }}
           MenuProps={MenuProps}>
-          <Scrollbars autoHeight>
-            {!!options.length &&
-              options.map(({ value: _id, label, locked }) => (
-                <MenuItem key={_id} value={_id} disabled={locked}>
-                  <Checkbox checked={value.indexOf(_id) > -1} />
-                  <ListItemText primary={label} />
-                </MenuItem>
-              ))}
-          </Scrollbars>
+          {!!options.length &&
+            options.map(({ value: _id, label, locked }) => (
+              <MenuItem key={_id} value={_id} disabled={locked}>
+                <Checkbox checked={value.indexOf(_id) > -1} />
+                <ListItemText primary={label} />
+              </MenuItem>
+            ))}
         </SelectBasic>
       )}
       {!!errorText && <Error>{errorText}</Error>}
