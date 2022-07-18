@@ -14,6 +14,7 @@ const ItemContainer = styled('div')(({ theme }) => ({
   marginTop: 30,
   alignItems: 'center',
   width: '100%',
+  paddingBottom: '30px',
 }));
 
 const Item = styled('div')(({ theme }) => ({

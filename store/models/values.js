@@ -13,11 +13,12 @@ const TYPES = [
 
 const INIT_VALUES = [
   {
+    _id: 1,
     type: '',
     isArray: false,
     scope: 'public',
-    isConstant: false,
-    variableName: '',
+    isConst: false,
+    label: '',
     variableValue: '',
     isDefaultValue: false,
     functions: '',

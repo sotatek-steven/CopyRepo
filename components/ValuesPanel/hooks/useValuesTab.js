@@ -1,12 +1,14 @@
 import { ELEMENT_TYPE, NEW_ID } from '@/config/constant/common';
+import { REGEX } from '@/config/constant/regex';
 import { useDispatch, useSelector } from 'react-redux';
 
 const OBJECT = {
+  _id: Date.now(),
   type: '',
   isArray: false,
   scope: 'public',
-  isConstant: false,
-  variableName: '',
+  isConst: false,
+  label: '',
   variableValue: '',
   isDefaultValue: false,
   functions: '',
@@ -35,22 +37,32 @@ const useValuesTab = () => {
   const handleChangeValue = (valueId, field, e, type) => {
     const iValue = values.findIndex(({ _id }) => _id === valueId);
     const data = [...values];
-
     switch (type) {
       case ELEMENT_TYPE.INPUT:
         data[iValue][field] = e.target.value;
-        if (field === 'name') {
-          data[iValue]['errorName'] = e.target.value.trim() ? null : 'Variable name should not be empty';
+        if (field === 'label') {
+          data[iValue]['errorName'] = null;
+          const regex = new RegExp(REGEX.VARIABLE_NAME);
+          if (!e.target.value.trim()) {
+            data[iValue]['errorName'] = 'Variable name should not be empty';
+          } else if (regex.test(e.target.value.trim())) {
+            data[iValue]['errorName'] = 'Invalid variable name';
+          }
         }
         break;
 
       case ELEMENT_TYPE.SELECT:
-        if (field === 'type' && e.target.value === 'structs') {
-          const init = JSON.parse(JSON.stringify(OBJECT));
-          data[iValue] = { ...init, _id: `${NEW_ID}_${count}`, type: e.target.value };
-        } else {
-          data[iValue][field] = e.target.value;
+        if (field === 'isArray' && e.target.value === true) {
+          data[iValue]['isConst'] = 'false';
         }
+        if (field === 'isConst' && e.target.value === true) {
+          data[iValue]['label'] = data[iValue]['label'].toUpperCase();
+        }
+
+        if (field === 'isDefaultValue' && e.target.value === true) {
+          data[iValue]['variableValue'] = '';
+        }
+        data[iValue][field] = e.target.value;
         break;
 
       default:

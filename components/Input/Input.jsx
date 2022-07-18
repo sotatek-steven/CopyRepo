@@ -27,6 +27,9 @@ const InputBasic = styled('input')(({ theme, error }) => ({
   fontWeight: theme.typography.fontWeightBold,
   padding: '0px 15px',
   fontFamily: theme.typography.fontFamily,
+  '&::placeholder': {
+    fontSize: '10px',
+  },
 }));
 
 const Error = styled('div')(({ theme }) => ({
