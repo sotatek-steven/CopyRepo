@@ -231,7 +231,7 @@ const ModulePage = () => {
                     top: '4.5em',
                     right: '0',
                   }}>
-                  GAS FEE OF THIS SMART CONTRACT: {moduleState.gasFee} Gwei
+                  GAS FEE OF THIS MODULE: {moduleState.gasFee} Gwei
                 </Box>
               )}
             </ContentWapper>
