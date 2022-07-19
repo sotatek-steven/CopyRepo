@@ -16,8 +16,6 @@ const ObjectTabPanel = () => {
     handleChangeAssignedValues,
   } = useObjectTab();
 
-  console.log('objects', objects);
-
   return (
     <Container>
       <BodyContent>

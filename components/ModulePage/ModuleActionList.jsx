@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { PrimaryButton } from '../ButtonStyle';
 import useObjectTab from '../ObjectTabPanel/hooks/useObjectTab';
 import useStructPage from '../StructTabPanel/hooks/useStructPage';
+import useModulePage from './hooks/useModulePage';
 
 const Container = styled('div')(() => ({
   display: 'flex',
@@ -15,9 +16,9 @@ const Container = styled('div')(() => ({
 const ModuleActionList = () => {
   const { userModule, struct } = useDispatch();
   const { structs } = useSelector((state) => state.struct);
-  const { values } = useSelector((state) => state.value);
   const { handleErrorStructs } = useStructPage();
   const { objectHasError } = useObjectTab();
+  const { fetchDetailModule } = useModulePage();
 
   const saveModule = async () => {
     const isErrorStruct = handleErrorStructs();
@@ -29,6 +30,7 @@ const ModuleActionList = () => {
     const { code } = await userModule.updateModule();
     if (code === HTTP_CODE.SUCCESS) {
       struct.setOriginStructs(JSON.parse(JSON.stringify(structs)));
+      fetchDetailModule();
     }
   };
 

@@ -34,11 +34,10 @@ const ObjectItem = ({
     return moduleState?.sources?.functions?.reduce((array, item) => {
       let temp = [];
       if (item?.globalVariables.length) {
-        const params = item?.params.map((param) => param?.label)?.toString();
         temp = item?.globalVariables.map((variable) => {
           return {
-            value: `${item._id}-${variable.label}`,
-            label: `(${item.name})(${params})`,
+            value: `${item?._id}-${variable?.label}`,
+            label: `(${item?.name})(${variable?.label})`,
           };
         });
       }

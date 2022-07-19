@@ -98,8 +98,8 @@ const useStructPage = () => {
   const handelRemoveStruct = (structId) => {
     const iStruct = structs.findIndex(({ _id }) => _id === structId);
 
-    if (listStructUsed?.includes(structs[iStruct]?.structId)) {
-      toast.warning('This struct is used');
+    if (listStructUsed?.includes(structs[iStruct]?.name)) {
+      toast.warning('This struct is using');
       return;
     }
     const data = [...structs];
@@ -111,7 +111,7 @@ const useStructPage = () => {
 
   const handelAddVariable = (structId) => {
     const iStruct = structs.findIndex(({ _id }) => _id === structId);
-    if (listStructUsed?.includes(structs[iStruct]?.structId)) {
+    if (listStructUsed?.includes(structs[iStruct]?.name)) {
       toast.warning('This struct is used');
       return;
     }
@@ -126,7 +126,7 @@ const useStructPage = () => {
 
   const handelRemoveVariable = (structId, variableId) => {
     const iStruct = structs.findIndex(({ _id }) => _id === structId);
-    if (listStructUsed?.includes(structs[iStruct]?.structId)) {
+    if (listStructUsed?.includes(structs[iStruct]?.name)) {
       toast.warning('This struct is used');
       return;
     }
