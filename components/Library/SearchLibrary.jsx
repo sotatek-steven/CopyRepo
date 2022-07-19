@@ -39,6 +39,8 @@ const SearchLibrary = () => {
     setCloseIconHidden(!value);
     const filterLibraries = (userInput) => {
       var filteredValues = libraryState.map((library) => {
+        if (library.imported) return library;
+
         const libraryName = library.name.toLowerCase();
         const textInput = userInput.toLowerCase();
 
