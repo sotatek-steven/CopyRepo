@@ -60,10 +60,11 @@ const Library = () => {
       const { libraries } = userModuleState.sources;
       const librariesArr = data.map((library) => {
         const { name } = library;
-        const hidden = libraries.filter((item) => item === name).length !== 0;
+        const imported = libraries.filter((item) => item === name).length !== 0;
         return {
           ...library,
-          hidden,
+          hidden: imported,
+          imported,
         };
       });
 
