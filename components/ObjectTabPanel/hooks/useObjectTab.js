@@ -66,7 +66,7 @@ const useObjectTab = () => {
         if (field === 'item') {
           const struct = moduleState?.sources?.structs?.find((item) => item?.name === e.target.value);
           const contents = JSON.parse(JSON.stringify(struct?.content));
-          data[iObject]['assignedValues'].push({ _id: Date.now(), contents: contents });
+          data[iObject]['assignedValues'] = [{ _id: Date.now(), contents: contents }];
         }
         if (field === 'isArray' && !e.target.value) {
           const struct = moduleState?.sources?.structs?.find((item) => item?.name === data[iObject]?.item);
@@ -154,7 +154,7 @@ const useObjectTab = () => {
   const convertToObjectShow = (data) => {
     const cloneData = data?.map((item, iData) => {
       const functions = item?.functions?.map(({ func, variable }) => {
-        return `${func}-${variable}`;
+        return `${func?._id}-${variable}`;
       });
 
       const assignedValues = item?.valueDefault?.map((assigned, iAssigned) => {

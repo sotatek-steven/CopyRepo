@@ -8,7 +8,6 @@ import ModulesSidebar from '@/components/ModulePage/ModulesSidebar';
 import ModuleActionList from '@/components/ModulePage/ModuleActionList';
 import Library from '@/components/Library';
 import { ModuleMode } from '@/store/models/moduleMode';
-import useStructPage from '@/components/StructTabPanel/hooks/useStructPage';
 import { MODULE_OWNER } from '@/config/constant/common';
 import CodeViewTab from '@/components/ModulePage/CodeViewTab';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
@@ -18,6 +17,7 @@ import { createNodes } from '@/components/FunctionCanvas/CreateElement';
 import FunctionCanvas from '@/components/FunctionCanvas';
 import AddFieldTab from '@/components/ModulePage/AddFieldTab';
 import useObjectTab from '@/components/ObjectTabPanel/hooks/useObjectTab';
+import useModulePage from '@/components/ModulePage/hooks/useModulePage';
 
 const ContentWapper = styled('div')(() => ({
   display: 'flex',
@@ -36,7 +36,7 @@ const TabListContainer = styled('div')(({ theme }) => ({
   '.vertical-tab': {
     position: 'absolute',
     left: -70,
-    top: 300,
+    top: '25vh',
     width: 88,
     borderRadius: 'unset',
     '.Mui-selected': {
@@ -136,14 +136,14 @@ const TAB_LIST = [
 ];
 
 const ModulePage = () => {
-  const { userModule, functions, object } = useDispatch();
+  const { userModule, functions } = useDispatch();
   const router = useRouter();
   const { id } = router.query;
   const moduleModeState = useSelector((state) => state.moduleMode);
   const moduleState = useSelector((state) => state.userModule);
   const { moduleMode, template } = useDispatch();
-  const { getStructs } = useStructPage();
-  const { objectHasError, convertToObjectShow } = useObjectTab();
+  const { objectHasError } = useObjectTab();
+  const { fetchDetailModule } = useModulePage();
   const [tabVertical, setTabVertical] = useState('canvas');
   const [tabHorizontal, setTabHorizontal] = useState('logic');
   const [nodes, setNodes] = useState([]);
@@ -151,17 +151,7 @@ const ModulePage = () => {
   const [sources, setSource] = useState(null);
 
   useEffect(() => {
-    const fetchDetailModule = async (id) => {
-      if (!id) return;
-      object.setObjects([]);
-      const data = await userModule.getDetailModule(id);
-
-      getStructs(data?.sources?.structs);
-      convertToObjectShow(data?.variables?.structs);
-      userModule.set(data);
-    };
-
-    fetchDetailModule(id);
+    fetchDetailModule();
   }, [id]);
 
   useEffect(() => {

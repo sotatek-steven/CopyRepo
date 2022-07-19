@@ -45,6 +45,7 @@ const AssignedValueList = styled('div')(({ theme }) => ({
 
 const AssignedValuesContainer = styled('div')(({ theme }) => ({
   marginTop: 25,
+  width: '20%',
   '.assigned-value-item': {
     display: 'flex',
     alignItems: 'center',
