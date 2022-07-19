@@ -77,6 +77,15 @@ const MappingTabPanel = () => {
   //   console.log('moduleState.variables.mappings: ', moduleState.variables.mappings);
   // }, [moduleState.variables.mappings]);
 
+  const removeItem = (id) => {
+    const {
+      variables: { mappings },
+    } = moduleState;
+    if (!mappings) return;
+    const updatedMappings = mappings.filter((item) => item.id !== id);
+    userModule.updateMappings(updatedMappings);
+  };
+
   return (
     <Container>
       {moduleState.variables.mappings.map((mappingItem, index) => {
@@ -88,6 +97,7 @@ const MappingTabPanel = () => {
             functions={functions}
             registerMapToFunction={registerMapToFunction}
             unregisterMapToFunction={unregisterMapToFunction}
+            removeItem={removeItem}
           />
         );
       })}
