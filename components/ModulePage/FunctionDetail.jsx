@@ -54,6 +54,12 @@ const FunctionDetail = ({ open, onClose, functionId }) => {
     }
   };
 
+  const getModifierOfFunction = (modifiers) => {
+    if (!modifiers) return null;
+    const modifierNames = modifiers.map((modifier) => modifier.content.name);
+    return modifierNames.join(', ');
+  };
+
   return (
     <FormModal height={600} width={750} open={open} onClose={onClose} title={functionInfo?.name} showFooter={false}>
       <Scrollbars style={{ height: '450px' }}>
@@ -61,7 +67,7 @@ const FunctionDetail = ({ open, onClose, functionId }) => {
         <ContentItem label="Description" description={functionInfo?.description} />
         <ContentItem label="Type" description={functionInfo?.scopes?.type} />
         <ContentItem label="Scope" description={functionInfo?.scopes?.scope} />
-        <ContentItem label="Modifier" description={functionInfo?.modifier?.name} />
+        <ContentItem label="Modifiers" description={getModifierOfFunction(functionInfo?.modifiers)} />
       </Scrollbars>
     </FormModal>
   );
