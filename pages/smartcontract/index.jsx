@@ -123,7 +123,7 @@ const Dashboard = () => {
       sx={{
         padding: '20px 24px 0 24px',
       }}>
-      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
         <TabWrapper>
           <Tabs
             initialTabs={tabs}
