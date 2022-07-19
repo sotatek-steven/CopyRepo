@@ -45,7 +45,7 @@ export const PAIR_TYPE = {
   last: 'lastPair',
 };
 
-const KeyValueField = ({ id }) => {
+const KeyValueField = ({ id, mappingList, setMappingList }) => {
   const [data, updateData] = useMappingData(id);
   const [keyValues, setKeyValues] = useState([]);
 
@@ -94,6 +94,7 @@ const KeyValueField = ({ id }) => {
   };
 
   useEffect(() => {
+    if (keyValues.length === 0) return;
     const keyValuesObj = keyValues.reduceRight((obj, pair) => {
       const { key, value } = pair;
       return {
@@ -116,7 +117,15 @@ const KeyValueField = ({ id }) => {
           <KeyValuePairContainer
             key={index}
             marginleft={index === 0 ? 0 : `calc(${LeftPosition}px*${index - 1} + 20px)`}>
-            <Key value={key} type={type} lenthOfData={keyValues.length} id={index} updateKey={updateKey} />
+            <Key
+              value={key}
+              type={type}
+              lenthOfData={keyValues.length}
+              id={index}
+              updateKey={updateKey}
+              mappingList={mappingList}
+              setMappingList={setMappingList}
+            />
             <Value
               value={value}
               type={type}
@@ -124,6 +133,8 @@ const KeyValueField = ({ id }) => {
               id={index}
               updateValue={updateValue}
               returnToPreviousValue={returnToPreviousValue}
+              mappingList={mappingList}
+              setMappingList={setMappingList}
             />
             {type !== PAIR_TYPE.first && <Line />}
           </KeyValuePairContainer>

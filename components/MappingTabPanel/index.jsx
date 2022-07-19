@@ -15,10 +15,10 @@ const MappingTabPanel = () => {
   const [error, setError] = useState(true);
   const [functions, setFunctions] = useState([]);
 
-  const registerMapToFunction = (functionId, mappingId) => {
+  const registerMapToFunction = (variableId, mappingId) => {
     const updatedFuctions = functions.map((item) => {
       const { id } = item;
-      if (id !== functionId) return item;
+      if (id !== variableId) return item;
       return {
         ...item,
         mappingId: mappingId,
@@ -27,10 +27,10 @@ const MappingTabPanel = () => {
     setFunctions(updatedFuctions);
   };
 
-  const unregisterMapToFunction = (functionId) => {
+  const unregisterMapToFunction = (variableId) => {
     const updatedFuctions = functions.map((item) => {
       const { id } = item;
-      if (id !== functionId) return item;
+      if (id !== variableId) return item;
       return {
         ...item,
         mappingId: null,
@@ -40,13 +40,18 @@ const MappingTabPanel = () => {
   };
 
   useEffect(() => {
-    const updateFunctions = moduleState?.sources?.functions?.map((item) => {
-      const { _id, name } = item;
-      return {
-        id: _id,
-        name,
-        mappingId: null,
-      };
+    const updateFunctions = moduleState?.sources?.functions?.flatMap((item) => {
+      const { globalVariables, name: functionName } = item;
+
+      return globalVariables.map((variable) => {
+        const { _id: id, label, type } = variable;
+        return {
+          id,
+          label: `${label}(${functionName})`,
+          mappingId: null,
+          type,
+        };
+      });
     });
 
     setFunctions(updateFunctions);
@@ -62,7 +67,7 @@ const MappingTabPanel = () => {
       id: Date.now(),
       label: '',
       scope: 'public',
-      func: [],
+      variables: [],
       type: {
         key: '',
         value: { type: '', map: {} },
@@ -84,6 +89,14 @@ const MappingTabPanel = () => {
     if (!mappings) return;
     const updatedMappings = mappings.filter((item) => item.id !== id);
     userModule.updateMappings(updatedMappings);
+    const updatedFuctions = functions.map((item) => {
+      const { mappingId } = item;
+      return {
+        ...item,
+        mappingId: mappingId === id ? null : mappingId,
+      };
+    });
+    setFunctions(updatedFuctions);
   };
 
   return (
@@ -95,6 +108,7 @@ const MappingTabPanel = () => {
             id={mappingItem.id}
             key={index}
             functions={functions}
+            setFunctions={setFunctions}
             registerMapToFunction={registerMapToFunction}
             unregisterMapToFunction={unregisterMapToFunction}
             removeItem={removeItem}
