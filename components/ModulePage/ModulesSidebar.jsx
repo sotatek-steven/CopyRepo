@@ -19,8 +19,10 @@ const tabs = [
 
 const Container = styled('div')(({ theme }) => ({
   width: 444,
-  height: '100%',
+  height: 'calc(100vh - 74px)',
   background: theme.palette.background.dark,
+  display: 'flex',
+  flexDirection: 'column',
 }));
 
 const TabWrapper = styled('div')(({ theme }) => ({
