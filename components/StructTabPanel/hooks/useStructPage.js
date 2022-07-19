@@ -149,7 +149,7 @@ const useStructPage = () => {
     const iStruct = structs.findIndex(({ _id }) => _id === structId);
     const data = [...structs];
     data[iStruct].name = value;
-    data[iStruct].errorName = !value?.trim() && 'This is field required';
+    data[iStruct].errorName = !value?.trim() && 'This field is required';
 
     struct.setStructs(data);
     userModule.updateStructs(convertStructs(data));
@@ -171,7 +171,7 @@ const useStructPage = () => {
         data[iStruct].variables[iVariable].name.value = e.target.value;
         data[iStruct].variables[iVariable].name.errorName = false;
         if (!e.target.value?.trim()) {
-          data[iStruct].variables[iVariable].name.errorName = 'This is field required';
+          data[iStruct].variables[iVariable].name.errorName = 'This field is required';
         }
         duplicateArr = checkDuplicateName(data[iStruct].variables);
 
@@ -187,7 +187,7 @@ const useStructPage = () => {
           struct.setTypes(temp);
         }
         data[iStruct].variables[iVariable].type.value = [e.value];
-        data[iStruct].variables[iVariable].type.errorType = !e.value?.trim() && 'This is field required';
+        data[iStruct].variables[iVariable].type.errorType = !e.value?.trim() && 'This field is required';
         break;
       default:
         break;
@@ -202,16 +202,16 @@ const useStructPage = () => {
     const lstStruct = JSON.parse(JSON.stringify(structs));
     lstStruct?.forEach((item) => {
       if (!item?.name?.trim()) {
-        item.errorName = 'This is field required';
+        item.errorName = 'This field is required';
         isError = true;
       }
       item?.variables.forEach(({ type, name }) => {
         if (!type?.value.length) {
-          type.errorType = 'This is field required';
+          type.errorType = 'This field is required';
           isError = true;
         }
         if (!name?.value.trim()) {
-          name.errorName = 'This is field required';
+          name.errorName = 'This field is required';
           isError = true;
         }
       });
