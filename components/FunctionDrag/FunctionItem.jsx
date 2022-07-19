@@ -35,6 +35,7 @@ const Text = styled('div')(({ theme }) => ({
   fontFamily: 'Segoe UI',
   color: theme.palette.text.primary,
   ...theme.components.truncate.singleLineEllipsis,
+  maxWidth: 352,
 }));
 
 const Container = styled('div')(({ theme }) => ({

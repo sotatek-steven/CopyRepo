@@ -6,7 +6,9 @@ import { useDispatch, useSelector } from 'react-redux';
 import FunctionItem from '../FunctionDrag/FunctionItem';
 
 const FunctionContainer = styled('div')(() => ({
-  height: '65vh',
+  flexGrow: 1,
+  display: 'flex',
+  flexDirection: 'column',
 }));
 
 const DescriptionContainer = styled('div')(({ theme }) => ({
@@ -57,43 +59,38 @@ const FunctionTabPanel = () => {
     updateModules();
   }, [moduleState.sources]);
 
-  // console.log(originStructs);
-
   return (
-    <div>
-      <FunctionContainer>
+    <FunctionContainer>
+      <div style={{ flexGrow: 1 }}>
         <Scrollbars autoHide>
           {!listFunction?.length && <span> Function not found</span>}
           {!!listFunction?.length &&
             listFunction?.map((item, index) => {
               return <FunctionItem key={index} data={item} nodeType="simpleRectangle" />;
             })}
-          {moduleState.gasFee > -1 ? (
-            <Box
-              sx={{
-                background: theme.palette.success.main,
-                // borderLeft: `7px solid ${theme.palette.primary.light2} `,
-                width: '444px',
-                height: '82px',
-                color: theme.palette.common.black,
-                display: 'flex',
-                alignItems: 'center',
-                paddingLeft: '10px',
-                position: 'absolute',
-                bottom: '0',
-              }}>
-              GAS FEE OF THIS SMART CONTRACT: {moduleState.gasFee} Gwei
-            </Box>
-          ) : null}
         </Scrollbars>
-      </FunctionContainer>
+      </div>
+      {moduleState.gasFee > -1 ? (
+        <Box
+          sx={{
+            background: theme.palette.success.main,
+            width: '444px',
+            height: '82px',
+            color: theme.palette.common.black,
+            display: 'flex',
+            alignItems: 'center',
+            paddingLeft: '10px',
+          }}>
+          GAS FEE OF THIS MODULE: {moduleState.gasFee} Gwei
+        </Box>
+      ) : null}
       <DescriptionContainer>
         <div className="title">DESCRIPTION</div>
         <div className="content">
           <Scrollbars autoHide>{moduleState?.description}</Scrollbars>
         </div>
       </DescriptionContainer>
-    </div>
+    </FunctionContainer>
   );
 };
 
