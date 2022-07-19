@@ -3,33 +3,33 @@ import { useMemo } from 'react';
 import SelectComponent from '../Select';
 import useMappingData from './useMappingData';
 
-const MapToFunctionField = ({ id, functions, registerMapToFunction, unregisterMapToFunction }) => {
+const MapToFunctionField = ({ id, registerMapToFunction, unregisterMapToFunction, mappingList }) => {
   const [data, updateData] = useMappingData(id);
 
-  const value = data?.func || [];
+  const value = data?.variables || [];
 
   const options = useMemo(() => {
-    return functions?.map((item) => {
-      const { id: _id, name, mappingId } = item;
+    return mappingList?.map((item) => {
+      const { id: _id, label, mappingId, matching } = item;
       return {
         value: _id,
-        label: name,
-        locked: !!mappingId && mappingId !== id,
+        label,
+        locked: !matching || (!!mappingId && mappingId !== id),
       };
     });
-  }, [functions]);
+  }, [mappingList]);
 
-  const checkRegisterFunction = (functions, selectedFunction) => {
-    return functions.some((item) => item === selectedFunction);
+  const checkRegisterFunction = (variables, selectedVariables) => {
+    return variables.some((item) => item === selectedVariables);
   };
 
   const handleChange = (event, child) => {
-    const functions = event.target.value;
-    updateData({ func: functions });
+    const variables = event.target.value;
+    updateData({ variables });
 
-    const selectedFunction = child.props.value;
-    if (checkRegisterFunction(functions, selectedFunction)) registerMapToFunction(selectedFunction, id);
-    else unregisterMapToFunction(selectedFunction);
+    const selectedVariables = child.props.value;
+    if (checkRegisterFunction(variables, selectedVariables)) registerMapToFunction(selectedVariables, id);
+    else unregisterMapToFunction(selectedVariables);
   };
 
   return (

@@ -12,16 +12,16 @@ const useMappingData = (id) => {
     return typeof newValue !== 'undefined' ? newValue : oldValue;
   };
 
-  const updateData = ({ scope, label, func, type }) => {
+  const updateData = ({ scope, label, variables, type }) => {
     const updatedMapping = mappings.map((item) => {
       if (item.id !== id) return item;
 
-      const { scope: _scope, label: _label, func: _func, type: _type } = item;
+      const { scope: _scope, label: _label, variables: _variables, type: _type } = item;
       return {
         ...item,
         scope: updateValue(scope, _scope),
         label: updateValue(label, _label),
-        func: updateValue(func, _func),
+        variables: updateValue(variables, _variables),
         type: updateValue(type, _type),
       };
     });
