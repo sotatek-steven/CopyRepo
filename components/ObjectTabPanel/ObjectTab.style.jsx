@@ -30,7 +30,7 @@ const ButtonWrapper = styled('div')(({ theme }) => ({
 }));
 
 const AssignedValueList = styled('div')(({ theme }) => ({
-  display: 'flex',
+  display: '-webkit-box',
   gap: 30,
   alignItems: 'center',
   '.action-icon': {
@@ -51,6 +51,7 @@ const AssignedValuesContainer = styled('div')(({ theme }) => ({
     alignItems: 'center',
   },
   '.assigned-value': {
+    width: '100%',
     '.content': {
       display: 'flex',
       gap: 20,
@@ -60,7 +61,12 @@ const AssignedValuesContainer = styled('div')(({ theme }) => ({
         marginTop: 0,
       },
       '.name': {
-        width: '15%',
+        width: '35%',
+        textOverflow: 'ellipsis',
+        overflow: 'hidden',
+      },
+      '.input-value': {
+        width: '65%',
       },
     },
   },
