@@ -25,7 +25,9 @@ const ValuesTabPanel = () => {
           <Item key={item.id}>
             {item.label}
             {item.value === 'variable_name' && (
-              <Tooltip title="Beginning character : Must be letter. Following characters only contain: Letter, digits, (_)">
+              <Tooltip
+                placement="top"
+                title="Beginning character : Must be letter. Following characters only contain: Letter, digits, (_)">
                 <IconButton>
                   <ReportGmailerrorredIcon sx={{ color: theme.palette.primary.light }} />
                 </IconButton>
