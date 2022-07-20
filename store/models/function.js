@@ -15,6 +15,7 @@ const functions = createModel({
       async getAllUserFunctions(page, state) {
         const { code, data, message } = await getRequest({
           url: '/api/v1/functions',
+          params: { size: -1 },
           userState: state.player,
           userModoel: player,
         });

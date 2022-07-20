@@ -2,11 +2,14 @@ import { ELEMENT_TYPE, IS_ARRAY_OPTION, OBJECT_TYPE, SCOPE } from '@/config/cons
 import { useSelector } from 'react-redux';
 import { PrimaryButton } from '../ButtonStyle';
 import { Input } from '../Input';
-import Select from '../Select';
 import RemoveIcon from 'assets/icon/removeIcon.svg';
 import AddIcon from 'assets/icon/addIcon.svg';
 import { Item, ItemContainer, ButtonWrapper, AssignedValuesContainer, AssignedValueList } from './ObjectTab.style';
 import { useMemo } from 'react';
+import SingleAutoComplete from '../AutoComplete/SingleAutoComplete';
+import MultipleAutoComplete from '../AutoComplete/MultipleAutoComplete';
+import Scrollbars from 'react-custom-scrollbars';
+import { Tooltip } from '@mui/material';
 
 const TOOLTIP_NAME = 'Beginning character: Must be letter\nFollowing characters only contain: Letters, digits, (_)';
 
@@ -45,43 +48,47 @@ const ObjectItem = ({
     }, []);
   }, [moduleState?.sources?.functions]);
 
+  console.log('object', object);
+
   return (
     <>
       <ItemContainer>
         <Item>
-          <Select
+          <SingleAutoComplete
             label={'Choose type'}
-            value={object?.type}
+            value={types.find((type) => type.value === object?.type)}
             options={types}
-            onChange={(e) => handleChangeObject(object?._id, 'type', e, ELEMENT_TYPE.SELECT)}
+            onChange={(e, newValue) => handleChangeObject(object?._id, 'type', newValue, ELEMENT_TYPE.SELECT)}
           />
         </Item>
         {object?.type === OBJECT_TYPE.STRUCT && (
           <>
             <Item>
-              <Select
+              <SingleAutoComplete
                 label={'Choose item'}
-                value={object?.item}
+                value={listStruct.find((struct) => struct.value === object?.item)}
                 options={listStruct}
-                onChange={(e) => handleChangeObject(object?._id, 'item', e, ELEMENT_TYPE.SELECT)}
+                onChange={(e, newValue) => handleChangeObject(object?._id, 'item', newValue, ELEMENT_TYPE.SELECT)}
               />
             </Item>
             {object?.item && (
               <>
                 <Item>
-                  <Select
+                  <SingleAutoComplete
                     label={'IS_ARRAY'}
-                    value={object?.isArray}
+                    value={IS_ARRAY_OPTION.find((item) => item.value === object?.isArray)}
                     options={IS_ARRAY_OPTION}
-                    onChange={(e) => handleChangeObject(object?._id, 'isArray', e, ELEMENT_TYPE.SELECT)}
+                    onChange={(e, newValue) =>
+                      handleChangeObject(object?._id, 'isArray', newValue, ELEMENT_TYPE.SELECT)
+                    }
                   />
                 </Item>
                 <Item>
-                  <Select
+                  <SingleAutoComplete
                     label={'SCOPE'}
-                    value={object?.scope}
+                    value={SCOPE.find((item) => item.value === object?.scope)}
                     options={SCOPE}
-                    onChange={(e) => handleChangeObject(object?._id, 'scope', e, ELEMENT_TYPE.SELECT)}
+                    onChange={(e, newValue) => handleChangeObject(object?._id, 'scope', newValue, ELEMENT_TYPE.SELECT)}
                   />
                 </Item>
                 <Item>
@@ -95,12 +102,14 @@ const ObjectItem = ({
                   />
                 </Item>
                 <Item>
-                  <Select
+                  <MultipleAutoComplete
                     multiple={true}
                     label={'MAP_TO_FUNCTION'}
-                    value={object?.functions}
+                    value={listFunction.filter((item) => object?.functions?.includes(item.value))}
                     options={listFunction}
-                    onChange={(e) => handleChangeObject(object?._id, 'functions', e, ELEMENT_TYPE.SELECT)}
+                    onChange={(e, newValue) =>
+                      handleChangeObject(object?._id, 'functions', newValue, ELEMENT_TYPE.SELECT)
+                    }
                   />
                 </Item>
               </>
@@ -117,44 +126,51 @@ const ObjectItem = ({
       </ItemContainer>
 
       {object?.type === OBJECT_TYPE.STRUCT && object?.item && (
-        <AssignedValueList>
-          {object?.assignedValues?.map((assigned, index) => (
-            <AssignedValuesContainer key={assigned?._id}>
-              <div className="title">
-                <div className="name"></div>
-                <div className="index">{index}</div>
-                <div>
-                  {object?.isArray && (
-                    <div className="remove-icon" onClick={() => handleRemoveAssignedValue(object?._id, assigned?._id)}>
-                      <RemoveIcon />
-                    </div>
-                  )}
-                </div>
-              </div>
-              <div className="assigned-value-item">
-                <div className="assigned-value">
-                  {assigned?.contents?.map((content) => (
-                    <div key={content?._id} className="content">
-                      <div className="name">{content?.label}</div>
-                      <div className="input-value">
-                        <Input
-                          value={content?.value || ''}
-                          placeholder={content?.type}
-                          onChange={(e) => handleChangeAssignedValues(e, object?._id, assigned?._id, content?._id)}
-                        />
+        <Scrollbars style={{ height: 165, width: '100%' }}>
+          <AssignedValueList>
+            {object?.assignedValues?.map((assigned, index) => (
+              <AssignedValuesContainer key={assigned?._id}>
+                <div className="title">
+                  <div className="name"></div>
+                  <div className="index">{`${index}`}</div>
+                  <div>
+                    {object?.isArray && (
+                      <div
+                        className="remove-icon"
+                        onClick={() => handleRemoveAssignedValue(object?._id, assigned?._id)}>
+                        <RemoveIcon />
                       </div>
-                    </div>
-                  ))}
+                    )}
+                  </div>
                 </div>
+                <div className="assigned-value-item">
+                  <div className="assigned-value">
+                    {assigned?.contents?.map((content) => (
+                      <div key={content?._id} className="content">
+                        <Tooltip arrow placement="top" title={content?.label}>
+                          <div className="name">{content?.label}</div>
+                        </Tooltip>
+
+                        <div className="input-value">
+                          <Input
+                            value={content?.value || ''}
+                            placeholder={content?.type}
+                            onChange={(e) => handleChangeAssignedValues(e, object?._id, assigned?._id, content?._id)}
+                          />
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </AssignedValuesContainer>
+            ))}
+            {object?.isArray && (
+              <div className="action-icon" onClick={() => handleAddAssignedValue(object?._id)}>
+                <AddIcon />
               </div>
-            </AssignedValuesContainer>
-          ))}
-          {object?.isArray && (
-            <div className="action-icon" onClick={() => handleAddAssignedValue(object?._id)}>
-              <AddIcon />
-            </div>
-          )}
-        </AssignedValueList>
+            )}
+          </AssignedValueList>
+        </Scrollbars>
       )}
     </>
   );

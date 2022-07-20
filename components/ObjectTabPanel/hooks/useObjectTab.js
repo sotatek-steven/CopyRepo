@@ -1,3 +1,4 @@
+/* eslint-disable no-case-declarations */
 import { ELEMENT_TYPE, OBJECT_TYPE } from '@/config/constant/common';
 import { REGEX } from '@/config/constant/regex';
 import { useDispatch, useSelector } from 'react-redux';
@@ -57,21 +58,37 @@ const useObjectTab = () => {
         break;
 
       case ELEMENT_TYPE.SELECT:
-        if (field === 'type' && e.target.value === OBJECT_TYPE.STRUCT) {
-          const init = JSON.parse(JSON.stringify(OBJECT));
-          data[iObject] = { ...init, _id: Date.now(), type: e.target.value };
-        } else {
-          data[iObject][field] = e.target.value;
-        }
-        if (field === 'item') {
-          const struct = moduleState?.sources?.structs?.find((item) => item?.name === e.target.value);
-          const contents = JSON.parse(JSON.stringify(struct?.content));
-          data[iObject]['assignedValues'] = [{ _id: Date.now(), contents: contents }];
-        }
-        if (field === 'isArray' && !e.target.value) {
-          const struct = moduleState?.sources?.structs?.find((item) => item?.name === data[iObject]?.item);
-          const contents = JSON.parse(JSON.stringify(struct?.content));
-          data[iObject]['assignedValues'] = [{ _id: Date.now(), contents: contents }];
+        switch (field) {
+          case 'type':
+            data[iObject][field] = e?.value;
+            if (e?.value === OBJECT_TYPE.STRUCT) {
+              const init = JSON.parse(JSON.stringify(OBJECT));
+              data[iObject] = { ...init, _id: Date.now(), type: e?.value };
+            }
+            break;
+          case 'item':
+            data[iObject][field] = e?.value;
+            const struct = moduleState?.sources?.structs?.find((item) => item?.name === e?.value);
+            const contents = JSON.parse(JSON.stringify(struct?.content));
+            data[iObject]['assignedValues'] = [{ _id: Date.now(), contents: contents }];
+            break;
+          case 'isArray':
+            data[iObject][field] = e?.value;
+            if (!e.value) {
+              const struct = moduleState?.sources?.structs?.find((item) => item?.name === data[iObject]?.item);
+              const contents = JSON.parse(JSON.stringify(struct?.content));
+              data[iObject]['assignedValues'] = [{ _id: Date.now(), contents: contents }];
+            }
+            break;
+          case 'scope':
+            data[iObject][field] = e?.value;
+            break;
+          case 'functions':
+            data[iObject][field] = e?.map((item) => item?.value);
+            break;
+          default:
+            data[iObject][field] = e?.value;
+            break;
         }
         break;
 
