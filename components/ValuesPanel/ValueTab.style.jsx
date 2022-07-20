@@ -18,11 +18,11 @@ const ItemContainer = styled('div')(({ theme }) => ({
 }));
 
 const Item = styled('div')(({ theme }) => ({
-  width: '180px !important',
+  width: '185px !important',
   textOverflow: 'ellipsis',
   overflow: 'hidden',
   marginRight: '24px',
-  fontSize: '15px',
+  fontSize: '14px',
   '@media screen and (max-width:1500px )': {
     fontSize: '11px',
   },

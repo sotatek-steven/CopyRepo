@@ -51,14 +51,13 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
           disabled={value.isArray}
         />
       </Item>
-      <Box>
-        <Item>
-          <Input value={value?.label} onChange={(e) => handleChangeValue(value?._id, 'label', e, ELEMENT_TYPE.INPUT)} />
-        </Item>
+      <Item>
+        <Input value={value?.label} onChange={(e) => handleChangeValue(value?._id, 'label', e, ELEMENT_TYPE.INPUT)} />
         <Box sx={{ position: 'absolute', maxWidth: '200px' }}>
           {!!value?.errorName && <Error>{value?.errorName}</Error>}
         </Box>
-      </Box>
+      </Item>
+
       <Item>
         <Input
           value={value?.variableValue}

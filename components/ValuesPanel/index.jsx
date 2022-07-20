@@ -48,7 +48,7 @@ const ValuesTabPanel = () => {
       <Box
         sx={{
           position: 'absolute',
-          right: '9%',
+          right: '6%',
           paddingY: 2,
           '@media screen and (max-width:1500px )': {
             right: '4%',
