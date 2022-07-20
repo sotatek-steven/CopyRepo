@@ -1,7 +1,7 @@
 import { Checkbox } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import ArrowDown from 'assets/icon/arrow-down.svg';
-import { BaseAutocomplete, Label } from './AutoComplete.Style';
+import { BaseAutocomplete, Label } from './AutoComplete.style';
 
 export default function MultipleAutoComplete({
   label,

@@ -10,6 +10,7 @@ const regex = new RegExp(REGEX.VARIABLE_NAME);
 const VariableNameField = ({ id, updateError }) => {
   const [data, updateData] = useMappingData(id);
   const [error, setError] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const {
     variables: { mappings },
@@ -22,12 +23,14 @@ const VariableNameField = ({ id, updateError }) => {
     updateData({ label: value });
     if (!value) {
       setError(false);
+      setErrorMessage('');
       return;
     }
 
     const match = regex.test(value);
     if (!match) {
       setError(true);
+      setErrorMessage('Invalid variable name');
       return;
     }
 
@@ -36,17 +39,20 @@ const VariableNameField = ({ id, updateError }) => {
       return _id !== id && label === value;
     });
     setError(duplicate);
+    setErrorMessage('');
   };
 
   const handleVariableNameFocus = () => {
     if (value) return;
     setError(false);
+    setErrorMessage('');
   };
 
   const handleVariableNameFocusOut = (event) => {
     const { value } = event.target;
     if (value) return;
     setError(true);
+    setErrorMessage('Variable name should not be empty');
   };
 
   useEffect(() => {
@@ -64,7 +70,7 @@ const VariableNameField = ({ id, updateError }) => {
       error={error}
       onFocus={handleVariableNameFocus}
       onBlur={handleVariableNameFocusOut}
-      errorText={error ? 'Invalid variable name' : ''}
+      errorText={errorMessage}
     />
   );
 };
