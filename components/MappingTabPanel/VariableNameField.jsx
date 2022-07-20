@@ -1,9 +1,11 @@
+import { REGEX } from '@/config/constant/regex';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import { Input } from '../Input';
 import useMappingData from './useMappingData';
 
 const TOOLTIP_NAME = 'Beginning character: Must be letter\nFollowing characters only contain: Letters, digits, (_)';
+const regex = new RegExp(REGEX.VARIABLE_NAME);
 
 const VariableNameField = ({ id, updateError }) => {
   const [data, updateData] = useMappingData(id);
@@ -16,14 +18,14 @@ const VariableNameField = ({ id, updateError }) => {
   const value = data?.label || '';
 
   const handleChange = (event) => {
-    const { value } = event.target;
+    const value = event.target.value.trim();
     updateData({ label: value });
     if (!value) {
       setError(false);
       return;
     }
 
-    const match = value.match(/^[a-zA-Z_$][a-zA-Z_$0-9]*$/);
+    const match = regex.test(value);
     if (!match) {
       setError(true);
       return;
@@ -62,6 +64,7 @@ const VariableNameField = ({ id, updateError }) => {
       error={error}
       onFocus={handleVariableNameFocus}
       onBlur={handleVariableNameFocusOut}
+      errorText={error ? 'Invalid variable name' : ''}
     />
   );
 };
