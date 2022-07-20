@@ -19,6 +19,25 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
       };
     });
   }, [moduleState?.sources?.functions]);
+
+  const getPlaceholderDefaultValue = useMemo(() => {
+    console.log(value);
+    let placeholder = null;
+    if (value.isDefaultValue) {
+      if (value.type === 'address') placeholder = '0x(and 40 zero digits behind)';
+      if (value.type === 'bool') placeholder = 'false';
+
+      if (value.type.includes('int') || value.type.includes('uint')) placeholder = '0';
+
+      if (value.type.includes('bytes')) placeholder = '0x(and 2 - 64 zero digits behind)';
+
+      if (value.type === 'string') placeholder = 'an empty string (empty value)';
+    }
+
+    if (value.isArray) placeholder = 'Separate array items with (,)';
+
+    return placeholder;
+  }, [value.type, value.isArray, value.isDefaultValue]);
   return (
     <ItemContainer>
       <Item>
@@ -63,7 +82,7 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
           value={value?.variableValue}
           onChange={(e) => handleChangeValue(value?._id, 'variableValue', e, ELEMENT_TYPE.INPUT)}
           disabled={value.isDefaultValue === true}
-          placeholder={value.isArray ? 'Separate array items with (,)' : null}
+          placeholder={getPlaceholderDefaultValue}
         />
       </Item>
       <Item>

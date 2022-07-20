@@ -71,8 +71,8 @@ export const BOOLEAN_OPTIONS = [
 
 export const VALUE_TYPE_OPTIONS = [
   {
-    value: 'adress',
-    label: 'adress',
+    value: 'address',
+    label: 'address',
   },
   {
     value: 'bool',
@@ -84,7 +84,7 @@ export const VALUE_TYPE_OPTIONS = [
   },
   {
     value: 'bytes2',
-    label: 'Bytes2',
+    label: 'bytes2',
   },
   {
     value: 'bytes3',
