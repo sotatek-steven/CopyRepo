@@ -11,8 +11,15 @@ export default function MultipleAutoComplete({
   isRequired,
   onChange,
   getOptionLabelCustom,
+  renderOptionCustom,
 }) {
   const getOptionLabelDefault = (option) => option.label;
+  const renderOptionDefault = (props, option, { selected }) => (
+    <li {...props}>
+      <Checkbox checked={selected} />
+      {option.label}
+    </li>
+  );
   return (
     <>
       {label && (
@@ -31,12 +38,7 @@ export default function MultipleAutoComplete({
         options={options}
         getOptionLabel={getOptionLabelCustom || getOptionLabelDefault}
         renderInput={(params) => <TextField {...params} />}
-        renderOption={(props, option, { selected }) => (
-          <li {...props}>
-            <Checkbox checked={selected} />
-            {option.label}
-          </li>
-        )}
+        renderOption={renderOptionCustom || renderOptionDefault}
         onChange={onChange}
         popupIcon={<ArrowDown />}
         ListboxProps={{ style: { maxHeight: 190 } }}
