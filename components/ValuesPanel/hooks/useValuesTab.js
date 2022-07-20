@@ -39,8 +39,9 @@ const useValuesTab = () => {
     const data = [...values];
     switch (type) {
       case ELEMENT_TYPE.INPUT:
-        data[iValue][field] = e.target.value;
         if (field === 'label') {
+          if (data[iValue]['isConst'] == true) data[iValue][field] = e.target.value.toUpperCase();
+
           data[iValue]['errorName'] = null;
           const regex = new RegExp(REGEX.VARIABLE_NAME);
           if (!e.target.value.trim()) {
@@ -49,6 +50,8 @@ const useValuesTab = () => {
             data[iValue]['errorName'] = 'Invalid variable name';
           }
         }
+        data[iValue][field] = e.target.value;
+
         break;
 
       case ELEMENT_TYPE.SELECT:
