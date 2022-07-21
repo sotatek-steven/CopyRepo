@@ -1,6 +1,7 @@
 /* eslint-disable no-case-declarations */
 import { ELEMENT_TYPE, OBJECT_TYPE } from '@/config/constant/common';
 import { REGEX } from '@/config/constant/regex';
+import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
@@ -175,18 +176,20 @@ const useObjectTab = () => {
       });
 
       const assignedValues = item?.valueDefault?.map((assigned, iAssigned) => {
-        const arrayKey = Object.keys(assigned);
-        const contents = arrayKey?.map((key, iKey) => {
+        if (!_.isEmpty(assigned)) {
+          const arrayKey = Object.keys(assigned);
+          const contents = arrayKey?.map((key, iKey) => {
+            return {
+              _id: iKey,
+              label: key,
+              value: assigned[key],
+            };
+          });
           return {
-            _id: iKey,
-            label: key,
-            value: assigned[key],
+            _id: iAssigned,
+            contents: contents,
           };
-        });
-        return {
-          _id: iAssigned,
-          contents: contents,
-        };
+        }
       });
       return {
         _id: iData,
@@ -196,7 +199,7 @@ const useObjectTab = () => {
         scope: item?.scope,
         name: item?.label,
         functions: functions,
-        assignedValues: assignedValues,
+        assignedValues: _.compact(assignedValues),
         errorName: null,
       };
     });

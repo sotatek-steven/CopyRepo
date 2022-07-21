@@ -4,11 +4,17 @@ import { PrimaryButton } from '../ButtonStyle';
 import { Input } from '../Input';
 import RemoveIcon from 'assets/icon/removeIcon.svg';
 import AddIcon from 'assets/icon/addIcon.svg';
-import { Item, ItemContainer, ButtonWrapper, AssignedValuesContainer, AssignedValueList } from './ObjectTab.style';
+import {
+  Item,
+  ItemContainer,
+  ButtonWrapper,
+  AssignedValuesContainer,
+  AssignedValueList,
+  ScrollbarsCustom,
+} from './ObjectTab.style';
 import { useMemo } from 'react';
 import SingleAutoComplete from '../AutoComplete/SingleAutoComplete';
 import MultipleAutoComplete from '../AutoComplete/MultipleAutoComplete';
-import Scrollbars from 'react-custom-scrollbars';
 import { Tooltip } from '@mui/material';
 
 const TOOLTIP_NAME = 'Beginning character: Must be letter\nFollowing characters only contain: Letters, digits, (_)';
@@ -124,7 +130,7 @@ const ObjectItem = ({
       </ItemContainer>
 
       {object?.type === OBJECT_TYPE.STRUCT && object?.item && (
-        <Scrollbars style={{ height: 165, width: '100%' }}>
+        <ScrollbarsCustom style={{ width: '100%' }}>
           <AssignedValueList>
             {object?.assignedValues?.map((assigned, index) => (
               <AssignedValuesContainer key={assigned?._id}>
@@ -168,7 +174,7 @@ const ObjectItem = ({
               </div>
             )}
           </AssignedValueList>
-        </Scrollbars>
+        </ScrollbarsCustom>
       )}
     </>
   );

@@ -15,9 +15,9 @@ export default function MultipleAutoComplete({
 }) {
   const getOptionLabelDefault = (option) => option.label;
   const renderOptionDefault = (props, option, { selected }) => (
-    <li {...props}>
+    <li {...props} style={{ padding: 0 }}>
       <Checkbox checked={selected} />
-      {option.label}
+      <div className="label">{option.label}</div>
     </li>
   );
   return (
@@ -41,7 +41,7 @@ export default function MultipleAutoComplete({
         renderOption={renderOptionCustom || renderOptionDefault}
         onChange={onChange}
         popupIcon={<ArrowDown />}
-        ListboxProps={{ style: { maxHeight: 190 } }}
+        ListboxProps={{ style: { maxHeight: 250 } }}
       />
     </>
   );
