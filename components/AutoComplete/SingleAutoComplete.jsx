@@ -10,8 +10,14 @@ export default function SingleAutoComplete({
   isRequired,
   onChange,
   getOptionLabelCustom,
+  renderOptionCustom,
 }) {
   const getOptionLabelDefault = (option) => option.label;
+  const renderOptionDefault = (props, option) => (
+    <div className="item" component="li" {...props}>
+      {option.label}
+    </div>
+  );
   return (
     <>
       {label && (
@@ -36,11 +42,7 @@ export default function SingleAutoComplete({
             }}
           />
         )}
-        renderOption={(props, option) => (
-          <div className="item" component="li" {...props}>
-            {option.label}
-          </div>
-        )}
+        renderOption={renderOptionCustom || renderOptionDefault}
         onChange={onChange}
         popupIcon={<ArrowDown />}
         ListboxProps={{ style: { maxHeight: 190 } }}

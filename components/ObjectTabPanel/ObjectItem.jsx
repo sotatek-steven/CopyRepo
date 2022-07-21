@@ -48,8 +48,6 @@ const ObjectItem = ({
     }, []);
   }, [moduleState?.sources?.functions]);
 
-  console.log('object', object);
-
   return (
     <>
       <ItemContainer>
