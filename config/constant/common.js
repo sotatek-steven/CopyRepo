@@ -71,200 +71,200 @@ export const BOOLEAN_OPTIONS = [
 
 export const VALUE_TYPE_OPTIONS = [
   {
-    value: 'adress',
-    label: 'Address',
+    value: 'address',
+    label: 'address',
   },
   {
     value: 'bool',
-    label: 'Bool',
+    label: 'bool',
   },
   {
     value: 'bytes1',
-    label: 'Bytes1',
+    label: 'bytes1',
   },
   {
     value: 'bytes2',
-    label: 'Bytes2',
+    label: 'bytes2',
   },
   {
     value: 'bytes3',
-    label: 'Bytes3',
+    label: 'bytes3',
   },
   {
     value: 'bytes4',
-    label: 'Bytes4',
+    label: 'bytes4',
   },
   {
     value: 'bytes5',
-    label: 'Bytes5',
+    label: 'bytes5',
   },
   {
     value: 'bytes6',
-    label: 'Bytes6',
+    label: 'bytes6',
   },
   {
     value: 'bytes7',
-    label: 'Bytes7',
+    label: 'bytes7',
   },
   {
     value: 'bytes8',
-    label: 'Bytes8',
+    label: 'bytes8',
   },
   {
     value: 'bytes9',
-    label: 'Bytes9',
+    label: 'bytes9',
   },
   {
     value: 'bytes10',
-    label: 'Bytes10',
+    label: 'bytes10',
   },
   {
     value: 'bytes11',
-    label: 'Bytes11',
+    label: 'bytes11',
   },
   {
     value: 'bytes12',
-    label: 'Bytes12',
+    label: 'bytes12',
   },
   {
     value: 'bytes13',
-    label: 'Bytes13',
+    label: 'bytes13',
   },
   {
     value: 'bytes14',
-    label: 'Bytes14',
+    label: 'bytes14',
   },
   {
     value: 'bytes15',
-    label: 'Bytes15',
+    label: 'bytes15',
   },
   {
     value: 'bytes16',
-    label: 'Bytes16',
+    label: 'bytes16',
   },
   {
     value: 'bytes17',
-    label: 'Bytes17',
+    label: 'bytes17',
   },
   {
     value: 'bytes18',
-    label: 'Bytes18',
+    label: 'bytes18',
   },
   {
     value: 'bytes19',
-    label: 'Bytes19',
+    label: 'bytes19',
   },
   {
     value: 'bytes20',
-    label: 'Bytes20',
+    label: 'bytes20',
   },
   {
     value: 'bytes21',
-    label: 'Bytes21',
+    label: 'bytes21',
   },
   {
     value: 'bytes22',
-    label: 'Bytes22',
+    label: 'bytes22',
   },
   {
     value: 'bytes23',
-    label: 'Bytes23',
+    label: 'bytes23',
   },
   {
     value: 'bytes24',
-    label: 'Bytes24',
+    label: 'bytes24',
   },
   {
     value: 'bytes25',
-    label: 'Bytes25',
+    label: 'bytes25',
   },
   {
     value: 'bytes26',
-    label: 'Bytes26',
+    label: 'bytes26',
   },
   {
     value: 'bytes27',
-    label: 'Bytes27',
+    label: 'bytes27',
   },
   {
     value: 'bytes28',
-    label: 'Bytes28',
+    label: 'bytes28',
   },
   {
     value: 'bytes29',
-    label: 'Bytes29',
+    label: 'bytes29',
   },
   {
     value: 'bytes30',
-    label: 'Bytes30',
+    label: 'bytes30',
   },
   {
     value: 'bytes31',
-    label: 'Bytes31',
+    label: 'bytes31',
   },
   {
     value: 'bytes32',
-    label: 'Bytes32',
+    label: 'bytes32',
   },
   {
     value: 'int',
-    label: 'Int',
+    label: 'int',
   },
   {
     value: 'int8',
-    label: 'Int8',
+    label: 'int8',
   },
   {
     value: 'int16',
-    label: 'Int16',
+    label: 'int16',
   },
   {
     value: 'int32',
-    label: 'Int32',
+    label: 'int32',
   },
   {
     value: 'int64',
-    label: 'Int64',
+    label: 'int64',
   },
   {
     value: 'int128',
-    label: 'Int128',
+    label: 'int128',
   },
   {
     value: 'int256',
-    label: 'Int256',
+    label: 'int256',
   },
   {
     value: 'uint',
-    label: 'Uint',
+    label: 'uint',
   },
   {
     value: 'uint8',
-    label: 'Uint8',
+    label: 'uint8',
   },
   {
     value: 'uint16',
-    label: 'Uint16',
+    label: 'uint16',
   },
   {
     value: 'uint32',
-    label: 'Uint32',
+    label: 'uint32',
   },
   {
     value: 'uint64',
-    label: 'Uint64',
+    label: 'uint64',
   },
   {
     value: 'uint128',
-    label: 'Uint128',
+    label: 'uint128',
   },
   {
     value: 'uint256',
-    label: 'Uint256',
+    label: 'uint256',
   },
   {
     value: 'string',
-    label: 'String',
+    label: 'string',
   },
 ];
 
