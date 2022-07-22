@@ -1,5 +1,6 @@
-import { ELEMENT_TYPE, NEW_ID, EDIT_ID } from '@/config/constant/common';
-import { useMemo, useState } from 'react';
+import { ELEMENT_TYPE, EDIT_ID } from '@/config/constant/common';
+import _ from 'lodash';
+import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
@@ -8,8 +9,9 @@ const STRUCT = {
   errorName: null,
   variables: [
     {
+      _id: Date.now(),
       type: {
-        value: [],
+        value: '',
         errorType: null,
       },
       name: {
@@ -21,8 +23,9 @@ const STRUCT = {
 };
 
 const VARIABLE = {
+  _id: Date.now(),
   type: {
-    value: [],
+    value: '',
     errorType: null,
   },
   name: {
@@ -41,15 +44,21 @@ const useStructPage = () => {
 
   const { struct, userModule } = useDispatch();
 
-  const [count, setCount] = useState(0);
+  const getTypeByStruct = (lstStruct) => {
+    return lstStruct.map((item, idxStruct) => ({ value: `${EDIT_ID}_${idxStruct}`, label: item?.name }));
+  };
 
-  const getStructs = (lstStruct) => {
+  const getStructs = async (lstStruct) => {
+    const typeTemp = await getTypeByStruct(lstStruct);
+    const listType = _.concat(types, typeTemp);
+
     const data = lstStruct?.map((struct, idxStruct) => {
       const variables = struct.content.map((content, idxContent) => {
+        const type = listType.find((item) => item?.label === content?.type);
         return {
           _id: `${EDIT_ID}_${idxStruct}_${idxContent}`,
           type: {
-            value: [content?.type],
+            value: type?.value,
           },
           name: {
             value: content?.label,
@@ -64,17 +73,20 @@ const useStructPage = () => {
         variables: variables,
       };
     });
+
     const dataOrigin = JSON.parse(JSON.stringify(data));
     struct.setOriginStructs(dataOrigin);
     struct.setStructs(data);
+    struct.setTypes(listType);
     userModule.updateStructs(convertStructs(data));
   };
 
   const convertStructs = (data) => {
     return data?.map((struct) => {
       const content = struct?.variables?.map((variable) => {
+        const type = types.find((item) => item?.value === variable?.type.value);
         return {
-          type: variable?.type.value[0],
+          type: type?.label,
           label: variable?.name.value,
         };
       });
@@ -89,10 +101,9 @@ const useStructPage = () => {
   const handelAddStruct = () => {
     const init = JSON.parse(JSON.stringify(STRUCT));
     const data = [...structs];
-    data.push({ ...init, _id: `${NEW_ID}_${count}` });
+    data.push({ ...init, _id: Date.now() });
     struct.setStructs(data);
     userModule.updateStructs(convertStructs(data));
-    setCount((prev) => prev + 1);
   };
 
   const handelRemoveStruct = (structId) => {
@@ -117,11 +128,10 @@ const useStructPage = () => {
     }
     const variable = JSON.parse(JSON.stringify(VARIABLE));
     const data = [...structs];
-    data[iStruct]?.variables?.push({ ...variable, _id: `${NEW_ID}_${count}` });
+    data[iStruct]?.variables?.push({ ...variable });
 
     struct.setStructs(data);
     userModule.updateStructs(convertStructs(data));
-    setCount((prev) => prev + 1);
   };
 
   const handelRemoveVariable = (structId, variableId) => {
@@ -134,7 +144,7 @@ const useStructPage = () => {
     const data = [...structs];
     data[iStruct]?.variables?.splice(iVariable, 1);
 
-    const duplicateArr = checkDuplicateName(data[iStruct].variables);
+    const duplicateArr = checkDuplicateVariableName(data[iStruct].variables);
 
     data[iStruct].variables.forEach(({ name }) => {
       name.errorName = !!duplicateArr?.includes(name.value) && 'Variable name cannot be duplicated';
@@ -144,18 +154,45 @@ const useStructPage = () => {
     userModule.updateStructs(convertStructs(data));
   };
 
+  const checkDuplicateStructName = () => {
+    const duplicateNames = structs.map(({ name }) => name).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i);
+    return duplicateNames;
+  };
+
   const handleChangeNameStruct = (structId, e) => {
     const value = e.target.value;
     const iStruct = structs.findIndex(({ _id }) => _id === structId);
     const data = [...structs];
     data[iStruct].name = value;
-    data[iStruct].errorName = !value?.trim() && 'This field is required';
+    data[iStruct].errorName = false;
+
+    if (!value?.trim()) {
+      data[iStruct].errorName = 'This field is required';
+    }
+    const duplicateArr = checkDuplicateStructName();
+
+    data.forEach((item) => {
+      item.errorName = !!duplicateArr?.includes(item?.name) && 'Struct name cannot be duplicated';
+    });
+
+    // Add Struct to List Type
+    const iType = types.findIndex(({ value }) => value === structId);
+    const tempType = [...types];
+    if (iType === -1) {
+      tempType.push({
+        value: structId,
+        label: e.target.value,
+      });
+    } else {
+      tempType[iType].label = e.target.value;
+    }
 
     struct.setStructs(data);
+    struct.setTypes(tempType);
     userModule.updateStructs(convertStructs(data));
   };
 
-  const checkDuplicateName = (variables) => {
+  const checkDuplicateVariableName = (variables) => {
     const duplicateNames = variables.map(({ name }) => name.value).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i);
     return duplicateNames;
   };
@@ -173,20 +210,15 @@ const useStructPage = () => {
         if (!e.target.value?.trim()) {
           data[iStruct].variables[iVariable].name.errorName = 'This field is required';
         }
-        duplicateArr = checkDuplicateName(data[iStruct].variables);
+        duplicateArr = checkDuplicateVariableName(data[iStruct].variables);
 
         data[iStruct].variables.forEach(({ name }) => {
           name.errorName = !!duplicateArr?.includes(name.value) && 'Variable name cannot be duplicated';
         });
 
         break;
-      case ELEMENT_TYPE.TAG:
-        if (!types.includes(e.value)) {
-          const temp = [...types];
-          temp.push(e.value);
-          struct.setTypes(temp);
-        }
-        data[iStruct].variables[iVariable].type.value = [e.value];
+      case ELEMENT_TYPE.SELECT:
+        data[iStruct].variables[iVariable].type.value = e.value;
         data[iStruct].variables[iVariable].type.errorType = !e.value?.trim() && 'This field is required';
         break;
       default:

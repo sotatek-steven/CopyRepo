@@ -42,4 +42,10 @@ const Label = styled('div')(({ theme }) => ({
   marginBottom: 3,
 }));
 
-export { BaseAutocomplete, Label };
+const Error = styled('div')(({ theme }) => ({
+  color: theme.palette.error.main,
+  fontSize: 14,
+  marginTop: 8,
+}));
+
+export { BaseAutocomplete, Label, Error };

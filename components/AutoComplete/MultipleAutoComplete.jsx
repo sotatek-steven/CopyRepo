@@ -1,7 +1,7 @@
 import { Checkbox } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import ArrowDown from 'assets/icon/arrow-down.svg';
-import { BaseAutocomplete, Label } from './AutoComplete.style';
+import { BaseAutocomplete, Error, Label } from './AutoComplete.style';
 
 export default function MultipleAutoComplete({
   label,
@@ -9,6 +9,7 @@ export default function MultipleAutoComplete({
   loading,
   value,
   isRequired,
+  errorText,
   onChange,
   getOptionLabelCustom,
   renderOptionCustom,
@@ -43,6 +44,7 @@ export default function MultipleAutoComplete({
         popupIcon={<ArrowDown />}
         ListboxProps={{ style: { maxHeight: 250 } }}
       />
+      {!!errorText && <Error>{errorText}</Error>}
     </>
   );
 }
