@@ -1,4 +1,5 @@
 import { styled } from '@mui/material/styles';
+import Scrollbars from 'react-custom-scrollbars';
 
 const Container = styled('div')(({ theme }) => ({
   padding: '0 20px',
@@ -40,6 +41,13 @@ const AssignedValueList = styled('div')(({ theme }) => ({
     backgroundColor: theme.palette.primary.main,
     borderRadius: '50%',
     cursor: 'pointer',
+  },
+}));
+
+const ScrollbarsCustom = styled(Scrollbars)(({ theme }) => ({
+  height: 'fit-content',
+  '& > div': {
+    position: 'unset !important',
   },
 }));
 
@@ -98,6 +106,7 @@ export {
   Item,
   ButtonWrapper,
   AssignedValueList,
+  ScrollbarsCustom,
   AssignedValuesContainer,
   Error,
 };

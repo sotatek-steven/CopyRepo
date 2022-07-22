@@ -8,8 +8,8 @@ import colourStyles from '../EditInfoContractModal/tagStyle';
 import FormModal from '../FormModal';
 import { ELEMENT_TYPE, HTTP_CODE, MODE, MODULE_OWNER } from '@/config/constant/common';
 import { ROUTE } from '@/config/constant/routeConstant';
-import Select from '../Select';
 import _ from 'lodash';
+import SingleAutoComplete from '../AutoComplete/SingleAutoComplete';
 
 const InputWrapper = styled('div')(() => ({
   marginBottom: 20,
@@ -60,7 +60,7 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
     }
     if (type === ELEMENT_TYPE.SELECT) {
       valueField = {
-        [field]: e.target.value,
+        [field]: e.value,
       };
     }
     if (type === ELEMENT_TYPE.TAG) {
@@ -199,13 +199,13 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
         />
       </InputWrapper>
       <InputWrapper>
-        <Select
+        <SingleAutoComplete
           label="Domain"
           isRequired={true}
           options={optionDomain}
-          value={moduleInfo?.domainId}
+          value={optionDomain.find((domain) => domain.value === moduleInfo?.domainId)}
           disabled={data?.owner?.toUpperCase() === MODULE_OWNER.SYSTEM}
-          onChange={(e) => handleChange(e, 'domainId', ELEMENT_TYPE.SELECT)}
+          onChange={(e, newValue) => handleChange(newValue, 'domainId', ELEMENT_TYPE.SELECT)}
           errorText={errors?.domainId}
         />
       </InputWrapper>
