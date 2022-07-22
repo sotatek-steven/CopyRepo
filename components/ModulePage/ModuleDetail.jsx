@@ -8,7 +8,6 @@ const Container = styled('div')(({ theme }) => ({
   fontWeight: '400',
   fontFamily: 'Segoe UI',
   color: theme.palette.text.primary,
-  ...theme.components.truncate.singleLineEllipsis,
 }));
 
 const GasContainer = styled('div')(({ theme }) => ({
@@ -67,11 +66,11 @@ const ModuleDetail = ({ open, onClose, moduleId }) => {
         </GasContainer>
         <FunctionContainer>
           <div className="title">Functions</div>
-          <div className="content">{moduleInfo?.sources?.functions?.toString()}</div>
+          <div className="content">{moduleInfo?.sources?.functions?.map((item) => item.name).join(', ')}</div>
         </FunctionContainer>
         <ParamContainer>
           <div className="title">Parameters Included</div>
-          <div className="content">{moduleInfo?.sources?.contructorParams?.toString()}</div>
+          <div className="content">{moduleInfo?.sources?.contructorParams?.map((item) => item.label).join(', ')}</div>
         </ParamContainer>
         <LibraryContainer>
           <div className="title">Libraries</div>
