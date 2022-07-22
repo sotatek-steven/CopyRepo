@@ -6,6 +6,8 @@ import { Error, Item, ItemContainer } from './ValueTab.style';
 import DeleteIcon from '../../assets/icon/deleteIcon2.svg';
 import { Box, IconButton, useTheme } from '@mui/material';
 import { useMemo } from 'react';
+import SelectSearch from 'react-select';
+import colourStyles from '../EditInfoContractModal/tagStyle';
 
 const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
   const theme = useTheme();
@@ -32,16 +34,25 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
     if (value.isArray) placeholder = 'Separate array items with (,)';
     return placeholder;
   }, [value.type, value.isArray, value.isDefaultValue]);
+
+  const options = [
+    { value: 'chocolate', label: 'Chocolate' },
+    { value: 'strawberry', label: 'Strawberry' },
+    { value: 'vanilla', label: 'Vanilla' },
+  ];
   return (
     <ItemContainer>
-      <Item>
-        <Select
-          menuProps
-          value={value?.type}
+      {/* <Item> */}
+      <Item sx={{ overflow: 'unset' }}>
+        <SelectSearch
+          // menuProps
+          // value={value?.type}
           options={VALUE_TYPE_OPTIONS}
+          styles={colourStyles(theme)}
           onChange={(e) => handleChangeValue(value?._id, 'type', e, ELEMENT_TYPE.SELECT)}
         />
       </Item>
+      {/* </Item> */}
       <Item>
         <Select
           value={value?.isArray}
@@ -88,7 +99,8 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
       </Item>
       <Item>
         <Select
-          value={value?.functions}
+          multiple={true}
+          value={value?.functions || []}
           options={listFunction}
           onChange={(e) => handleChangeValue(value?._id, 'functions', e, ELEMENT_TYPE.SELECT)}
         />
