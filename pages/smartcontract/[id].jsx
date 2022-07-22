@@ -49,7 +49,7 @@ const Design = () => {
     if (!sources) return;
 
     _.isArray(sources) &&
-      sources.forEach((item, index) => {
+      sources.forEach((item) => {
         const stringFile = item.lines.join('\n');
         lines = lines.concat(stringFile).concat('\n\n');
       });
@@ -129,22 +129,20 @@ const Design = () => {
           </div>
         </TabPanel>
         <TabPanel value="2" sx={{ padding: '0 !important' }}>
-          <Scrollbars style={{ height: 'calc(100vh - 74px)', width: '100%' }}>
-            <>
-              <Card
-                sx={{
-                  marginBottom: '0px',
-                  overflowX: 'hidden !important',
-                }}>
-                <SyntaxHighlighter
-                  language="solidity"
-                  style={a11yDark}
-                  wrapLongLines
-                  customStyle={{ overflow: 'hidden', paddingTop: '60px', marginTop: 0 }}>
-                  {allLines}
-                </SyntaxHighlighter>
-              </Card>
-            </>
+          <Scrollbars
+            style={{ height: 'calc(100vh - 74px)', width: '100%', background: theme.palette.background.dark }}>
+            <SyntaxHighlighter
+              language="solidity"
+              style={a11yDark}
+              wrapLongLines
+              customStyle={{
+                overflow: 'hidden',
+                paddingTop: '70px',
+                margin: 0,
+                background: theme.palette.background.dark,
+              }}>
+              {allLines}
+            </SyntaxHighlighter>
           </Scrollbars>
         </TabPanel>
       </TabContext>

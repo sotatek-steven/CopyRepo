@@ -220,7 +220,6 @@ const ModulePage = () => {
                 <Box
                   sx={{
                     background: theme.palette.success.main,
-                    // borderLeft: `7px solid ${theme.palette.primary.light2} `,
                     width: '444px',
                     height: '82px',
                     color: theme.palette.common.black,

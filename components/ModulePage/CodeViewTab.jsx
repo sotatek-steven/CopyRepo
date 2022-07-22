@@ -1,17 +1,11 @@
+import { useTheme } from '@mui/material';
 import React, { useMemo } from 'react';
-import { Card, styled } from '@mui/material';
 import Scrollbars from 'react-custom-scrollbars';
 import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
 import { a11yDark } from 'react-syntax-highlighter/dist/cjs/styles/prism';
-import _ from 'lodash';
-
-const CardContainer = styled(Card)(() => ({
-  marginBottom: '0px',
-  overflowX: 'hidden !important',
-  height: '100%',
-}));
 
 const CodeViewTab = ({ sources }) => {
+  const theme = useTheme();
   const allLines = useMemo(() => {
     let lines = '';
     if (!sources) return;
@@ -20,16 +14,19 @@ const CodeViewTab = ({ sources }) => {
   }, [sources]);
 
   return (
-    <Scrollbars style={{ height: 'calc(100vh - 74px)', background: 'red' }}>
-      <CardContainer>
-        <SyntaxHighlighter
-          language="solidity"
-          style={a11yDark}
-          wrapLongLines
-          customStyle={{ overflow: 'hidden', padding: '150px 117px 0px', marginTop: 0, height: '100%' }}>
-          {allLines}
-        </SyntaxHighlighter>
-      </CardContainer>
+    <Scrollbars style={{ height: 'calc(100vh - 74px)', background: theme.palette.background.dark }}>
+      <SyntaxHighlighter
+        language="solidity"
+        style={a11yDark}
+        wrapLongLines
+        customStyle={{
+          overflow: 'hidden',
+          padding: '150px 117px 0px',
+          margin: 0,
+          background: theme.palette.background.dark,
+        }}>
+        {allLines}
+      </SyntaxHighlighter>
     </Scrollbars>
   );
 };
