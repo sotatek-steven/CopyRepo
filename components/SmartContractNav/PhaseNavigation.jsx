@@ -32,14 +32,22 @@ const PhaseNavigation = () => {
   const colors = {
     true: theme.palette.success.main,
     false: theme.palette.warning.main,
-  }
+  };
   return (
     <NavigationContainer>
       <Line />
-      <PhaseItem label="Design" icon={<DesignIcon fill={colors[contractState.current?.status !== 'deployed']} />} isActive={contractState.current?.status !== 'deployed'} />
+      <PhaseItem
+        label="Design"
+        icon={<DesignIcon fill={colors[contractState.current?.status !== 'deployed']} />}
+        isActive={contractState.current?.status !== 'deployed'}
+      />
       <PhaseItem label="Validation" icon={<SearchIcon fill={colors[false]} />} isActive={false} />
       <PhaseItem label="Security" icon={<SecurityIcon fill={colors[false]} />} isActive={false} />
-      <PhaseItem label="Deployment" icon={<RocketIcon stroke={colors[contractState.current?.status === 'deployed']} />} isActive={contractState.current?.status === 'deployed'} />
+      <PhaseItem
+        label="Deployment"
+        icon={<RocketIcon stroke={colors[contractState.current?.status === 'deployed']} />}
+        isActive={contractState.current?.status === 'deployed'}
+      />
     </NavigationContainer>
   );
 };
