@@ -30,7 +30,7 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
     }
     if (value.isArray) placeholder = 'Separate array items with (,)';
     return placeholder;
-  }, [value.type, value.isArray, value.isDefaultValue]);
+  }, [value.type, value.isArray, value.isDefaultValue, PLACE_HOLDER]);
 
   return (
     <ItemContainer>
@@ -72,17 +72,19 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
           {!!value?.errorName && <Error>{value?.errorName}</Error>}
         </Box>
       </Item>
-
-      <Item sx={{ wordBreak: 'break-all', ...theme.components.truncate.twoLineEllipsis }}>
-        <Tooltip title={getPlaceholderDefaultValue}>
+      <Tooltip
+        title={getPlaceholderDefaultValue}
+        disableHoverListener={!getPlaceholderDefaultValue}
+        disableFocusListener={!getPlaceholderDefaultValue}>
+        <Item>
           <Input
             value={value?.variableValue}
             onChange={(e) => handleChangeValue(value?._id, 'variableValue', e, ELEMENT_TYPE.INPUT)}
             disabled={value.isDefaultValue === true}
             placeholder={getPlaceholderDefaultValue}
           />
-        </Tooltip>
-      </Item>
+        </Item>
+      </Tooltip>
       <Item>
         <Select
           value={value?.isDefaultValue}
