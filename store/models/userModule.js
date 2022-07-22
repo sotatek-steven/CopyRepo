@@ -93,9 +93,6 @@ const userModule = createModel({
           toast.error(message);
           return;
         }
-
-        console.log('data from api');
-        console.log(data.sources);
         return data;
       },
       async createModule({ moduleInfo }, state) {
@@ -128,10 +125,6 @@ const userModule = createModel({
         if (code !== 200) {
           toast.error(message);
           return { code };
-        } else {
-          toast.success('Save Successfully!', {
-            style: { top: '3.5em' },
-          });
         }
         return { code, data };
       },

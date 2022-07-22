@@ -127,9 +127,11 @@ const FunctionCanvas = ({ initialNodes }) => {
     [reactFlowInstance, setNodes, moduleState.functions, nodes]
   );
 
-  const updateModuleState = (modules, coordinates) => {
+  const updateModuleState = async (modules, coordinates) => {
     userModule.updateFunctions(modules);
     userModule.updateCoordinates(coordinates);
+    const { data } = await userModule.updateModule();
+    userModule.update(data);
   };
 
   const addNewFuctionToModule = (functionInfo, position) => {
@@ -168,6 +170,10 @@ const FunctionCanvas = ({ initialNodes }) => {
   //    * lock the canvas
   //    */
   // };
+
+  useEffect(() => {
+    console.log('node: ', nodes);
+  }, [nodes]);
 
   return (
     <ReactFlowProvider>
