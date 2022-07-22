@@ -1,10 +1,10 @@
-import { BOOLEAN_OPTIONS, ELEMENT_TYPE, SCOPE, VALUE_TYPE_OPTIONS } from '@/config/constant/common';
+import { BOOLEAN_OPTIONS, ELEMENT_TYPE, PLACE_HOLDER, SCOPE, VALUE_TYPE_OPTIONS } from '@/config/constant/common';
 import { useSelector } from 'react-redux';
 import { Input } from '../Input';
 import Select from '../Select';
 import { Error, Item, ItemContainer } from './ValueTab.style';
 import DeleteIcon from '../../assets/icon/deleteIcon2.svg';
-import { Box, IconButton, useTheme } from '@mui/material';
+import { Box, IconButton, Tooltip, useTheme } from '@mui/material';
 import { useMemo } from 'react';
 import SelectSearch from 'react-select';
 import colourStyles from './ValueTypeStyle';
@@ -25,11 +25,8 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
   const getPlaceholderDefaultValue = useMemo(() => {
     let placeholder = null;
     if (value.isDefaultValue) {
-      if (value.type === 'address') placeholder = '0x(and 40 zero digits behind)';
-      if (value.type === 'bool') placeholder = 'false';
-      if (value.type === 'string') placeholder = 'an empty string (empty value)';
       if (value.type.includes('int') || value.type.includes('uint')) placeholder = '0';
-      if (value.type.includes('bytes')) placeholder = '0x(and 2 - 64 zero digits behind)';
+      else placeholder = PLACE_HOLDER[value.type];
     }
     if (value.isArray) placeholder = 'Separate array items with (,)';
     return placeholder;
@@ -76,13 +73,15 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
         </Box>
       </Item>
 
-      <Item>
-        <Input
-          value={value?.variableValue}
-          onChange={(e) => handleChangeValue(value?._id, 'variableValue', e, ELEMENT_TYPE.INPUT)}
-          disabled={value.isDefaultValue === true}
-          placeholder={getPlaceholderDefaultValue}
-        />
+      <Item sx={{ wordBreak: 'break-all', ...theme.components.truncate.twoLineEllipsis }}>
+        <Tooltip title={getPlaceholderDefaultValue}>
+          <Input
+            value={value?.variableValue}
+            onChange={(e) => handleChangeValue(value?._id, 'variableValue', e, ELEMENT_TYPE.INPUT)}
+            disabled={value.isDefaultValue === true}
+            placeholder={getPlaceholderDefaultValue}
+          />
+        </Tooltip>
       </Item>
       <Item>
         <Select
