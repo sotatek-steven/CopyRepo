@@ -7,7 +7,7 @@ import DeleteIcon from '../../assets/icon/deleteIcon2.svg';
 import { Box, IconButton, useTheme } from '@mui/material';
 import { useMemo } from 'react';
 import SelectSearch from 'react-select';
-import colourStyles from '../EditInfoContractModal/tagStyle';
+import colourStyles from './ValueTypeStyle';
 
 const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
   const theme = useTheme();
@@ -35,17 +35,11 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
     return placeholder;
   }, [value.type, value.isArray, value.isDefaultValue]);
 
-  const options = [
-    { value: 'chocolate', label: 'Chocolate' },
-    { value: 'strawberry', label: 'Strawberry' },
-    { value: 'vanilla', label: 'Vanilla' },
-  ];
   return (
     <ItemContainer>
       {/* <Item> */}
       <Item sx={{ overflow: 'unset' }}>
         <SelectSearch
-          // menuProps
           // value={value?.type}
           options={VALUE_TYPE_OPTIONS}
           styles={colourStyles(theme)}
