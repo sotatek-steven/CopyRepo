@@ -1,3 +1,4 @@
+import { INIT_VALUE_TYPE } from '@/config/constant/common';
 import { createModel } from '@rematch/core';
 
 const TYPES = [
@@ -11,23 +12,9 @@ const TYPES = [
   },
 ];
 
-const INIT_VALUES = [
-  {
-    _id: 1,
-    type: '',
-    isArray: false,
-    scope: 'public',
-    isConst: false,
-    label: '',
-    variableValue: '',
-    isDefaultValue: false,
-    functions: '',
-  },
-];
-
 const value = createModel({
   state: {
-    values: INIT_VALUES,
+    values: INIT_VALUE_TYPE,
     types: TYPES,
     count: 0,
   },
