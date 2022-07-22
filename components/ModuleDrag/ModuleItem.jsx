@@ -140,7 +140,7 @@ const ModuleItem = ({ data, nodeType, fetchModules, setDataClone, setIsOpenModul
 
   const handleClickActionMenu = (mode) => {
     if (!data) return;
-    const { _id, owner, ...dataModule } = data;
+    const { owner, ...dataModule } = data;
     switch (mode) {
       case MODE_ACTION_MODULE.DETAILS:
         setIsOpenModuleDetail(true);
@@ -174,7 +174,7 @@ const ModuleItem = ({ data, nodeType, fetchModules, setDataClone, setIsOpenModul
         fetchModules();
       }
     } catch (error) {
-        toast.error('Delete failed!');
+      toast.error('Delete failed!');
     } finally {
       setIsOpenConfirmDelete(false);
     }

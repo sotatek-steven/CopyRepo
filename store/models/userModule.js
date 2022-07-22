@@ -135,6 +135,23 @@ const userModule = createModel({
         }
         return { code, data };
       },
+      async cloneModule(payload, state) {
+        const { _id, name, description, domainId, tags } = payload;
+        const body = { from: _id, name, description, domainId, tags };
+        const { code, data, message } = await postRequest({
+          url: `/api/v1/modules/clone`,
+          userModoel: player,
+          userState: state.player,
+          body: body,
+        });
+        if (code !== 200) {
+          toast.error(message);
+          return { code };
+        } else {
+          toast.success('Save Successfully!');
+        }
+        return { code, data };
+      },
       async deleteModule(payload, state) {
         const { _id } = payload;
 

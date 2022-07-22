@@ -138,6 +138,14 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
     }
   };
 
+  const cloneModule = async () => {
+    const res = await userModule.cloneModule(moduleInfo);
+    if (res?.code === HTTP_CODE.SUCCESS && res?.data?._id) {
+      const { _id } = res.data;
+      router.push(`${ROUTE.MODULES}/${_id}`);
+    }
+  };
+
   const updateModule = () => {
     const newModule = { ...data, ...moduleInfo };
     userModule.update(newModule);
@@ -147,8 +155,10 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
   const handleSave = () => {
     switch (mode) {
       case MODE.CREATE:
-      case MODE.CLONE:
         createModule();
+        break;
+      case MODE.CLONE:
+        cloneModule();
         break;
       case MODE.EDIT:
         updateModule();
