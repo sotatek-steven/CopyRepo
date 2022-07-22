@@ -4,12 +4,14 @@ import KeyValueField from './KeyValueField';
 import MapToFunctionField from './MapToFunctionField';
 import ScopeField from './ScopeField';
 import VariableNameField from './VariableNameField';
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
+import CloseIcon from '@mui/icons-material/Close';
 import useMappingData from './useMappingData';
 import _ from 'lodash';
 
-const RemoveButton = styled(RemoveCircleIcon)(({ theme }) => ({
-  color: theme.palette.primary.main,
+const RemoveButton = styled(CloseIcon)(({ theme }) => ({
+  background: theme.palette.primary.main,
+  borderRadius: '50%',
+  color: theme.palette.common.black,
   fontSize: 22,
   marginBottom: 12,
   cursor: 'pointer',

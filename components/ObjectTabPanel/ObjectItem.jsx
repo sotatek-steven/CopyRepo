@@ -11,6 +11,7 @@ import {
   AssignedValuesContainer,
   AssignedValueList,
   ScrollbarsCustom,
+  RemoveButton,
 } from './ObjectTab.style';
 import { useMemo } from 'react';
 import SingleAutoComplete from '../AutoComplete/SingleAutoComplete';
@@ -123,7 +124,7 @@ const ObjectItem = ({
 
         <ButtonWrapper>
           <PrimaryButton width="150px" height="45px" onClick={() => handleRemoveObject(object?._id)}>
-            <RemoveIcon />
+            <RemoveButton />
             Remove Object
           </PrimaryButton>
         </ButtonWrapper>

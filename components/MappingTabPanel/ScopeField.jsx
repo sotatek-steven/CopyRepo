@@ -1,18 +1,8 @@
+import { SCOPE } from '@/config/constant/common';
 import React from 'react';
 
 import Select from '../Select';
 import useMappingData from './useMappingData';
-
-const SCOPE = [
-  {
-    value: 'public',
-    label: 'Public',
-  },
-  {
-    value: 'private',
-    label: 'Private',
-  },
-];
 
 const ScopeField = ({ id }) => {
   const [data, updateData] = useMappingData(id);

@@ -1,5 +1,6 @@
 import { styled } from '@mui/material/styles';
 import Scrollbars from 'react-custom-scrollbars';
+import CloseIcon from '@mui/icons-material/Close';
 
 const Container = styled('div')(({ theme }) => ({
   padding: '0 20px',
@@ -98,6 +99,14 @@ const Error = styled('div')(({ theme }) => ({
   marginTop: 8,
 }));
 
+const RemoveButton = styled(CloseIcon)(({ theme }) => ({
+  background: theme.palette.primary.main,
+  borderRadius: '50%',
+  border: '1.5px solid',
+  fontSize: 18,
+  marginBottom: 4,
+}));
+
 export {
   Container,
   BodyContent,
@@ -109,4 +118,5 @@ export {
   ScrollbarsCustom,
   AssignedValuesContainer,
   Error,
+  RemoveButton,
 };
