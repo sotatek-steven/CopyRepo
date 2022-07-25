@@ -5,13 +5,12 @@ import ValueItem from './ValueItem';
 import useValuesTab from './hooks/useValuesTab';
 import { Box, IconButton, Tooltip, useTheme } from '@mui/material';
 import { Item, ItemContainer } from './ValueTab.style';
-import ReportGmailerrorredIcon from '@mui/icons-material/ReportGmailerrorred';
 import { TITLE_VALUES_TAB } from '@/config/constant/common';
+import IconInfo from 'assets/icon/icon-info.svg';
 
 const ValuesTabPanel = () => {
   const { values, handleAddValues, handleRemoveValue, handleChangeValue } = useValuesTab();
   const theme = useTheme();
-  console.log(values);
 
   return (
     <Container>
@@ -27,10 +26,11 @@ const ValuesTabPanel = () => {
             {item.label}
             {item.value === 'variable_name' && (
               <Tooltip
+                arrow
                 placement="top"
                 title="Beginning character : Must be letter. Following characters only contain: Letter, digits, (_)">
-                <IconButton>
-                  <ReportGmailerrorredIcon sx={{ color: theme.palette.primary.light }} />
+                <IconButton sx={{ padding: '0', margin: '0 0 6px 10px' }}>
+                  <IconInfo sx={{ color: theme.palette.primary.light }} />
                 </IconButton>
               </Tooltip>
             )}

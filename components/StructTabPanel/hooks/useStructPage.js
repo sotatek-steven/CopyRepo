@@ -58,7 +58,7 @@ const useStructPage = () => {
         return {
           _id: `${EDIT_ID}_${idxStruct}_${idxContent}`,
           type: {
-            value: type?.value,
+            value: type?.value || 'string',
           },
           name: {
             value: content?.label,
@@ -238,7 +238,7 @@ const useStructPage = () => {
         isError = true;
       }
       item?.variables.forEach(({ type, name }) => {
-        if (!type?.value.length) {
+        if (!type?.value?.length) {
           type.errorType = 'This field is required';
           isError = true;
         }
