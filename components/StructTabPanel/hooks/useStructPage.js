@@ -45,7 +45,7 @@ const useStructPage = () => {
   const { struct, userModule } = useDispatch();
 
   const getTypeByStruct = (lstStruct) => {
-    return lstStruct.map((item, idxStruct) => ({ value: `${EDIT_ID}_${idxStruct}`, label: item?.name }));
+    return lstStruct?.map((item, idxStruct) => ({ value: `${EDIT_ID}_${idxStruct}`, label: item?.name }));
   };
 
   const getStructs = async (lstStruct) => {

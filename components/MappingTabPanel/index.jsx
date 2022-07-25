@@ -101,7 +101,7 @@ const MappingTabPanel = () => {
 
   return (
     <Container>
-      {moduleState.variables.mappings.map((mappingItem, index) => {
+      {moduleState.variables?.mappings?.map((mappingItem, index) => {
         return (
           <MappingItem
             updateError={setError}

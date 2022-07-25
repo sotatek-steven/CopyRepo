@@ -56,6 +56,10 @@ export const SCOPE = [
     value: 'private',
     label: 'Private',
   },
+  {
+    value: 'internal',
+    label: 'Internal',
+  },
 ];
 
 export const BOOLEAN_OPTIONS = [
