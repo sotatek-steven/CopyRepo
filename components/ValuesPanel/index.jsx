@@ -11,6 +11,7 @@ import { TITLE_VALUES_TAB } from '@/config/constant/common';
 const ValuesTabPanel = () => {
   const { values, handleAddValues, handleRemoveValue, handleChangeValue } = useValuesTab();
   const theme = useTheme();
+  console.log(values);
 
   return (
     <Container>

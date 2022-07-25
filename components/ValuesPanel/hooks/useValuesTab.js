@@ -39,6 +39,8 @@ const useValuesTab = () => {
     const data = [...values];
     switch (type) {
       case ELEMENT_TYPE.INPUT:
+        data[iValue][field] = e.target.value;
+
         if (field === 'label') {
           if (data[iValue]['isConst'] == true) data[iValue][field] = e.target.value.toUpperCase();
 
@@ -50,11 +52,15 @@ const useValuesTab = () => {
             data[iValue]['errorName'] = 'Invalid variable name';
           }
         }
-        data[iValue][field] = e.target.value;
 
         break;
 
       case ELEMENT_TYPE.SELECT:
+        if (field === 'type') {
+          data[iValue][field] = e?.value;
+        } else {
+          data[iValue][field] = e.target.value;
+        }
         if (field === 'isArray' && e.target.value === true) {
           data[iValue]['isConst'] = 'false';
         }
@@ -65,7 +71,6 @@ const useValuesTab = () => {
         if (field === 'isDefaultValue' && e.target.value === true) {
           data[iValue]['variableValue'] = '';
         }
-        data[iValue][field] = e.target.value;
         break;
 
       default:

@@ -1,11 +1,13 @@
-import { BOOLEAN_OPTIONS, ELEMENT_TYPE, SCOPE, VALUE_TYPE_OPTIONS } from '@/config/constant/common';
+import { BOOLEAN_OPTIONS, ELEMENT_TYPE, PLACE_HOLDER, SCOPE, VALUE_TYPE_OPTIONS } from '@/config/constant/common';
 import { useSelector } from 'react-redux';
 import { Input } from '../Input';
 import Select from '../Select';
 import { Error, Item, ItemContainer } from './ValueTab.style';
 import DeleteIcon from '../../assets/icon/deleteIcon2.svg';
-import { Box, IconButton, useTheme } from '@mui/material';
+import { Box, IconButton, Tooltip, useTheme } from '@mui/material';
 import { useMemo } from 'react';
+import SelectSearch from 'react-select';
+import colourStyles from './ValueTypeStyle';
 
 const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
   const theme = useTheme();
@@ -23,25 +25,25 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
   const getPlaceholderDefaultValue = useMemo(() => {
     let placeholder = null;
     if (value.isDefaultValue) {
-      if (value.type === 'address') placeholder = '0x(and 40 zero digits behind)';
-      if (value.type === 'bool') placeholder = 'false';
-      if (value.type === 'string') placeholder = 'an empty string (empty value)';
       if (value.type.includes('int') || value.type.includes('uint')) placeholder = '0';
-      if (value.type.includes('bytes')) placeholder = '0x(and 2 - 64 zero digits behind)';
+      else placeholder = PLACE_HOLDER[value.type];
     }
     if (value.isArray) placeholder = 'Separate array items with (,)';
     return placeholder;
-  }, [value.type, value.isArray, value.isDefaultValue]);
+  }, [value.type, value.isArray, value.isDefaultValue, PLACE_HOLDER]);
+
   return (
     <ItemContainer>
-      <Item>
-        <Select
-          menuProps
-          value={value?.type}
+      {/* <Item> */}
+      <Item sx={{ overflow: 'unset' }}>
+        <SelectSearch
+          // value={value?.type}
           options={VALUE_TYPE_OPTIONS}
+          styles={colourStyles(theme)}
           onChange={(e) => handleChangeValue(value?._id, 'type', e, ELEMENT_TYPE.SELECT)}
         />
       </Item>
+      {/* </Item> */}
       <Item>
         <Select
           value={value?.isArray}
@@ -70,15 +72,19 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
           {!!value?.errorName && <Error>{value?.errorName}</Error>}
         </Box>
       </Item>
-
-      <Item>
-        <Input
-          value={value?.variableValue}
-          onChange={(e) => handleChangeValue(value?._id, 'variableValue', e, ELEMENT_TYPE.INPUT)}
-          disabled={value.isDefaultValue === true}
-          placeholder={getPlaceholderDefaultValue}
-        />
-      </Item>
+      <Tooltip
+        title={getPlaceholderDefaultValue}
+        disableHoverListener={!getPlaceholderDefaultValue}
+        disableFocusListener={!getPlaceholderDefaultValue}>
+        <Item>
+          <Input
+            value={value?.variableValue}
+            onChange={(e) => handleChangeValue(value?._id, 'variableValue', e, ELEMENT_TYPE.INPUT)}
+            disabled={value.isDefaultValue === true}
+            placeholder={getPlaceholderDefaultValue}
+          />
+        </Item>
+      </Tooltip>
       <Item>
         <Select
           value={value?.isDefaultValue}
@@ -88,7 +94,8 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
       </Item>
       <Item>
         <Select
-          value={value?.functions}
+          multiple={true}
+          value={value?.functions || []}
           options={listFunction}
           onChange={(e) => handleChangeValue(value?._id, 'functions', e, ELEMENT_TYPE.SELECT)}
         />
