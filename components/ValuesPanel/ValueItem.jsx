@@ -53,7 +53,7 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
           value={BOOLEAN_OPTIONS.find((item) => item.value === value?.isArray)}
           options={BOOLEAN_OPTIONS}
           onChange={(e, newValue) => handleChangeValue(value?._id, 'isArray', newValue, ELEMENT_TYPE.SELECT)}
-          disabled={value.isConst === true}
+          disabled={value.isConst}
         />
       </Item>
       <Item>
@@ -68,7 +68,7 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
           value={BOOLEAN_OPTIONS.find((item) => item.value === value?.isConst)}
           options={BOOLEAN_OPTIONS}
           onChange={(e, newValue) => handleChangeValue(value?._id, 'isConst', newValue, ELEMENT_TYPE.SELECT)}
-          disabled={value.isArray === true}
+          disabled={value.isArray}
         />
       </Item>
       <Item>
