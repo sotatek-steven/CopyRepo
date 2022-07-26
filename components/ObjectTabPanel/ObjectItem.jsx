@@ -137,7 +137,7 @@ const ObjectItem = ({
               <AssignedValuesContainer key={assigned?._id}>
                 <div className="title">
                   <div className="name"></div>
-                  <div className="index">{`${index}`}</div>
+                  {object?.isArray && <div className="index">{`${index}`}</div>}
                   <div>
                     {object?.isArray && (
                       <div

@@ -29,7 +29,7 @@ const ContentItem = ({ label, description }) => {
   return (
     <Wrapper>
       <Label>{label}</Label>
-      <Description>{description}</Description>
+      <Description>{description?.toString()}</Description>
     </Wrapper>
   );
 };
@@ -60,14 +60,28 @@ const FunctionDetail = ({ open, onClose, functionId }) => {
     return modifierNames.join(', ');
   };
 
+  const getOverrideOfFunction = (overrides) => {
+    if (!overrides?.length) return null;
+    return overrides.join(', ');
+  };
+
+  const getParamOfFunction = (params) => {
+    if (!params?.length) return null;
+    const param = params.map((param) => `${param.label}(${param?.type})`);
+    return param.join(', ');
+  };
+
   return (
     <FormModal height={600} width={750} open={open} onClose={onClose} title={functionInfo?.name} showFooter={false}>
       <Scrollbars style={{ height: '450px' }}>
         <ContentItem label="Name" description={functionInfo?.name} />
-        <ContentItem label="Description" description={functionInfo?.description} />
-        <ContentItem label="Type" description={functionInfo?.scopes?.type} />
         <ContentItem label="Scope" description={functionInfo?.scopes?.scope} />
+        <ContentItem label="Type" description={functionInfo?.scopes?.type} />
         <ContentItem label="Modifiers" description={getModifierOfFunction(functionInfo?.modifiers)} />
+        <ContentItem label="Virtual" description={functionInfo?.scopes?.virtual} />
+        <ContentItem label="Overrides" description={getOverrideOfFunction(functionInfo?.scopes?.overrides)} />
+        <ContentItem label="Payable" description={functionInfo?.scopes?.payable} />
+        <ContentItem label="Params" description={getParamOfFunction(functionInfo?.params)} />
       </Scrollbars>
     </FormModal>
   );

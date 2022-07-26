@@ -1,4 +1,5 @@
 import { Box } from '@mui/system';
+import _ from 'lodash';
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import ReactFlow, { Controls, Background, useNodesState, ReactFlowProvider } from 'react-flow-renderer';
 import { useDispatch, useSelector } from 'react-redux';
@@ -52,7 +53,7 @@ const FunctionCanvas = ({ initialNodes }) => {
   }, [nodeDeleted, setNodes]);
 
   const removeFunctionFromModule = (functionId) => {
-    let { functions, coordinates } = moduleState.sources;
+    let { functions, coordinates, libraries } = moduleState.sources;
 
     //update moudles feild
     const updatedFunctions = functions.filter((item) => item._id !== functionId);
@@ -60,7 +61,7 @@ const FunctionCanvas = ({ initialNodes }) => {
     //update coordinates field
     const updatedCoordinates = coordinates.filter((item) => item.func !== functionId);
 
-    updateModuleState(updatedFunctions, updatedCoordinates);
+    updateModuleState(updatedFunctions, updatedCoordinates, libraries);
   };
 
   const onDragOver = useCallback((event) => {
@@ -127,16 +128,17 @@ const FunctionCanvas = ({ initialNodes }) => {
     [reactFlowInstance, setNodes, moduleState.functions, nodes]
   );
 
-  const updateModuleState = async (modules, coordinates) => {
+  const updateModuleState = async (modules, coordinates, libraries) => {
     userModule.updateFunctions(modules);
     userModule.updateCoordinates(coordinates);
+    userModule.updateLibraries(libraries);
     const { data } = await userModule.updateModule();
     userModule.update(data);
   };
 
   const addNewFuctionToModule = (functionInfo, position) => {
     if (!functionInfo) return;
-    let { functions, coordinates } = moduleState.sources;
+    let { functions, coordinates, libraries } = moduleState.sources;
 
     //update moudles feild
     functions.push(functionInfo);
@@ -148,7 +150,11 @@ const FunctionCanvas = ({ initialNodes }) => {
     };
     coordinates.push(newModule);
 
-    updateModuleState(functions, coordinates);
+    // update libraries
+    const dataLi = functionInfo?.libraries?.map((item) => item?.name);
+    const listLibrary = _.uniq(_.concat(libraries, dataLi));
+
+    updateModuleState(functions, coordinates, listLibrary);
   };
 
   const onNodeDragStop = (event, node) => {
