@@ -399,7 +399,7 @@ export const INIT_VALUE_TYPE = [
     scope: 'public',
     isConst: false,
     label: '',
-    variableValue: '',
+    valueDefault: '',
     isDefaultValue: true,
     functions: [],
   },

@@ -62,6 +62,7 @@ const useValuesTab = () => {
             data[iValue][field] = e?.value;
             if (e?.value) {
               data[iValue]['label'] = data[iValue]['label'].toUpperCase();
+              data[iValue]['isArray'] = false;
             }
             break;
           case 'isDefaultValue':

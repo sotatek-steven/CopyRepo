@@ -12,6 +12,7 @@ export default function SingleAutoComplete({
   onChange,
   getOptionLabelCustom,
   renderOptionCustom,
+  disabled = false,
 }) {
   const getOptionLabelDefault = (option) => option.label;
   const renderOptionDefault = (props, option) => (
@@ -31,6 +32,7 @@ export default function SingleAutoComplete({
         id="combo-box-demo"
         autoHighlight
         disableClearable
+        disabled={disabled}
         loading={loading}
         options={options}
         value={value}

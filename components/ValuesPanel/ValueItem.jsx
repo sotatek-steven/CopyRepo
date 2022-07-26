@@ -37,13 +37,6 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
     return placeholder;
   }, [value.type, value.isArray, value.isDefaultValue, PLACE_HOLDER]);
 
-  const defaultValueType = useMemo(() => {
-    if (value?.type) {
-      return VALUE_TYPE_OPTIONS.find((item) => item.value === value.type);
-    }
-    return [];
-  }, [value.type]);
-
   return (
     <ItemContainer>
       {/* <Item> */}
@@ -60,7 +53,7 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
           value={BOOLEAN_OPTIONS.find((item) => item.value === value?.isArray)}
           options={BOOLEAN_OPTIONS}
           onChange={(e, newValue) => handleChangeValue(value?._id, 'isArray', newValue, ELEMENT_TYPE.SELECT)}
-          disabled={value.isConst}
+          disabled={value.isConst === true}
         />
       </Item>
       <Item>
@@ -75,7 +68,7 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
           value={BOOLEAN_OPTIONS.find((item) => item.value === value?.isConst)}
           options={BOOLEAN_OPTIONS}
           onChange={(e, newValue) => handleChangeValue(value?._id, 'isConst', newValue, ELEMENT_TYPE.SELECT)}
-          disabled={value.isArray}
+          disabled={value.isArray === true}
         />
       </Item>
       <Item>
@@ -90,27 +83,16 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
         disableFocusListener={!getPlaceholderDefaultValue}>
         <Item>
           <Input
-<<<<<<< HEAD
             value={value?.variableValue}
             onChange={(e) => handleChangeValue(value?._id, 'variableValue', e, ELEMENT_TYPE.INPUT)}
-            disabled={value.isDefaultValue === false}
-=======
-            value={value?.valueDefault}
-            onChange={(e) => handleChangeValue(value?._id, 'valueDefault', e, ELEMENT_TYPE.INPUT)}
             disabled={value.isDefaultValue === true}
->>>>>>> 7c02fb4 ( convert data)
             placeholder={getPlaceholderDefaultValue}
           />
         </Item>
       </Tooltip>
       <Item>
-<<<<<<< HEAD
         <SingleAutoComplete
           value={BOOLEAN_OPTIONS.find((item) => item.value === value?.isDefaultValue)}
-=======
-        <Select
-          value={value?.valueDefault !== 'undefined'}
->>>>>>> 7c02fb4 ( convert data)
           options={BOOLEAN_OPTIONS}
           onChange={(e, newValue) => handleChangeValue(value?._id, 'isDefaultValue', newValue, ELEMENT_TYPE.SELECT)}
         />

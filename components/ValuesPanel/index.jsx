@@ -6,32 +6,14 @@ import useValuesTab from './hooks/useValuesTab';
 import { Box, IconButton, Tooltip, useTheme } from '@mui/material';
 import { Item, ItemContainer } from './ValueTab.style';
 import { TITLE_VALUES_TAB } from '@/config/constant/common';
-<<<<<<< HEAD
 import IconInfo from 'assets/icon/icon-info.svg';
-=======
 import { useDispatch, useSelector } from 'react-redux';
->>>>>>> 18a0662 (load data values)
 
 const ValuesTabPanel = () => {
   const { values, handleAddValues, handleRemoveValue, handleChangeValue } = useValuesTab();
   const userModuleState = useSelector((state) => state.userModule);
   const { value } = useDispatch();
   const theme = useTheme();
-<<<<<<< HEAD
-=======
-
-  useEffect(() => {
-    if (!userModuleState.variables.values) return;
-    const convertData = userModuleState.variables.values.map((item, index) => {
-      return {
-        _id: index,
-        ...item,
-        valueDefault: item.valueDefault.join(),
-      };
-    });
-    value.setValues(convertData);
-  }, [userModuleState.variables.values]);
->>>>>>> 18a0662 (load data values)
 
   return (
     <Container>
