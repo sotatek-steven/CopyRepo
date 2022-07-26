@@ -21,7 +21,15 @@ const ValuesTabPanel = () => {
 =======
 
   useEffect(() => {
-    userModuleState.variables.values && value.setValues(userModuleState.variables.values);
+    if (!userModuleState.variables.values) return;
+    const convertData = userModuleState.variables.values.map((item, index) => {
+      return {
+        _id: index,
+        ...item,
+        valueDefault: item.valueDefault.join(),
+      };
+    });
+    value.setValues(convertData);
   }, [userModuleState.variables.values]);
 >>>>>>> 18a0662 (load data values)
 

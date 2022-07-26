@@ -42,7 +42,7 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
       return VALUE_TYPE_OPTIONS.find((item) => item.value === value.type);
     }
     return [];
-  }, [value]);
+  }, [value.type]);
 
   return (
     <ItemContainer>
@@ -90,16 +90,27 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
         disableFocusListener={!getPlaceholderDefaultValue}>
         <Item>
           <Input
+<<<<<<< HEAD
             value={value?.variableValue}
             onChange={(e) => handleChangeValue(value?._id, 'variableValue', e, ELEMENT_TYPE.INPUT)}
             disabled={value.isDefaultValue === false}
+=======
+            value={value?.valueDefault}
+            onChange={(e) => handleChangeValue(value?._id, 'valueDefault', e, ELEMENT_TYPE.INPUT)}
+            disabled={value.isDefaultValue === true}
+>>>>>>> 7c02fb4 ( convert data)
             placeholder={getPlaceholderDefaultValue}
           />
         </Item>
       </Tooltip>
       <Item>
+<<<<<<< HEAD
         <SingleAutoComplete
           value={BOOLEAN_OPTIONS.find((item) => item.value === value?.isDefaultValue)}
+=======
+        <Select
+          value={value?.valueDefault !== 'undefined'}
+>>>>>>> 7c02fb4 ( convert data)
           options={BOOLEAN_OPTIONS}
           onChange={(e, newValue) => handleChangeValue(value?._id, 'isDefaultValue', newValue, ELEMENT_TYPE.SELECT)}
         />
