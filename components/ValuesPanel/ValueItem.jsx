@@ -53,6 +53,7 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
           value={BOOLEAN_OPTIONS.find((item) => item.value === value?.isArray)}
           options={BOOLEAN_OPTIONS}
           onChange={(e, newValue) => handleChangeValue(value?._id, 'isArray', newValue, ELEMENT_TYPE.SELECT)}
+          disabled={value.isConst}
         />
       </Item>
       <Item>
@@ -84,7 +85,7 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
           <Input
             value={value?.variableValue}
             onChange={(e) => handleChangeValue(value?._id, 'variableValue', e, ELEMENT_TYPE.INPUT)}
-            disabled={value.isDefaultValue === false}
+            disabled={value.isDefaultValue === true}
             placeholder={getPlaceholderDefaultValue}
           />
         </Item>

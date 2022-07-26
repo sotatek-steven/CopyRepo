@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { PrimaryButton } from '../ButtonStyle';
 import useObjectTab from '../ObjectTabPanel/hooks/useObjectTab';
 import useStructPage from '../StructTabPanel/hooks/useStructPage';
+import useValuesTab from '../ValuesPanel/hooks/useValuesTab';
 import useModulePage from './hooks/useModulePage';
 
 const Container = styled('div')(() => ({
@@ -16,6 +17,8 @@ const Container = styled('div')(() => ({
 const ModuleActionList = () => {
   const { userModule, struct } = useDispatch();
   const { structs } = useSelector((state) => state.struct);
+  const { values } = useValuesTab();
+
   const { handleErrorStructs } = useStructPage();
   const { objectHasError } = useObjectTab();
   const { fetchDetailModule } = useModulePage();

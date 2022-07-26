@@ -32,7 +32,6 @@ const useValuesTab = () => {
     switch (type) {
       case ELEMENT_TYPE.INPUT:
         data[iValue][field] = e.target.value;
-
         if (field === 'label') {
           if (data[iValue]['isConst'] == true) data[iValue][field] = e.target.value.toUpperCase();
 
@@ -59,6 +58,7 @@ const useValuesTab = () => {
             data[iValue][field] = e?.value;
             if (e?.value) {
               data[iValue]['label'] = data[iValue]['label'].toUpperCase();
+              data[iValue]['isArray'] = false;
             }
             break;
           case 'isDefaultValue':

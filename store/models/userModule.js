@@ -16,6 +16,7 @@ const userModule = createModel({
     gasFee: null,
     variables: {
       mappings: [],
+      values: [],
     },
   },
   reducers: {

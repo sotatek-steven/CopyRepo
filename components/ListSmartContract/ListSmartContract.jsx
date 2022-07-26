@@ -16,6 +16,10 @@ const ListSmartContract = ({ data, status }) => {
   const theme = useTheme();
   const userContractState = useSelector((state) => state.userContract);
 
+  useEffect(() => {
+    setPage(1);
+  }, [status]);
+
   const getUserContracts = async () => {
     try {
       let res = {};
