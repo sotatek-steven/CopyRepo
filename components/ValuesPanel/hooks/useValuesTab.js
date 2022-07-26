@@ -44,10 +44,6 @@ const useValuesTab = () => {
           }
         }
 
-        // if (field === 'valueDefault') {
-        //   if (data[iValue]['isArray'] == true) data[iValue][field] === data[iValue][field].split(',');
-        // }
-
         break;
 
       case ELEMENT_TYPE.SELECT:
