@@ -6,22 +6,25 @@ const useMappingData = (id) => {
   } = useSelector((state) => state.userModule);
   const { userModule } = useDispatch();
 
-  const data = mappings.find((item) => item.id === id);
+  // console.log('mapping: ', mappings);
+  const data = mappings.find((item) => item._id === id);
 
   const updateValue = (newValue, oldValue) => {
     return typeof newValue !== 'undefined' ? newValue : oldValue;
   };
 
-  const updateData = ({ scope, label, variables, type }) => {
+  const updateData = ({ scope, label, functions, type }) => {
+    // console.log('functions: ', functions);
     const updatedMapping = mappings.map((item) => {
-      if (item.id !== id) return item;
+      if (item._id !== id) return item;
 
-      const { scope: _scope, label: _label, variables: _variables, type: _type } = item;
+      const { scope: _scope, label: _label, functions: _functions, type: _type } = item;
+      // console.log('updateValue(type, _type): ', updateValue(type, _type));
       return {
         ...item,
         scope: updateValue(scope, _scope),
         label: updateValue(label, _label),
-        variables: updateValue(variables, _variables),
+        functions: updateValue(functions, _functions),
         type: updateValue(type, _type),
       };
     });

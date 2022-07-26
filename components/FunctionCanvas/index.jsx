@@ -171,10 +171,6 @@ const FunctionCanvas = ({ initialNodes }) => {
   //    */
   // };
 
-  useEffect(() => {
-    console.log('node: ', nodes);
-  }, [nodes]);
-
   return (
     <ReactFlowProvider>
       <Box sx={{ ...styles.backgroundFlow }} style={{ height: '100%', position: 'relative' }} ref={reactFlowWrapper}>

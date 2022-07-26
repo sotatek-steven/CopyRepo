@@ -65,11 +65,11 @@ const KeyValueField = ({ id, mappingList, setMappingList }) => {
       const _data = keyValueObj.map;
       const {
         key,
-        value: { type },
+        values: { type },
       } = _data;
 
       keyValueArr.push({ key, value: type });
-      keyValueObj = { ..._data.value };
+      keyValueObj = { ..._data.values };
       if (_.isEmpty(keyValueObj.map)) loop = false;
       setKeyValues(keyValueArr);
     }
@@ -99,12 +99,12 @@ const KeyValueField = ({ id, mappingList, setMappingList }) => {
       const { key, value } = pair;
       return {
         key: key,
-        value: {
-          type: value,
+        values: {
+          type: obj ? 'map' : value,
           map: obj,
         },
       };
-    }, {});
+    }, null);
     updateData({ type: keyValuesObj });
   }, [keyValues]);
 
