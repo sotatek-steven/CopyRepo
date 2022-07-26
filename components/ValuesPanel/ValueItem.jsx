@@ -37,6 +37,13 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
     return placeholder;
   }, [value.type, value.isArray, value.isDefaultValue, PLACE_HOLDER]);
 
+  const defaultValueType = useMemo(() => {
+    if (value?.type) {
+      return VALUE_TYPE_OPTIONS.find((item) => item.value === value.type);
+    }
+    return [];
+  }, [value]);
+
   return (
     <ItemContainer>
       {/* <Item> */}

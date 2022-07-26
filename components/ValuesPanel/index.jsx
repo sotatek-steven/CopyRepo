@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import AddIcon from 'assets/icon/addIcon2.svg';
 import { Container, BodyContent } from './ValueTab.style';
 import ValueItem from './ValueItem';
@@ -6,11 +6,24 @@ import useValuesTab from './hooks/useValuesTab';
 import { Box, IconButton, Tooltip, useTheme } from '@mui/material';
 import { Item, ItemContainer } from './ValueTab.style';
 import { TITLE_VALUES_TAB } from '@/config/constant/common';
+<<<<<<< HEAD
 import IconInfo from 'assets/icon/icon-info.svg';
+=======
+import { useDispatch, useSelector } from 'react-redux';
+>>>>>>> 18a0662 (load data values)
 
 const ValuesTabPanel = () => {
   const { values, handleAddValues, handleRemoveValue, handleChangeValue } = useValuesTab();
+  const userModuleState = useSelector((state) => state.userModule);
+  const { value } = useDispatch();
   const theme = useTheme();
+<<<<<<< HEAD
+=======
+
+  useEffect(() => {
+    userModuleState.variables.values && value.setValues(userModuleState.variables.values);
+  }, [userModuleState.variables.values]);
+>>>>>>> 18a0662 (load data values)
 
   return (
     <Container>
