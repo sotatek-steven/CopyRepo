@@ -7,48 +7,60 @@ import VariableNameField from './VariableNameField';
 import CloseIcon from '@mui/icons-material/Close';
 import useMappingData from './useMappingData';
 import _ from 'lodash';
+import { useSelector } from 'react-redux';
 
 const RemoveButton = styled(CloseIcon)(({ theme }) => ({
   background: theme.palette.primary.main,
   borderRadius: '50%',
   color: theme.palette.common.black,
-  fontSize: 22,
+  fontSize: 18,
   marginBottom: 12,
   cursor: 'pointer',
 }));
 
 const MappingItem = (props) => {
-  const { removeItem, id, functions } = props;
-  const [data] = useMappingData(props.id);
-  const [mappingList, setMappingList] = useState([]);
+  const { removeItem, id } = props;
+  const [data] = useMappingData(id);
+  const mappingVariableOptionsState = useSelector((state) => state.mappingVariableOptions);
+  const [mapToFunctionOptions, setMapToFunctionOptions] = useState([]);
 
-  useEffect(() => {
-    if (!data) return;
+  const convertMappingObjToArr = (keyValueObj) => {
     let keyValueArr = [];
-    let keyValueObj = { map: data.type };
-    let loop = true;
+    const loop = true;
     while (loop) {
       const _data = keyValueObj.map;
       const {
         key,
-        value: { type },
+        values: { type },
       } = _data;
 
       keyValueArr.push({ key, value: type });
-      keyValueObj = { ..._data.value };
-
-      if (_.isEmpty(keyValueObj.map)) loop = false;
+      keyValueObj = { ..._data.values };
+      if (!keyValueObj.map) break;
     }
-    const { value } = keyValueArr[keyValueArr.length - 1];
-    const _functions = functions?.map((item) => {
+
+    return keyValueArr;
+  };
+
+  useEffect(() => {
+    if (!data) return;
+    const keyValueArr = convertMappingObjToArr({ map: data.type });
+    const updatedOptions = mappingVariableOptionsState?.map((item) => {
+      const { _id, label, subscriber, mapping, func, variable } = item;
+      const typeArr = convertMappingObjToArr({ map: mapping });
+      const matching = JSON.stringify(typeArr) === JSON.stringify(keyValueArr);
+
       return {
-        ...item,
-        matching: value === '' ? true : value === item.type, //matching type with key-value field
+        _id,
+        label,
+        func,
+        variable,
+        locked: !matching || (!!subscriber && subscriber !== id),
       };
     });
 
-    setMappingList(_functions);
-  }, [functions, data.type]);
+    setMapToFunctionOptions(updatedOptions);
+  }, [mappingVariableOptionsState, data.type]);
 
   const handleClick = () => {
     if (!removeItem) return;
@@ -65,13 +77,17 @@ const MappingItem = (props) => {
           <VariableNameField {...props} />
         </Grid>
         <Grid item xs={3}>
-          <MapToFunctionField {...props} mappingList={mappingList} setMappingList={setMappingList} />
+          <MapToFunctionField
+            {...props}
+            options={mapToFunctionOptions}
+            setMapToFunctionOptions={setMapToFunctionOptions}
+          />
         </Grid>
-        <Grid item xs={3} style={{ display: 'flex', alignItems: 'end' }}>
+        <Grid item xs={3} style={{ display: 'flex', marginTop: 40 }}>
           <RemoveButton onClick={handleClick} />
         </Grid>
       </Grid>
-      <KeyValueField {...props} mappingList={mappingList} setMappingList={setMappingList} />
+      <KeyValueField {...props} options={mapToFunctionOptions} setMapToFunctionOptions={setMapToFunctionOptions} />
     </div>
   );
 };

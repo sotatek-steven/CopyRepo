@@ -11,50 +11,78 @@ const Container = styled('div')({
 
 const MappingTabPanel = () => {
   const moduleState = useSelector((state) => state.userModule);
-  const { userModule } = useDispatch();
+  const { userModule, mappingVariableOptions } = useDispatch();
   const [error, setError] = useState(true);
-  const [functions, setFunctions] = useState([]);
+  // const [mappingVariables, setMappingVariables] = useState([]);
 
-  const registerMapToFunction = (variableId, mappingId) => {
-    const updatedFuctions = functions.map((item) => {
-      const { id } = item;
-      if (id !== variableId) return item;
-      return {
-        ...item,
-        mappingId: mappingId,
-      };
-    });
-    setFunctions(updatedFuctions);
-  };
+  // const registerMapToFunction = (variableId, mappingId) => {
+  //   const updatedFuctions = mappingVariables.map((item) => {
+  //     const { id } = item;
+  //     if (id !== variableId) return item;
+  //     return {
+  //       ...item,
+  //       mappingId: mappingId,
+  //     };
+  //   });
+  //   setMappingVariables(updatedFuctions);
+  // };
 
-  const unregisterMapToFunction = (variableId) => {
-    const updatedFuctions = functions.map((item) => {
-      const { id } = item;
-      if (id !== variableId) return item;
-      return {
-        ...item,
-        mappingId: null,
-      };
-    });
-    setFunctions(updatedFuctions);
-  };
+  // const unregisterMapToFunction = (variableId) => {
+  //   const updatedFuctions = mappingVariables.map((item) => {
+  //     const { id } = item;
+  //     if (id !== variableId) return item;
+  //     return {
+  //       ...item,
+  //       mappingId: null,
+  //     };
+  //   });
+  //   setMappingVariables(updatedFuctions);
+  // };
 
+  //update mapping variable list
   useEffect(() => {
-    const updateFunctions = moduleState?.sources?.functions?.flatMap((item) => {
-      const { globalVariables, name: functionName } = item;
+    const {
+      variables: { mappings },
+    } = moduleState;
+    if (!mappings) return;
 
-      return globalVariables.map((variable) => {
-        const { _id: id, label, type } = variable;
-        return {
-          id,
-          label: `${label}(${functionName})`,
-          mappingId: null,
-          type,
-        };
+    //get all global mapping variables
+    const options = [];
+    moduleState?.sources?.functions?.forEach((item) => {
+      const { globalVariables, name: functionName, _id } = item;
+
+      globalVariables.forEach((variable) => {
+        const { label, type } = variable;
+        if (type.includes('mapping'))
+          options.push({
+            ...variable,
+            label: `${label}(${functionName})`,
+            func: _id,
+            variable: label,
+          });
       });
     });
 
-    setFunctions(updateFunctions);
+    //update mapping subcriber for mapping variable list
+    const updatedMappingVariableOptions = options.map((option) => {
+      let subscriber = null;
+      for (const mapping of mappings) {
+        const { functions, _id } = mapping;
+        subscriber = functions.find((item) => {
+          const { func, variable } = item;
+          const { func: _func, variable: _variable } = option;
+          return func === _func && variable === _variable;
+        })
+          ? _id
+          : null;
+      }
+      return {
+        ...option,
+        subscriber,
+      };
+    });
+
+    mappingVariableOptions.update(updatedMappingVariableOptions);
   }, [moduleState?.sources?.functions]);
 
   const handleClick = () => {
@@ -64,13 +92,14 @@ const MappingTabPanel = () => {
     if (!mappings) return;
 
     const newMappingItem = {
-      id: Date.now(),
+      _id: Date.now(),
       label: '',
       scope: 'public',
       variables: [],
+      functions: [],
       type: {
         key: '',
-        value: { type: '', map: {} },
+        values: { type: '' },
       },
     };
     mappings.push(newMappingItem);
@@ -82,21 +111,24 @@ const MappingTabPanel = () => {
   //   console.log('moduleState.variables.mappings: ', moduleState.variables.mappings);
   // }, [moduleState.variables.mappings]);
 
-  const removeItem = (id) => {
+  const removeMappingItem = (mappingId) => {
     const {
       variables: { mappings },
     } = moduleState;
     if (!mappings) return;
-    const updatedMappings = mappings.filter((item) => item.id !== id);
+    const updatedMappings = mappings.filter((item) => item._id !== mappingId);
     userModule.updateMappings(updatedMappings);
-    const updatedFuctions = functions.map((item) => {
-      const { mappingId } = item;
-      return {
-        ...item,
-        mappingId: mappingId === id ? null : mappingId,
-      };
-    });
-    setFunctions(updatedFuctions);
+
+    mappingVariableOptions.unregisterAllOptions(mappingId);
+
+    // const updatedFuctions = mappingVariables.map((item) => {
+    //   const { mappingId } = item;
+    //   return {
+    //     ...item,
+    //     mappingId: mappingId === id ? null : mappingId,
+    //   };
+    // });
+    // setMappingVariables(updatedFuctions);
   };
 
   return (
@@ -105,13 +137,11 @@ const MappingTabPanel = () => {
         return (
           <MappingItem
             updateError={setError}
-            id={mappingItem.id}
+            id={mappingItem._id}
             key={index}
-            functions={functions}
-            setFunctions={setFunctions}
-            registerMapToFunction={registerMapToFunction}
-            unregisterMapToFunction={unregisterMapToFunction}
-            removeItem={removeItem}
+            // mappingVariables={mappingVariables}
+            // setMappingVariables={setMappingVariables}
+            removeItem={removeMappingItem}
           />
         );
       })}
