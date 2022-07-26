@@ -70,7 +70,13 @@ const useObjectTab = () => {
           case 'item':
             data[iObject][field] = e?.value;
             const struct = moduleState?.sources?.structs?.find((item) => item?.name === e?.value);
-            const contents = JSON.parse(JSON.stringify(struct?.content));
+            const dataContents = JSON.parse(JSON.stringify(struct?.content));
+            const contents = dataContents?.map((content, iContent) => {
+              return {
+                ...content,
+                _id: content?._id || iContent,
+              };
+            });
             data[iObject]['assignedValues'] = [{ _id: Date.now(), contents: contents }];
             break;
           case 'isArray':
@@ -105,8 +111,14 @@ const useObjectTab = () => {
   const handleAddAssignedValue = (objectId) => {
     const iObject = objects.findIndex(({ _id }) => _id === objectId);
     const struct = moduleState?.sources?.structs?.find((item) => item?.name === objects[iObject]?.item);
-    const contents = JSON.parse(JSON.stringify(struct?.content));
     const data = [...objects];
+    const dataContents = JSON.parse(JSON.stringify(struct?.content));
+    const contents = dataContents?.map((content, iContent) => {
+      return {
+        ...content,
+        _id: content?._id || iContent,
+      };
+    });
     data[iObject]['assignedValues'].push({ _id: Date.now(), contents: contents });
     object.setObjects(data);
     const dataClone = convertToObjectModule(data);

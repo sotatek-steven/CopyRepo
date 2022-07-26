@@ -1,29 +1,19 @@
-import { ELEMENT_TYPE, NEW_ID } from '@/config/constant/common';
+import { ELEMENT_TYPE, INIT_VALUE_TYPE, NEW_ID } from '@/config/constant/common';
 import { REGEX } from '@/config/constant/regex';
 import { useDispatch, useSelector } from 'react-redux';
 
-const OBJECT = {
-  _id: Date.now(),
-  type: '',
-  isArray: false,
-  scope: 'public',
-  isConst: false,
-  label: '',
-  variableValue: '',
-  isDefaultValue: false,
-  functions: '',
-};
-
 const useValuesTab = () => {
   const { values, count } = useSelector((state) => state.value);
-  const { value } = useDispatch();
+  const { value, userModule } = useDispatch();
 
   const handleAddValues = () => {
-    const init = JSON.parse(JSON.stringify(OBJECT));
+    const init = JSON.parse(JSON.stringify(INIT_VALUE_TYPE));
     const data = [...values];
     data.push({ ...init, _id: `${NEW_ID}_${count}` });
     value.setValues(data);
     value.setCount(count + 1);
+    const dataClone = convertToValuesModule(data);
+    userModule.updateValues(dataClone);
   };
 
   const handleRemoveValue = (valueId) => {
@@ -32,6 +22,8 @@ const useValuesTab = () => {
     data.splice(iValue, 1);
 
     value.setValues(data);
+    const dataClone = convertToValuesModule(data);
+    userModule.updateValues(dataClone);
   };
 
   const handleChangeValue = (valueId, field, e, type) => {
@@ -56,20 +48,31 @@ const useValuesTab = () => {
         break;
 
       case ELEMENT_TYPE.SELECT:
-        if (field === 'type') {
-          data[iValue][field] = e?.value;
-        } else {
-          data[iValue][field] = e.target.value;
-        }
-        if (field === 'isArray' && e.target.value === true) {
-          data[iValue]['isConst'] = 'false';
-        }
-        if (field === 'isConst' && e.target.value === true) {
-          data[iValue]['label'] = data[iValue]['label'].toUpperCase();
-        }
-
-        if (field === 'isDefaultValue' && e.target.value === true) {
-          data[iValue]['variableValue'] = '';
+        switch (field) {
+          case 'isArray':
+            data[iValue][field] = e?.value;
+            if (e?.value) {
+              data[iValue]['isConst'] = false;
+            }
+            break;
+          case 'isConst':
+            data[iValue][field] = e?.value;
+            if (e?.value) {
+              data[iValue]['label'] = data[iValue]['label'].toUpperCase();
+            }
+            break;
+          case 'isDefaultValue':
+            data[iValue][field] = e?.value;
+            if (e?.value) {
+              data[iValue]['variableValue'] = '';
+            }
+            break;
+          case 'functions':
+            data[iValue][field] = e?.map((item) => item?.value);
+            break;
+          default:
+            data[iValue][field] = e?.value;
+            break;
         }
         break;
 
@@ -78,6 +81,62 @@ const useValuesTab = () => {
     }
 
     value.setValues(data);
+    const dataClone = convertToValuesModule(data);
+    userModule.updateValues(dataClone);
+  };
+
+  const convertToValuesModule = (data) => {
+    const cloneData = data?.map((item) => {
+      let valueDefault = item?.variableValue;
+      if (item?.isArray) {
+        valueDefault = item?.variableValue?.split(',');
+      }
+      const functions = item?.functions?.map((func) => {
+        const array = func?.split('-');
+        if (array.length >= 2) {
+          return {
+            func: array[0],
+            variable: array[1],
+          };
+        }
+      });
+      return {
+        type: item?.type,
+        isArray: item?.isArray,
+        scope: item?.scope,
+        isConst: item?.isConst,
+        label: item?.label,
+        valueDefault: item?.isDefaultValue ? valueDefault : undefined,
+        functions: functions || [],
+      };
+    });
+    return cloneData;
+  };
+
+  const converToValueShow = (data) => {
+    const cloneData = data?.map((item, iData) => {
+      const functions = item?.functions?.map(({ func, variable }) => {
+        return `${func?._id}-${variable}`;
+      });
+
+      const valueDefault = item?.valueDefault?.join();
+
+      return {
+        _id: iData,
+        type: item?.type,
+        isArray: item?.isArray,
+        isConst: item?.isConst,
+        scope: item?.scope,
+        label: item?.label,
+        variableValue: valueDefault,
+        isDefaultValue: !!item?.valueDefault?.length,
+        functions: functions,
+        errorName: null,
+      };
+    });
+
+    value.setValues(cloneData);
+    return cloneData;
   };
 
   return {
@@ -85,6 +144,7 @@ const useValuesTab = () => {
     handleAddValues,
     handleRemoveValue,
     handleChangeValue,
+    converToValueShow,
   };
 };
 

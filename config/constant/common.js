@@ -393,14 +393,14 @@ export const PLACE_HOLDER = {
 
 export const INIT_VALUE_TYPE = [
   {
-    _id: 1,
+    _id: Date.now(),
     type: '',
     isArray: false,
     scope: 'public',
     isConst: false,
     label: '',
     variableValue: '',
-    isDefaultValue: false,
-    functions: '',
+    isDefaultValue: true,
+    functions: [],
   },
 ];

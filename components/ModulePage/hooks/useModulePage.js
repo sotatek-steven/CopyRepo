@@ -1,5 +1,6 @@
 import useObjectTab from '@/components/ObjectTabPanel/hooks/useObjectTab';
 import useStructPage from '@/components/StructTabPanel/hooks/useStructPage';
+import useValuesTab from '@/components/ValuesPanel/hooks/useValuesTab';
 import { INIT_VALUE_TYPE } from '@/config/constant/common';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
@@ -8,6 +9,7 @@ const useModulePage = () => {
   const { object, userModule, value } = useDispatch();
   const { getStructs } = useStructPage();
   const { convertToObjectShow } = useObjectTab();
+  const { converToValueShow } = useValuesTab();
   const router = useRouter();
   const { id } = router.query;
 
@@ -19,6 +21,7 @@ const useModulePage = () => {
 
     getStructs(data?.sources?.structs);
     convertToObjectShow(data?.variables?.structs);
+    converToValueShow(data?.variables?.values);
     userModule.set(data);
   };
 

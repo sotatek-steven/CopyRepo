@@ -68,6 +68,13 @@ const userModule = createModel({
         structs,
       },
     }),
+    updateValues: (state, values) => ({
+      ...state,
+      variables: {
+        ...state.variables,
+        values,
+      },
+    }),
   },
   effects: (dispatch) => {
     const { player, modules } = dispatch;
