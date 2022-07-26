@@ -53,6 +53,7 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
           value={BOOLEAN_OPTIONS.find((item) => item.value === value?.isArray)}
           options={BOOLEAN_OPTIONS}
           onChange={(e, newValue) => handleChangeValue(value?._id, 'isArray', newValue, ELEMENT_TYPE.SELECT)}
+          disabled={value.isConst}
         />
       </Item>
       <Item>
