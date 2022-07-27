@@ -64,7 +64,7 @@ const useValuesTab = () => {
           case 'isDefaultValue':
             data[iValue][field] = e?.value;
             if (e?.value) {
-              data[iValue]['variableValue'] = '';
+              data[iValue]['valueDefault'] = '';
             }
             break;
           case 'functions':
@@ -87,9 +87,9 @@ const useValuesTab = () => {
 
   const convertToValuesModule = (data) => {
     const cloneData = data?.map((item) => {
-      let valueDefault = item?.variableValue;
+      let valueDefault = item?.valueDefault;
       if (item?.isArray) {
-        valueDefault = item?.variableValue?.split(',');
+        valueDefault = item?.valueDefault?.split(',');
       }
       const functions = item?.functions?.map((func) => {
         const array = func?.split('-');
@@ -128,7 +128,7 @@ const useValuesTab = () => {
         isConst: item?.isConst,
         scope: item?.scope,
         label: item?.label,
-        variableValue: valueDefault,
+        valueDefault: valueDefault,
         isDefaultValue: !!item?.valueDefault?.length,
         functions: functions,
         errorName: null,

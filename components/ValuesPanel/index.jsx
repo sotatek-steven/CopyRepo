@@ -8,6 +8,7 @@ import { Item, ItemContainer } from './ValueTab.style';
 import { TITLE_VALUES_TAB } from '@/config/constant/common';
 import IconInfo from 'assets/icon/icon-info.svg';
 import { useDispatch, useSelector } from 'react-redux';
+import { isArray } from 'lodash';
 
 const ValuesTabPanel = () => {
   const { values, handleAddValues, handleRemoveValue, handleChangeValue } = useValuesTab();
@@ -42,14 +43,15 @@ const ValuesTabPanel = () => {
       </ItemContainer>
 
       <BodyContent>
-        {values?.map((value) => (
-          <ValueItem
-            key={value?._id}
-            value={value}
-            handleRemoveValue={handleRemoveValue}
-            handleChangeValue={handleChangeValue}
-          />
-        ))}
+        {isArray(values) &&
+          values?.map((value) => (
+            <ValueItem
+              key={value?._id}
+              value={value}
+              handleRemoveValue={handleRemoveValue}
+              handleChangeValue={handleChangeValue}
+            />
+          ))}
       </BodyContent>
       <Box
         sx={{
