@@ -6,8 +6,8 @@ import ScopeField from './ScopeField';
 import VariableNameField from './VariableNameField';
 import CloseIcon from '@mui/icons-material/Close';
 import useMappingData from './useMappingData';
-import _ from 'lodash';
 import { useSelector } from 'react-redux';
+import { convertMappingObjToArr } from './utils';
 
 const RemoveButton = styled(CloseIcon)(({ theme }) => ({
   background: theme.palette.primary.main,
@@ -23,24 +23,6 @@ const MappingItem = (props) => {
   const [data] = useMappingData(id);
   const mappingVariableOptionsState = useSelector((state) => state.mappingVariableOptions);
   const [mapToFunctionOptions, setMapToFunctionOptions] = useState([]);
-
-  const convertMappingObjToArr = (keyValueObj) => {
-    let keyValueArr = [];
-    const loop = true;
-    while (loop) {
-      const _data = keyValueObj.map;
-      const {
-        key,
-        values: { type },
-      } = _data;
-
-      keyValueArr.push({ key, value: type });
-      keyValueObj = { ..._data.values };
-      if (!keyValueObj.map) break;
-    }
-
-    return keyValueArr;
-  };
 
   useEffect(() => {
     if (!data) return;
@@ -77,11 +59,13 @@ const MappingItem = (props) => {
           <VariableNameField {...props} />
         </Grid>
         <Grid item xs={3}>
-          <MapToFunctionField
-            {...props}
-            options={mapToFunctionOptions}
-            setMapToFunctionOptions={setMapToFunctionOptions}
-          />
+          {mapToFunctionOptions.length && (
+            <MapToFunctionField
+              {...props}
+              options={mapToFunctionOptions}
+              setMapToFunctionOptions={setMapToFunctionOptions}
+            />
+          )}
         </Grid>
         <Grid item xs={3} style={{ display: 'flex', marginTop: 40 }}>
           <RemoveButton onClick={handleClick} />
