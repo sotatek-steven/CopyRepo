@@ -78,7 +78,6 @@ const useStructPage = () => {
     struct.setOriginStructs(dataOrigin);
     struct.setStructs(data);
     struct.setTypes(listType);
-    userModule.updateStructs(convertStructs(data));
   };
 
   const convertStructs = (data) => {

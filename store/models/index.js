@@ -12,6 +12,7 @@ import modules from './modules';
 import object from './object';
 import value from './values';
 import mappingVariableOptions from './mappingVariableOptions';
+import initialModule from './initialModule';
 
 export {
   ticket,
@@ -28,4 +29,5 @@ export {
   object,
   value,
   mappingVariableOptions,
+  initialModule,
 };

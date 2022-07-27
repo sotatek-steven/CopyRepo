@@ -47,17 +47,7 @@ export const PAIR_TYPE = {
 
 const KeyValueField = ({ id, mappingList, setMappingList }) => {
   const [data, updateData] = useMappingData(id);
-  const [keyValues, setKeyValues] = useState([]);
-
-  const addNewKeyValuePair = () => {
-    let updatedKeyValues = [...keyValues];
-    updatedKeyValues[updatedKeyValues.length - 1].value = 'map';
-    updatedKeyValues.push({ key: '', value: '' });
-    setKeyValues(updatedKeyValues);
-  };
-
-  useEffect(() => {
-    if (!data) return;
+  const [keyValues, setKeyValues] = useState(() => {
     let keyValueArr = [];
     let keyValueObj = { map: data.type };
     let loop = true;
@@ -71,9 +61,35 @@ const KeyValueField = ({ id, mappingList, setMappingList }) => {
       keyValueArr.push({ key, value: type });
       keyValueObj = { ..._data.values };
       if (_.isEmpty(keyValueObj.map)) loop = false;
-      setKeyValues(keyValueArr);
     }
-  }, []);
+    return keyValueArr;
+  });
+
+  const addNewKeyValuePair = () => {
+    let updatedKeyValues = [...keyValues];
+    updatedKeyValues[updatedKeyValues.length - 1].value = 'map';
+    updatedKeyValues.push({ key: '', value: '' });
+    setKeyValues(updatedKeyValues);
+  };
+
+  // useEffect(() => {
+  //   if (!data) return;
+  //   let keyValueArr = [];
+  //   let keyValueObj = { map: data.type };
+  //   let loop = true;
+  //   while (loop) {
+  //     const _data = keyValueObj.map;
+  //     const {
+  //       key,
+  //       values: { type },
+  //     } = _data;
+
+  //     keyValueArr.push({ key, value: type });
+  //     keyValueObj = { ..._data.values };
+  //     if (_.isEmpty(keyValueObj.map)) loop = false;
+  //     setKeyValues(keyValueArr);
+  //   }
+  // }, []);
 
   const updateKey = (pairIndex, key) => {
     let updatedKeyValues = [...keyValues];
@@ -97,14 +113,26 @@ const KeyValueField = ({ id, mappingList, setMappingList }) => {
     if (keyValues.length === 0) return;
     const keyValuesObj = keyValues.reduceRight((obj, pair) => {
       const { key, value } = pair;
+      if (obj)
+        return {
+          values: {
+            isArray: false,
+            type: obj ? 'map' : value,
+            map: obj,
+          },
+          key: key,
+        };
+
       return {
-        key: key,
         values: {
+          isArray: false,
           type: obj ? 'map' : value,
-          map: obj,
         },
+        key: key,
       };
     }, null);
+    console.log('keyValuesObj: ', keyValuesObj);
+    if (data.type._id) keyValuesObj['_id'] = data.type._id;
     updateData({ type: keyValuesObj });
   }, [keyValues]);
 
