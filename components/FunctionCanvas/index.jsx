@@ -132,8 +132,8 @@ const FunctionCanvas = ({ initialNodes }) => {
     userModule.updateFunctions(modules);
     userModule.updateCoordinates(coordinates);
     userModule.updateLibraries(libraries);
-    const { data } = await userModule.updateModule();
-    userModule.update(data);
+    // const { data } = await userModule.updateModule();
+    // userModule.update(data);
   };
 
   const addNewFuctionToModule = (functionInfo, position) => {
