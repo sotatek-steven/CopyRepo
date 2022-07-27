@@ -14,7 +14,7 @@ const TYPES = [
 
 const value = createModel({
   state: {
-    values: INIT_VALUE_TYPE,
+    values: [INIT_VALUE_TYPE],
     types: TYPES,
     count: 0,
   },

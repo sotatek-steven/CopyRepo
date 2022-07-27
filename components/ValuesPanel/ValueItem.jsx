@@ -83,8 +83,8 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
         disableFocusListener={!getPlaceholderDefaultValue}>
         <Item>
           <Input
-            value={value?.variableValue}
-            onChange={(e) => handleChangeValue(value?._id, 'variableValue', e, ELEMENT_TYPE.INPUT)}
+            value={value?.valueDefault}
+            onChange={(e) => handleChangeValue(value?._id, 'valueDefault', e, ELEMENT_TYPE.INPUT)}
             disabled={value.isDefaultValue === true}
             placeholder={getPlaceholderDefaultValue}
           />

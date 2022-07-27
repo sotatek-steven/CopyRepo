@@ -391,16 +391,14 @@ export const PLACE_HOLDER = {
   [VALUE_TYPE_ENUM.STRING]: 'an empty string (empty value)',
 };
 
-export const INIT_VALUE_TYPE = [
-  {
-    _id: Date.now(),
-    type: '',
-    isArray: false,
-    scope: 'public',
-    isConst: false,
-    label: '',
-    valueDefault: '',
-    isDefaultValue: true,
-    functions: [],
-  },
-];
+export const INIT_VALUE_TYPE = {
+  _id: Date.now(),
+  type: '',
+  isArray: false,
+  scope: 'public',
+  isConst: false,
+  label: '',
+  valueDefault: '',
+  isDefaultValue: true,
+  functions: [],
+};
