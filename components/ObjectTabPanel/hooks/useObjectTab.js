@@ -51,7 +51,7 @@ const useObjectTab = () => {
           data[iObject]['errorName'] = null;
 
           if (!e.target.value.trim()) {
-            data[iObject]['errorName'] = 'This field is required';
+            data[iObject]['errorName'] = 'Variable name should not be empty';
           } else if (!regex.test(e.target.value.trim())) {
             data[iObject]['errorName'] = 'Invalid variable name';
           }
@@ -234,7 +234,7 @@ const useObjectTab = () => {
 
     object.setObjects(data);
     if (isError) {
-      toast.warning('Has errors');
+      toast.warning('Object tab has errors');
     }
 
     return isError;
