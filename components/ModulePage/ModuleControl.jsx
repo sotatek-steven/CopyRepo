@@ -8,6 +8,7 @@ import ConfirmDialog from '../atom/Dialog/ConfirmDialog';
 import { useRouter } from 'next/router';
 import { MODE } from '@/config/constant/common';
 import BackButton from '../atom/BackButton';
+import _ from 'lodash';
 
 const Wrapper = styled('div')(({ theme }) => ({
   display: 'flex',
@@ -46,6 +47,7 @@ const ModuleControl = () => {
   const route = useRouter();
   const { userModule } = useDispatch();
   const moduleState = useSelector((state) => state.userModule);
+  const initialModuleState = useSelector((state) => state.initialModule);
   const contractState = useSelector((state) => state.contract);
 
   const redirectToContractPage = () => {
@@ -55,10 +57,9 @@ const ModuleControl = () => {
   };
 
   const handleConfirm = async () => {
-    const moduleData = await userModule.getDetailModule(moduleState._id);
     if (
       moduleState.owner === 'system' ||
-      JSON.stringify({ ...moduleData, updatedAt: '' }) === JSON.stringify({ ...moduleState, updatedAt: '' })
+      _.isEqual({ ...initialModuleState, updatedAt: '' }, { ...moduleState, updatedAt: '' })
     ) {
       redirectToContractPage();
       return;

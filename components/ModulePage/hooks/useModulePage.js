@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
 
 const useModulePage = () => {
-  const { object, userModule, value } = useDispatch();
+  const { object, userModule, value, initialModule } = useDispatch();
   const { getStructs } = useStructPage();
   const { convertToObjectShow } = useObjectTab();
   const { converToValueShow } = useValuesTab();
@@ -23,6 +23,7 @@ const useModulePage = () => {
     convertToObjectShow(data?.variables?.structs);
     converToValueShow(data?.variables?.values);
     userModule.set(data);
+    initialModule.setData(data);
   };
 
   return {
