@@ -34,6 +34,10 @@ const ModuleActionList = () => {
     if (code === HTTP_CODE.SUCCESS) {
       struct.setOriginStructs(JSON.parse(JSON.stringify(structs)));
       fetchDetailModule();
+
+      toast.success('Save module success', {
+        style: { top: '3.5em' },
+      });
     }
   };
 

@@ -149,7 +149,7 @@ const ModuleDrop = ({ initialNodes, initialEdges }) => {
   const updateContractState = (modules, coordinates) => {
     contract.setModules(modules);
     contract.setCoordinates(coordinates);
-    contract.updateContract({ ...contractState, modules, coordinates });
+    // contract.updateContract({ ...contractState, modules, coordinates });
   };
 
   const addNewModuleToContract = (moduleInfo, position) => {
