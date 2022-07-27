@@ -1,9 +1,10 @@
 import { Checkbox, ListItemText, MenuItem, Select, styled } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
 import Label from '../atom/Label';
 import useMappingData from './useMappingData';
 import ArrowDown from 'assets/icon/arrow-down.svg';
+import { compareMappingVariable } from './utils';
 
 const SelectCustom = styled(Select)(({ theme }) => ({
   backgroundColor: theme.palette.background.light,
@@ -36,8 +37,20 @@ const MapToFunctionField = ({ id, options }) => {
   const { mappingVariableOptions } = useDispatch();
   const [value, setValue] = useState([]);
 
+  useEffect(() => {
+    const _value = data.functions.map((item) => {
+      return options.find((option) => compareMappingVariable(item, option));
+    });
+    setValue(
+      _value.map((item) => {
+        const { func, variable, label } = item;
+        return JSON.stringify({ func, variable, label });
+      })
+    );
+  }, []);
+
   const checkRegisterFunction = (updateOptions, selectedOption) => {
-    return updateOptions.some((item) => item._id !== selectedOption._id);
+    return updateOptions.some((item) => compareMappingVariable(item, selectedOption));
   };
 
   const handleChange = (event, child) => {
@@ -51,9 +64,8 @@ const MapToFunctionField = ({ id, options }) => {
     setValue(values);
 
     const selectedOption = JSON.parse(child.props.value);
-    if (checkRegisterFunction(updateOptions, selectedOption))
-      mappingVariableOptions.registerOption(selectedOption._id, id);
-    else mappingVariableOptions.unregisterOption(selectedOption._id);
+    if (checkRegisterFunction(updateOptions, selectedOption)) mappingVariableOptions.registerOption(selectedOption, id);
+    else mappingVariableOptions.unregisterOption(selectedOption);
   };
 
   return (
@@ -73,11 +85,10 @@ const MapToFunctionField = ({ id, options }) => {
         {options?.map((option) => {
           const { _id, label, locked, func, variable } = option;
           const checked = !!value.find((item) => {
-            const { func: _func, variable: _variable } = JSON.parse(item);
-            return func === _func && variable === _variable;
+            return compareMappingVariable(option, JSON.parse(item));
           });
           return (
-            <MenuItem key={_id} value={JSON.stringify({ func, variable, label, _id })} disabled={locked}>
+            <MenuItem key={_id} value={JSON.stringify({ func, variable, label })} disabled={locked}>
               <Checkbox checked={checked} />
               <ListItemText primary={label} />
             </MenuItem>

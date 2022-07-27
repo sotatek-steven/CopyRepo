@@ -5,6 +5,7 @@ import useMappingData from '../useMappingData';
 import _ from 'lodash';
 import Key from './Key';
 import Value from './Value';
+import { convertMappingObjToArr } from '../utils';
 
 const Container = styled('div')({
   marginBottom: 30,
@@ -48,21 +49,7 @@ export const PAIR_TYPE = {
 const KeyValueField = ({ id, mappingList, setMappingList }) => {
   const [data, updateData] = useMappingData(id);
   const [keyValues, setKeyValues] = useState(() => {
-    let keyValueArr = [];
-    let keyValueObj = { map: data.type };
-    let loop = true;
-    while (loop) {
-      const _data = keyValueObj.map;
-      const {
-        key,
-        values: { type },
-      } = _data;
-
-      keyValueArr.push({ key, value: type });
-      keyValueObj = { ..._data.values };
-      if (_.isEmpty(keyValueObj.map)) loop = false;
-    }
-    return keyValueArr;
+    return convertMappingObjToArr({ map: data.type });
   });
 
   const addNewKeyValuePair = () => {
@@ -71,25 +58,6 @@ const KeyValueField = ({ id, mappingList, setMappingList }) => {
     updatedKeyValues.push({ key: '', value: '' });
     setKeyValues(updatedKeyValues);
   };
-
-  // useEffect(() => {
-  //   if (!data) return;
-  //   let keyValueArr = [];
-  //   let keyValueObj = { map: data.type };
-  //   let loop = true;
-  //   while (loop) {
-  //     const _data = keyValueObj.map;
-  //     const {
-  //       key,
-  //       values: { type },
-  //     } = _data;
-
-  //     keyValueArr.push({ key, value: type });
-  //     keyValueObj = { ..._data.values };
-  //     if (_.isEmpty(keyValueObj.map)) loop = false;
-  //     setKeyValues(keyValueArr);
-  //   }
-  // }, []);
 
   const updateKey = (pairIndex, key) => {
     let updatedKeyValues = [...keyValues];
@@ -131,8 +99,7 @@ const KeyValueField = ({ id, mappingList, setMappingList }) => {
         key: key,
       };
     }, null);
-    console.log('keyValuesObj: ', keyValuesObj);
-    if (data.type._id) keyValuesObj['_id'] = data.type._id;
+    // if (data.type._id) keyValuesObj['_id'] = data.type._id;
     updateData({ type: keyValuesObj });
   }, [keyValues]);
 

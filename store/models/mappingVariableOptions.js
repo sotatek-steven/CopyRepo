@@ -1,3 +1,4 @@
+import { compareMappingVariable } from '@/components/MappingTabPanel/utils';
 import { createModel } from '@rematch/core';
 
 /**
@@ -12,10 +13,9 @@ const mappingVariableOptions = createModel({
   state: [],
   reducers: {
     update: (state, data) => data,
-    registerOption: (state, optionId, mappingId) => {
+    registerOption: (state, option, mappingId) => {
       const updatedOptions = state.map((item) => {
-        const { _id } = item;
-        if (_id !== optionId) return item;
+        if (!compareMappingVariable(item, option)) return item;
         return {
           ...item,
           subscriber: mappingId,
@@ -23,10 +23,9 @@ const mappingVariableOptions = createModel({
       });
       return updatedOptions;
     },
-    unregisterOption(state, optionId) {
+    unregisterOption(state, option) {
       const updatedOptions = state.map((item) => {
-        const { _id } = item;
-        if (_id !== optionId) return item;
+        if (!compareMappingVariable(item, option)) return item;
         return {
           ...item,
           subscriber: null,
@@ -43,6 +42,7 @@ const mappingVariableOptions = createModel({
           mappingId: subscriber === mappingId ? null : subscriber,
         };
       });
+
       return updatedOptions;
     },
   },
