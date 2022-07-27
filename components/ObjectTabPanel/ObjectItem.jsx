@@ -44,16 +44,23 @@ const ObjectItem = ({
     return moduleState?.sources?.functions?.reduce((array, item) => {
       let temp = [];
       if (item?.globalVariables.length) {
-        temp = item?.globalVariables.map((variable) => {
-          return {
-            value: `${item?._id}-${variable?.label}`,
-            label: `(${item?.name})(${variable?.label})`,
-          };
-        });
+        temp = item?.globalVariables
+          .filter((variable) => {
+            return (
+              variable?.isArray?.toString() === object?.isArray?.toString() &&
+              object?.listType?.includes(variable?.type)
+            );
+          })
+          .map((variable) => {
+            return {
+              value: `${item?._id}-${variable?.label}`,
+              label: `(${item?.name})(${variable?.label})`,
+            };
+          });
       }
       return array?.concat(temp);
     }, []);
-  }, [moduleState?.sources?.functions]);
+  }, [moduleState?.sources?.functions, object?.item, object?.isArray]);
 
   return (
     <>

@@ -77,7 +77,9 @@ const useObjectTab = () => {
                 _id: content?._id || iContent,
               };
             });
+            const listType = struct?.content?.map((item) => item?.type);
             data[iObject]['assignedValues'] = [{ _id: Date.now(), contents: contents }];
+            data[iObject]['listType'] = listType;
             break;
           case 'isArray':
             data[iObject][field] = e?.value;
@@ -181,11 +183,14 @@ const useObjectTab = () => {
     return cloneData;
   };
 
-  const convertToObjectShow = (data) => {
+  const convertToObjectShow = (data, structModule) => {
     const cloneData = data?.map((item, iData) => {
       const functions = item?.functions?.map(({ func, variable }) => {
-        return `${func?._id}-${variable}`;
+        return `${func}-${variable}`;
       });
+
+      const struct = structModule?.find((struct) => struct?.name === item?.type);
+      const listType = struct?.content?.map((item) => item?.type);
 
       const assignedValues = item?.valueDefault?.map((assigned, iAssigned) => {
         if (!_.isEmpty(assigned)) {
@@ -213,6 +218,7 @@ const useObjectTab = () => {
         functions: functions,
         assignedValues: _.compact(assignedValues),
         errorName: null,
+        listType: listType,
       };
     });
     object.setObjects(cloneData);
