@@ -147,6 +147,7 @@ const ModulePage = () => {
   const [tabVertical, setTabVertical] = useState('canvas');
   const [tabHorizontal, setTabHorizontal] = useState('logic');
   const [nodes, setNodes] = useState([]);
+  const [edges, setEdges] = useState([]);
   const theme = useTheme();
   const [sources, setSource] = useState(null);
 
@@ -164,9 +165,9 @@ const ModulePage = () => {
   useEffect(() => {
     if (!moduleState || !moduleState.sources) return;
     const { functions, coordinates } = moduleState.sources;
-    const _nodes = createNodes(functions, coordinates);
-
+    const { nodes: _nodes, edges: _edges } = createNodes(functions, coordinates);
     setNodes(_nodes);
+    setEdges(_edges);
   }, [moduleState.sources]);
 
   useEffect(() => {
@@ -210,7 +211,7 @@ const ModulePage = () => {
           <TabPanelContent value="logic">
             <ContentWapper>
               <div className="div-canvas">
-                <FunctionCanvas initialNodes={nodes} />
+                <FunctionCanvas initialNodes={nodes} initialEdges={edges} />
               </div>
               {moduleState?.owner?.toUpperCase() !== MODULE_OWNER.SYSTEM ? (
                 <div className="div-func-list">

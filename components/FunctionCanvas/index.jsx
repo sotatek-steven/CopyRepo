@@ -1,10 +1,17 @@
 import { Box } from '@mui/system';
 import _ from 'lodash';
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
-import ReactFlow, { Controls, Background, useNodesState, ReactFlowProvider } from 'react-flow-renderer';
+import ReactFlow, {
+  Controls,
+  Background,
+  useNodesState,
+  ReactFlowProvider,
+  useEdgesState,
+  addEdge,
+  updateEdge,
+} from 'react-flow-renderer';
 import { useDispatch, useSelector } from 'react-redux';
 import CustomNodes from '../CustomNode';
-import { generateNodeId } from './CreateElement';
 
 const styles = {
   backgroundFlow: {
@@ -14,12 +21,13 @@ const styles = {
   },
 };
 
-const FunctionCanvas = ({ initialNodes }) => {
+const FunctionCanvas = ({ initialNodes, initialEdges }) => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [nodeDeleted, setNodeDeleted] = useState(null);
   const { userModule } = useDispatch();
   const moduleState = useSelector((state) => state.userModule);
+  const { functions: listFunction } = useSelector((state) => state.functions);
   const nodeTypes = useMemo(() => CustomNodes, []);
 
   /**
@@ -44,6 +52,11 @@ const FunctionCanvas = ({ initialNodes }) => {
     return data;
   });
 
+  const [edges, setEdges, onEdgesChange] = useEdgesState(initialEdges);
+
+  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
+
+  // Effect Remove node
   useEffect(() => {
     if (!nodeDeleted) return;
     const updatedNodes = nodes.filter((node) => node.id !== nodeDeleted.id);
@@ -71,7 +84,7 @@ const FunctionCanvas = ({ initialNodes }) => {
   }, []);
 
   useEffect(() => {
-    const data = initialNodes.map((item) => {
+    const data = initialNodes?.map((item) => {
       return {
         ...item,
         data: {
@@ -81,12 +94,53 @@ const FunctionCanvas = ({ initialNodes }) => {
       };
     });
     setNodes(data);
-  }, [initialNodes]);
+    setEdges(initialEdges);
+  }, [initialNodes, initialEdges]);
+
+  const createNodeFromFunc = (funcData, type, position) => {
+    let funcDepen = [];
+    let nodeDepen = [];
+    const nodeFunc = [
+      {
+        id: funcData?._id,
+        type,
+        position,
+        data: {
+          label: `${type} node`,
+          ...funcData,
+          onDeleteNode: deleteNode,
+          event: 'drop',
+        },
+      },
+    ];
+
+    if (funcData?.dependencies?.length) {
+      funcDepen = listFunction?.filter((item) => funcData?.dependencies?.includes(item?._id));
+
+      nodeDepen = funcDepen.map((depen) => {
+        return {
+          id: depen?._id,
+          type,
+          position,
+          data: {
+            label: `${type} node`,
+            ...depen,
+            onDeleteNode: deleteNode,
+            event: 'drop',
+          },
+        };
+      });
+    }
+    const newNode = _.concat(nodeFunc, nodeDepen);
+    const listFunc = _.concat([funcData], funcDepen);
+
+    setNodes((nds) => _.concat(nds, newNode));
+    addNewFuctionToModule(listFunc, position);
+  };
 
   const onDrop = useCallback(
     (event) => {
       event.preventDefault();
-
       const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect();
       if (!event.dataTransfer) return;
       const type = event.dataTransfer.getData('application/reactflow');
@@ -109,21 +163,7 @@ const FunctionCanvas = ({ initialNodes }) => {
       if (!functions || functions.some((item) => item === data._id)) return;
 
       //add new node
-      const newNode = {
-        id: generateNodeId(),
-        type,
-        position,
-        data: {
-          label: `${type} node`,
-          ...data,
-          onDeleteNode: deleteNode,
-          event: 'drop',
-        },
-      };
-      setNodes((nds) => nds.concat(newNode));
-
-      //update contract state
-      addNewFuctionToModule(data, position);
+      createNodeFromFunc(data, type, position);
     },
     [reactFlowInstance, setNodes, moduleState.functions, nodes]
   );
@@ -136,25 +176,33 @@ const FunctionCanvas = ({ initialNodes }) => {
     userModule.update(data);
   };
 
-  const addNewFuctionToModule = (functionInfo, position) => {
-    if (!functionInfo) return;
+  const addNewFuctionToModule = (funcData, position) => {
+    if (!funcData) return;
     let { functions, coordinates, libraries } = moduleState.sources;
 
     //update moudles feild
-    functions.push(functionInfo);
+    const listFunc = _.concat(functions, funcData);
 
     //update coordinates field
-    const newModule = {
-      position,
-      func: functionInfo._id,
-    };
-    coordinates.push(newModule);
+    const tempCoor = funcData?.map((item, index) => {
+      return {
+        position: {
+          ...position,
+          y: position.y + (index + 1) * 80,
+        },
+        func: item?._id,
+      };
+    });
+    const listCoordi = _.concat(coordinates, tempCoor);
 
     // update libraries
-    const dataLi = functionInfo?.libraries?.map((item) => item?.name);
-    const listLibrary = _.uniq(_.concat(libraries, dataLi));
-
-    updateModuleState(functions, coordinates, listLibrary);
+    const tempLi = funcData?.map((item) => {
+      return item?.libraries.map((li) => {
+        return li?.name;
+      });
+    });
+    const listLibrary = _.uniq(_.concat(libraries, tempLi?.flat(1)));
+    updateModuleState(listFunc, listCoordi, listLibrary);
   };
 
   const onNodeDragStop = (event, node) => {
@@ -171,25 +219,26 @@ const FunctionCanvas = ({ initialNodes }) => {
     userModule.updateCoordinates(updatedCoordinates);
   };
 
-  // const lockCanvas = (isInteractive) => {
-  //   /**
-  //    * lock the canvas
-  //    */
-  // };
+  const onEdgeUpdate = (oldEdge, newConnection) => {
+    setEdges((els) => updateEdge(oldEdge, newConnection, els));
+  };
 
   return (
     <ReactFlowProvider>
       <Box sx={{ ...styles.backgroundFlow }} style={{ height: '100%', position: 'relative' }} ref={reactFlowWrapper}>
         <ReactFlow
           nodes={nodes}
+          edges={edges}
           onNodesChange={onNodesChange}
           onNodeDragStop={onNodeDragStop}
+          onEdgesChange={onEdgesChange}
           onInit={setReactFlowInstance}
           onDrop={onDrop}
+          onConnect={onConnect}
           nodeTypes={nodeTypes}
           onDragOver={onDragOver}
-          defaultZoom={1}>
-          {}
+          defaultZoom={1}
+          onEdgeUpdate={onEdgeUpdate}>
           <Controls
             style={{ bottom: '100px', left: '65px' }}
             // onInteractiveChange={lockCanvas}
