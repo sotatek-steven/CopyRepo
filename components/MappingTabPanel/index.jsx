@@ -13,31 +13,6 @@ const MappingTabPanel = () => {
   const moduleState = useSelector((state) => state.userModule);
   const { userModule, mappingVariableOptions } = useDispatch();
   const [error, setError] = useState(true);
-  // const [mappingVariables, setMappingVariables] = useState([]);
-
-  // const registerMapToFunction = (variableId, mappingId) => {
-  //   const updatedFuctions = mappingVariables.map((item) => {
-  //     const { id } = item;
-  //     if (id !== variableId) return item;
-  //     return {
-  //       ...item,
-  //       mappingId: mappingId,
-  //     };
-  //   });
-  //   setMappingVariables(updatedFuctions);
-  // };
-
-  // const unregisterMapToFunction = (variableId) => {
-  //   const updatedFuctions = mappingVariables.map((item) => {
-  //     const { id } = item;
-  //     if (id !== variableId) return item;
-  //     return {
-  //       ...item,
-  //       mappingId: null,
-  //     };
-  //   });
-  //   setMappingVariables(updatedFuctions);
-  // };
 
   //update mapping variable list
   useEffect(() => {
@@ -56,7 +31,7 @@ const MappingTabPanel = () => {
         if (type.includes('mapping'))
           options.push({
             ...variable,
-            label: `${label}(${functionName})`,
+            label: `(${functionName})(${label})`,
             func: _id,
             variable: label,
           });
@@ -120,30 +95,13 @@ const MappingTabPanel = () => {
     userModule.updateMappings(updatedMappings);
 
     mappingVariableOptions.unregisterAllOptions(mappingId);
-
-    // const updatedFuctions = mappingVariables.map((item) => {
-    //   const { mappingId } = item;
-    //   return {
-    //     ...item,
-    //     mappingId: mappingId === id ? null : mappingId,
-    //   };
-    // });
-    // setMappingVariables(updatedFuctions);
   };
 
   return (
     <Container>
-      {moduleState.variables?.mappings?.map((mappingItem, index) => {
-        return (
-          <MappingItem
-            updateError={setError}
-            id={mappingItem._id}
-            key={index}
-            // mappingVariables={mappingVariables}
-            // setMappingVariables={setMappingVariables}
-            removeItem={removeMappingItem}
-          />
-        );
+      {moduleState.variables?.mappings?.map((mappingItem) => {
+        const { _id } = mappingItem;
+        return <MappingItem updateError={setError} id={_id} key={_id} removeItem={removeMappingItem} />;
       })}
       <PrimaryButton width={123} onClick={handleClick}>
         <AddCircleOutlineIcon style={{ fontSize: 18 }} />

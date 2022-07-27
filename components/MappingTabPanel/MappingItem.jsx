@@ -24,6 +24,7 @@ const MappingItem = (props) => {
   const mappingVariableOptionsState = useSelector((state) => state.mappingVariableOptions);
   const [mapToFunctionOptions, setMapToFunctionOptions] = useState([]);
 
+  //setup options list of map to function field
   useEffect(() => {
     if (!data) return;
     const keyValueArr = convertMappingObjToArr({ map: data.type });
