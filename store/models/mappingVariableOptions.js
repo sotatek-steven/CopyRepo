@@ -39,7 +39,7 @@ const mappingVariableOptions = createModel({
         const { subscriber } = item;
         return {
           ...item,
-          mappingId: subscriber === mappingId ? null : subscriber,
+          subscriber: subscriber === mappingId ? null : subscriber,
         };
       });
 

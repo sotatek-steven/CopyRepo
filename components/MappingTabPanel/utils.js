@@ -1,5 +1,5 @@
 export const compareMappingVariable = (value1, value2) => {
-  return value1.func === value2.func && value2.variable === value2.variable;
+  return value1.func === value2.func && value1.variable === value2.variable;
 };
 
 export const convertMappingObjToArr = (keyValueObj) => {

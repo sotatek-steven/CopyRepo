@@ -6,7 +6,6 @@ const useMappingData = (id) => {
   } = useSelector((state) => state.userModule);
   const { userModule } = useDispatch();
 
-  // console.log('mapping: ', mappings);
   const data = mappings.find((item) => item._id === id);
 
   const updateValue = (newValue, oldValue) => {
@@ -14,12 +13,10 @@ const useMappingData = (id) => {
   };
 
   const updateData = ({ scope, label, functions, type }) => {
-    // console.log('functions: ', functions);
     const updatedMapping = mappings.map((item) => {
       if (item._id !== id) return item;
 
       const { scope: _scope, label: _label, functions: _functions, type: _type } = item;
-      // console.log('updateValue(type, _type): ', updateValue(type, _type));
       return {
         ...item,
         scope: updateValue(scope, _scope),
