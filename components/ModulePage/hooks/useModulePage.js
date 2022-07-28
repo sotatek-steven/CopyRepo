@@ -20,7 +20,7 @@ const useModulePage = () => {
     const data = await userModule.getDetailModule(id);
 
     getStructs(data?.sources?.structs);
-    convertToObjectShow(data?.variables?.structs);
+    convertToObjectShow(data?.variables?.structs, data?.sources?.structs);
     converToValueShow(data?.variables?.values);
     userModule.set(data);
     initialModule.setData(data);
