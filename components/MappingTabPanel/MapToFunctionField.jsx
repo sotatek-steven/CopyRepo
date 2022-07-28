@@ -38,23 +38,15 @@ const MapToFunctionField = ({ id, options }) => {
   const [value, setValue] = useState([]);
 
   useEffect(() => {
-    const { functions } = data;
-    if (functions.length === 0) return;
+    const objValues = options.filter((option) => option.subscriber === id);
 
-    const objValue = functions.map((item) => {
-      return options.find((option) => compareMappingVariable(item, option));
-    });
-
-    if (!objValue[0]) return; //logic for fake data
-
-    const stringValue = objValue.map((item) => {
+    const stringValue = objValues.map((item) => {
       const { func, variable, label } = item;
       const option = { func, variable, label };
-      mappingVariableOptions.registerOption(option, id);
       return JSON.stringify(option);
     });
     setValue(stringValue);
-  }, [data.functions]);
+  }, [options]);
 
   const checkRegisterFunction = (updateOptions, selectedOption) => {
     return updateOptions.some((item) => compareMappingVariable(item, selectedOption));
