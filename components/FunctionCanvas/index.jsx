@@ -11,6 +11,7 @@ import ReactFlow, {
   updateEdge,
 } from 'react-flow-renderer';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 import CustomNodes from '../CustomNode';
 
 const styles = {
@@ -36,6 +37,21 @@ const FunctionCanvas = ({ initialNodes, initialEdges }) => {
    */
   const deleteNode = (id, functionId) => {
     if (!id || !functionId) return;
+
+    let isDependence = false;
+    nodes.every((node) => {
+      if (node?.data?.dependencies?.includes(functionId)) {
+        isDependence = true;
+        return false;
+      }
+      return true;
+    });
+
+    if (isDependence) {
+      toast.warning('This function is using');
+      return;
+    }
+
     setNodeDeleted({ id, functionId });
   };
 
