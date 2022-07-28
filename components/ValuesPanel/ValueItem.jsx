@@ -4,7 +4,7 @@ import { Input } from '../Input';
 import { Error, Item, ItemContainer } from './ValueTab.style';
 import DeleteIcon from '../../assets/icon/deleteIcon2.svg';
 import { Box, IconButton, Tooltip, useTheme } from '@mui/material';
-import { useEffect, useMemo } from 'react';
+import { useMemo } from 'react';
 import SingleAutoComplete from '../AutoComplete/SingleAutoComplete';
 import MultipleAutoComplete from '../AutoComplete/MultipleAutoComplete';
 
