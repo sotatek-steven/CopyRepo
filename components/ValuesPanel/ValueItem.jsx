@@ -4,7 +4,7 @@ import { Input } from '../Input';
 import { Error, Item, ItemContainer } from './ValueTab.style';
 import DeleteIcon from '../../assets/icon/deleteIcon2.svg';
 import { Box, IconButton, Tooltip, useTheme } from '@mui/material';
-import { useMemo } from 'react';
+import { useEffect, useMemo } from 'react';
 import SingleAutoComplete from '../AutoComplete/SingleAutoComplete';
 import MultipleAutoComplete from '../AutoComplete/MultipleAutoComplete';
 
@@ -16,16 +16,22 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
     return moduleState?.sources?.functions?.reduce((array, item) => {
       let temp = [];
       if (item?.globalVariables.length) {
-        temp = item?.globalVariables.map((variable) => {
-          return {
-            value: `${item?._id}-${variable?.label}`,
-            label: `(${item?.name})(${variable?.label})`,
-          };
-        });
+        temp = item?.globalVariables
+          .filter((variable) => {
+            return (
+              variable?.isArray?.toString() === value?.isArray?.toString() && value?.type?.includes(variable?.type)
+            );
+          })
+          .map((variable) => {
+            return {
+              value: `${item?._id}-${variable?.label}`,
+              label: `(${item?.name})(${variable?.label})`,
+            };
+          });
       }
       return array?.concat(temp);
     }, []);
-  }, [moduleState?.sources?.functions]);
+  }, [moduleState?.sources?.functions, value?.type, value?.isArray]);
 
   const getPlaceholderDefaultValue = useMemo(() => {
     let placeholder = '';
