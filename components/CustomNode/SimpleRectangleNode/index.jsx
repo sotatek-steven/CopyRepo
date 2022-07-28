@@ -4,6 +4,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useSelector } from 'react-redux';
 import ActionPopover from './ActionPopover';
+import { Handle, Position } from 'react-flow-renderer';
 
 const Card = styled('article')(({ color, theme }) => ({
   padding: '10px 15px',
@@ -85,6 +86,8 @@ const SimpleRectangleNode = ({ data, id }) => {
         </CardHeader>
         <CardBody>
           <Content>{name}</Content>
+          <Handle type="target" position={Position.Top} id="a" style={{ background: '#555' }} />
+          <Handle type="source" position={Position.Bottom} id="c" style={{ background: '#555' }} />
         </CardBody>
       </Card>
       <ActionPopover open={open} anchorEl={anchorEl} handlePopoverClose={handlePopoverClose} functionId={functionId} />
