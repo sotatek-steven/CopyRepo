@@ -4,6 +4,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import { styled } from '@mui/material';
 import MappingItem from './MappingItem';
 import { useDispatch, useSelector } from 'react-redux';
+import { compareMappingVariable } from './utils';
 
 const Container = styled('div')({
   padding: '30px 70px',
@@ -16,11 +17,6 @@ const MappingTabPanel = () => {
 
   //update mapping variable list
   useEffect(() => {
-    const {
-      variables: { mappings },
-    } = moduleState;
-    if (!mappings) return;
-
     //get all global mapping variables
     const options = [];
     moduleState?.sources?.functions?.forEach((item) => {
@@ -38,18 +34,17 @@ const MappingTabPanel = () => {
       });
     });
 
+    const {
+      variables: { mappings },
+    } = moduleState;
+    if (!mappings) return;
+
     //update mapping subcriber for mapping variable list
     const updatedMappingVariableOptions = options.map((option) => {
       let subscriber = null;
       for (const mapping of mappings) {
         const { functions, _id } = mapping;
-        subscriber = functions.find((item) => {
-          const { func, variable } = item;
-          const { func: _func, variable: _variable } = option;
-          return func === _func && variable === _variable;
-        })
-          ? _id
-          : null;
+        if (functions.find((item) => compareMappingVariable(item, option))) subscriber = _id;
       }
       return {
         ...option,

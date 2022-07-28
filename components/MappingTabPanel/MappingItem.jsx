@@ -39,6 +39,7 @@ const MappingItem = (props) => {
         func,
         variable,
         locked: !matching || (!!subscriber && subscriber !== id),
+        subscriber,
       };
     });
 
