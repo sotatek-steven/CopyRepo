@@ -20,14 +20,13 @@ const SaveContractButton = () => {
   const theme = useTheme();
   const classes = useStyles();
   const [loading, setLoading] = useState(false);
-  const contractStore = useSelector((state) => state.contract);
   const { contract } = useDispatch();
 
   const saveContract = async () => {
     setLoading(true);
-    const { code, message } = await contract.updateContract();
+    const { code, message, data } = await contract.updateContract();
     setLoading(false);
-    const errors = contractStore.current.errors;
+    const errors = data.errors;
     if (code == HTTP_CODE.SUCCESS) {
       if (errors.length > 0) {
         toast(

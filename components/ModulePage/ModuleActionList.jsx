@@ -28,8 +28,6 @@ const ModuleActionList = () => {
   const { userModule, struct } = useDispatch();
   const { structs } = useSelector((state) => state.struct);
   const classes = useStyles();
-
-  const moduleState = useSelector((state) => state.userModule);
   const theme = useTheme();
 
   const { handleErrorStructs } = useStructPage();
@@ -43,9 +41,9 @@ const ModuleActionList = () => {
     }
     if (objectHasError()) return;
 
-    const { code } = await userModule.updateModule();
+    const { code, data } = await userModule.updateModule();
 
-    const errors = moduleState.errors;
+    const errors = data.errors;
     if (code === HTTP_CODE.SUCCESS) {
       struct.setOriginStructs(JSON.parse(JSON.stringify(structs)));
       fetchDetailModule();
