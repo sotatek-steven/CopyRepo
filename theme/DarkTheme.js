@@ -67,7 +67,6 @@ export const darkTheme = createTheme({
     },
   },
   typography: {
-    fontSize: '0.875rem', //14px
     fontFamily:
       '"Josefin Sans", sans-serif, "Poppins", -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial',
     fontWeightLight: 300,

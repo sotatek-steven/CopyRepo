@@ -32,7 +32,7 @@ export default function SingleAutoComplete({
         id="combo-box-demo"
         autoHighlight
         disableClearable
-        disabled={disabled}
+        disabled={!!disabled}
         loading={loading}
         options={options}
         value={value}
