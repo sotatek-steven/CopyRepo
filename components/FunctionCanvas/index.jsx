@@ -1,3 +1,4 @@
+import { FUNCTION_TYPE, STRUCT_POOLINFO, STRUCT_USERINFO } from '@/config/constant/common';
 import { Box } from '@mui/system';
 import _ from 'lodash';
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
@@ -13,6 +14,7 @@ import ReactFlow, {
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import CustomNodes from '../CustomNode';
+import useStructPage from '../StructTabPanel/hooks/useStructPage';
 
 const styles = {
   backgroundFlow: {
@@ -29,7 +31,9 @@ const FunctionCanvas = ({ initialNodes, initialEdges }) => {
   const { userModule } = useDispatch();
   const moduleState = useSelector((state) => state.userModule);
   const { functions: listFunction } = useSelector((state) => state.functions);
+  const { structs } = useSelector((state) => state.struct);
   const nodeTypes = useMemo(() => CustomNodes, []);
+  const { handelAddStruct } = useStructPage();
 
   /**
    * @param {*} id to update node list of react flow
@@ -116,6 +120,30 @@ const FunctionCanvas = ({ initialNodes, initialEdges }) => {
   const createNodeFromFunc = (funcData, type, position) => {
     let funcDepen = [];
     let nodeDepen = [];
+    let listStruct = [];
+
+    const listStructName = structs.map((item) => item?.name?.toUpperCase());
+
+    funcData?.globalVariables?.every((variable) => {
+      if (variable?.type.toUpperCase() === FUNCTION_TYPE.POOLINFO && !listStructName.includes(FUNCTION_TYPE.POOLINFO)) {
+        listStruct.push(STRUCT_POOLINFO);
+        return false;
+      }
+      return true;
+    });
+
+    funcData?.globalVariables?.every((variable) => {
+      if (
+        variable?.type
+          .toUpperCase()
+          ?.includes(FUNCTION_TYPE.USERINFO && !listStructName.includes(FUNCTION_TYPE.USERINFO))
+      ) {
+        listStruct.push(STRUCT_USERINFO);
+        return false;
+      }
+      return true;
+    });
+
     const nodeFunc = [
       {
         id: funcData?._id,
@@ -152,6 +180,7 @@ const FunctionCanvas = ({ initialNodes, initialEdges }) => {
 
     setNodes((nds) => _.concat(nds, newNode));
     addNewFuctionToModule(listFunc, position);
+    handelAddStruct(listStruct);
   };
 
   const onDrop = useCallback(
@@ -204,7 +233,7 @@ const FunctionCanvas = ({ initialNodes, initialEdges }) => {
       return {
         position: {
           ...position,
-          y: position.y + (index + 1) * 80,
+          y: position.y + (index + 1) * 120,
         },
         func: item?._id,
       };

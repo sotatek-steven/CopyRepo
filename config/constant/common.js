@@ -211,6 +211,10 @@ export const VALUE_TYPE_OPTIONS = [
     label: 'bytes32',
   },
   {
+    value: 'IERC20',
+    label: 'IERC20',
+  },
+  {
     value: 'int',
     label: 'int',
   },
@@ -401,4 +405,96 @@ export const INIT_VALUE_TYPE = {
   valueDefault: '',
   isDefaultValue: true,
   functions: [],
+};
+
+export const STRUCT = [
+  {
+    _id: Date.now(),
+    name: '',
+    errorName: null,
+    variables: [
+      {
+        _id: Date.now(),
+        type: {
+          value: '',
+          errorType: null,
+        },
+        name: {
+          value: '',
+          errorName: null,
+        },
+      },
+    ],
+  },
+];
+
+export const FUNCTION_TYPE = {
+  POOLINFO: 'POOLINFO',
+  USERINFO: 'USERINFO',
+};
+
+export const STRUCT_POOLINFO = {
+  name: 'PoolInfo',
+  variables: [
+    {
+      _id: 'IpToken',
+      type: {
+        value: 'IERC20',
+      },
+      name: {
+        value: 'IpToken',
+      },
+    },
+    {
+      _id: 'allocPoint',
+      type: {
+        value: 'uint256',
+      },
+      name: {
+        value: 'allocPoint',
+      },
+    },
+    {
+      _id: 'lastRewardBlock',
+      type: {
+        value: 'uint256',
+      },
+      name: {
+        value: 'lastRewardBlock',
+      },
+    },
+    {
+      _id: 'accRewardPerShare',
+      type: {
+        value: 'uint256',
+      },
+      name: {
+        value: 'accRewardPerShare',
+      },
+    },
+  ],
+};
+
+export const STRUCT_USERINFO = {
+  name: 'UserInfo',
+  variables: [
+    {
+      _id: 'amount',
+      type: {
+        value: 'uint256',
+      },
+      name: {
+        value: 'amount',
+      },
+    },
+    {
+      _id: 'rewardDebt',
+      type: {
+        value: 'uint256',
+      },
+      name: {
+        value: 'rewardDebt',
+      },
+    },
+  ],
 };
