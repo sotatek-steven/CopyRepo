@@ -33,7 +33,7 @@ const useValuesTab = () => {
       case ELEMENT_TYPE.INPUT:
         data[iValue][field] = e.target.value;
         if (field === 'label') {
-          if (data[iValue]['isConst'] == true) data[iValue][field] = e.target.value.toUpperCase();
+          if (data[iValue]['constant'] == true) data[iValue][field] = e.target.value.toUpperCase();
 
           data[iValue]['errorName'] = null;
           const regex = new RegExp(REGEX.VARIABLE_NAME);
@@ -51,10 +51,10 @@ const useValuesTab = () => {
           case 'isArray':
             data[iValue][field] = e?.value;
             if (e?.value) {
-              data[iValue]['isConst'] = false;
+              data[iValue]['constant'] = '';
             }
             break;
-          case 'isConst':
+          case 'constant':
             data[iValue][field] = e?.value;
             if (e?.value) {
               data[iValue]['label'] = data[iValue]['label'].toUpperCase();
@@ -104,7 +104,7 @@ const useValuesTab = () => {
         type: item?.type,
         isArray: item?.isArray,
         scope: item?.scope,
-        isConst: item?.isConst,
+        constant: item?.constant,
         label: item?.label,
         valueDefault: item?.isDefaultValue ? valueDefault : undefined,
         functions: functions || [],
@@ -125,7 +125,7 @@ const useValuesTab = () => {
         _id: iData,
         type: item?.type,
         isArray: item?.isArray,
-        isConst: item?.isConst,
+        constant: item?.constant,
         scope: item?.scope,
         label: item?.label,
         valueDefault: valueDefault,

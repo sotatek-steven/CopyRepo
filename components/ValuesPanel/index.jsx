@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import AddIcon from 'assets/icon/addIcon2.svg';
 import { Container, BodyContent } from './ValueTab.style';
 import ValueItem from './ValueItem';
@@ -7,13 +7,10 @@ import { Box, IconButton, Tooltip, useTheme } from '@mui/material';
 import { Item, ItemContainer } from './ValueTab.style';
 import { TITLE_VALUES_TAB } from '@/config/constant/common';
 import IconInfo from 'assets/icon/icon-info.svg';
-import { useDispatch, useSelector } from 'react-redux';
 import { isArray } from 'lodash';
 
 const ValuesTabPanel = () => {
   const { values, handleAddValues, handleRemoveValue, handleChangeValue } = useValuesTab();
-  const userModuleState = useSelector((state) => state.userModule);
-  const { value } = useDispatch();
   const theme = useTheme();
 
   return (
