@@ -73,6 +73,21 @@ export const BOOLEAN_OPTIONS = [
   },
 ];
 
+export const IS_CONSTANT = [
+  {
+    value: 'constant',
+    label: 'Constant',
+  },
+  {
+    value: 'immutable',
+    label: 'Immutable',
+  },
+  {
+    value: '',
+    label: 'None',
+  },
+];
+
 export const VALUE_TYPE_OPTIONS = [
   {
     value: 'address',
@@ -294,7 +309,7 @@ export const TITLE_VALUES_TAB = [
   },
   {
     id: 4,
-    label: 'IS_CONSTANT',
+    label: 'CONSTANT',
     value: 'is_constant',
   },
   {
@@ -400,7 +415,7 @@ export const INIT_VALUE_TYPE = {
   type: '',
   isArray: false,
   scope: 'public',
-  isConst: false,
+  constant: '',
   label: '',
   valueDefault: '',
   isDefaultValue: true,

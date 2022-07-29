@@ -1,4 +1,11 @@
-import { BOOLEAN_OPTIONS, ELEMENT_TYPE, PLACE_HOLDER, SCOPE, VALUE_TYPE_OPTIONS } from '@/config/constant/common';
+import {
+  BOOLEAN_OPTIONS,
+  ELEMENT_TYPE,
+  IS_CONSTANT,
+  PLACE_HOLDER,
+  SCOPE,
+  VALUE_TYPE_OPTIONS,
+} from '@/config/constant/common';
 import { useSelector } from 'react-redux';
 import { Input } from '../Input';
 import { Error, Item, ItemContainer } from './ValueTab.style';
@@ -59,7 +66,7 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
           value={BOOLEAN_OPTIONS.find((item) => item.value === value?.isArray)}
           options={BOOLEAN_OPTIONS}
           onChange={(e, newValue) => handleChangeValue(value?._id, 'isArray', newValue, ELEMENT_TYPE.SELECT)}
-          disabled={value.isConst}
+          disabled={value.constant}
         />
       </Item>
       <Item>
@@ -71,9 +78,9 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
       </Item>
       <Item>
         <SingleAutoComplete
-          value={BOOLEAN_OPTIONS.find((item) => item.value === value?.isConst)}
-          options={BOOLEAN_OPTIONS}
-          onChange={(e, newValue) => handleChangeValue(value?._id, 'isConst', newValue, ELEMENT_TYPE.SELECT)}
+          value={IS_CONSTANT.find((item) => item.value === value?.constant)}
+          options={IS_CONSTANT}
+          onChange={(e, newValue) => handleChangeValue(value?._id, 'constant', newValue, ELEMENT_TYPE.SELECT)}
           disabled={value.isArray}
         />
       </Item>
