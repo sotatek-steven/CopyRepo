@@ -91,16 +91,22 @@ const contract = createModel({
         } else {
           toast.error(message);
         }
-        return { code: 200, data: null };
+        return { code: 200, data };
       },
       async deployContract({ signer, deploying, deployed }, state) {
         try {
           const { abi, bytecode, parameters, _id } = state.contract.current;
           let factory = new ContractFactory(abi, bytecode, signer);
-          const params = parameters.map((param) => (param.type.trim().endsWith('[]') ? param.value.split(',') : param.value));
+          const params = parameters.map((param) =>
+            param.type.trim().endsWith('[]') ? param.value.split(',') : param.value
+          );
           deploying();
           const depoyedContract = await factory.deploy(...params);
-          await contract.updateContract({ _id, address: depoyedContract.address, hash: depoyedContract.deployTransaction.hash });
+          await contract.updateContract({
+            _id,
+            address: depoyedContract.address,
+            hash: depoyedContract.deployTransaction.hash,
+          });
           contract.setAddress(depoyedContract.address);
           contract.setTransaction(depoyedContract.deployTransaction.hash);
           console.log(depoyedContract);
