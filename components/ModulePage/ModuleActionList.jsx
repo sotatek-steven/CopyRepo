@@ -43,7 +43,7 @@ const ModuleActionList = () => {
 
     const { code, data } = await userModule.updateModule();
 
-    const errors = data.errors;
+    const errors = data?.errors;
     if (code === HTTP_CODE.SUCCESS) {
       struct.setOriginStructs(JSON.parse(JSON.stringify(structs)));
       fetchDetailModule();

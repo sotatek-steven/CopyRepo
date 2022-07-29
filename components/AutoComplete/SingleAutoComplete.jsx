@@ -6,7 +6,7 @@ export default function SingleAutoComplete({
   label,
   options,
   loading,
-  value,
+  value = { value: '', label: '' },
   isRequired,
   errorText,
   onChange,

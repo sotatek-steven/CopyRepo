@@ -116,7 +116,7 @@ const useValuesTab = () => {
   const converToValueShow = (data) => {
     const cloneData = data?.map((item, iData) => {
       const functions = item?.functions?.map(({ func, variable }) => {
-        return `${func?._id}-${variable}`;
+        return `${func}-${variable}`;
       });
 
       const valueDefault = item?.valueDefault?.join();
