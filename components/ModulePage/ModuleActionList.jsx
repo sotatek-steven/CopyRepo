@@ -1,13 +1,23 @@
 import { HTTP_CODE } from '@/config/constant/common';
-import { styled } from '@mui/material';
+import { styled, useTheme } from '@mui/material';
 import React from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
+import CompiledErrorToast from '../atom/CompiledErrorToast';
 import { PrimaryButton } from '../ButtonStyle';
 import useObjectTab from '../ObjectTabPanel/hooks/useObjectTab';
 import useStructPage from '../StructTabPanel/hooks/useStructPage';
 import useValuesTab from '../ValuesPanel/hooks/useValuesTab';
 import useModulePage from './hooks/useModulePage';
+import { makeStyles } from '@mui/styles';
+
+export const useStyles = makeStyles(() => {
+  return {
+    customToast: {
+      padding: 0,
+    },
+  };
+});
 
 const Container = styled('div')(() => ({
   display: 'flex',
@@ -17,7 +27,10 @@ const Container = styled('div')(() => ({
 const ModuleActionList = () => {
   const { userModule, struct } = useDispatch();
   const { structs } = useSelector((state) => state.struct);
-  const { values } = useValuesTab();
+  const classes = useStyles();
+
+  const moduleState = useSelector((state) => state.userModule);
+  const theme = useTheme();
 
   const { handleErrorStructs } = useStructPage();
   const { objectHasError } = useObjectTab();
@@ -31,13 +44,38 @@ const ModuleActionList = () => {
     if (objectHasError()) return;
 
     const { code } = await userModule.updateModule();
+
+    const errors = moduleState.errors;
     if (code === HTTP_CODE.SUCCESS) {
       struct.setOriginStructs(JSON.parse(JSON.stringify(structs)));
       fetchDetailModule();
-
-      toast.success('Save module success', {
-        style: { top: '3.5em' },
-      });
+      if (errors.length > 0) {
+        toast(
+          <>
+            <CompiledErrorToast errors={errors} />
+          </>,
+          {
+            position: 'bottom-center',
+            autoClose: 5000,
+            hideProgressBar: true,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            closeButton: false,
+            bodyClassName: classes.customToast,
+            style: {
+              width: '457px',
+              right: '50%',
+              padding: 0,
+              background: theme.palette.background.dark,
+            },
+          }
+        );
+      } else {
+        toast.success('Save module success', {
+          style: { top: '3.5em' },
+        });
+      }
     }
   };
 
