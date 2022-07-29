@@ -4,24 +4,6 @@ import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
-const STRUCT = {
-  name: '',
-  errorName: null,
-  variables: [
-    {
-      _id: Date.now(),
-      type: {
-        value: '',
-        errorType: null,
-      },
-      name: {
-        value: '',
-        errorName: null,
-      },
-    },
-  ],
-};
-
 const VARIABLE = {
   _id: Date.now(),
   type: {
@@ -97,10 +79,15 @@ const useStructPage = () => {
     });
   };
 
-  const handelAddStruct = () => {
-    const init = JSON.parse(JSON.stringify(STRUCT));
-    const data = [...structs];
-    data.push({ ...init, _id: Date.now() });
+  const handelAddStruct = (initStruct) => {
+    const init = JSON.parse(JSON.stringify(initStruct));
+    const initData = init?.map((item, index) => {
+      return {
+        ...item,
+        _id: `${Date.now()}-${index}`,
+      };
+    });
+    const data = _.concat(structs, initData);
     struct.setStructs(data);
     userModule.updateStructs(convertStructs(data));
   };

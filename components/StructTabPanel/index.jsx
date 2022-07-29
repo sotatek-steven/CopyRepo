@@ -4,6 +4,7 @@ import StructItem from './StructItem';
 import AddIcon from 'assets/icon/addIcon.svg';
 import { BodyContent, Footer, Header } from './StructItem.style';
 import useStructPage from './hooks/useStructPage';
+import { STRUCT } from '@/config/constant/common';
 
 const StructPage = () => {
   const {
@@ -35,7 +36,7 @@ const StructPage = () => {
         ))}
       </BodyContent>
       <Footer>
-        <PrimaryButton width="150px" height="45px" onClick={handelAddStruct}>
+        <PrimaryButton width="150px" height="45px" onClick={() => handelAddStruct(STRUCT)}>
           <AddIcon />
           Add Struct
         </PrimaryButton>
