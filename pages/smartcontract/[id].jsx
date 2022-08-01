@@ -33,6 +33,10 @@ const Design = () => {
   useEffect(() => {
     if (!id) return;
     contract.getDetailContract(id);
+
+    return () => {
+      contract.setCurrent({});
+    };
   }, [id]);
   useEffect(() => {
     if (!contractState.current?._id) return;

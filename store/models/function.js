@@ -23,10 +23,13 @@ const functions = createModel({
           toast.error(message);
           return { code };
         }
+
         const listFunc = data.map((item) => {
+          const { _id } = item;
+          const disable = state?.userModule?.sources?.functions?.some((func) => func._id === _id);
           return {
             ...item,
-            disable: false,
+            disable,
           };
         });
         functions.setFunctions(listFunc);
