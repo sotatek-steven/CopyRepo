@@ -183,14 +183,11 @@ const useObjectTab = () => {
     return cloneData;
   };
 
-  const convertToObjectShow = (data, structModule) => {
+  const convertToObjectShow = (data) => {
     const cloneData = data?.map((item, iData) => {
       const functions = item?.functions?.map(({ func, variable }) => {
         return `${func}-${variable}`;
       });
-
-      const struct = structModule?.find((struct) => struct?.name === item?.type);
-      const listType = struct?.content?.map((item) => item?.type);
 
       const assignedValues = item?.valueDefault?.map((assigned, iAssigned) => {
         if (!_.isEmpty(assigned)) {
@@ -218,7 +215,6 @@ const useObjectTab = () => {
         functions: functions,
         assignedValues: _.compact(assignedValues),
         errorName: null,
-        listType: listType,
       };
     });
     object.setObjects(cloneData);

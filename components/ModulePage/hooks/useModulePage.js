@@ -21,7 +21,7 @@ const useModulePage = () => {
 
     functions.getAllUserFunctions();
     getStructs(data?.sources?.structs);
-    convertToObjectShow(data?.variables?.structs, data?.sources?.structs);
+    convertToObjectShow(data?.variables?.structs);
     converToValueShow(data?.variables?.values);
     userModule.set(data);
     initialModule.setData(data);
