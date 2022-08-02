@@ -8,6 +8,7 @@ import { Item, ItemContainer } from './ValueTab.style';
 import { TITLE_VALUES_TAB } from '@/config/constant/common';
 import IconInfo from 'assets/icon/icon-info.svg';
 import { isArray } from 'lodash';
+import Scrollbars from 'react-custom-scrollbars';
 
 const ValuesTabPanel = () => {
   const { values, handleAddValues, handleRemoveValue, handleChangeValue } = useValuesTab();
@@ -38,31 +39,36 @@ const ValuesTabPanel = () => {
           </Item>
         ))}
       </ItemContainer>
-
-      <BodyContent>
-        {isArray(values) &&
-          values?.map((value) => (
-            <ValueItem
-              key={value?._id}
-              value={value}
-              handleRemoveValue={handleRemoveValue}
-              handleChangeValue={handleChangeValue}
-            />
-          ))}
-      </BodyContent>
-      <Box
-        sx={{
-          position: 'absolute',
-          right: '6%',
-          paddingY: 2,
-          '@media screen and (max-width:1500px )': {
-            right: '4%',
-          },
+      <Scrollbars
+        style={{
+          height: '71vh',
+          overflowX: 'hidden',
         }}>
-        <IconButton aria-label="delete" onClick={handleAddValues}>
-          <AddIcon sx={{ color: theme.palette.primary.main }} />
-        </IconButton>
-      </Box>
+        <BodyContent>
+          {isArray(values) &&
+            values?.map((value) => (
+              <ValueItem
+                key={value?._id}
+                value={value}
+                handleRemoveValue={handleRemoveValue}
+                handleChangeValue={handleChangeValue}
+              />
+            ))}
+        </BodyContent>
+        <Box
+          sx={{
+            position: 'absolute',
+            right: '6%',
+            paddingY: 2,
+            '@media screen and (max-width:1500px )': {
+              right: '4%',
+            },
+          }}>
+          <IconButton aria-label="delete" onClick={handleAddValues}>
+            <AddIcon sx={{ color: theme.palette.primary.main }} />
+          </IconButton>
+        </Box>
+      </Scrollbars>
     </Container>
   );
 };
