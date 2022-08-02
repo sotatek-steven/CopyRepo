@@ -57,10 +57,9 @@ const Library = () => {
   useEffect(() => {
     const fetchImportedLibraries = async () => {
       const { data } = await library.getAllUserLibraries();
-      const { libraries } = userModuleState.sources;
       const librariesArr = data.map((library) => {
         const { name } = library;
-        const imported = libraries.filter((item) => item === name).length !== 0;
+        const imported = userModuleState?.sources?.libraries.filter((item) => item === name).length !== 0;
         return {
           ...library,
           hidden: imported,

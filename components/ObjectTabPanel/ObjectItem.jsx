@@ -48,7 +48,7 @@ const ObjectItem = ({
           .filter((variable) => {
             return (
               variable?.isArray?.toString() === object?.isArray?.toString() &&
-              object?.listType?.includes(variable?.type)
+              variable?.type.toUpperCase() === object?.item.toUpperCase()
             );
           })
           .map((variable) => {
