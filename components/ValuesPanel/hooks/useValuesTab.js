@@ -38,7 +38,7 @@ const useValuesTab = () => {
           data[iValue]['errorName'] = null;
           const regex = new RegExp(REGEX.VARIABLE_NAME);
           if (!e.target.value.trim()) {
-            data[iValue]['errorName'] = 'Variable name should not be empty';
+            data[iValue]['errorName'] = 'This field is required';
           } else if (!regex.test(e.target.value.trim())) {
             data[iValue]['errorName'] = 'Invalid variable name';
           }
