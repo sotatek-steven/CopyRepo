@@ -5,6 +5,7 @@ import { styled } from '@mui/material';
 import MappingItem from './MappingItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { compareMappingVariable } from './utils';
+import Scrollbars from 'react-custom-scrollbars';
 
 const Container = styled('div')({
   padding: '30px 70px',
@@ -94,14 +95,20 @@ const MappingTabPanel = () => {
 
   return (
     <Container>
-      {moduleState.variables?.mappings?.map((mappingItem) => {
-        const { _id } = mappingItem;
-        return <MappingItem updateError={setError} id={_id} key={_id} removeItem={removeMappingItem} />;
-      })}
-      <PrimaryButton width={123} onClick={handleClick}>
-        <AddCircleOutlineIcon style={{ fontSize: 18 }} />
-        <span>Create New</span>
-      </PrimaryButton>
+      <Scrollbars
+        style={{
+          height: '73vh',
+          overflowX: 'hidden',
+        }}>
+        {moduleState.variables?.mappings?.map((mappingItem) => {
+          const { _id } = mappingItem;
+          return <MappingItem updateError={setError} id={_id} key={_id} removeItem={removeMappingItem} />;
+        })}
+        <PrimaryButton width={123} onClick={handleClick}>
+          <AddCircleOutlineIcon style={{ fontSize: 18 }} />
+          <span>Create New</span>
+        </PrimaryButton>
+      </Scrollbars>
     </Container>
   );
 };

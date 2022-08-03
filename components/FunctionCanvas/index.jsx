@@ -134,9 +134,8 @@ const FunctionCanvas = ({ initialNodes, initialEdges }) => {
 
     funcData?.globalVariables?.every((variable) => {
       if (
-        variable?.type
-          .toUpperCase()
-          ?.includes(FUNCTION_TYPE.USERINFO && !listStructName.includes(FUNCTION_TYPE.USERINFO))
+        variable?.type.toUpperCase()?.includes(FUNCTION_TYPE.USERINFO) &&
+        !listStructName.includes(FUNCTION_TYPE.USERINFO)
       ) {
         listStruct.push(STRUCT_USERINFO);
         return false;

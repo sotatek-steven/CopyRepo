@@ -35,6 +35,7 @@ const AssignedValueList = styled('div')(({ theme }) => ({
   display: '-webkit-box',
   gap: 30,
   alignItems: 'center',
+  paddingBottom: 20,
   '.action-icon': {
     marginTop: 60,
   },
