@@ -27,6 +27,7 @@ const Container = styled('div')(() => ({
 const ModuleActionList = () => {
   const { userModule, struct } = useDispatch();
   const { structs } = useSelector((state) => state.struct);
+  const { owner } = useSelector((state) => state.userModule);
   const classes = useStyles();
   const theme = useTheme();
 
@@ -80,7 +81,7 @@ const ModuleActionList = () => {
   return (
     <div>
       <Container>
-        <PrimaryButton onClick={saveModule}>Save Module</PrimaryButton>
+        {owner?.toLowerCase() !== 'system' && <PrimaryButton onClick={saveModule}>Save Module</PrimaryButton>}
       </Container>
     </div>
   );
