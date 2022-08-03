@@ -9,6 +9,13 @@ import useMappingData from './useMappingData';
 import { useSelector } from 'react-redux';
 import { convertMappingObjToArr } from './utils';
 
+const ContainerItem = styled('div')(({ theme }) => ({
+  marginBottom: 60,
+  '&:first-of-type': {
+    marginTop: 30,
+  },
+}));
+
 const RemoveButton = styled(CloseIcon)(({ theme }) => ({
   background: theme.palette.primary.main,
   borderRadius: '50%',
@@ -52,7 +59,7 @@ const MappingItem = (props) => {
   };
 
   return (
-    <div style={{ marginBottom: 60 }}>
+    <ContainerItem>
       <Grid container spacing={4}>
         <Grid item xs={3}>
           <ScopeField {...props} />
@@ -74,7 +81,7 @@ const MappingItem = (props) => {
         </Grid>
       </Grid>
       <KeyValueField {...props} options={mapToFunctionOptions} setMapToFunctionOptions={setMapToFunctionOptions} />
-    </div>
+    </ContainerItem>
   );
 };
 

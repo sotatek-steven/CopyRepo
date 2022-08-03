@@ -8,7 +8,7 @@ import { compareMappingVariable } from './utils';
 import Scrollbars from 'react-custom-scrollbars';
 
 const Container = styled('div')({
-  padding: '30px 70px',
+  paddingLeft: 30,
 });
 
 const MappingTabPanel = () => {
@@ -97,7 +97,7 @@ const MappingTabPanel = () => {
     <Container>
       <Scrollbars
         style={{
-          height: '73vh',
+          height: '77vh',
           overflowX: 'hidden',
         }}>
         {moduleState.variables?.mappings?.map((mappingItem) => {
