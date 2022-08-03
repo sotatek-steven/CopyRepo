@@ -150,6 +150,7 @@ const ModulePage = () => {
   const [edges, setEdges] = useState([]);
   const theme = useTheme();
   const [sources, setSource] = useState(null);
+  const [addFieldTab, setAddFieldTab] = useState('values');
 
   useEffect(() => {
     fetchDetailModule();
@@ -213,7 +214,14 @@ const ModulePage = () => {
           <TabPanelContent value="logic">
             <ContentWapper>
               <div className="div-canvas">
-                <FunctionCanvas initialNodes={nodes} initialEdges={edges} />
+                <FunctionCanvas
+                  initialNodes={nodes}
+                  initialEdges={edges}
+                  redirectToAddField={(tab) => {
+                    setTabVertical('fields');
+                    setAddFieldTab(tab);
+                  }}
+                />
               </div>
               {moduleState?.owner?.toUpperCase() !== MODULE_OWNER.SYSTEM ? (
                 <div className="div-func-list">
@@ -247,7 +255,7 @@ const ModulePage = () => {
         <TabContext value={tabHorizontal}>
           <TabAddFieldContainer>
             <ModuleControl />
-            <AddFieldTab />
+            <AddFieldTab tab={addFieldTab} />
           </TabAddFieldContainer>
         </TabContext>
       </TabPanelContent>

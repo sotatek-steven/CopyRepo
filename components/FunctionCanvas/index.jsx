@@ -14,6 +14,7 @@ import ReactFlow, {
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import CustomNodes from '../CustomNode';
+import IndentifierModal from '../IndentifierModal';
 import useStructPage from '../StructTabPanel/hooks/useStructPage';
 
 const styles = {
@@ -24,7 +25,7 @@ const styles = {
   },
 };
 
-const FunctionCanvas = ({ initialNodes, initialEdges }) => {
+const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
   const reactFlowWrapper = useRef(null);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
   const [nodeDeleted, setNodeDeleted] = useState(null);
@@ -34,6 +35,16 @@ const FunctionCanvas = ({ initialNodes, initialEdges }) => {
   const { structs } = useSelector((state) => state.struct);
   const nodeTypes = useMemo(() => CustomNodes, []);
   const { handelAddStruct } = useStructPage();
+  const [identifierModalOpen, setIdentifierModalOpen] = useState(false);
+  const [stateVariablesOfDropFunctions, setStateVariablesOfDropFunctions] = useState([]);
+
+  const handleIdentifierModalClose = () => {
+    setIdentifierModalOpen(false);
+  };
+
+  // useEffect(() => {
+  //   console.log('identifier: ', identifierModalOpen);
+  // }, [identifierModalOpen]);
 
   /**
    * @param {*} id to update node list of react flow
@@ -180,6 +191,21 @@ const FunctionCanvas = ({ initialNodes, initialEdges }) => {
     setNodes((nds) => _.concat(nds, newNode));
     addNewFuctionToModule(listFunc, position);
     handelAddStruct(listStruct);
+    return listFunc;
+  };
+
+  const getStateVariables = (listFunc) => {
+    listFunc.concat(listFunc);
+    const stateVariable = listFunc.reduce((arr, item) => {
+      const { globalVariables, _id } = item;
+      const updatedGlobalVariables = globalVariables.map((item) => ({
+        ...item,
+        func: _id,
+      }));
+      return arr.concat(updatedGlobalVariables);
+    }, []);
+
+    return stateVariable;
   };
 
   const onDrop = useCallback(
@@ -207,7 +233,14 @@ const FunctionCanvas = ({ initialNodes, initialEdges }) => {
       if (!functions || functions.some((item) => item === data._id)) return;
 
       //add new node
-      createNodeFromFunc(data, type, position);
+      const listFunc = createNodeFromFunc(data, type, position);
+
+      const stateVariables = getStateVariables(listFunc);
+
+      //open Identifier modal
+      const isOpen = !!data.globalVariables.length;
+      setIdentifierModalOpen(isOpen);
+      setStateVariablesOfDropFunctions(stateVariables);
     },
     [reactFlowInstance, setNodes, moduleState.functions, nodes]
   );
@@ -290,6 +323,12 @@ const FunctionCanvas = ({ initialNodes, initialEdges }) => {
           <Background color="#aaa" gap={16} />
         </ReactFlow>
       </Box>
+      <IndentifierModal
+        open={identifierModalOpen}
+        onClose={handleIdentifierModalClose}
+        stateVariables={stateVariablesOfDropFunctions}
+        redirectToAddField={redirectToAddField}
+      />
     </ReactFlowProvider>
   );
 };

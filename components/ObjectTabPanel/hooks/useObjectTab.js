@@ -1,19 +1,9 @@
 /* eslint-disable no-case-declarations */
-import { ELEMENT_TYPE, OBJECT_TYPE } from '@/config/constant/common';
+import { ELEMENT_TYPE, INIT_OBJECT_TYPE, OBJECT_TYPE } from '@/config/constant/common';
 import { REGEX } from '@/config/constant/regex';
 import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-
-const OBJECT = {
-  type: '',
-  item: '',
-  isArray: false,
-  scope: 'public',
-  name: '',
-  functions: [],
-  assignedValues: [],
-};
 
 const regex = new RegExp(REGEX.VARIABLE_NAME);
 
@@ -22,8 +12,8 @@ const useObjectTab = () => {
   const moduleState = useSelector((state) => state.userModule);
   const { object, userModule } = useDispatch();
 
-  const handleAddObject = () => {
-    const init = JSON.parse(JSON.stringify(OBJECT));
+  const handleAddObject = ({ initObject = INIT_OBJECT_TYPE }) => {
+    const init = JSON.parse(JSON.stringify(initObject));
     const data = [...objects];
     data.push({ ...init, _id: Date.now() });
     object.setObjects(data);
@@ -63,7 +53,7 @@ const useObjectTab = () => {
           case 'type':
             data[iObject][field] = e?.value;
             if (e?.value === OBJECT_TYPE.STRUCT) {
-              const init = JSON.parse(JSON.stringify(OBJECT));
+              const init = JSON.parse(JSON.stringify(INIT_OBJECT_TYPE));
               data[iObject] = { ...init, _id: Date.now(), type: e?.value };
             }
             break;
