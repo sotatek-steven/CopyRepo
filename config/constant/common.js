@@ -422,6 +422,16 @@ export const INIT_VALUE_TYPE = {
   functions: [],
 };
 
+export const INIT_OBJECT_TYPE = {
+  type: '',
+  item: '',
+  isArray: false,
+  scope: 'public',
+  name: '',
+  functions: [],
+  assignedValues: [],
+};
+
 export const STRUCT = [
   {
     _id: Date.now(),

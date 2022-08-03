@@ -6,9 +6,10 @@ import MappingItem from './MappingItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { compareMappingVariable } from './utils';
 import Scrollbars from 'react-custom-scrollbars';
+import ObjectID from 'bson-objectid';
 
 const Container = styled('div')({
-  padding: '30px 70px',
+  paddingLeft: 30,
 });
 
 const MappingTabPanel = () => {
@@ -63,10 +64,9 @@ const MappingTabPanel = () => {
     if (!mappings) return;
 
     const newMappingItem = {
-      _id: Date.now(),
+      _id: ObjectID(),
       label: '',
       scope: 'public',
-      variables: [],
       functions: [],
       type: {
         key: '',
@@ -97,7 +97,7 @@ const MappingTabPanel = () => {
     <Container>
       <Scrollbars
         style={{
-          height: '73vh',
+          height: '77vh',
           overflowX: 'hidden',
         }}>
         {moduleState.variables?.mappings?.map((mappingItem) => {

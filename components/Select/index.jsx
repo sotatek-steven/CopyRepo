@@ -72,9 +72,9 @@ const SelectComponent = ({
           displayEmpty
           IconComponent={ArrowDown}>
           {!!options.length &&
-            options.map((option) => {
+            options.map((option, index) => {
               return (
-                <MenuItem key={option.value} value={option.value}>
+                <MenuItem key={index} value={option.value}>
                   {option.label}
                 </MenuItem>
               );

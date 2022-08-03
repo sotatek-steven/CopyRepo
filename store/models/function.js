@@ -35,7 +35,6 @@ const functions = createModel({
         functions.setFunctions(listFunc);
       },
       async getDetailUserFunction(id, state) {
-        console.log('id', id);
         const { code, data, message } = await getRequest({
           url: `/api/v1/functions/${id}`,
           userState: state.player,

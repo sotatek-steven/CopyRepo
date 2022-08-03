@@ -1,6 +1,6 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { styled, Tab } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MappingTabPanel from '../MappingTabPanel';
 import ObjectTabPanel from '../ObjectTabPanel';
 import ValuesTabPanel from '../ValuesPanel';
@@ -58,8 +58,12 @@ const TabPanelContent = styled(TabPanel)({
   width: '100%',
 });
 
-const AddFieldTab = () => {
+const AddFieldTab = ({ tab }) => {
   const [activeTab, setActiveTab] = useState('values');
+
+  useEffect(() => {
+    setActiveTab(tab);
+  }, [tab]);
 
   const handleChangeTab = (e, tab) => {
     setActiveTab(tab);

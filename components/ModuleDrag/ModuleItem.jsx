@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import DragIcon from '../../assets/icon/drag.svg';
 import { useRouter } from 'next/router';
-import { HTTP_CODE, MODE, MODE_ACTION_MODULE, MODULE_OWNER } from '@/config/constant/common';
+import { HTTP_CODE, MODE_ACTION_MODULE, MODULE_OWNER } from '@/config/constant/common';
 import { IconButton, Popover } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ModuleDetail from '../ModulePage/ModuleDetail';
@@ -132,9 +132,7 @@ const ModuleItem = ({ data, nodeType, fetchModules, setDataClone, setIsOpenModul
   };
 
   const redirectToModulePage = () => {
-    console.log('data: ', data);
     const { _id } = data;
-    console.log('replace');
     route.push(`/modules/${_id}`);
   };
 

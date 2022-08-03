@@ -17,6 +17,7 @@ const userModule = createModel({
     variables: {
       mappings: [],
       values: [],
+      structs: [],
     },
   },
   reducers: {
@@ -75,6 +76,10 @@ const userModule = createModel({
         ...state.variables,
         values,
       },
+    }),
+    updateVariables: (state, variables) => ({
+      ...state,
+      variables,
     }),
   },
   effects: (dispatch) => {

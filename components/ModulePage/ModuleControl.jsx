@@ -51,19 +51,25 @@ const ModuleControl = () => {
   const contractState = useSelector((state) => state.contract);
 
   const redirectToContractPage = () => {
-    const { _id: id } = contractState.current;
-    if (!id) return;
-    route.push(`/smartcontract/${id}`);
+    // const { _id: id } = contractState.current;
+    // console.log('contractState.current: ', contractState.current);
+    // if (!id) return;
+    // route.push(`/smartcontract/${id}`);
+    route.back();
   };
 
   const handleConfirm = async () => {
+    // console.log('initialModuleState : ', JSON.stringify({ ...initialModuleState, updatedAt: '' }));
+    // console.log('moduleState: ', JSON.stringify({ ...moduleState, updatedAt: '' }));
     if (
       moduleState.owner === 'system' ||
       _.isEqual({ ...initialModuleState, updatedAt: '' }, { ...moduleState, updatedAt: '' })
     ) {
+      console.log('fkdf');
       redirectToContractPage();
       return;
     }
+    console.log('no redirect');
     setSaveChangeDialogOpen(true);
   };
 

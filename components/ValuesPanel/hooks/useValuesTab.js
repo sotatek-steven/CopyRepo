@@ -6,8 +6,8 @@ const useValuesTab = () => {
   const { values, count } = useSelector((state) => state.value);
   const { value, userModule } = useDispatch();
 
-  const handleAddValues = () => {
-    const init = JSON.parse(JSON.stringify(INIT_VALUE_TYPE));
+  const handleAddValues = ({ initValue = INIT_VALUE_TYPE }) => {
+    const init = JSON.parse(JSON.stringify(initValue));
     const data = [...values];
     data.push({ ...init, _id: `${NEW_ID}_${count}` });
     value.setValues(data);
