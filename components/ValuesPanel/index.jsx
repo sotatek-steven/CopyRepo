@@ -21,7 +21,6 @@ const ValuesTabPanel = () => {
           backgroundColor: theme.palette.background.dark,
           padding: '9px 0px 10px 6px',
           borderRadius: '4px',
-          width: `calc(100% - 25px)`,
         }}>
         {TITLE_VALUES_TAB.map((item) => (
           <Item key={item.id}>
