@@ -129,7 +129,7 @@ const useValuesTab = () => {
         scope: item?.scope,
         label: item?.label,
         valueDefault: valueDefault,
-        isDefaultValue: !!item?.valueDefault?.length,
+        isDefaultValue: !item?.valueDefault?.length,
         functions: functions,
         errorName: null,
       };
