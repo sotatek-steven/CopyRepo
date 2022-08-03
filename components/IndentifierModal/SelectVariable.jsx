@@ -76,6 +76,7 @@ const SelectVariable = ({ label, options, variable, redirectToAddField }) => {
         break;
       }
       case 'mappings': {
+        const { mapping } = variable;
         const {
           variables: { mappings },
         } = moduleState;
@@ -86,10 +87,7 @@ const SelectVariable = ({ label, options, variable, redirectToAddField }) => {
           label: '',
           scope,
           functions: [{ func, variable: label }],
-          type: {
-            key: '',
-            values: { type: '' },
-          },
+          type: mapping,
         };
         mappings.push(newMappingItem);
 
