@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { PrimaryButton } from '../ButtonStyle';
-import AddIcon from 'assets/icon/addIcon.svg';
 import { Container, BodyContent, Footer } from './ObjectTab.style';
 import useObjectTab from './hooks/useObjectTab';
 import ObjectItem from './ObjectItem';
 import Scrollbars from 'react-custom-scrollbars';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 const ObjectTabPanel = () => {
   const {
@@ -38,8 +38,8 @@ const ObjectTabPanel = () => {
           ))}
         </BodyContent>
         <Footer>
-          <PrimaryButton width="150px" height="45px" onClick={handleAddObject}>
-            <AddIcon />
+          <PrimaryButton width="135px" onClick={handleAddObject}>
+            <AddCircleOutlineIcon style={{ fontSize: 18 }} />
             Add Object
           </PrimaryButton>
         </Footer>
