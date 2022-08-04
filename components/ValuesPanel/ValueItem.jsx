@@ -112,7 +112,7 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
       </Item>
       <Item>
         <MultipleAutoComplete
-          value={listFunction.filter((item) => value?.functions?.includes(item.value))}
+          value={listFunction?.filter((item) => value?.functions?.includes(item.value))}
           options={listFunction}
           onChange={(e, newValue) => handleChangeValue(value?._id, 'functions', newValue, ELEMENT_TYPE.SELECT)}
         />

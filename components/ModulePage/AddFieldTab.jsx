@@ -1,6 +1,7 @@
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { styled, Tab } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import EventErrorTabPanel from '../EventErrorTabPanel';
 import MappingTabPanel from '../MappingTabPanel';
 import ObjectTabPanel from '../ObjectTabPanel';
 import ValuesTabPanel from '../ValuesPanel';
@@ -20,6 +21,11 @@ const TAB_LIST = [
     id: 'mappings',
     label: 'Mappings',
     tabPanel: 'Mappings',
+  },
+  {
+    id: 'events-errors',
+    label: 'Events & Errors',
+    tabPanel: 'Events & Errors',
   },
 ];
 
@@ -82,6 +88,9 @@ const AddFieldTab = ({ tab }) => {
         <TabPanelContent value="objects">{<ObjectTabPanel />}</TabPanelContent>
         <TabPanelContent value="mappings">
           <MappingTabPanel />
+        </TabPanelContent>
+        <TabPanelContent value="events-errors">
+          <EventErrorTabPanel />
         </TabPanelContent>
       </Container>
     </TabContext>
