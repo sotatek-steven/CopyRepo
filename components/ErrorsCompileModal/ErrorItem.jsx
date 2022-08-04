@@ -38,7 +38,7 @@ const ErrorItem = ({ data }) => {
         <ErrorType>{label}</ErrorType>
         <Description>{message}</Description>
       </Content>
-      <PrimaryButton padding="6px 20px">Fix</PrimaryButton>
+      {label !== 'Compiler Error' && <PrimaryButton padding="6px 20px">Fix</PrimaryButton>}
     </Container>
   );
 };
