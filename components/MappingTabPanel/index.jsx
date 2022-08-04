@@ -104,7 +104,7 @@ const MappingTabPanel = () => {
           const { _id } = mappingItem;
           return <MappingItem updateError={setError} id={_id} key={_id} removeItem={removeMappingItem} />;
         })}
-        <PrimaryButton width={123} onClick={handleClick}>
+        <PrimaryButton style={{ marginTop: 40 }} width={133} onClick={handleClick}>
           <AddCircleOutlineIcon style={{ fontSize: 18 }} />
           <span>Create New</span>
         </PrimaryButton>
