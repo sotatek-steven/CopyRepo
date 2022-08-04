@@ -14,6 +14,7 @@ import ReactFlow, {
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import CustomNodes from '../CustomNode';
+import ErrorsCompileModal from '../ErrorsCompileModal';
 import IndentifierModal from '../IndentifierModal';
 import useStructPage from '../StructTabPanel/hooks/useStructPage';
 
@@ -329,6 +330,7 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
         stateVariables={stateVariablesOfDropFunctions}
         redirectToAddField={redirectToAddField}
       />
+      <ErrorsCompileModal />
     </ReactFlowProvider>
   );
 };

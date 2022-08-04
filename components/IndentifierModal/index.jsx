@@ -1,37 +1,11 @@
 import { Modal, styled } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { ModalBox } from '../atom/ModalBox';
-import CloseIcon from '@mui/icons-material/Close';
-import WarningIcon from '@mui/icons-material/Warning';
 import { PrimaryButton } from '../ButtonStyle';
 import { useSelector } from 'react-redux';
 import Scrollbars from 'react-custom-scrollbars';
 import SelectVariable from './SelectVariable';
-
-const ModalHeader = styled('div')(({ theme }) => ({
-  fontSize: 20,
-  fontWeight: theme.typography.fontWeightBold,
-  color: theme.palette.primary.red1,
-  display: 'flex',
-  justifyContent: 'space-between',
-  alignItems: 'center',
-  background: theme.palette.error.light,
-  padding: '20px 30px',
-  marginBottom: 45,
-}));
-
-const TitleWrapper = styled('div')({
-  display: 'flex',
-  gap: 10,
-  alignItems: 'center',
-});
-
-const Title = styled('h3')(({ theme }) => ({
-  fontSize: 20,
-  fontWeight: theme.typography.fontWeightBold,
-  fontFamily: 'Segoe UI',
-  margin: 0,
-}));
+import { ModalHeader } from '../atom/Modal';
 
 const ModalBody = styled('div')({
   padding: '0px 30px',
@@ -41,10 +15,6 @@ const ModalFooter = styled('div')({
   display: 'flex',
   justifyContent: 'end',
   padding: '35px 30px 30px',
-});
-
-const CloseButton = styled(CloseIcon)({
-  cursor: 'pointer',
 });
 
 const SelectWrapper = styled('div')({
@@ -116,14 +86,8 @@ const IndentifierModal = ({ open, onClose, stateVariables, redirectToAddField })
   return (
     <Modal aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description" open={open} onClose={onClose}>
       <ModalBox maxheight="700px">
-        <ModalHeader>
-          <TitleWrapper>
-            <WarningIcon />
-            <Title>Unidentified identifiers</Title>
-          </TitleWrapper>
-          <CloseButton onClick={onClose} />
-        </ModalHeader>
-        <Scrollbars autoHeightMax={460} autoHeight>
+        <ModalHeader type="warning" title="Unidentified identifiers" onClose={onClose} />
+        <Scrollbars style={{ marginTop: 45 }} autoHeightMax={460} autoHeight>
           <ModalBody>
             {stateVariables &&
               stateVariables.map((item, index) => {
@@ -149,7 +113,7 @@ const IndentifierModal = ({ open, onClose, stateVariables, redirectToAddField })
           </ModalBody>
         </Scrollbars>
         <ModalFooter>
-          <PrimaryButton>Continue</PrimaryButton>
+          <PrimaryButton onClick={onClose}>Continue</PrimaryButton>
         </ModalFooter>
       </ModalBox>
     </Modal>
