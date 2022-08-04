@@ -30,16 +30,13 @@ const Description = styled('p')(({ theme }) => ({
   marginTop: 7,
 }));
 
-const ErrorItem = () => {
+const ErrorItem = ({ data }) => {
+  const { label, message } = data;
   return (
     <Container>
       <Content>
-        <ErrorType>Rule-book detected error</ErrorType>
-        <Description>
-          Lorem ipsum dolor sit, amet consectetur adipisicing elit. Doloremque, dolores quae, blanditiis ipsa atque
-          dolor, reprehenderit quidem incidunt vitae tenetur dolorem provident ex voluptates delectus quis. Rem
-          veritatis temporibus veniam!
-        </Description>
+        <ErrorType>{label}</ErrorType>
+        <Description>{message}</Description>
       </Content>
       <PrimaryButton padding="6px 20px">Fix</PrimaryButton>
     </Container>

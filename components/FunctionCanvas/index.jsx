@@ -330,7 +330,7 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
         stateVariables={stateVariablesOfDropFunctions}
         redirectToAddField={redirectToAddField}
       />
-      <ErrorsCompileModal />
+      {/* <ErrorsCompileModal /> */}
     </ReactFlowProvider>
   );
 };

@@ -1,6 +1,6 @@
 import { HTTP_CODE } from '@/config/constant/common';
 import { styled, useTheme } from '@mui/material';
-import React from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import CompiledErrorToast from '../atom/CompiledErrorToast';
@@ -10,6 +10,7 @@ import useStructPage from '../StructTabPanel/hooks/useStructPage';
 import useValuesTab from '../ValuesPanel/hooks/useValuesTab';
 import useModulePage from './hooks/useModulePage';
 import { makeStyles } from '@mui/styles';
+import ErrorsCompileModal from '../ErrorsCompileModal';
 
 export const useStyles = makeStyles(() => {
   return {
@@ -28,6 +29,8 @@ const ModuleActionList = () => {
   const { userModule, struct } = useDispatch();
   const { structs } = useSelector((state) => state.struct);
   const { owner } = useSelector((state) => state.userModule);
+  const [errorsModalOpen, setErrorsModalOpen] = useState(false);
+  const [errors, setErrors] = useState([]);
   const classes = useStyles();
   const theme = useTheme();
 
@@ -49,27 +52,8 @@ const ModuleActionList = () => {
       struct.setOriginStructs(JSON.parse(JSON.stringify(structs)));
       fetchDetailModule();
       if (errors.length > 0) {
-        toast(
-          <>
-            <CompiledErrorToast errors={errors} />
-          </>,
-          {
-            position: 'bottom-center',
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            closeButton: false,
-            bodyClassName: classes.customToast,
-            style: {
-              width: '457px',
-              right: '50%',
-              padding: 0,
-              background: theme.palette.background.dark,
-            },
-          }
-        );
+        setErrors(errors);
+        setErrorsModalOpen(true);
       } else {
         toast.success('Save module success', {
           style: { top: '3.5em' },
@@ -78,10 +62,16 @@ const ModuleActionList = () => {
     }
   };
 
+  const handleErrorsModalClose = () => {
+    setErrors([]);
+    setErrorsModalOpen(false);
+  };
+
   return (
     <div>
       <Container>
         {owner?.toLowerCase() !== 'system' && <PrimaryButton onClick={saveModule}>Save Module</PrimaryButton>}
+        <ErrorsCompileModal open={errorsModalOpen} onClose={handleErrorsModalClose} errors={errors} />
       </Container>
     </div>
   );
