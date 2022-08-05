@@ -111,7 +111,7 @@ const FunctionItem = ({ data, nodeType }) => {
       onDragStart={(event) => onDragStart(event, nodeType)}
       draggable
       key={data.id}
-      disable={data.disable.toString()}>
+      disable={data?.disable?.toString()}>
       <div>
         <DragIcon />
       </div>
