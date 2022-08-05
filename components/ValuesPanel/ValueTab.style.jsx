@@ -18,7 +18,7 @@ const ItemContainer = styled('div')(({ theme }) => ({
 }));
 
 const Item = styled('div')(({ theme }) => ({
-  width: '185px !important',
+  width: '12% !important',
   textOverflow: 'ellipsis',
   overflow: 'hidden',
   marginRight: '24px',

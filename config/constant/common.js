@@ -47,6 +47,22 @@ export const OBJECT_TYPE = {
   ENUM: 'enum',
 };
 
+export const EVENT_ERROR_TYPE = {
+  EVENT: 'event',
+  ERROR: 'error',
+};
+
+export const EVENT_ERROR_OPTION = [
+  {
+    value: EVENT_ERROR_TYPE.EVENT,
+    label: 'Event',
+  },
+  {
+    value: EVENT_ERROR_TYPE.ERROR,
+    label: 'Error',
+  },
+];
+
 export const SCOPE = [
   {
     value: 'public',
@@ -335,6 +351,7 @@ export const TITLE_VALUES_TAB = [
 ];
 
 export const VALUE_TYPE_ENUM = {
+  IECR20: 'IERC20',
   ADRESS: 'address',
   BOOL: 'bool',
   BYTE1: 'bytes1',
@@ -373,6 +390,7 @@ export const VALUE_TYPE_ENUM = {
 };
 
 export const PLACE_HOLDER = {
+  [VALUE_TYPE_ENUM.IECR20]: '0x0000000000000000000000000000000000000000',
   [VALUE_TYPE_ENUM.ADRESS]: '0x0000000000000000000000000000000000000000',
   [VALUE_TYPE_ENUM.BOOL]: 'false',
   [VALUE_TYPE_ENUM.BYTE1]: '0x00',

@@ -13,6 +13,7 @@ import object from './object';
 import value from './values';
 import mappingVariableOptions from './mappingVariableOptions';
 import initialModule from './initialModule';
+import eventError from './eventError';
 
 export {
   ticket,
@@ -30,4 +31,5 @@ export {
   value,
   mappingVariableOptions,
   initialModule,
+  eventError,
 };

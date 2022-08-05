@@ -18,7 +18,12 @@ import SingleAutoComplete from '../AutoComplete/SingleAutoComplete';
 import MultipleAutoComplete from '../AutoComplete/MultipleAutoComplete';
 import { Tooltip } from '@mui/material';
 
-const TOOLTIP_NAME = 'Beginning character: Must be letter\nFollowing characters only contain: Letters, digits, (_)';
+const TOOLTIP_NAME = (
+  <div>
+    <div>{`Beginning character: Must be letter`}</div>
+    <div>{`Following characters only contain: Letters, digits, (_)`}</div>
+  </div>
+);
 
 const ObjectItem = ({
   object,

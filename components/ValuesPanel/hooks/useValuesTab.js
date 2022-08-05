@@ -87,7 +87,7 @@ const useValuesTab = () => {
 
   const convertToValuesModule = (data) => {
     const cloneData = data?.map((item) => {
-      let valueDefault = item?.valueDefault;
+      let valueDefault = [item?.valueDefault];
       if (item?.isArray) {
         valueDefault = item?.valueDefault?.split(',');
       }
@@ -106,7 +106,7 @@ const useValuesTab = () => {
         scope: item?.scope,
         constant: item?.constant,
         label: item?.label,
-        valueDefault: item?.isDefaultValue ? valueDefault : undefined,
+        valueDefault: item?.isDefaultValue ? [] : valueDefault,
         functions: functions || [],
       };
     });
