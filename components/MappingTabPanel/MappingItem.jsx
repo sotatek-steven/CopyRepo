@@ -68,13 +68,11 @@ const MappingItem = (props) => {
           <VariableNameField {...props} />
         </Grid>
         <Grid item xs={3}>
-          {mapToFunctionOptions.length && (
-            <MapToFunctionField
-              {...props}
-              options={mapToFunctionOptions}
-              setMapToFunctionOptions={setMapToFunctionOptions}
-            />
-          )}
+          <MapToFunctionField
+            {...props}
+            options={mapToFunctionOptions}
+            setMapToFunctionOptions={setMapToFunctionOptions}
+          />
         </Grid>
         <Grid item xs={3} style={{ display: 'flex', marginTop: 40 }}>
           <RemoveButton onClick={handleClick} />
