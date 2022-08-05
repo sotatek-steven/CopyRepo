@@ -91,8 +91,8 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
   // Effect Remove node
   useEffect(() => {
     if (!nodeDeleted) return;
-    const updatedNodes = nodes.filter((node) => node._id !== nodeDeleted._id);
-    setNodes((nds) => _.unionBy(_.concat(nds, updatedNodes), 'id'));
+    const updatedNodes = nodes.filter((node) => node.id !== nodeDeleted.id);
+    setNodes(updatedNodes);
 
     removeFunctionFromModule(nodeDeleted.functionId);
   }, [nodeDeleted, setNodes]);
@@ -126,8 +126,7 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
       };
     });
 
-    setNodes((nds) => _.unionBy(_.concat(nds, data), 'id'));
-
+    setNodes(data);
     setEdges(initialEdges);
   }, [initialNodes, initialEdges]);
 
