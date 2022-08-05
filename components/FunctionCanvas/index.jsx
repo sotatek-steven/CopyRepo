@@ -91,8 +91,8 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
   // Effect Remove node
   useEffect(() => {
     if (!nodeDeleted) return;
-    const updatedNodes = nodes.filter((node) => node.id !== nodeDeleted.id);
-    setNodes(updatedNodes);
+    const updatedNodes = nodes.filter((node) => node._id !== nodeDeleted._id);
+    setNodes((nds) => _.unionBy(_.concat(nds, updatedNodes), 'id'));
 
     removeFunctionFromModule(nodeDeleted.functionId);
   }, [nodeDeleted, setNodes]);
@@ -125,16 +125,17 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
         },
       };
     });
-    setNodes(data);
+
+    setNodes((nds) => _.unionBy(_.concat(nds, data), 'id'));
+
     setEdges(initialEdges);
   }, [initialNodes, initialEdges]);
 
-  const createNodeFromFunc = (funcData, type, position) => {
+  const createNodeFromFunc = (funcData, type, position, newNode = [], listFunc = [], listStruct = []) => {
     let funcDepen = [];
-    let nodeDepen = [];
-    let listStruct = [];
 
-    const listStructName = structs.map((item) => item?.name?.toUpperCase());
+    // Create Struct
+    const listStructName = _.concat(structs, listStruct).map((item) => item?.name?.toUpperCase());
 
     funcData?.globalVariables?.every((variable) => {
       if (variable?.type.toUpperCase() === FUNCTION_TYPE.POOLINFO && !listStructName.includes(FUNCTION_TYPE.POOLINFO)) {
@@ -155,51 +156,54 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
       return true;
     });
 
-    const nodeFunc = [
-      {
-        id: funcData?._id,
+    // Create Node
+    newNode.push({
+      id: funcData?._id,
+      type,
+      position,
+      data: {
+        label: `${type} node`,
+        ...funcData,
+        onDeleteNode: deleteNode,
+        event: 'drop',
+      },
+    });
+    listFunc.push(funcData);
+
+    funcDepen = listFunction?.filter((item) => funcData?.dependencies?.includes(item?._id));
+    funcDepen.forEach((depen, index) => {
+      position = {
+        ...position,
+        y: position.y + (index + 1) * 120,
+      };
+      newNode.push({
+        id: depen?._id,
         type,
         position,
         data: {
           label: `${type} node`,
-          ...funcData,
+          ...depen,
           onDeleteNode: deleteNode,
           event: 'drop',
         },
-      },
-    ];
-
-    if (funcData?.dependencies?.length) {
-      funcDepen = listFunction?.filter((item) => funcData?.dependencies?.includes(item?._id));
-
-      nodeDepen = funcDepen.map((depen) => {
-        return {
-          id: depen?._id,
-          type,
-          position,
-          data: {
-            label: `${type} node`,
-            ...depen,
-            onDeleteNode: deleteNode,
-            event: 'drop',
-          },
-        };
       });
-    }
-    const newNode = _.concat(nodeFunc, nodeDepen);
-    const listFunc = _.concat([funcData], funcDepen);
+      listFunc.push(depen);
 
-    setNodes((nds) => _.concat(nds, newNode));
-    addNewFuctionToModule(listFunc, position);
-    handelAddStruct(listStruct);
-    return listFunc;
+      if (depen?.dependencies?.length) {
+        createNodeFromFunc(depen, type, position, newNode, listFunc, listStruct);
+      }
+    });
+    newNode = _.unionBy(newNode, 'id');
+    listFunc = _.unionBy(listFunc, '_id');
+
+    return { newNode, listFunc, listStruct };
   };
 
   const getStateVariables = (listFunc) => {
-    listFunc.concat(listFunc);
+    listFunc?.concat(listFunc);
     const stateVariable = listFunc.reduce((arr, item) => {
       const { globalVariables, _id } = item;
-      const updatedGlobalVariables = globalVariables.map((item) => ({
+      const updatedGlobalVariables = globalVariables?.map((item) => ({
         ...item,
         func: _id,
       }));
@@ -234,7 +238,7 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
       if (!functions || functions.some((item) => item === data._id)) return;
 
       //add new node
-      const listFunc = createNodeFromFunc(data, type, position);
+      const { newNode, listFunc, listStruct } = createNodeFromFunc(data, type, position);
 
       const stateVariables = getStateVariables(listFunc);
 
@@ -242,6 +246,9 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
       const isOpen = !!data.globalVariables.length;
       setIdentifierModalOpen(isOpen);
       setStateVariablesOfDropFunctions(stateVariables);
+      setNodes((nds) => _.unionBy(_.concat(nds, newNode), 'id'));
+      addNewFuctionToModule(listFunc, position);
+      handelAddStruct(listStruct);
     },
     [reactFlowInstance, setNodes, moduleState.functions, nodes]
   );
@@ -275,7 +282,7 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
 
     // update libraries
     const tempLi = funcData?.map((item) => {
-      return item?.libraries.map((li) => {
+      return item?.libraries?.map((li) => {
         return li?.name;
       });
     });

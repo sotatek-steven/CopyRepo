@@ -11,7 +11,7 @@ export const createNodes = (functions, coordinates) => {
       return funcData._id === functionId;
     });
 
-    edges = _.concat(edges, createEdges(item?.func, data?.dependencies));
+    edges = _.unionBy(_.concat(edges, createEdges(item?.func, data?.dependencies)), 'id');
     return {
       id: item?.func,
       type,
