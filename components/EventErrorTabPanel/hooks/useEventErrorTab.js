@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux';
 const INIT_ITEM = {
   type: '',
   parameters: [],
-  functions: [],
+  function: '',
 };
 
 const INIT_PARAM = {
@@ -19,6 +19,8 @@ const regex = new RegExp(REGEX.VARIABLE_NAME);
 
 const useEventErrorTab = () => {
   const { dataEventError } = useSelector((state) => state.eventError);
+  const moduleDetail = useSelector((state) => state.userModule);
+
   const { eventError } = useDispatch();
 
   const handleAddItem = () => {
@@ -37,6 +39,18 @@ const useEventErrorTab = () => {
     eventError.setDataEventError(data);
   };
 
+  const checkValidateItemName = (name) => {
+    let isValid = true;
+    const isDuplicateModuleName = moduleDetail?.name?.toUpperCase() === name?.toUpperCase();
+    const listFuncName = moduleDetail?.sources?.functions?.map((item) => item?.name?.toUpperCase());
+    const isDuplicateFuncName = listFuncName?.includes(name?.toUpperCase());
+    if (!regex.test(name.trim()) || isDuplicateModuleName || isDuplicateFuncName) {
+      isValid = false;
+    }
+
+    return isValid;
+  };
+
   const handleChangeItem = (itemId, field, e, type) => {
     const iItem = dataEventError.findIndex(({ _id }) => _id === itemId);
     const data = [...dataEventError];
@@ -49,12 +63,32 @@ const useEventErrorTab = () => {
 
           if (!e.target.value.trim()) {
             data[iItem]['errorName'] = 'This field is required';
+          } else if (!checkValidateItemName(e.target.value)) {
+            data[iItem]['errorName'] = 'Invalid Event name';
           }
         }
         break;
 
       case ELEMENT_TYPE.SELECT:
         data[iItem][field] = e?.value;
+
+        if (field === 'function') {
+          const funcId = e?.value?.split('-')[0];
+          const eventId = e?.value?.split('-')[1];
+
+          const functionSelected = moduleDetail.sources?.functions?.find((item) => item?._id === funcId);
+          const eventSelected = functionSelected?.events?.find((item) => item?._id === eventId);
+
+          const params = eventSelected?.params?.map((param) => {
+            return {
+              _id: param?._id,
+              type: param?.type,
+              name: '',
+              errorName: null,
+            };
+          });
+          data[iItem]['parameters'] = params;
+        }
         break;
 
       default:
@@ -69,6 +103,7 @@ const useEventErrorTab = () => {
     const data = [...dataEventError];
     const dataParam = JSON.parse(JSON.stringify(INIT_PARAM));
     data[iItem]['parameters'].push({ dataParam, _id: Date.now() });
+    data[iItem]['function'] = '';
 
     eventError.setDataEventError(data);
   };
@@ -78,6 +113,7 @@ const useEventErrorTab = () => {
     const iParam = dataEventError[iItem]?.parameters.findIndex(({ _id }) => _id === paramId);
     const data = [...dataEventError];
     data[iItem]?.parameters?.splice(iParam, 1);
+    data[iItem]['function'] = '';
 
     eventError.setDataEventError(data);
   };
@@ -103,6 +139,7 @@ const useEventErrorTab = () => {
 
       case ELEMENT_TYPE.SELECT:
         data[iItem].parameters[iParam][field] = e?.value;
+        data[iItem]['function'] = '';
         break;
 
       default:

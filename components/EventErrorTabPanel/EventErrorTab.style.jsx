@@ -13,10 +13,12 @@ const Footer = styled('div')(({ theme }) => ({
 }));
 
 const ItemContainer = styled('div')(({ theme }) => ({
-  display: 'flex',
-  gap: 30,
-  color: theme.palette.text.primary,
   marginTop: 30,
+  borderTop: `1px solid ${theme.shape.borderColor}`,
+
+  '&:first-of-type': {
+    borderTop: 'unset',
+  },
 }));
 
 const Item = styled('div')(({ theme }) => ({
@@ -25,6 +27,13 @@ const Item = styled('div')(({ theme }) => ({
   '& > div': {
     fontSize: '15px !important',
   },
+}));
+
+const TypeContainer = styled('div')(({ theme }) => ({
+  display: 'flex',
+  gap: 30,
+  color: theme.palette.text.primary,
+  marginTop: 30,
 }));
 
 const ButtonWrapper = styled('div')(({ theme }) => ({
@@ -59,7 +68,7 @@ const ItemParam = styled('div')(({ theme }) => ({
 const MapFunctions = styled('div')(({ theme }) => ({
   color: theme.palette.text.primary,
   marginTop: 15,
-  width: '15%',
+  width: 'calc(30% + 30px)',
 }));
 
 const ScrollbarsCustom = styled(Scrollbars)(({ theme }) => ({
@@ -89,6 +98,7 @@ export {
   Footer,
   ItemContainer,
   Item,
+  TypeContainer,
   ButtonWrapper,
   EventParameters,
   ItemParam,
