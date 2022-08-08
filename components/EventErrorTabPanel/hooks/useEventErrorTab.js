@@ -75,10 +75,8 @@ const useEventErrorTab = () => {
         if (field === 'function') {
           const funcId = e?.value?.split('-')[0];
           const eventId = e?.value?.split('-')[1];
-
           const functionSelected = moduleDetail.sources?.functions?.find((item) => item?._id === funcId);
-          const eventSelected = functionSelected?.events?.find((item) => item?._id === eventId);
-
+          const eventSelected = functionSelected?.[`${data[iItem]?.type}`]?.find((item) => item?._id === eventId);
           const params = eventSelected?.params?.map((param) => {
             return {
               _id: param?._id,

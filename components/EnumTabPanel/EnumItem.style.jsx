@@ -20,16 +20,19 @@ const BodyContent = styled('div')(({ theme }) => ({
   paddingRight: 20,
 }));
 
-const Footer = styled('div')(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'end',
-}));
+const Footer = styled('div')(({ theme }) => ({}));
 
 const ItemContainer = styled('div')(({ theme }) => ({
   color: theme.palette.text.primary,
   fontSize: 18,
   marginBottom: 20,
   borderBottom: `1px solid ${theme.shape.borderColor}`,
+}));
+
+const ValueContainer = styled('div')(({ theme }) => ({
+  color: theme.palette.primary.light,
+  fontSize: 18,
+  marginTop: 20,
 }));
 
 const ItemTitle = styled('div')(({ theme }) => ({
@@ -48,11 +51,11 @@ const ItemContent = styled('div')(({ theme }) => ({
   fontSize: 18,
   width: '80%',
   display: 'flex',
-  marginLeft: 50,
+  alignItems: 'center',
   gap: 40,
-  marginTop: 20,
+  marginBottom: 20,
   ':last-child': {
-    '& > .action-variable': {
+    '& > .action-value': {
       width: '10%',
       margin: '20px 0',
     },
@@ -61,12 +64,16 @@ const ItemContent = styled('div')(({ theme }) => ({
   '& > .type': {
     width: '45%',
   },
-  '& > .name-variable': {
+  '& > .name-value': {
     width: '45%',
   },
-  '& > .action-variable': {
+  '& > .action-value': {
     width: '10%',
-    marginTop: 42,
+
+    '& .action-icon': {
+      display: 'flex',
+      alignItems: 'center',
+    },
 
     '& .action-icon > svg': {
       backgroundColor: theme.palette.primary.main,
@@ -82,4 +89,4 @@ const Error = styled('div')(({ theme }) => ({
   marginTop: 8,
 }));
 
-export { Header, Label, BodyContent, Footer, ItemContainer, ItemTitle, ItemContent, Error };
+export { Header, Label, BodyContent, Footer, ItemContainer, ValueContainer, ItemTitle, ItemContent, Error };

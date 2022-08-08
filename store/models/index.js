@@ -14,6 +14,7 @@ import value from './values';
 import mappingVariableOptions from './mappingVariableOptions';
 import initialModule from './initialModule';
 import eventError from './eventError';
+import enumState from './enum';
 
 export {
   ticket,
@@ -32,4 +33,5 @@ export {
   mappingVariableOptions,
   initialModule,
   eventError,
+  enumState,
 };

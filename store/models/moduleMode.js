@@ -4,6 +4,7 @@ export const ModuleMode = {
   DESIGN: 'design',
   LIBRARY: 'library',
   STRUCT: 'struct',
+  ENUM: 'enum',
 };
 
 const moduleMode = createModel({
