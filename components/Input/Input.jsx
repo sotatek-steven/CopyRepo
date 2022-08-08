@@ -38,7 +38,7 @@ const Error = styled('div')(({ theme }) => ({
   marginTop: 8,
 }));
 
-const Input = ({ label, isRequired, tooltip, errorText, error, ...props }) => {
+const Input = ({ label, isRequired, tooltip, errorText, error, value = '', ...props }) => {
   return (
     <>
       <LabelContainer htmlFor={props.id}>
@@ -54,7 +54,7 @@ const Input = ({ label, isRequired, tooltip, errorText, error, ...props }) => {
           </Tooltip>
         )}
       </LabelContainer>
-      <InputBasic error={error ? 1 : 0} {...props} />
+      <InputBasic value={value} error={error ? 1 : 0} {...props} />
       {!!errorText && <Error>{errorText}</Error>}
     </>
   );

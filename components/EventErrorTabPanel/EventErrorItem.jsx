@@ -5,6 +5,7 @@ import {
   ButtonWrapper,
   EventParameters,
   Item,
+  TypeContainer,
   ItemContainer,
   ItemParam,
   MapFunctions,
@@ -13,7 +14,8 @@ import {
 import AddIcon from 'assets/icon/addIcon.svg';
 import RemoveIcon from 'assets/icon/removeIcon.svg';
 import { PrimaryButton } from '../ButtonStyle';
-import MultipleAutoComplete from '../AutoComplete/MultipleAutoComplete';
+import { useMemo } from 'react';
+import { useSelector } from 'react-redux';
 
 const TOOLTIP_NAME = (
   <div>
@@ -36,9 +38,35 @@ const EventErrorItem = ({
   handleRemoveParam,
   handleChangeParam,
 }) => {
+  const moduleState = useSelector((state) => state.userModule);
+  const { dataEventError } = useSelector((state) => state.eventError);
+  const lstFuncUsed = dataEventError?.map((data) => data?.function);
+
+  const listFunction = useMemo(() => {
+    return moduleState?.sources?.functions?.reduce((array, item) => {
+      let temp = [];
+      if (dataItem?.type === EVENT_ERROR_TYPE.EVENT && item?.events.length) {
+        temp = item?.events.map((event) => {
+          return {
+            value: `${item?._id}-${event?._id}`,
+            label: `(${item?.name})(${event?.name})`,
+          };
+        });
+      } else if (dataItem?.type === EVENT_ERROR_TYPE.ERROR && item?.errors.length) {
+        temp = item?.errors.map((error) => {
+          return {
+            value: `${item?._id}-${error?._id}`,
+            label: `(${item?.name})(${error?.name})`,
+          };
+        });
+      }
+      return array?.concat(temp);
+    }, []);
+  }, [moduleState?.sources?.functions, dataItem?.type]);
+
   return (
-    <>
-      <ItemContainer>
+    <ItemContainer>
+      <TypeContainer>
         <Item>
           <SingleAutoComplete
             label={'CHOOSE TYPE'}
@@ -67,7 +95,7 @@ const EventErrorItem = ({
             Remove
           </PrimaryButton>
         </ButtonWrapper>
-      </ItemContainer>
+      </TypeContainer>
       {dataItem?.type && (
         <EventParameters>
           <div className="title">
@@ -101,24 +129,25 @@ const EventErrorItem = ({
                 </div>
               </ItemParam>
             ))}
-            <div className="action-icon" onClick={() => handleAddParam(dataItem?._id)}>
-              <AddIcon />
+            <div className="action-icon">
+              <AddIcon onClick={() => handleAddParam(dataItem?._id)} />
             </div>
           </div>
         </EventParameters>
       )}
       {dataItem?.type && (
         <MapFunctions>
-          <MultipleAutoComplete
-            multiple={true}
+          <SingleAutoComplete
             label={'Map to function'}
-            value={dataItem?.functions?.filter((item) => []?.includes(item.value))}
-            options={[]}
-            onChange={(e, newValue) => handleChangeItem(dataItem?._id, 'functions', newValue, ELEMENT_TYPE.SELECT)}
+            value={listFunction?.find((item) => dataItem?.function === item.value)}
+            options={listFunction?.filter(
+              (item) => dataItem?.function === item.value || !lstFuncUsed.includes(item.value)
+            )}
+            onChange={(e, newValue) => handleChangeItem(dataItem?._id, 'function', newValue, ELEMENT_TYPE.SELECT)}
           />
         </MapFunctions>
       )}
-    </>
+    </ItemContainer>
   );
 };
 
