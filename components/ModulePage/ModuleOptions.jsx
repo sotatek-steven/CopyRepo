@@ -3,6 +3,7 @@ import { Popover, styled } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import StructIcon from '../../assets/icon/struct.svg';
 import LibraryIcon from '../../assets/icon/library.svg';
+import EnumIcon from 'assets/icon/EnumIcon.svg';
 import OptionItem from './OptionItem';
 import { ModuleMode } from '@/store/models/moduleMode';
 import { DashedDivider } from '../atom/Divider';
@@ -34,6 +35,12 @@ const options = [
     label: 'Structs',
     icon: <StructIcon />,
     mode: ModuleMode.STRUCT,
+  },
+  {
+    id: 'enums',
+    label: 'Enums',
+    icon: <EnumIcon />,
+    mode: ModuleMode.ENUM,
   },
 ];
 

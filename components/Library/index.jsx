@@ -9,6 +9,7 @@ import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import StructTabPanel from '../StructTabPanel';
+import EnumTabPanel from '../EnumTabPanel';
 
 const ButtonWrapper = styled('div')(() => ({
   position: 'absolute',
@@ -38,6 +39,12 @@ const tabs = [
     id: 'structs',
     tabPanel: <StructTabPanel />,
     mode: ModuleMode.STRUCT,
+  },
+  {
+    label: 'Enums',
+    id: 'enums',
+    tabPanel: <EnumTabPanel />,
+    mode: ModuleMode.ENUM,
   },
 ];
 

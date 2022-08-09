@@ -48,8 +48,8 @@ export const OBJECT_TYPE = {
 };
 
 export const EVENT_ERROR_TYPE = {
-  EVENT: 'event',
-  ERROR: 'error',
+  EVENT: 'events',
+  ERROR: 'errors',
 };
 
 export const EVENT_ERROR_OPTION = [
@@ -466,6 +466,20 @@ export const STRUCT = [
           value: '',
           errorName: null,
         },
+      },
+    ],
+  },
+];
+
+export const ENUM_ITEM = [
+  {
+    _id: Date.now(),
+    name: '',
+    errorName: null,
+    values: [
+      {
+        _id: Date.now(),
+        name: '',
       },
     ],
   },
