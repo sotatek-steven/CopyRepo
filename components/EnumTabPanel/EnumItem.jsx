@@ -1,9 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Input } from '../Input';
 import { PrimaryButton } from '../ButtonStyle';
 import RemoveIcon from 'assets/icon/removeIcon.svg';
 import AddIcon from 'assets/icon/addIcon.svg';
 import { ItemContainer, ItemTitle, ItemContent, ValueContainer } from './EnumItem.style';
+import ConfirmDeleteDialog from '../atom/Dialog/ConfirmDeleteDialog';
 
 const StructItem = ({
   dataItem,
@@ -13,6 +14,8 @@ const StructItem = ({
   handelRemoveValue,
   handleChangeValue,
 }) => {
+  const [isOpenConfirmDelete, setIsOpenConfirmDelete] = useState(false);
+
   return (
     <ItemContainer>
       <ItemTitle>
@@ -28,7 +31,7 @@ const StructItem = ({
           />
         </div>
         <div className="action-remove-struct">
-          <PrimaryButton width="150px" height="45px" onClick={() => handelRemoveEnum(dataItem?._id)}>
+          <PrimaryButton width="150px" height="45px" onClick={() => setIsOpenConfirmDelete(true)}>
             <RemoveIcon />
             Remove Enum
           </PrimaryButton>
@@ -62,6 +65,14 @@ const StructItem = ({
           </div>
         </div>
       </ItemContent>
+      <ConfirmDeleteDialog
+        open={isOpenConfirmDelete}
+        onClose={() => setIsOpenConfirmDelete(false)}
+        onAgree={() => handelRemoveEnum(dataItem?._id)}
+        desciption={'Are you sure you want to delete this enum?'}
+        cancelText={'Cancel'}
+        agreeText={'Confirm'}
+      />
     </ItemContainer>
   );
 };

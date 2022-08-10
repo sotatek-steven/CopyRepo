@@ -81,6 +81,20 @@ const userModule = createModel({
       ...state,
       variables,
     }),
+    updateEvents: (state, events) => ({
+      ...state,
+      sources: {
+        ...state.sources,
+        events,
+      },
+    }),
+    updateErrors: (state, errors) => ({
+      ...state,
+      sources: {
+        ...state.sources,
+        errors,
+      },
+    }),
   },
   effects: (dispatch) => {
     const { player, modules } = dispatch;

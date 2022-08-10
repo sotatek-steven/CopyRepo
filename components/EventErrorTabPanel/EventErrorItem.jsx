@@ -17,19 +17,6 @@ import { PrimaryButton } from '../ButtonStyle';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 
-const TOOLTIP_NAME = (
-  <div>
-    <div>
-      {`The rules of setting event name is the same as rules for settings State variable name (as Value, Object or Mapping
-      type): detailed rules will be specified in the message`}
-    </div>
-    <div>
-      {`Event name should not bear the same charater and case as any function's name inside the contract and even the
-      contract's name itself`}
-    </div>
-  </div>
-);
-
 const EventErrorItem = ({
   dataItem,
   handleRemoveItem,
@@ -42,20 +29,35 @@ const EventErrorItem = ({
   const { dataEventError } = useSelector((state) => state.eventError);
   const lstFuncUsed = dataEventError?.map((data) => data?.function);
 
+  const getTooltip = (type) => {
+    return (
+      <div>
+        <div>
+          {`The rules of setting event name is the same as rules for settings State variable name (as Value, Object or Mapping
+      type): detailed rules will be specified in the message`}
+        </div>
+        <div>
+          {`${type} name should not bear the same charater and case as any function's name inside the contract and even the
+      contract's name itself`}
+        </div>
+      </div>
+    );
+  };
+
   const listFunction = useMemo(() => {
     return moduleState?.sources?.functions?.reduce((array, item) => {
       let temp = [];
       if (dataItem?.type === EVENT_ERROR_TYPE.EVENT && item?.events.length) {
         temp = item?.events.map((event) => {
           return {
-            value: `${item?._id}-${event?._id}`,
+            value: `${item?._id}-${event?.name}`,
             label: `(${item?.name})(${event?.name})`,
           };
         });
       } else if (dataItem?.type === EVENT_ERROR_TYPE.ERROR && item?.errors.length) {
         temp = item?.errors.map((error) => {
           return {
-            value: `${item?._id}-${error?._id}`,
+            value: `${item?._id}-${error?.name}`,
             label: `(${item?.name})(${error?.name})`,
           };
         });
@@ -82,7 +84,7 @@ const EventErrorItem = ({
                 isRequired={true}
                 label={dataItem?.type === EVENT_ERROR_TYPE.EVENT ? 'EVENT NAME' : 'ERROR NAME'}
                 value={dataItem?.name}
-                tooltip={TOOLTIP_NAME}
+                tooltip={getTooltip(dataItem?.type === EVENT_ERROR_TYPE.EVENT ? 'Event' : 'Error')}
                 errorText={dataItem?.errorName}
                 onChange={(e) => handleChangeItem(dataItem?._id, 'name', e, ELEMENT_TYPE.INPUT)}
               />

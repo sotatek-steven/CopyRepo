@@ -1,7 +1,8 @@
-import { ELEMENT_TYPE } from '@/config/constant/common';
+import { ELEMENT_TYPE, EVENT_ERROR_TYPE } from '@/config/constant/common';
 import { REGEX } from '@/config/constant/regex';
 import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const INIT_ITEM = {
   type: '',
@@ -21,7 +22,7 @@ const useEventErrorTab = () => {
   const { dataEventError } = useSelector((state) => state.eventError);
   const moduleDetail = useSelector((state) => state.userModule);
 
-  const { eventError } = useDispatch();
+  const { eventError, userModule } = useDispatch();
 
   const handleAddItem = () => {
     const init = JSON.parse(JSON.stringify(INIT_ITEM));
@@ -29,6 +30,9 @@ const useEventErrorTab = () => {
     data.push({ ...init, _id: Date.now() });
 
     eventError.setDataEventError(data);
+    const { events, errors } = convertToEventErrorModule(data);
+    userModule.updateEvents(events);
+    userModule.updateErrors(errors);
   };
 
   const handleRemoveItem = (itemId) => {
@@ -37,6 +41,9 @@ const useEventErrorTab = () => {
     data.splice(iItem, 1);
 
     eventError.setDataEventError(data);
+    const { events, errors } = convertToEventErrorModule(data);
+    userModule.updateEvents(events);
+    userModule.updateErrors(errors);
   };
 
   const checkValidateItemName = (name) => {
@@ -74,9 +81,9 @@ const useEventErrorTab = () => {
 
         if (field === 'function') {
           const funcId = e?.value?.split('-')[0];
-          const eventId = e?.value?.split('-')[1];
+          const eventName = e?.value?.split('-')[1];
           const functionSelected = moduleDetail.sources?.functions?.find((item) => item?._id === funcId);
-          const eventSelected = functionSelected?.[`${data[iItem]?.type}`]?.find((item) => item?._id === eventId);
+          const eventSelected = functionSelected?.[`${data[iItem]?.type}`]?.find((item) => item?.name === eventName);
           const params = eventSelected?.params?.map((param) => {
             return {
               _id: param?._id,
@@ -94,6 +101,9 @@ const useEventErrorTab = () => {
     }
 
     eventError.setDataEventError(data);
+    const { events, errors } = convertToEventErrorModule(data);
+    userModule.updateEvents(events);
+    userModule.updateErrors(errors);
   };
 
   const handleAddParam = (itemId) => {
@@ -104,6 +114,9 @@ const useEventErrorTab = () => {
     data[iItem]['function'] = '';
 
     eventError.setDataEventError(data);
+    const { events, errors } = convertToEventErrorModule(data);
+    userModule.updateEvents(events);
+    userModule.updateErrors(errors);
   };
 
   const handleRemoveParam = (itemId, paramId) => {
@@ -114,6 +127,9 @@ const useEventErrorTab = () => {
     data[iItem]['function'] = '';
 
     eventError.setDataEventError(data);
+    const { events, errors } = convertToEventErrorModule(data);
+    userModule.updateEvents(events);
+    userModule.updateErrors(errors);
   };
 
   const handleChangeParam = (itemId, paramId, e, field, type) => {
@@ -129,7 +145,7 @@ const useEventErrorTab = () => {
 
           if (!e.target.value.trim()) {
             data[iItem].parameters[iParam]['errorName'] = 'Name should not be blank';
-          } else if (!regex.test(e.target.value.trim())) {
+          } else if (!regex.test(e.target.value)) {
             data[iItem].parameters[iParam]['errorName'] = 'Invalid name';
           }
         }
@@ -145,6 +161,100 @@ const useEventErrorTab = () => {
     }
 
     eventError.setDataEventError(data);
+    const { events, errors } = convertToEventErrorModule(data);
+
+    userModule.updateEvents(events);
+    userModule.updateErrors(errors);
+  };
+
+  const convertToEventErrorModule = (listData) => {
+    let events = [];
+    let errors = [];
+    listData?.forEach((data) => {
+      const params = data?.parameters.map((param) => {
+        return {
+          label: param?.name,
+          type: param?.type,
+        };
+      });
+      const functions = [
+        {
+          func: data?.function?.split('-')[0],
+          name: data?.function?.split('-')[1],
+        },
+      ];
+      const item = {
+        name: data?.name,
+        params,
+        functions,
+      };
+
+      if (data?.type === EVENT_ERROR_TYPE.EVENT) {
+        events.push(item);
+      } else if (data?.type === EVENT_ERROR_TYPE.ERROR) {
+        errors.push(item);
+      }
+    });
+
+    return { events, errors };
+  };
+
+  const convertToEventErrorShow = (listData) => {
+    const cloneData = listData?.map((data) => {
+      const parameters = data?.params?.map((param) => {
+        return {
+          _id: param?._id,
+          type: param?.type,
+          name: param?.label,
+          errorName: null,
+        };
+      });
+      let func = '';
+      if (data?.functions?.length) {
+        func = `${data.functions[0].func}-${data?.functions[0].name}`;
+      }
+
+      return {
+        _id: data?._id,
+        type: data?.type,
+        name: data?.name,
+        parameters,
+        function: func,
+        errorName: null,
+      };
+    });
+    eventError.setDataEventError(cloneData);
+    return cloneData;
+  };
+
+  const checkErrorTab = () => {
+    let isError = false;
+    const data = [...dataEventError];
+    data.forEach((item) => {
+      if (!item?.name.trim()) {
+        item.errorName = 'This field is required';
+        isError = true;
+      } else if (!checkValidateItemName(item?.name)) {
+        item.errorName = item?.type === EVENT_ERROR_TYPE.EVENT ? 'Invalid Event name' : 'Invalid Error name';
+        isError = true;
+      }
+      item?.parameters.forEach((param) => {
+        if (!param?.name.trim()) {
+          param.errorName = 'Name should not be blank';
+          isError = true;
+        } else if (!regex.test(param?.name)) {
+          param.errorName = 'Invalid name';
+          isError = true;
+        }
+      });
+    });
+
+    eventError.setDataEventError(data);
+    if (isError) {
+      toast.warning('Event & Error tab has errors');
+    }
+
+    return isError;
   };
 
   return {
@@ -155,6 +265,8 @@ const useEventErrorTab = () => {
     handleAddParam,
     handleRemoveParam,
     handleChangeParam,
+    convertToEventErrorShow,
+    checkErrorTab,
   };
 };
 
