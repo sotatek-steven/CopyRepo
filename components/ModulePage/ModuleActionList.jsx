@@ -11,6 +11,7 @@ import useValuesTab from '../ValuesPanel/hooks/useValuesTab';
 import useModulePage from './hooks/useModulePage';
 import { makeStyles } from '@mui/styles';
 import ErrorsCompileModal from '../ErrorsCompileModal';
+import useEventErrorTab from '../EventErrorTabPanel/hooks/useEventErrorTab';
 
 export const useStyles = makeStyles(() => {
   return {
@@ -36,6 +37,7 @@ const ModuleActionList = () => {
 
   const { handleErrorStructs } = useStructPage();
   const { objectHasError } = useObjectTab();
+  const { checkErrorTab } = useEventErrorTab();
   const { fetchDetailModule } = useModulePage();
 
   const saveModule = async () => {
@@ -44,6 +46,7 @@ const ModuleActionList = () => {
       return;
     }
     if (objectHasError()) return;
+    if (checkErrorTab()) return;
 
     const { code, data } = await userModule.updateModule();
 
