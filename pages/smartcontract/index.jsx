@@ -22,6 +22,11 @@ import TemplateDialog from '@/components/Dialog/TemplateDialog';
 import _ from 'lodash';
 import { styled } from '@mui/material/styles';
 import Tabs from '@/components/Tabs';
+import Image from 'next/image';
+import panaImage from '@/assets/images/steps-pana.png';
+import DefiIcon from '../../assets/icon/defiIcon.svg';
+import NFTIcon from '../../assets/icon/NFTIcon.svg';
+import { useMemo } from 'react';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -107,6 +112,29 @@ const Dashboard = () => {
   const { listDomain } = useSelector((state) => state.template);
   const theme = useTheme();
 
+  const domains = useMemo(() => {
+    console.log('domain: ', listDomain);
+    return listDomain.map((domain) => {
+      let icon;
+      const { name } = domain;
+      switch (name) {
+        case 'Defi':
+          icon = <DefiIcon />;
+          break;
+        case 'NFT':
+          icon = <NFTIcon />;
+          break;
+        default:
+          icon = 'N';
+      }
+
+      return {
+        ...domain,
+        icon,
+      };
+    });
+  }, [listDomain]);
+
   const onEnter = (e) => {
     if (e.keyCode == 13) {
       keywords && userContract.changeKeywordsSearch(keywords.trim());
@@ -142,13 +170,6 @@ const Dashboard = () => {
               onKeyDown={onEnter}
               type="search"
               placeholder="Search Smart Contract"
-              // endAdornment={
-              //   <InputAdornment
-              //     position="start"
-              //     sx={{ position: 'absolute', right: '8px', cursor: 'pointer' }}
-              //     className="xIcon"></InputAdornment>
-              // }
-              // inputProps={{}}
             />
           </Search>
           <Box sx={{ pl: 3, pr: 1 }}>
@@ -191,7 +212,17 @@ const Dashboard = () => {
         <DialogContent>
           <Grid container sx={{ borderTop: '1px solid', borderColor: theme.shape.borderColor }}>
             <Grid item xs={6}>
-              <Box sx={{ width: '589px', height: '548px', background: theme.palette.background.default }}></Box>
+              <Box
+                sx={{
+                  width: '589px',
+                  height: '548px',
+                  background: theme.palette.background.default,
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center',
+                }}>
+                <Image src={panaImage} alt="me" width="311" height="311" />
+              </Box>
             </Grid>
             <Grid
               sx={{
@@ -203,8 +234,8 @@ const Dashboard = () => {
               <Typography sx={{ fontSize: '14px', py: 1, fontFamily: 'Segoe UI' }}>
                 Choose the business domain that you are creating for this smart contract
               </Typography>
-              {_.isArray(listDomain) &&
-                listDomain.map((item) => {
+              {_.isArray(domains) &&
+                domains.map((item) => {
                   return (
                     <BusinessDomain
                       setOpen={setOpen}

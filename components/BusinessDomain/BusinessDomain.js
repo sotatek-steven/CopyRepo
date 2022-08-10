@@ -1,15 +1,7 @@
-import { Dialog, DialogContent, DialogTitle, Grid, IconButton, styled, Typography, useTheme } from '@mui/material';
-import { Box, padding } from '@mui/system';
-import React, { useEffect, useState } from 'react';
+import { Grid, Typography, useTheme } from '@mui/material';
+import { Box } from '@mui/system';
+import React from 'react';
 import Avatar from '@mui/material/Avatar';
-import { useDispatch } from 'react-redux';
-
-const Description = styled('div')(({ theme }) => ({
-  fontSize: '14px',
-  padding: 1,
-  fontFamily: 'Segoe UI',
-  ...theme.components.truncate.twoLineEllipsis,
-}));
 
 const BusinessDomain = ({ data, setOpenCreate, setOpen, setType }) => {
   const theme = useTheme();
@@ -18,7 +10,6 @@ const BusinessDomain = ({ data, setOpenCreate, setOpen, setType }) => {
     setType(data.name);
     setOpen(true);
     setOpenCreate(false);
-    // template.clearDomain();
   };
 
   return (
@@ -30,13 +21,14 @@ const BusinessDomain = ({ data, setOpenCreate, setOpen, setType }) => {
           my: 3,
           maxWidth: '450px',
           cursor: 'pointer',
-          '&:hover': { opacity: 0.7 },
+          transition: 'all 0.3s',
+          '&:hover': { background: theme.palette.background.light },
         }}
         onClick={handleClick}>
         <Grid container columnSpacing={4}>
           <Grid item xs={2} sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
             <Avatar sx={{ bgcolor: '#685252', width: '72px', height: '72px', borderRadius: '8px' }} variant="square">
-              N
+              {data.icon}
             </Avatar>
           </Grid>
           <Grid item xs={10}>
@@ -45,7 +37,6 @@ const BusinessDomain = ({ data, setOpenCreate, setOpen, setType }) => {
           </Grid>
         </Grid>
       </Box>
-      {/*<TemplateDialogNFT openListNFT={openListNFT} setOpenListNFT={setOpenListNFT} /> */}
     </>
   );
 };
