@@ -1,3 +1,4 @@
+import useEnumPage from '@/components/EnumTabPanel/hooks/useEnumPage';
 import useEventErrorTab from '@/components/EventErrorTabPanel/hooks/useEventErrorTab';
 import useObjectTab from '@/components/ObjectTabPanel/hooks/useObjectTab';
 import useStructPage from '@/components/StructTabPanel/hooks/useStructPage';
@@ -10,6 +11,7 @@ import { useDispatch } from 'react-redux';
 const useModulePage = () => {
   const { object, userModule, value, initialModule, functions } = useDispatch();
   const { getStructs } = useStructPage();
+  const { getEnums } = useEnumPage();
   const { convertToObjectShow } = useObjectTab();
   const { converToValueShow } = useValuesTab();
   const { convertToEventErrorShow } = useEventErrorTab();
@@ -36,6 +38,7 @@ const useModulePage = () => {
 
     await functions.getAllUserFunctions();
     getStructs(data?.sources?.structs);
+    getEnums(data?.sources?.enums);
     convertToObjectShow(data?.variables?.structs);
     converToValueShow(data?.variables?.values);
     convertToEventErrorShow(_.concat(events, errors));
