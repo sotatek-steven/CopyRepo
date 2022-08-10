@@ -1,6 +1,6 @@
-import { EDIT_ID } from '@/config/constant/common';
 import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'react-toastify';
 
 const VALUE = {
   name: '',
@@ -8,15 +8,20 @@ const VALUE = {
 
 const useEnumPage = () => {
   const { enums } = useSelector((state) => state.enumState);
-  const { enumState } = useDispatch();
+  const { enumState, userModule } = useDispatch();
 
   const getEnums = async (lstEnum) => {
-    const data = lstEnum?.map((item, idx) => {
+    const data = lstEnum?.map((item) => {
+      const values = item?.content.map((con) => {
+        return {
+          ...con,
+          name: con.label,
+        };
+      });
       return {
-        _id: `${EDIT_ID}_${idx}`,
-        enumId: item?._id,
+        _id: item?._id,
         name: item?.name,
-        values: item?.values,
+        values,
       };
     });
 
@@ -35,6 +40,7 @@ const useEnumPage = () => {
     });
     const data = _.concat(enums, initData);
     enumState.setEnums(data);
+    userModule.updateEnums(convertToEnumModule(data));
   };
 
   const handelRemoveEnum = (enumId) => {
@@ -43,6 +49,7 @@ const useEnumPage = () => {
     data.splice(iEnum, 1);
 
     enumState.setEnums(data);
+    userModule.updateEnums(convertToEnumModule(data));
   };
 
   const handleChangeNameEnum = (enumId, e) => {
@@ -56,6 +63,7 @@ const useEnumPage = () => {
     }
 
     enumState.setEnums(data);
+    userModule.updateEnums(convertToEnumModule(data));
   };
 
   const handelAddValue = (enumId) => {
@@ -65,6 +73,7 @@ const useEnumPage = () => {
     data[iEnum]?.values?.push({ ...value, _id: Date.now() });
 
     enumState.setEnums(data);
+    userModule.updateEnums(convertToEnumModule(data));
   };
 
   const handelRemoveValue = (enumId, valueId) => {
@@ -74,6 +83,7 @@ const useEnumPage = () => {
     data[iEnum]?.values?.splice(iValue, 1);
 
     enumState.setEnums(data);
+    userModule.updateEnums(convertToEnumModule(data));
   };
 
   const handleChangeValue = (enumId, valueId, e) => {
@@ -83,6 +93,42 @@ const useEnumPage = () => {
     data[iEnum].values[iValue].name = e.target.value;
 
     enumState.setEnums(data);
+    userModule.updateEnums(convertToEnumModule(data));
+  };
+
+  const convertToEnumModule = (listData) => {
+    const cloneData = listData?.map((data) => {
+      const content = data?.values.map((item) => {
+        return {
+          label: item?.name,
+        };
+      });
+
+      return {
+        name: data?.name,
+        content,
+      };
+    });
+
+    return cloneData;
+  };
+
+  const checkErrorEnumTab = () => {
+    let isError = false;
+    const data = [...enums];
+    data.forEach((item) => {
+      if (!item?.name.trim()) {
+        item.errorName = 'This field is required';
+        isError = true;
+      }
+    });
+
+    enumState.setEnums(data);
+    if (isError) {
+      toast.warning('Enum tab has errors');
+    }
+
+    return isError;
   };
 
   return {
@@ -94,6 +140,7 @@ const useEnumPage = () => {
     handelAddValue,
     handelRemoveValue,
     handleChangeValue,
+    checkErrorEnumTab,
   };
 };
 

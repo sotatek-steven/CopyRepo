@@ -42,6 +42,13 @@ const userModule = createModel({
         structs,
       },
     }),
+    updateEnums: (state, enums) => ({
+      ...state,
+      sources: {
+        ...state.sources,
+        enums,
+      },
+    }),
     updateFunctions: (state, functions) => ({
       ...state,
       sources: {
