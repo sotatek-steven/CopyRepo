@@ -63,7 +63,7 @@ export const EVENT_ERROR_OPTION = [
   },
 ];
 
-export const SCOPE = [
+export const SCOPE_OPTIONS = [
   {
     value: 'public',
     label: 'Public',

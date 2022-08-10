@@ -4,6 +4,7 @@ import { Box, styled } from '@mui/material';
 import Scrollbars from 'react-custom-scrollbars';
 import { useDispatch, useSelector } from 'react-redux';
 import FunctionItem from '../FunctionDrag/FunctionItem';
+import SubMenu from './SubMenu';
 
 const FunctionContainer = styled('div')(() => ({
   flexGrow: 1,
@@ -61,6 +62,7 @@ const FunctionTabPanel = () => {
 
   return (
     <FunctionContainer>
+      <SubMenu />
       <div style={{ flexGrow: 1 }}>
         <Scrollbars autoHide>
           {!listFunction?.length && <span> Function not found</span>}

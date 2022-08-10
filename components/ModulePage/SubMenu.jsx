@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
-import SearchModule from '../atom/SearchModule';
-import CreateButton from './CreateBtn';
 import ModuleInfoModal from '../ModulePage/ModuleInfoModal';
 import { MODE } from '@/config/constant/common';
+import SearchModule from '../atom/SearchModule';
+import CreateFunction from '../CreateFunction';
 
 const LeftSide = styled('div')(({ theme }) => ({
   color: theme.palette.primary.light,
@@ -34,7 +34,7 @@ const SubMenu = () => {
           gap: '18px',
           alignItems: 'center',
         }}>
-        <CreateButton handleOpen={handleOpen} />
+        <CreateFunction handleOpen={handleOpen} />
         <SearchModule />
       </div>
       <ModuleInfoModal mode={MODE.CREATE} open={open} onClose={handleOpen} data={{}} />

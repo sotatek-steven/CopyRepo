@@ -1,4 +1,4 @@
-import { SCOPE } from '@/config/constant/common';
+import { SCOPE_OPTIONS } from '@/config/constant/common';
 import React from 'react';
 
 import Select from '../Select';
@@ -12,7 +12,7 @@ const ScopeField = ({ id }) => {
     updateData({ scope: value });
   };
 
-  return <Select label={'SCOPE'} value={data?.scope} options={SCOPE} onChange={handleChange} />;
+  return <Select label={'SCOPE'} value={data?.scope} options={SCOPE_OPTIONS} onChange={handleChange} />;
 };
 
 export default ScopeField;

@@ -1,4 +1,4 @@
-import { Checkbox, ListItemText, MenuItem, Select } from '@mui/material';
+import { Checkbox, FormControl, InputLabel, ListItemText, MenuItem, Select } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import ArrowDown from 'assets/icon/arrow-down.svg';
 import React from 'react';
@@ -54,17 +54,22 @@ const SelectComponent = ({
   disabled = false,
   errorText,
   menuProps = false,
+  placeholder,
 }) => {
   return (
-    <>
+    <FormControl fullWidth>
       {label && (
         <Label>
           {label}
           {isRequired && '*'}
         </Label>
       )}
+
+      <InputLabel id="demo-simple-select-label">{placeholder}</InputLabel>
       {!multiple && (
         <SelectBasic
+          labelId="demo-simple-select-label"
+          id="demo-simple-select"
           MenuProps={menuProps ? MenuSimpeProps : {}}
           value={value}
           onChange={onChange}
@@ -103,7 +108,7 @@ const SelectComponent = ({
         </SelectBasic>
       )}
       {!!errorText && <Error>{errorText}</Error>}
-    </>
+    </FormControl>
   );
 };
 

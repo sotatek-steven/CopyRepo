@@ -1,4 +1,4 @@
-import { ELEMENT_TYPE, IS_ARRAY_OPTION, OBJECT_TYPE, SCOPE } from '@/config/constant/common';
+import { ELEMENT_TYPE, IS_ARRAY_OPTION, OBJECT_TYPE, SCOPE_OPTIONS } from '@/config/constant/common';
 import { useSelector } from 'react-redux';
 import { PrimaryButton } from '../ButtonStyle';
 import { Input } from '../Input';
@@ -103,8 +103,8 @@ const ObjectItem = ({
                 <Item>
                   <SingleAutoComplete
                     label={'SCOPE'}
-                    value={SCOPE.find((item) => item.value === object?.scope)}
-                    options={SCOPE}
+                    value={SCOPE_OPTIONS.find((item) => item.value === object?.scope)}
+                    options={SCOPE_OPTIONS}
                     onChange={(e, newValue) => handleChangeObject(object?._id, 'scope', newValue, ELEMENT_TYPE.SELECT)}
                   />
                 </Item>

@@ -3,7 +3,7 @@ import {
   ELEMENT_TYPE,
   IS_CONSTANT,
   PLACE_HOLDER,
-  SCOPE,
+  SCOPE_OPTIONS,
   VALUE_TYPE_OPTIONS,
 } from '@/config/constant/common';
 import { useSelector } from 'react-redux';
@@ -71,8 +71,8 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
       </Item>
       <Item>
         <SingleAutoComplete
-          value={SCOPE.find((item) => item.value === value?.scope)}
-          options={SCOPE}
+          value={SCOPE_OPTIONS.find((item) => item.value === value?.scope)}
+          options={SCOPE_OPTIONS}
           onChange={(e, newValue) => handleChangeValue(value?._id, 'scope', newValue, ELEMENT_TYPE.SELECT)}
         />
       </Item>
