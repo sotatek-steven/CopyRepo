@@ -113,7 +113,7 @@ const Dashboard = () => {
   const theme = useTheme();
 
   const domains = useMemo(() => {
-    console.log('domain: ', listDomain);
+    if (!listDomain) return [];
     return listDomain.map((domain) => {
       let icon;
       const { name } = domain;
