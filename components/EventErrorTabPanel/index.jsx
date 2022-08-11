@@ -8,6 +8,7 @@ import useEventErrorTab from './hooks/useEventErrorTab';
 
 const EventErrorTabPanel = () => {
   const {
+    typeParam,
     dataEventError,
     handleAddItem,
     handleRemoveItem,
@@ -28,6 +29,7 @@ const EventErrorTabPanel = () => {
           {dataEventError?.map((item) => (
             <EventErrorItem
               key={item?._id}
+              typeParam={typeParam}
               dataItem={item}
               handleRemoveItem={handleRemoveItem}
               handleChangeItem={handleChangeItem}

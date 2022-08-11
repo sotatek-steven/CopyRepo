@@ -16,8 +16,10 @@ import RemoveIcon from 'assets/icon/removeIcon.svg';
 import { PrimaryButton } from '../ButtonStyle';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
+import MultipleAutoComplete from '../AutoComplete/MultipleAutoComplete';
 
 const EventErrorItem = ({
+  typeParam,
   dataItem,
   handleRemoveItem,
   handleChangeItem,
@@ -26,18 +28,16 @@ const EventErrorItem = ({
   handleChangeParam,
 }) => {
   const moduleState = useSelector((state) => state.userModule);
-  const { dataEventError } = useSelector((state) => state.eventError);
-  const lstFuncUsed = dataEventError?.map((data) => data?.function);
 
   const getTooltip = (type) => {
     return (
       <div>
         <div>
-          {`The rules of setting event name is the same as rules for settings State variable name (as Value, Object or Mapping
+          {`The rules of setting event name is the same as rules for setting State variable name (as Value, Object or Mapping
       type): detailed rules will be specified in the message`}
         </div>
         <div>
-          {`${type} name should not bear the same charater and case as any function's name inside the contract and even the
+          {`${type} name should not bear the same charater and case as any state variable names, any function's name inside the contract and even the
       contract's name itself`}
         </div>
       </div>
@@ -45,18 +45,24 @@ const EventErrorItem = ({
   };
 
   const listFunction = useMemo(() => {
-    return moduleState?.sources?.functions?.reduce((array, item) => {
+    let listFunction = moduleState?.sources?.functions?.reduce((array, item) => {
       let temp = [];
       if (dataItem?.type === EVENT_ERROR_TYPE.EVENT && item?.events.length) {
         temp = item?.events.map((event) => {
+          const typeParam = event?.params?.map((param) => param?.type);
+
           return {
+            type: typeParam?.toString(),
             value: `${item?._id}-${event?.name}`,
             label: `(${item?.name})(${event?.name})`,
           };
         });
       } else if (dataItem?.type === EVENT_ERROR_TYPE.ERROR && item?.errors.length) {
         temp = item?.errors.map((error) => {
+          const typeParam = error?.params?.map((param) => param?.type);
+
           return {
+            type: typeParam?.toString(),
             value: `${item?._id}-${error?.name}`,
             label: `(${item?.name})(${error?.name})`,
           };
@@ -64,7 +70,14 @@ const EventErrorItem = ({
       }
       return array?.concat(temp);
     }, []);
-  }, [moduleState?.sources?.functions, dataItem?.type]);
+
+    if (dataItem?.parameters?.length) {
+      const paramSelected = dataItem?.parameters?.map((item) => item?.type)?.toString();
+      listFunction = listFunction?.filter((func) => func?.type === paramSelected);
+    }
+
+    return listFunction;
+  }, [moduleState?.sources?.functions, dataItem?.type, dataItem?.parameters, typeParam]);
 
   return (
     <ItemContainer>
@@ -139,13 +152,12 @@ const EventErrorItem = ({
       )}
       {dataItem?.type && (
         <MapFunctions>
-          <SingleAutoComplete
+          <MultipleAutoComplete
+            multiple={true}
             label={'Map to function'}
-            value={listFunction?.find((item) => dataItem?.function === item.value)}
-            options={listFunction?.filter(
-              (item) => dataItem?.function === item.value || !lstFuncUsed.includes(item.value)
-            )}
-            onChange={(e, newValue) => handleChangeItem(dataItem?._id, 'function', newValue, ELEMENT_TYPE.SELECT)}
+            value={listFunction?.filter((item) => dataItem?.functions?.includes(item.value))}
+            options={listFunction}
+            onChange={(e, newValue) => handleChangeItem(dataItem?._id, 'functions', newValue, ELEMENT_TYPE.SELECT)}
           />
         </MapFunctions>
       )}

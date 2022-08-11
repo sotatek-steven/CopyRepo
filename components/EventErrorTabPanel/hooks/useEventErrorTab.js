@@ -1,17 +1,18 @@
 import { ELEMENT_TYPE, EVENT_ERROR_TYPE } from '@/config/constant/common';
 import { REGEX } from '@/config/constant/regex';
 import _ from 'lodash';
+import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
 const INIT_ITEM = {
   type: '',
   parameters: [],
-  function: '',
+  function: [],
 };
 
 const INIT_PARAM = {
-  type: '',
+  type: 'address',
   name: '',
   errorName: null,
 };
@@ -21,8 +22,8 @@ const regex = new RegExp(REGEX.VARIABLE_NAME);
 const useEventErrorTab = () => {
   const { dataEventError } = useSelector((state) => state.eventError);
   const moduleDetail = useSelector((state) => state.userModule);
-
   const { eventError, userModule } = useDispatch();
+  const [typeParam, setTypeParam] = useState('');
 
   const handleAddItem = () => {
     const init = JSON.parse(JSON.stringify(INIT_ITEM));
@@ -46,16 +47,31 @@ const useEventErrorTab = () => {
     userModule.updateErrors(errors);
   };
 
-  const checkValidateItemName = (name) => {
-    let isValid = true;
+  const checkValidateItemName = (type, name) => {
+    let errorMessage = '';
     const isDuplicateModuleName = moduleDetail?.name?.toUpperCase() === name?.toUpperCase();
     const listFuncName = moduleDetail?.sources?.functions?.map((item) => item?.name?.toUpperCase());
     const isDuplicateFuncName = listFuncName?.includes(name?.toUpperCase());
-    if (!regex.test(name.trim()) || isDuplicateModuleName || isDuplicateFuncName) {
-      isValid = false;
+
+    // check duplicate variable
+    const valuesVariable = moduleDetail?.variables?.values?.map((item) => item?.label?.toUpperCase());
+    const structsVariable = moduleDetail?.variables?.structs?.map((item) => item?.label?.toUpperCase());
+    const mappingsVariable = moduleDetail?.variables?.mappings?.map((item) => item?.label?.toUpperCase());
+
+    const listVariable = _.concat(valuesVariable, structsVariable, mappingsVariable);
+    const isDuplicateVariableName = listVariable?.includes(name?.toUpperCase());
+
+    if (!regex.test(name.trim())) {
+      errorMessage = type === EVENT_ERROR_TYPE.EVENT ? 'Invalid Event name' : 'Invalid Error name';
+    } else if (isDuplicateModuleName) {
+      errorMessage = 'Found existing module with the same name';
+    } else if (isDuplicateFuncName) {
+      errorMessage = 'Found existing function with the same name';
+    } else if (isDuplicateVariableName) {
+      errorMessage = 'Found existing state variable with the same name';
     }
 
-    return isValid;
+    return errorMessage;
   };
 
   const handleChangeItem = (itemId, field, e, type) => {
@@ -70,29 +86,34 @@ const useEventErrorTab = () => {
 
           if (!e.target.value.trim()) {
             data[iItem]['errorName'] = 'This field is required';
-          } else if (!checkValidateItemName(e.target.value)) {
-            data[iItem]['errorName'] = 'Invalid Event name';
+          } else {
+            data[iItem]['errorName'] = checkValidateItemName(data[iItem]['type'], e.target.value);
           }
         }
         break;
 
       case ELEMENT_TYPE.SELECT:
-        data[iItem][field] = e?.value;
-
-        if (field === 'function') {
-          const funcId = e?.value?.split('-')[0];
-          const eventName = e?.value?.split('-')[1];
-          const functionSelected = moduleDetail.sources?.functions?.find((item) => item?._id === funcId);
-          const eventSelected = functionSelected?.[`${data[iItem]?.type}`]?.find((item) => item?.name === eventName);
-          const params = eventSelected?.params?.map((param) => {
-            return {
-              _id: param?._id,
-              type: param?.type,
-              name: '',
-              errorName: null,
-            };
-          });
-          data[iItem]['parameters'] = params;
+        if (field === 'type') {
+          data[iItem][field] = e?.value;
+          data[iItem]['functions'] = [];
+        }
+        if (field === 'functions') {
+          data[iItem][field] = e?.map((item) => item?.value);
+          if (e?.length) {
+            const funcId = e[0]?.value?.split('-')[0];
+            const eventName = e[0]?.value?.split('-')[1];
+            const functionSelected = moduleDetail.sources?.functions?.find((item) => item?._id === funcId);
+            const eventSelected = functionSelected?.[`${data[iItem]?.type}`]?.find((item) => item?.name === eventName);
+            const params = eventSelected?.params?.map((param) => {
+              return {
+                _id: param?._id,
+                type: param?.type,
+                name: '',
+                errorName: null,
+              };
+            });
+            data[iItem]['parameters'] = params;
+          }
         }
         break;
 
@@ -110,8 +131,8 @@ const useEventErrorTab = () => {
     const iItem = dataEventError.findIndex(({ _id }) => _id === itemId);
     const data = [...dataEventError];
     const dataParam = JSON.parse(JSON.stringify(INIT_PARAM));
-    data[iItem]['parameters'].push({ dataParam, _id: Date.now() });
-    data[iItem]['function'] = '';
+    data[iItem]['parameters'] = _.concat(data[iItem]['parameters'], [{ ...dataParam, _id: Date.now() }]);
+    data[iItem]['functions'] = [];
 
     eventError.setDataEventError(data);
     const { events, errors } = convertToEventErrorModule(data);
@@ -121,10 +142,11 @@ const useEventErrorTab = () => {
 
   const handleRemoveParam = (itemId, paramId) => {
     const iItem = dataEventError.findIndex(({ _id }) => _id === itemId);
-    const iParam = dataEventError[iItem]?.parameters.findIndex(({ _id }) => _id === paramId);
     const data = [...dataEventError];
-    data[iItem]?.parameters?.splice(iParam, 1);
-    data[iItem]['function'] = '';
+
+    // Remove Param
+    data[iItem]['parameters'] = _.remove(data[iItem]['parameters'], (item) => item?._id !== paramId);
+    data[iItem]['functions'] = [];
 
     eventError.setDataEventError(data);
     const { events, errors } = convertToEventErrorModule(data);
@@ -153,7 +175,8 @@ const useEventErrorTab = () => {
 
       case ELEMENT_TYPE.SELECT:
         data[iItem].parameters[iParam][field] = e?.value;
-        data[iItem]['function'] = '';
+        data[iItem]['functions'] = [];
+        setTypeParam(Date.now());
         break;
 
       default:
@@ -177,12 +200,13 @@ const useEventErrorTab = () => {
           type: param?.type,
         };
       });
-      const functions = [
-        {
-          func: data?.function?.split('-')[0],
-          name: data?.function?.split('-')[1],
-        },
-      ];
+      const functions = data?.functions?.map((funcItem) => {
+        return {
+          func: funcItem?.split('-')[0],
+          name: funcItem?.split('-')[1],
+        };
+      });
+
       const item = {
         name: data?.name,
         params,
@@ -209,17 +233,16 @@ const useEventErrorTab = () => {
           errorName: null,
         };
       });
-      let func = '';
-      if (data?.functions?.length) {
-        func = `${data.functions[0].func}-${data?.functions[0].name}`;
-      }
+      const functions = data?.functions?.map((item) => {
+        return `${item?.func}-${item?.name}`;
+      });
 
       return {
         _id: data?._id,
         type: data?.type,
         name: data?.name,
         parameters,
-        function: func,
+        functions,
         errorName: null,
       };
     });
@@ -231,11 +254,11 @@ const useEventErrorTab = () => {
     let isError = false;
     const data = [...dataEventError];
     data.forEach((item) => {
-      if (!item?.name.trim()) {
+      if (!item?.name?.trim()) {
         item.errorName = 'This field is required';
         isError = true;
-      } else if (!checkValidateItemName(item?.name)) {
-        item.errorName = item?.type === EVENT_ERROR_TYPE.EVENT ? 'Invalid Event name' : 'Invalid Error name';
+      } else if (checkValidateItemName(item?.type, item?.name)) {
+        item.errorName = checkValidateItemName(item?.type, item?.name);
         isError = true;
       }
       item?.parameters.forEach((param) => {
@@ -258,6 +281,7 @@ const useEventErrorTab = () => {
   };
 
   return {
+    typeParam,
     dataEventError,
     handleAddItem,
     handleRemoveItem,
