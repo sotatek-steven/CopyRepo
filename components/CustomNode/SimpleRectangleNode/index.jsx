@@ -48,6 +48,7 @@ const Content = styled('p')(({ theme }) => ({
   fontFamily: 'Segoe UI',
   fontWeight: theme.typography.fontWeightBold,
   ...theme.components.truncate.twoLineEllipsis,
+  wordBreak: 'break-all',
 }));
 
 const SimpleRectangleNode = ({ data, id }) => {
