@@ -20,7 +20,7 @@ const ErrorsCompileModal = ({ open, onClose, errors }) => {
         <Scrollbars autoHeightMax={460} autoHeight>
           <ModalBody>
             {errors.map((item) => {
-              return <ErrorItem key={item.id} data={item} />;
+              return <ErrorItem key={item.id} data={item} onClose={onClose} />;
             })}
           </ModalBody>
         </Scrollbars>
