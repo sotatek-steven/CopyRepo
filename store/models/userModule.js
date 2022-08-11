@@ -194,6 +194,18 @@ const userModule = createModel({
         }
         return { code, data };
       },
+
+      async fixRuleBookError({ moduleId, key }, state) {
+        const { data, code } = await putRequest({
+          url: `/api/v1/modules/fix/${moduleId}`,
+          body: {
+            key,
+          },
+          userModoel: player,
+          userState: state.player,
+        });
+        return { code, data };
+      },
     };
   },
 });
