@@ -37,13 +37,13 @@ const ObjectItem = ({
   const moduleState = useSelector((state) => state.userModule);
 
   const listStruct = useMemo(() => {
-    return moduleState?.sources?.structs?.map((item) => {
+    return moduleState?.sources[`${object?.type}s`]?.map((item) => {
       return {
         value: item.name,
         label: item.name,
       };
     });
-  }, [moduleState?.sources?.structs]);
+  }, [moduleState?.sources?.structs, object?.type]);
 
   const listFunction = useMemo(() => {
     return moduleState?.sources?.functions?.reduce((array, item) => {
@@ -78,7 +78,7 @@ const ObjectItem = ({
             onChange={(e, newValue) => handleChangeObject(object?._id, 'type', newValue, ELEMENT_TYPE.SELECT)}
           />
         </Item>
-        {object?.type === OBJECT_TYPE.STRUCT && (
+        {object?.type && (
           <>
             <Item>
               <SingleAutoComplete
@@ -142,7 +142,7 @@ const ObjectItem = ({
         </ButtonWrapper>
       </ItemContainer>
 
-      {object?.type === OBJECT_TYPE.STRUCT && object?.item && (
+      {object?.type && object?.item && (
         <ScrollbarsCustom style={{ width: '100%' }}>
           <AssignedValueList>
             {object?.assignedValues?.map((assigned, index) => (

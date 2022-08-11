@@ -52,14 +52,14 @@ const useObjectTab = () => {
         switch (field) {
           case 'type':
             data[iObject][field] = e?.value;
-            if (e?.value === OBJECT_TYPE.STRUCT) {
-              const init = JSON.parse(JSON.stringify(INIT_OBJECT_TYPE));
-              data[iObject] = { ...init, _id: Date.now(), type: e?.value };
-            }
+            // if (e?.value === OBJECT_TYPE.STRUCT) {
+            const init = JSON.parse(JSON.stringify(INIT_OBJECT_TYPE));
+            data[iObject] = { ...init, _id: Date.now(), type: e?.value };
+            // }
             break;
           case 'item':
             data[iObject][field] = e?.value;
-            const struct = moduleState?.sources?.structs?.find((item) => item?.name === e?.value);
+            const struct = moduleState?.sources[`${data[iObject]['type']}s`]?.find((item) => item?.name === e?.value);
             const dataContents = JSON.parse(JSON.stringify(struct?.content));
             const contents = dataContents?.map((content, iContent) => {
               return {
@@ -74,7 +74,9 @@ const useObjectTab = () => {
           case 'isArray':
             data[iObject][field] = e?.value;
             if (!e.value) {
-              const struct = moduleState?.sources?.structs?.find((item) => item?.name === data[iObject]?.item);
+              const struct = moduleState?.sources[`${data[iObject]['type']}s`]?.find(
+                (item) => item?.name === data[iObject]?.item
+              );
               const contents = JSON.parse(JSON.stringify(struct?.content));
               data[iObject]['assignedValues'] = [{ _id: Date.now(), contents: contents }];
             }
@@ -102,8 +104,10 @@ const useObjectTab = () => {
 
   const handleAddAssignedValue = (objectId) => {
     const iObject = objects.findIndex(({ _id }) => _id === objectId);
-    const struct = moduleState?.sources?.structs?.find((item) => item?.name === objects[iObject]?.item);
     const data = [...objects];
+    const struct = moduleState?.sources[`${data[iObject]['type']}s`]?.find(
+      (item) => item?.name === objects[iObject]?.item
+    );
     const dataContents = JSON.parse(JSON.stringify(struct?.content));
     const contents = dataContents?.map((content, iContent) => {
       return {
@@ -160,7 +164,7 @@ const useObjectTab = () => {
       });
 
       return {
-        objectType: item?.type,
+        objecType: item?.type,
         type: item?.item,
         label: item?.name,
         scope: item?.scope,
@@ -197,7 +201,7 @@ const useObjectTab = () => {
       });
       return {
         _id: iData,
-        type: item?.objectType || OBJECT_TYPE.STRUCT,
+        type: item?.objecType || OBJECT_TYPE.STRUCT,
         item: item?.type,
         isArray: item?.isArray,
         scope: item?.scope,
