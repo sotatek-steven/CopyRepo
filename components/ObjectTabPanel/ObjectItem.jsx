@@ -67,6 +67,16 @@ const ObjectItem = ({
     }, []);
   }, [moduleState?.sources?.functions, object?.item, object?.isArray]);
 
+  const listEnum = useMemo(() => {
+    const enumSelected = moduleState?.sources?.enums?.find((item) => item?.name === object?.item);
+    return enumSelected?.content?.map((item) => {
+      return {
+        ...item,
+        value: item?.label,
+      };
+    });
+  }, [moduleState?.sources?.enums]);
+
   return (
     <>
       <ItemContainer>
@@ -162,21 +172,45 @@ const ObjectItem = ({
                 </div>
                 <div className="assigned-value-item">
                   <div className="assigned-value">
-                    {assigned?.contents?.map((content) => (
-                      <div key={content?._id} className="content">
-                        <Tooltip arrow placement="top" title={content?.label}>
-                          <div className="name">{content?.label}</div>
-                        </Tooltip>
+                    {object?.type === OBJECT_TYPE.STRUCT &&
+                      assigned?.contents?.map((content) => (
+                        <div key={content?._id} className="content">
+                          <Tooltip arrow placement="top" title={content?.label}>
+                            <div className="name">{content?.label}</div>
+                          </Tooltip>
 
-                        <div className="input-value">
-                          <Input
-                            value={content?.value || ''}
-                            placeholder={content?.type}
-                            onChange={(e) => handleChangeAssignedValues(e, object?._id, assigned?._id, content?._id)}
-                          />
+                          <div className="input-value">
+                            <Input
+                              value={content?.value || ''}
+                              placeholder={content?.type}
+                              onChange={(e) =>
+                                handleChangeAssignedValues(
+                                  e,
+                                  object?._id,
+                                  assigned?._id,
+                                  content?._id,
+                                  ELEMENT_TYPE.INPUT
+                                )
+                              }
+                            />
+                          </div>
                         </div>
-                      </div>
-                    ))}
+                      ))}
+                    {object?.type === OBJECT_TYPE.ENUM && (
+                      <SingleAutoComplete
+                        value={listEnum.find((item) => item.value === assigned?.contents[0]?.value)}
+                        options={listEnum}
+                        onChange={(e, newValue) =>
+                          handleChangeAssignedValues(
+                            newValue,
+                            object?._id,
+                            assigned?._id,
+                            assigned?.contents[0]?._id,
+                            ELEMENT_TYPE.SELECT
+                          )
+                        }
+                      />
+                    )}
                   </div>
                 </div>
               </AssignedValuesContainer>

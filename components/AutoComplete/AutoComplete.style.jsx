@@ -1,6 +1,10 @@
 import { Autocomplete } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
+const Container = styled('div')(({ theme }) => ({
+  width: '100%',
+}));
+
 const BaseAutocomplete = styled(Autocomplete)(({ theme }) => ({
   '.MuiOutlinedInput-root': {
     backgroundColor: theme.palette.background.light,
@@ -48,4 +52,4 @@ const Error = styled('div')(({ theme }) => ({
   marginTop: 8,
 }));
 
-export { BaseAutocomplete, Label, Error };
+export { Container, BaseAutocomplete, Label, Error };

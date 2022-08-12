@@ -1,7 +1,7 @@
 import { Checkbox } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import ArrowDown from 'assets/icon/arrow-down.svg';
-import { BaseAutocomplete, Error, Label } from './AutoComplete.style';
+import { BaseAutocomplete, Container, Error, Label } from './AutoComplete.style';
 
 export default function MultipleAutoComplete({
   label,
@@ -22,7 +22,7 @@ export default function MultipleAutoComplete({
     </li>
   );
   return (
-    <>
+    <Container>
       {label && (
         <Label>
           {label}
@@ -45,6 +45,6 @@ export default function MultipleAutoComplete({
         ListboxProps={{ style: { maxHeight: 250 } }}
       />
       {!!errorText && <Error>{errorText}</Error>}
-    </>
+    </Container>
   );
 }

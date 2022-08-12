@@ -1,6 +1,6 @@
 import TextField from '@mui/material/TextField';
 import ArrowDown from 'assets/icon/arrow-down.svg';
-import { BaseAutocomplete, Error, Label } from './AutoComplete.style';
+import { BaseAutocomplete, Container, Error, Label } from './AutoComplete.style';
 
 export default function SingleAutoComplete({
   label,
@@ -21,7 +21,7 @@ export default function SingleAutoComplete({
     </div>
   );
   return (
-    <>
+    <Container>
       {label && (
         <Label>
           {label}
@@ -51,6 +51,6 @@ export default function SingleAutoComplete({
         ListboxProps={{ style: { maxHeight: 190 } }}
       />
       {!!errorText && <Error>{errorText}</Error>}
-    </>
+    </Container>
   );
 }
