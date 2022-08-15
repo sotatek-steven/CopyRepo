@@ -87,6 +87,9 @@ const useObjectTab = () => {
           case 'functions':
             data[iObject][field] = e?.map((item) => item?.value);
             break;
+          case 'enums':
+            data[iObject][field] = e?.value;
+            break;
           default:
             data[iObject][field] = e?.value;
             break;
@@ -132,12 +135,23 @@ const useObjectTab = () => {
     userModule.updateObjects(dataClone);
   };
 
-  const handleChangeAssignedValues = (e, objectId, assignId, contentId) => {
+  const handleChangeAssignedValues = (e, objectId, assignId, contentId, type) => {
     const iObject = objects.findIndex(({ _id }) => _id === objectId);
     const iAssign = objects[iObject]?.assignedValues.findIndex(({ _id }) => _id === assignId);
     const iContent = objects[iObject]?.assignedValues[iAssign]?.contents.findIndex(({ _id }) => _id === contentId);
     const data = [...objects];
-    data[iObject].assignedValues[iAssign].contents[iContent].value = e.target.value;
+
+    switch (type) {
+      case ELEMENT_TYPE.INPUT:
+        data[iObject].assignedValues[iAssign].contents[iContent].value = e.target.value;
+        break;
+      case ELEMENT_TYPE.SELECT:
+        data[iObject].assignedValues[iAssign].contents[iContent].value = e.value;
+        break;
+
+      default:
+        break;
+    }
 
     object.setObjects(data);
     const dataClone = convertToObjectModule(data);

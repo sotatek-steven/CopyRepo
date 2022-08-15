@@ -28,6 +28,7 @@ const EventErrorItem = ({
   handleChangeParam,
 }) => {
   const moduleState = useSelector((state) => state.userModule);
+  const { dataEventError } = useSelector((state) => state.eventError);
 
   const getTooltip = (type) => {
     return (
@@ -37,12 +38,17 @@ const EventErrorItem = ({
       type): detailed rules will be specified in the message`}
         </div>
         <div>
-          {`${type} name should not bear the same charater and case as any state variable names, any function's name inside the contract and even the
+          {`${type} name should not bear the same character and case as any state variable names, any function's name inside the contract and even the
       contract's name itself`}
         </div>
       </div>
     );
   };
+
+  const lstFuncUsed = dataEventError?.reduce((array, data) => {
+    const temp = data?.functions?.map((func) => func);
+    return array?.concat(temp);
+  }, []);
 
   const listFunction = useMemo(() => {
     let listFunction = moduleState?.sources?.functions?.reduce((array, item) => {
@@ -156,7 +162,9 @@ const EventErrorItem = ({
             multiple={true}
             label={'Map to function'}
             value={listFunction?.filter((item) => dataItem?.functions?.includes(item.value))}
-            options={listFunction}
+            options={listFunction?.filter(
+              (item) => dataItem?.functions.includes(item.value) || !lstFuncUsed.includes(item.value)
+            )}
             onChange={(e, newValue) => handleChangeItem(dataItem?._id, 'functions', newValue, ELEMENT_TYPE.SELECT)}
           />
         </MapFunctions>
