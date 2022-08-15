@@ -4,8 +4,9 @@ import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ParameterItem from './ParameterItem';
 import { useDispatch, useSelector } from 'react-redux';
 import { NEW_PARAMETER } from '@/store/models/userFunction';
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import ObjectID from 'bson-objectid';
 
 const AddButton = styled(AddCircleIcon)(({ theme }) => ({
   color: theme.palette.primary.main,
@@ -24,13 +25,13 @@ const TitleWrapper = styled('div')({
   alignItems: 'center',
 });
 
-const ParametersField = () => {
+const ParametersField = ({ setFormError }) => {
   const { parameters } = useSelector((state) => state.userFunction);
   const { userFunction } = useDispatch();
   const [hasParameters, setHasParameters] = useState(false);
 
   const hanleAddParameter = () => {
-    parameters.push({ ...NEW_PARAMETER, id: Date.now() });
+    parameters.push({ ...NEW_PARAMETER, id: ObjectID(32).toHexString() });
     userFunction.updateParameters(parameters);
   };
 
@@ -63,12 +64,12 @@ const ParametersField = () => {
     <>
       <TitleWrapper>
         <Checkbox
-          icon={<RadioButtonUncheckedIcon />}
-          checkedIcon={<RadioButtonCheckedIcon />}
+          icon={<CheckBoxOutlineBlankIcon />}
+          checkedIcon={<CheckBoxIcon />}
           checked={hasParameters}
           onClick={() => setHasParameters((hasParameters) => !hasParameters)}
         />
-        Paramerters
+        Include Paramerters?
       </TitleWrapper>
       {hasParameters && (
         <Grid container spacing={2}>
@@ -76,7 +77,13 @@ const ParametersField = () => {
             <ListWrapper>
               {parameters.map((item, index) => {
                 return (
-                  <ParameterItem key={index} data={item} onRemove={handleRemoveParameter} onUpdate={updateParameter} />
+                  <ParameterItem
+                    key={index}
+                    data={item}
+                    onRemove={handleRemoveParameter}
+                    onUpdate={updateParameter}
+                    setFormError={setFormError}
+                  />
                 );
               })}
             </ListWrapper>

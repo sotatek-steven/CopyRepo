@@ -11,7 +11,7 @@ const TitleWrapper = styled('div')({
   justifyContent: 'space-between',
 });
 
-const FunctionNameField = () => {
+const FunctionNameField = ({ setFormError }) => {
   const { name } = useSelector((state) => state.userFunction);
   const { userFunction } = useDispatch();
 
@@ -27,7 +27,7 @@ const FunctionNameField = () => {
           <ErrorOutlineIcon style={{ fontSize: 16 }} />
         </Tooltip>
       </TitleWrapper>
-      <NameField value={name} setValue={handleChange} />
+      <NameField value={name} setValue={handleChange} setFormError={setFormError} />
     </div>
   );
 };

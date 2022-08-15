@@ -1,30 +1,63 @@
+import { postRequest } from '@/utils/httpRequest';
 import { createModel } from '@rematch/core';
+import { toast } from 'react-toastify';
 
 export const NEW_PARAMETER = {
   type: 'int',
-  isArray: true,
+  isArray: false,
   scope: 'public',
-  name: '',
+  label: '',
+  location: 'memory',
 };
 
 const userFunction = createModel({
   state: {
     name: '',
-    parameters: [{ ...NEW_PARAMETER, id: Date.now() }],
-    scope: 'public',
-    type: 'executable',
-    vitural: true,
-    payable: true,
-    modifier: true,
-    returns: ['int'],
+    tags: '',
+    description: '',
+    scopes: {
+      scope: 'external',
+      virtual: false,
+      payable: false,
+      type: '',
+      overrides: null,
+    },
+    parameters: [],
+    type: 'not-readonly',
+    modifier: [],
+    returns: [],
   },
   reducers: {
     updateName: (state, name) => ({ ...state, name }),
     updateParameters: (state, parameters) => ({ ...state, parameters }),
+    updateScope: (state, scope) => ({ ...state, scopes: { ...state.scopes, scope } }),
+    updateType: (state, type) => ({ ...state, type }),
+    updateStateMutability: (state, type) => ({ ...state, scopes: { ...state.scopes, type } }),
     updateReturn: (state, returnData) => ({ ...state, returns: returnData }),
+    updateVirtual: (state, virtual) => ({ ...state, scopes: { ...state.scopes, virtual } }),
+    updatePayable: (state, payable) => ({ ...state, scopes: { ...state.scopes, payable } }),
   },
-  effects: () => {
-    return {};
+  effects: (dispatch) => {
+    const { player } = dispatch;
+    return {
+      async createFunction({ functionInfo }, state) {
+        try {
+          const { code, data, message } = await postRequest({
+            url: `/api/v1/functions`,
+            userModoel: player,
+            userState: state.player,
+            body: functionInfo,
+          });
+          if (code !== 200) {
+            toast.error(message);
+            return;
+          }
+          return { code, data };
+        } catch (error) {
+          console.log('error: ', error);
+        }
+      },
+    };
   },
 });
 

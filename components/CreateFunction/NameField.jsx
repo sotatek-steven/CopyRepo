@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { Input } from '../Input';
 const regex = new RegExp(REGEX.VARIABLE_NAME);
 
-const NameField = ({ value, setValue }) => {
+const NameField = ({ value, setValue, setFormError }) => {
   const moduleState = useSelector((state) => state.userModule);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
@@ -21,6 +21,7 @@ const NameField = ({ value, setValue }) => {
     if (!value) {
       setError(false);
       setErrorMessage('');
+      setFormError(true);
       return;
     }
 
@@ -28,17 +29,20 @@ const NameField = ({ value, setValue }) => {
     if (!match) {
       setError(true);
       setErrorMessage('Invalid function name');
+      setFormError(true);
       return;
     }
 
     if (checkExistingFunction(value)) {
       setError(true);
       setErrorMessage('Found an existing function with the same name');
+      setFormError(true);
       return;
     }
 
     setError(false);
     setErrorMessage('');
+    setFormError(false);
   };
 
   const handleVariableNameFocus = () => {
