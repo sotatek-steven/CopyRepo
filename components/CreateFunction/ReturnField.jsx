@@ -1,11 +1,13 @@
-import { Checkbox, Grid, styled } from '@mui/material';
+import { Grid, styled } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import Label from '../atom/Label';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-import RadioButtonCheckedIcon from '@mui/icons-material/RadioButtonChecked';
-import RadioButtonUncheckedIcon from '@mui/icons-material/RadioButtonUnchecked';
+import Select from '../Select';
 import { useDispatch, useSelector } from 'react-redux';
-import ReturnItem from './ReturnItem';
+import { BOOLEAN_OPTIONS } from '@/config/constant/common';
+import ParameterItem from './ParameterItem';
+import { NEW_PARAMETER } from '@/store/models/userFunction';
+import ObjectID from 'bson-objectid';
 
 const AddButton = styled(AddCircleIcon)(({ theme }) => ({
   color: theme.palette.primary.main,
@@ -13,24 +15,24 @@ const AddButton = styled(AddCircleIcon)(({ theme }) => ({
   margin: '10px 0px',
 }));
 
-const TitleWrapper = styled('div')({
-  display: 'flex',
-  alignItems: 'center',
-});
-
 const ListWrapper = styled('div')({
   display: 'flex',
   flexDirection: 'column',
   gap: 20,
 });
 
-const ReturnField = () => {
-  const { returns: returnData } = useSelector((state) => state.userFunction);
+const ReturnField = ({ setFormError }) => {
+  const { returns: returnData, type } = useSelector((state) => state.userFunction);
   const [hasReturn, setHasReturn] = useState(false);
   const { userFunction } = useDispatch();
 
+  const handleReturnChange = (e) => {
+    const value = e.target.value;
+    setHasReturn(value);
+  };
+
   const hanleAddItem = () => {
-    returnData.push({ data: '', id: Date.now() });
+    returnData.push({ ...NEW_PARAMETER, id: ObjectID(32).toHexString() });
     userFunction.updateReturn(returnData);
   };
 
@@ -59,23 +61,37 @@ const ReturnField = () => {
     hanleAddItem();
   }, [hasReturn]);
 
+  useEffect(() => {
+    if (type === 'readonly') setHasReturn(true);
+  }, [type]);
+
   return (
     <>
-      <TitleWrapper>
-        <Checkbox
-          icon={<RadioButtonUncheckedIcon />}
-          checkedIcon={<RadioButtonCheckedIcon />}
-          checked={hasReturn}
-          onClick={() => setHasReturn((hasReturn) => !hasReturn)}
-        />
-        Return
-      </TitleWrapper>
+      <Grid container>
+        <Grid item xs={6}>
+          <Label type="basic">Return values?</Label>
+          <Select
+            disabled={type === 'readonly'}
+            value={hasReturn}
+            options={BOOLEAN_OPTIONS}
+            onChange={handleReturnChange}
+          />
+        </Grid>
+      </Grid>
       {hasReturn && (
-        <Grid container spacing={2}>
+        <Grid sx={{ padding: '20px 20px 0px' }} container spacing={2}>
           <Grid item xs={11}>
             <ListWrapper>
               {returnData.map((item, index) => {
-                return <ReturnItem data={item} key={index} onUpdate={updateReturn} onRemove={handleRemoveItem} />;
+                return (
+                  <ParameterItem
+                    setFormError={setFormError}
+                    data={item}
+                    key={index}
+                    onUpdate={updateReturn}
+                    onRemove={handleRemoveItem}
+                  />
+                );
               })}
             </ListWrapper>
           </Grid>

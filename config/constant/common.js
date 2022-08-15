@@ -42,6 +42,17 @@ export const IS_ARRAY_OPTION = [
   },
 ];
 
+export const LOCATION_OPTIONS = [
+  {
+    value: 'calldata',
+    label: 'calldata',
+  },
+  {
+    value: 'memory',
+    label: 'memory',
+  },
+];
+
 export const OBJECT_TYPE = {
   STRUCT: 'struct',
   ENUM: 'enum',
@@ -78,6 +89,57 @@ export const SCOPE_OPTIONS = [
   },
 ];
 
+export const VISIBILITY_OPTIONS = [
+  {
+    value: 'external',
+    label: 'External',
+  },
+  {
+    value: 'internal',
+    label: 'Internal',
+  },
+  {
+    value: 'public',
+    label: 'Public',
+  },
+  {
+    value: 'private',
+    label: 'Private',
+  },
+];
+
+// export const VIRTUAL_OPTIONS = [
+//   {
+//     value: 'true',
+//     label: 'True',
+//   },
+//   {
+//     value: 'false',
+//     label: 'False',
+//   },
+// ];
+
+export const FUNCTION_TYPE_OPTIONS = [
+  {
+    value: 'readonly',
+    label: 'Readonly',
+  },
+  {
+    value: 'not-readonly',
+    label: 'Not Readonly',
+  },
+];
+
+export const STATE_MUTABILITY_OPTIONS = [
+  {
+    value: 'pure',
+    label: 'Pure',
+  },
+  {
+    value: 'view',
+    label: 'View',
+  },
+];
 export const BOOLEAN_OPTIONS = [
   {
     value: true,
