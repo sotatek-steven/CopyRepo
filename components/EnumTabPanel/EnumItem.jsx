@@ -50,11 +50,13 @@ const StructItem = ({
                 onChange={(e) => handleChangeValue(dataItem?._id, _id, e)}
               />
             </div>
-            <div className="action-value">
-              <div className="action-icon" onClick={() => handelRemoveValue(dataItem?._id, _id)}>
-                <RemoveIcon />
+            {dataItem?.values?.length > 1 && (
+              <div className="action-value">
+                <div className="action-icon" onClick={() => handelRemoveValue(dataItem?._id, _id)}>
+                  <RemoveIcon />
+                </div>
               </div>
-            </div>
+            )}
           </ItemContent>
         );
       })}

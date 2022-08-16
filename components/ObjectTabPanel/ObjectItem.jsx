@@ -75,7 +75,7 @@ const ObjectItem = ({
         value: item?.label,
       };
     });
-  }, [moduleState?.sources?.enums]);
+  }, [moduleState?.sources?.enums, object?.item]);
 
   return (
     <>
@@ -198,7 +198,7 @@ const ObjectItem = ({
                       ))}
                     {object?.type === OBJECT_TYPE.ENUM && (
                       <SingleAutoComplete
-                        value={listEnum.find((item) => item.value === assigned?.contents[0]?.value)}
+                        value={listEnum?.find((item) => item.value === assigned?.contents[0]?.value)}
                         options={listEnum}
                         onChange={(e, newValue) =>
                           handleChangeAssignedValues(
