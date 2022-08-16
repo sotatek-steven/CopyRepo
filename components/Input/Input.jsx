@@ -54,7 +54,7 @@ const Input = ({ label, isRequired, tooltip, errorText, error, value = '', ...pr
           </Tooltip>
         )}
       </LabelContainer>
-      <InputBasic value={value} error={error ? 1 : 0} {...props} />
+      <InputBasic value={value} error={error ? 1 : 0} onBlur={props?.onChange} {...props} />
       {!!errorText && <Error>{errorText}</Error>}
     </>
   );

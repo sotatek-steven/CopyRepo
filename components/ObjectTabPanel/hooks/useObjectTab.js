@@ -87,9 +87,6 @@ const useObjectTab = () => {
           case 'functions':
             data[iObject][field] = e?.map((item) => item?.value);
             break;
-          case 'enums':
-            data[iObject][field] = e?.value;
-            break;
           default:
             data[iObject][field] = e?.value;
             break;
