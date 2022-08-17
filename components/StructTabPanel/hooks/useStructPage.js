@@ -1,4 +1,5 @@
 import { ELEMENT_TYPE, EDIT_ID } from '@/config/constant/common';
+import { REGEX } from '@/config/constant/regex';
 import _ from 'lodash';
 import { useMemo } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
@@ -14,6 +15,8 @@ const VARIABLE = {
     errorName: null,
   },
 };
+
+const regex = new RegExp(REGEX.VARIABLE_NAME);
 
 const useStructPage = () => {
   const { structs, types } = useSelector((state) => state.struct);
@@ -194,13 +197,18 @@ const useStructPage = () => {
         data[iStruct].variables[iVariable].name.errorName = false;
         if (!e.target.value?.trim()) {
           data[iStruct].variables[iVariable].name.errorName = 'This field is required';
+        } else {
+          if (!regex.test(e.target.value.trim())) {
+            data[iStruct].variables[iVariable].name.errorName = 'Invalid variable name';
+          } else {
+            duplicateArr = checkDuplicateVariableName(data[iStruct].variables);
+  
+            data[iStruct].variables.forEach(({ name }) => {
+              name.errorName = !!duplicateArr?.includes(name.value) && 'Variable name cannot be duplicated';
+            });
+          }
         }
-        duplicateArr = checkDuplicateVariableName(data[iStruct].variables);
-
-        data[iStruct].variables.forEach(({ name }) => {
-          name.errorName = !!duplicateArr?.includes(name.value) && 'Variable name cannot be duplicated';
-        });
-
+        
         break;
       case ELEMENT_TYPE.SELECT:
         data[iStruct].variables[iVariable].type.value = e.value;
