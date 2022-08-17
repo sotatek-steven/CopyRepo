@@ -79,7 +79,7 @@ const ReturnField = ({ setFormError }) => {
         </Grid>
       </Grid>
       {hasReturn && (
-        <Grid sx={{ padding: '20px 20px 0px' }} container spacing={2}>
+        <Grid sx={{ padding: '20px 0px 0px 30px' }} container spacing={2}>
           <Grid item xs={11}>
             <ListWrapper>
               {returnData.map((item, index) => {

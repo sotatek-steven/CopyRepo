@@ -1,6 +1,6 @@
 import { REGEX } from '@/config/constant/regex';
 import { InputAdornment, styled, TextField, Tooltip } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 const regex = new RegExp(REGEX.VARIABLE_NAME);
@@ -50,26 +50,43 @@ const TOOLTIP_NAME = 'Beginning character: Must be letter\nFollowing characters 
 const ParameterName = ({ value, setValue, setFormError }) => {
   const moduleState = useSelector((state) => state.userModule);
   const functionState = useSelector((state) => state.userFunction);
+  const { variables: stateVariables } = useSelector((state) => state.userModule);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [onFocus, setOnFocus] = useState(false);
 
   const checkExistingFunction = (functionName) => {
+    if (functionState.name === functionName) return true;
     const functions = moduleState.sources.functions;
     if (!functions) return false;
     return functions.find((item) => item.name === functionName);
   };
 
   const checkExistingParameter = (parameterName) => {
-    if (functionState.name === parameterName) return true;
     const { parameters } = functionState;
     if (!parameters) return false;
     return parameters.find((item) => item.name === parameterName);
   };
 
-  const handleNameChange = (e) => {
-    const value = e.target.value.trim();
-    setValue(value);
+  const checkExistingIdentifier = (parameterName) => {
+    const { mappings, structs, values } = stateVariables;
+    let names = [];
+    mappings.forEach((items) => {
+      names.push(items.label);
+    });
+
+    structs.forEach((items) => {
+      names.push(items.label);
+    });
+
+    values.forEach((items) => {
+      names.push(items.label);
+    });
+
+    return names.find((name) => name === parameterName);
+  };
+
+  const validateParameterName = (value) => {
     if (!value) {
       setError(false);
       setErrorMessage('');
@@ -99,9 +116,22 @@ const ParameterName = ({ value, setValue, setFormError }) => {
       return;
     }
 
+    if (checkExistingIdentifier(value)) {
+      setError(true);
+      setErrorMessage('Identifier already declared');
+      setFormError(true);
+      return;
+    }
+
     setError(false);
     setErrorMessage('');
     setFormError(false);
+  };
+
+  const handleNameChange = (e) => {
+    const value = e.target.value.trim();
+    setValue(value);
+    validateParameterName(value);
   };
 
   const handleVariableNameFocus = () => {
@@ -118,6 +148,11 @@ const ParameterName = ({ value, setValue, setFormError }) => {
     setError(true);
     setErrorMessage('This field is required');
   };
+
+  useEffect(() => {
+    validateParameterName(value);
+  }, [functionState.name]);
+
   return (
     <Container sx={{ position: 'relative' }}>
       <TooltipWrapper focus={onFocus ? 1 : 0} error={error ? 1 : 0}>

@@ -26,23 +26,23 @@ const TitleWrapper = styled('div')({
 });
 
 const ParametersField = ({ setFormError }) => {
-  const { parameters } = useSelector((state) => state.userFunction);
+  const { params } = useSelector((state) => state.userFunction);
   const { userFunction } = useDispatch();
   const [hasParameters, setHasParameters] = useState(false);
 
   const hanleAddParameter = () => {
-    parameters.push({ ...NEW_PARAMETER, id: ObjectID(32).toHexString() });
-    userFunction.updateParameters(parameters);
+    const _params = [...params, { ...NEW_PARAMETER, id: ObjectID(32).toHexString() }];
+    userFunction.updateParameters(_params);
   };
 
   const handleRemoveParameter = (parameterId) => {
-    const updatedParameters = parameters.filter((item) => item.id !== parameterId);
+    const updatedParameters = params.filter((item) => item.id !== parameterId);
     if (!updatedParameters.length) setHasParameters(false);
     userFunction.updateParameters(updatedParameters);
   };
 
   const updateParameter = (parameter) => {
-    const updatedParameters = parameters.map((item) => {
+    const updatedParameters = params.map((item) => {
       if (item.id !== parameter.id) return item;
       return parameter;
     });
@@ -51,7 +51,7 @@ const ParametersField = ({ setFormError }) => {
   };
 
   useEffect(() => {
-    if (hasParameters && parameters.length > 0) return;
+    if (hasParameters && params.length > 0) return;
     if (!hasParameters) {
       userFunction.updateParameters([]);
       return;
@@ -72,10 +72,10 @@ const ParametersField = ({ setFormError }) => {
         Include Paramerters?
       </TitleWrapper>
       {hasParameters && (
-        <Grid container spacing={2}>
+        <Grid container spacing={2} sx={{ paddingLeft: '30px' }}>
           <Grid item xs={11}>
             <ListWrapper>
-              {parameters.map((item, index) => {
+              {params.map((item, index) => {
                 return (
                   <ParameterItem
                     key={index}
