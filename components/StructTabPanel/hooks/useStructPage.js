@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 
 const VARIABLE = {
-  _id: Date.now(),
   type: {
     value: '',
     errorType: null,
@@ -114,7 +113,7 @@ const useStructPage = () => {
     }
     const variable = JSON.parse(JSON.stringify(VARIABLE));
     const data = [...structs];
-    data[iStruct]?.variables?.push({ ...variable });
+    data[iStruct]?.variables?.push({ ...variable, _id: Date.now(), });
 
     struct.setStructs(data);
     userModule.updateStructs(convertStructs(data));
