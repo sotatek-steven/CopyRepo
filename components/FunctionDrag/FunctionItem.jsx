@@ -6,6 +6,7 @@ import { MODE_ACTION_MODULE } from '@/config/constant/common';
 import { IconButton, Popover } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FunctionDetail from '../ModulePage/FunctionDetail';
+import { useRouter } from 'next/router';
 
 const Item = styled('div')(({ theme, disable }) => ({
   gap: '17px',
@@ -75,6 +76,7 @@ const options = [
 const FunctionItem = ({ data, nodeType }) => {
   const [anchorEl, setAnchorEl] = useState(null);
   const [isOpenFunctionDetail, setIsOpenFunctionDetail] = useState(false);
+  const route = useRouter();
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
@@ -106,16 +108,21 @@ const FunctionItem = ({ data, nodeType }) => {
     }
   };
 
+  const redirectToFunctionPage = () => {
+    const { _id } = data;
+    route.push(`/functions/${_id}`);
+  };
+
   return (
     <Item
       onDragStart={(event) => onDragStart(event, nodeType)}
       draggable
-      key={data.id}
+      key={data._id}
       disable={data?.disable?.toString()}>
       <div>
         <DragIcon />
       </div>
-      <div className="content">
+      <div className="content" onClick={redirectToFunctionPage}>
         <div className="div-name">
           <Text>{data.name}</Text>
         </div>

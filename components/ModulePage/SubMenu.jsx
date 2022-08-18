@@ -27,7 +27,7 @@ const SubMenu = () => {
         justifyContent: 'space-between',
         alignItems: 'center',
       }}>
-      <LeftSide>Drag & Drop Modules</LeftSide>
+      <LeftSide>Drag & Drop Functions</LeftSide>
       <div
         style={{
           display: 'flex',

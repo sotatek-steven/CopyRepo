@@ -1,4 +1,4 @@
-import { postRequest } from '@/utils/httpRequest';
+import { getRequest, postRequest, putRequest } from '@/utils/httpRequest';
 import { createModel } from '@rematch/core';
 import { toast } from 'react-toastify';
 
@@ -28,6 +28,7 @@ const userFunction = createModel({
     returns: [],
   },
   reducers: {
+    update: (state, data) => data,
     updateName: (state, name) => ({ ...state, name }),
     updateParameters: (state, params) => ({ ...state, params }),
     updateScope: (state, scope) => ({ ...state, scopes: { ...state.scopes, scope } }),
@@ -40,6 +41,20 @@ const userFunction = createModel({
   effects: (dispatch) => {
     const { player } = dispatch;
     return {
+      async getDetailFunction(id, state) {
+        console.log('id: ', id);
+        const { code, data, message } = await getRequest({
+          url: `/api/v1/functions/${id}`,
+          userState: state.player,
+          userModoel: player,
+        });
+
+        if (code !== 200) {
+          toast.error(message);
+          return;
+        }
+        return data;
+      },
       async createFunction({ functionInfo }, state) {
         try {
           const { code, data, message } = await postRequest({
@@ -56,6 +71,22 @@ const userFunction = createModel({
         } catch (error) {
           console.log('error: ', error);
         }
+      },
+      async updateFunction(functionInfo, state) {
+        const _id = functionInfo ? functionInfo._id : state.userFunction;
+        const functionData = functionInfo || state.userFunction;
+
+        const { code, data, message } = await putRequest({
+          url: `/api/v1/functions/${_id}`,
+          userModoel: player,
+          userState: state.player,
+          body: functionData,
+        });
+        if (code !== 200) {
+          toast.error(message);
+          return { code };
+        }
+        return { code, data };
       },
     };
   },
