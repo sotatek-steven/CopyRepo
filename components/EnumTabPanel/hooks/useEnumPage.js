@@ -91,6 +91,9 @@ const useEnumPage = () => {
     const iValue = enums[iEnum]?.values.findIndex(({ _id }) => _id === valueId);
     const data = [...enums];
     data[iEnum].values[iValue].name = e.target.value;
+    if (!e.target.value?.trim()) {
+      data[iEnum].values[iValue].errorName = 'Value should not be empty';
+    }
 
     enumState.setEnums(data);
     userModule.updateEnums(convertToEnumModule(data));
@@ -100,7 +103,7 @@ const useEnumPage = () => {
     const cloneData = listData?.map((data) => {
       const content = data?.values.map((item) => {
         return {
-          label: item?.name,
+          label: item?.name?.trim(),
         };
       });
 
@@ -121,6 +124,12 @@ const useEnumPage = () => {
         item.errorName = 'This field is required';
         isError = true;
       }
+      item?.values.map(value => {
+        if (!value?.name.trim()) {
+          value.errorName = 'Value should not be empty'
+          isError = true;
+        }
+      })
     });
 
     enumState.setEnums(data);
