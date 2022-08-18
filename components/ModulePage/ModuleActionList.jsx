@@ -1,13 +1,11 @@
 import { HTTP_CODE } from '@/config/constant/common';
-import { styled, useTheme } from '@mui/material';
+import { styled } from '@mui/material';
 import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
-import CompiledErrorToast from '../atom/CompiledErrorToast';
 import { PrimaryButton } from '../ButtonStyle';
 import useObjectTab from '../ObjectTabPanel/hooks/useObjectTab';
 import useStructPage from '../StructTabPanel/hooks/useStructPage';
-import useValuesTab from '../ValuesPanel/hooks/useValuesTab';
 import useModulePage from './hooks/useModulePage';
 import { makeStyles } from '@mui/styles';
 import ErrorsCompileModal from '../ErrorsCompileModal';
@@ -33,8 +31,6 @@ const ModuleActionList = () => {
   const { owner } = useSelector((state) => state.userModule);
   const [errorsModalOpen, setErrorsModalOpen] = useState(false);
   const [errors, setErrors] = useState([]);
-  const classes = useStyles();
-  const theme = useTheme();
 
   const { handleErrorStructs } = useStructPage();
   const { objectHasError } = useObjectTab();
