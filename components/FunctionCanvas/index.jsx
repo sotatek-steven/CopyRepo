@@ -14,7 +14,7 @@ import ReactFlow, {
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import CustomNodes from '../CustomNode';
-import ErrorsCompileModal from '../ErrorsCompileModal';
+import useEnumPage from '../EnumTabPanel/hooks/useEnumPage';
 import IndentifierModal from '../IndentifierModal';
 import useStructPage from '../StructTabPanel/hooks/useStructPage';
 
@@ -34,8 +34,10 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
   const moduleState = useSelector((state) => state.userModule);
   const { functions: listFunction } = useSelector((state) => state.functions);
   const { structs } = useSelector((state) => state.struct);
+  const { enums } = useSelector((state) => state.enumState);
   const nodeTypes = useMemo(() => CustomNodes, []);
   const { handelAddStruct } = useStructPage();
+  const { handelAddEnum } = useEnumPage();
   const [identifierModalOpen, setIdentifierModalOpen] = useState(false);
   const [stateVariablesOfDropFunctions, setStateVariablesOfDropFunctions] = useState([]);
 
@@ -130,11 +132,13 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
     setEdges(initialEdges);
   }, [initialNodes, initialEdges]);
 
-  const createNodeFromFunc = (funcData, type, position, newNode = [], listFunc = [], listStruct = []) => {
+  const createNodeFromFunc = (funcData, type, position, newNode = [], listFunc = [], listStruct = [], listEnum = []) => {
     let funcDepen = [];
 
     // Create Struct
-    const listStructName = _.concat(structs, listStruct).map((item) => item?.name?.toUpperCase());
+    const listStructName = _.concat(structs, listStruct).map((item) => item?.name);
+    const listEnumName = _.concat(enums, listEnum).map((item) => item?.name);
+
 
     funcData?.globalVariables?.every((variable) => {
       if (variable?.type.toUpperCase() === FUNCTION_TYPE.POOLINFO && !listStructName.includes(FUNCTION_TYPE.POOLINFO)) {
@@ -154,6 +158,24 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
       }
       return true;
     });
+
+    // Create Enum
+    funcData?.enums
+      ?.filter((item) => !listEnumName.includes(item?.name))
+      ?.forEach((item) => {
+        const values = item?.content?.map((con) => {
+          return {
+            ...con,
+            name: con?.label,
+          }
+        })
+
+        listEnum.push({
+          ...item,
+          errorName: null,
+          values,
+        })
+      })
 
     // Create Node
     newNode.push({
@@ -189,13 +211,13 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
       listFunc.push(depen);
 
       if (depen?.dependencies?.length) {
-        createNodeFromFunc(depen, type, position, newNode, listFunc, listStruct);
+        createNodeFromFunc(depen, type, position, newNode, listFunc, listStruct, listEnum);
       }
     });
     newNode = _.unionBy(newNode, 'id');
     listFunc = _.unionBy(listFunc, '_id');
 
-    return { newNode, listFunc, listStruct };
+    return { newNode, listFunc, listStruct, listEnum };
   };
 
   const getStateVariables = (listFunc) => {
@@ -237,7 +259,7 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
       if (!functions || functions.some((item) => item === data._id)) return;
 
       //add new node
-      const { newNode, listFunc, listStruct } = createNodeFromFunc(data, type, position);
+      const { newNode, listFunc, listStruct, listEnum } = createNodeFromFunc(data, type, position);
 
       const stateVariables = getStateVariables(listFunc);
 
@@ -248,6 +270,7 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
       setNodes((nds) => _.unionBy(_.concat(nds, newNode), 'id'));
       addNewFuctionToModule(listFunc, position);
       handelAddStruct(listStruct);
+      handelAddEnum(listEnum);
     },
     [reactFlowInstance, setNodes, moduleState.functions, nodes]
   );
@@ -295,9 +318,9 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
     const updatedCoordinates = coordinates.map((item) => {
       return item.func === data._id
         ? {
-            ...item,
-            position,
-          }
+          ...item,
+          position,
+        }
         : item;
     });
     userModule.updateCoordinates(updatedCoordinates);
@@ -325,7 +348,7 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
           onEdgeUpdate={onEdgeUpdate}>
           <Controls
             style={{ bottom: '100px', left: '65px' }}
-            // onInteractiveChange={lockCanvas}
+          // onInteractiveChange={lockCanvas}
           />
           <Background color="#aaa" gap={16} />
         </ReactFlow>
