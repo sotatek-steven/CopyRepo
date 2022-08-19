@@ -70,12 +70,12 @@ const useStructPage = () => {
         const type = types.find((item) => item?.value === variable?.type.value);
         return {
           type: type?.label,
-          label: variable?.name.value,
+          label: variable?.name.value?.trim(),
         };
       });
 
       return {
-        name: struct?.name,
+        name: struct?.name?.trim(),
         content: content,
       };
     });
