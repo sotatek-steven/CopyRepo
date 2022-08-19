@@ -38,21 +38,22 @@ const StructItem = ({
         </div>
       </ItemTitle>
       <ValueContainer>Value</ValueContainer>
-      {dataItem?.values?.map(({ _id, name }) => {
+      {dataItem?.values?.map((value) => {
         return (
-          <ItemContent key={_id}>
+          <ItemContent key={value?._id}>
             <div className="name-value">
               <Input
                 label=""
                 id="name"
                 name="name"
-                value={name}
-                onChange={(e) => handleChangeValue(dataItem?._id, _id, e)}
+                value={value?.name}
+                errorText={value?.errorName}
+                onChange={(e) => handleChangeValue(dataItem?._id, value?._id, e)}
               />
             </div>
             {dataItem?.values?.length > 1 && (
               <div className="action-value">
-                <div className="action-icon" onClick={() => handelRemoveValue(dataItem?._id, _id)}>
+                <div className="action-icon" onClick={() => handelRemoveValue(dataItem?._id, value?._id)}>
                   <RemoveIcon />
                 </div>
               </div>
