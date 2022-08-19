@@ -108,7 +108,7 @@ const useEnumPage = () => {
       });
 
       return {
-        name: data?.name,
+        name: data?.name?.trim(),
         content,
       };
     });
