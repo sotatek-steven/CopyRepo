@@ -11,8 +11,8 @@ import { ModuleMode } from '@/store/models/moduleMode';
 import { MODULE_OWNER } from '@/config/constant/common';
 import CodeViewTab from '@/components/ModulePage/CodeViewTab';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import IconCanvas from '../../assets/icon/IconCanvas.svg';
-import IconAddField from '../../assets/icon/IconAddField.svg';
+import IconCanvas from '@/assets/icon/IconCanvas.svg';
+import IconAddField from '@/assets/icon/IconAddField.svg';
 import { createNodes } from '@/components/FunctionCanvas/CreateElement';
 import FunctionCanvas from '@/components/FunctionCanvas';
 import AddFieldTab from '@/components/ModulePage/AddFieldTab';
@@ -138,7 +138,7 @@ const TAB_LIST = [
 const ModulePage = () => {
   const { userModule, functions } = useDispatch();
   const router = useRouter();
-  const { id } = router.query;
+  const { moduleId } = router.query;
   const moduleModeState = useSelector((state) => state.moduleMode);
   const moduleState = useSelector((state) => state.userModule);
   const { moduleMode, template } = useDispatch();
@@ -157,7 +157,7 @@ const ModulePage = () => {
     return () => {
       userModule.set({});
     };
-  }, [id]);
+  }, [moduleId]);
 
   useEffect(() => {
     moduleMode.update(ModuleMode.DESIGN);

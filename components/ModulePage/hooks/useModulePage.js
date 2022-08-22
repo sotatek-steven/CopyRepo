@@ -3,7 +3,7 @@ import useEventErrorTab from '@/components/EventErrorTabPanel/hooks/useEventErro
 import useObjectTab from '@/components/ObjectTabPanel/hooks/useObjectTab';
 import useStructPage from '@/components/StructTabPanel/hooks/useStructPage';
 import useValuesTab from '@/components/ValuesPanel/hooks/useValuesTab';
-import { EVENT_ERROR_TYPE, INIT_VALUE_TYPE } from '@/config/constant/common';
+import { EVENT_ERROR_TYPE, INIT_VALUE_TYPE, VALUE_TYPE_OPTIONS } from '@/config/constant/common';
 import _ from 'lodash';
 import { useRouter } from 'next/router';
 import { useDispatch } from 'react-redux';
@@ -12,17 +12,18 @@ const useModulePage = () => {
   const { object, userModule, value, initialModule, functions } = useDispatch();
   const { getStructs } = useStructPage();
   const { getEnums } = useEnumPage();
+  const { declaration } = useDispatch();
   const { convertToObjectShow } = useObjectTab();
   const { converToValueShow } = useValuesTab();
   const { convertToEventErrorShow } = useEventErrorTab();
   const router = useRouter();
-  const { id } = router.query;
+  const { moduleId } = router.query;
 
   const fetchDetailModule = async () => {
-    if (!id) return;
+    if (!moduleId) return;
     object.setObjects([]);
     value.setValues(INIT_VALUE_TYPE);
-    const data = await userModule.getDetailModule(id);
+    const data = await userModule.getDetailModule(moduleId);
     const events = data?.sources?.events.map((item) => {
       return {
         ...item,
@@ -35,6 +36,12 @@ const useModulePage = () => {
         type: EVENT_ERROR_TYPE.ERROR,
       };
     });
+    const typeStructs = data?.sources?.structs?.map((item) => {
+      return {
+        value: item?._id,
+        label: item?.name,
+      };
+    });
 
     await functions.getAllUserFunctions();
     getStructs(data?.sources?.structs);
@@ -44,6 +51,7 @@ const useModulePage = () => {
     convertToEventErrorShow(_.concat(events, errors));
     userModule.set(data);
     initialModule.setData(data);
+    declaration.setListType(_.concat(VALUE_TYPE_OPTIONS, typeStructs));
   };
 
   return {

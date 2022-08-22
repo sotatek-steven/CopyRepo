@@ -24,11 +24,11 @@ const FunctionSidebar = () => {
       <div className="title">Control Structures</div>
       <div className="list-structure" style={{ flexGrow: 1 }}>
         <Scrollbars autoHide>
-          {![{ name: 'Declaration' }, { name: 'Assignment' }, { name: 'Logic' }]?.length && (
+          {![{ name: 'Declaration' }, { name: 'Assignment' }, { name: 'Logics' }]?.length && (
             <span> Control Structures not found</span>
           )}
-          {!![{ name: 'Declaration' }, { name: 'Assignment' }, { name: 'Logic' }]?.length &&
-            [{ name: 'Declaration' }, { name: 'Assignment' }, { name: 'Logic' }]?.map((item, index) => {
+          {!![{ name: 'Declaration' }, { name: 'Assignment' }, { name: 'Logics' }]?.length &&
+            [{ name: 'Declaration' }, { name: 'Assignment' }, { name: 'Logics' }]?.map((item, index) => {
               return <ControlStructureItem key={index} data={item} nodeType="simpleRectangle" />;
             })}
         </Scrollbars>

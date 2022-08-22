@@ -19,7 +19,7 @@ const Header = styled('div')(({ theme, footer }) => ({
   justifyContent: 'space-between',
   fontSize: 25,
   marginBottom: 20,
-  borderBottom: footer === 'false' ? `1px solid ${theme.shape.borderColor}` : 'unset',
+  borderBottom: `1px solid ${theme.shape.borderColor}`,
 }));
 
 const Title = styled('div')(({ theme }) => ({
