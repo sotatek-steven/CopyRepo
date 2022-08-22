@@ -1,9 +1,8 @@
 import ControlStructureCanvas from '@/components/ControlStructureCanvas';
-import FunctionActionList from '@/components/functionsPage/FunctionActionList';
-import FunctionControl from '@/components/functionsPage/FunctionControl';
+import FunctionActionList from '@/components/FunctionsPage/FunctionActionList';
+import FunctionInfo from '@/components/FunctionsPage/FunctionInfo';
 import FunctionSidebar from '@/components/functionsPage/FunctionSidebar';
 import DesignLayout from '@/components/layout/DesignLayout';
-import useModulePage from '@/components/ModulePage/hooks/useModulePage';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { styled, Tab } from '@mui/material';
 import { useRouter } from 'next/router';
@@ -117,62 +116,99 @@ const TAB_LIST = [
 
 const FunctionPage = () => {
   const router = useRouter();
-  const { functionId } = router.query;
-  const { userFunction } = useDispatch();
-  const { fetchDetailModule } = useModulePage();
+  const { moduleId, functionId } = router.query;
+  const { userFunction, initialFunction, userModule, functions, functionDefinition } = useDispatch();
   const [tab, setTab] = useState('workflow_view');
-
-  useEffect(() => {
-    const fetchDetailFunction = async () => {
-      try {
-        if (!functionId) return;
-        const data = await userFunction.getDetailFunction(functionId);
-        userFunction.update(data);
-      } catch (error) {
-        console.log('Failed to fetch detail function: ', error);
-      }
-    };
-
-    fetchDetailFunction();
-    fetchDetailModule();
-    return () => {
-      userFunction.update({});
-    };
-  }, [functionId]);
+  // const { fetchDetailModule } = useModulePage();
 
   const handleChangeTab = (e, newValue) => {
     setTab(newValue);
   };
 
+  // useEffect(() => {
+  //   const fetchDetailFunction = async () => {
+  //     try {
+  //       if (!functionId) return;
+  //       const data = await userFunction.getDetailFunction(functionId);
+  //       userFunction.update(data);
+  //     } catch (error) {
+  //       console.log('Failed to fetch detail function: ', error);
+  //     }
+  //   };
+
+  //   fetchDetailFunction();
+  //   fetchDetailModule();
+  //   return () => {
+  //     userFunction.update({});
+  //   };
+  // }, [functionId]);
+
+  // const handleChangeTab = (e, newValue) => {
+  //   setTab(newValue);
+  // };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      if (!functionId || !moduleId) return;
+      try {
+        // fetch detail function
+        const data = await userFunction.getDetailFunction(functionId);
+        delete data.updatedAt;
+        userFunction.update(data);
+
+        // save initial function data to compare
+        initialFunction.set(data);
+
+        // initial function definition data
+        const FEData = await functionDefinition.convertToFEDataDisplay(data);
+        functionDefinition.update(FEData);
+
+        // fetch detail module
+        const moduleData = await userModule.getDetailModule(moduleId);
+        userModule.update(moduleData);
+
+        //fetch all of functions
+        functions.getAllUserFunctions();
+      } catch (error) {
+        console.log('Failed to fetch data: ', error);
+      }
+    };
+
+    fetchData();
+  }, [functionId, moduleId]);
+
   return (
-    <Container>
-      <TabContext value={tab}>
-        <TabListContainer>
-          <FunctionControl />
-          <TabListContent onChange={handleChangeTab} aria-label="lab API tabs example">
-            {TAB_LIST.map((tab) => (
-              <TabItem key={tab.value} label={tab.name} value={tab.value} />
-            ))}
-          </TabListContent>
-        </TabListContainer>
-        <TabPanelContent value="workflow_view">
-          <ContentWrapper>
-            <div className="div-canvas">
-              <ControlStructureCanvas />
-            </div>
-            <div className="div-func-list">
-              <FunctionSidebar />
-            </div>
-          </ContentWrapper>
-        </TabPanelContent>
-        <TabPanelContent value="form_view">
-          <div>Form View</div>
-        </TabPanelContent>
-        <TabPanelContent value="code_view">
-          <div>Code View</div>
-        </TabPanelContent>
-      </TabContext>
-    </Container>
+    <div>
+      <FunctionInfo />
+      <Container>
+        <TabContext value={tab}>
+          <TabListContainer>
+            {/* <FunctionControl /> */}
+            <TabListContent onChange={handleChangeTab} aria-label="lab API tabs example">
+              {TAB_LIST.map((tab) => (
+                <TabItem key={tab.value} label={tab.name} value={tab.value} />
+              ))}
+            </TabListContent>
+          </TabListContainer>
+          <TabPanelContent value="workflow_view">
+            <ContentWrapper>
+              <div className="div-canvas">
+                <ControlStructureCanvas />
+              </div>
+              <div className="div-func-list">
+                <FunctionSidebar />
+              </div>
+            </ContentWrapper>
+          </TabPanelContent>
+          <TabPanelContent value="form_view">
+            <div>Form View</div>
+          </TabPanelContent>
+          <TabPanelContent value="code_view">
+            <div>Code View</div>
+          </TabPanelContent>
+        </TabContext>
+      </Container>
+    </div>
   );
 };
 

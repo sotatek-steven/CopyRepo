@@ -17,6 +17,8 @@ import eventError from './eventError';
 import enumState from './enum';
 import userFunction from './userFunction';
 import declaration from './declaration';
+import initialFunction from './initialFunction';
+import functionDefinition from './functionDefinition';
 
 export {
   ticket,
@@ -37,5 +39,7 @@ export {
   eventError,
   enumState,
   userFunction,
-  declaration
+  declaration,
+  initialFunction,
+  functionDefinition,
 };

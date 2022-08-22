@@ -21,13 +21,18 @@ const Container = styled('div')(() => ({
 }));
 
 const FunctionActionList = () => {
-  const { userFunction } = useDispatch();
+  const { userFunction, initialFunction } = useDispatch();
   const functionState = useSelector((state) => state.userFunction);
   const [errorsModalOpen, setErrorsModalOpen] = useState(false);
   const [errors, setErrors] = useState([]);
 
   const saveFunction = async () => {
     const { code, data } = await userFunction.updateFunction(functionState);
+    delete data.updatedAt;
+    userFunction.update(data);
+
+    // save initial function data to compare
+    initialFunction.set(data);
 
     const errors = data?.errors;
     if (code === HTTP_CODE.SUCCESS) {

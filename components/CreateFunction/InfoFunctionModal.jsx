@@ -16,14 +16,24 @@ import {
   STATE_MUTABILITY_OPTIONS,
   VISIBILITY_OPTIONS,
 } from '@/config/constant/common';
-import { useRouter } from 'next/router';
 
-const ModalBody = styled('div')({
+const ModalBody = styled('div')(({ edited }) => ({
+  position: 'relative',
   padding: '20px 30px',
   display: 'flex',
   flexDirection: 'column',
   gap: 20,
-});
+  '&::after': {
+    display: edited === 1 ? 'none' : 'block',
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    zIndex: 100,
+    content: '""',
+    width: '100%',
+    height: '100%',
+  },
+}));
 
 const ModalFooter = styled('div')({
   padding: '0px 30px 20px',
@@ -32,66 +42,114 @@ const ModalFooter = styled('div')({
   gap: 20,
 });
 
-const CreateFunctionModal = ({ open, onClose }) => {
-  const { scopes, type } = useSelector((state) => state.userFunction);
-
-  const functionState = useSelector((state) => state.userFunction);
-  const { userFunction } = useDispatch();
+const InfoFunctionModal = ({ open, onClose, onCancel, onSubmit, mode = 'edit' }) => {
+  const { scopes, type, name, params, returns } = useSelector((state) => state.functionDefinition);
+  const functionDefinitionState = useSelector((state) => state.functionDefinition);
+  const { functions } = useSelector((state) => state.functions);
+  const { functionDefinition } = useDispatch();
   const [showPayableField, setShowPayableField] = useState(false);
-  const router = useRouter();
-  const [hasError, setHasError] = useState(true);
+  const [isDuplicated, setIsDuplicated] = useState(false);
 
   const handleVisibilityChange = (e) => {
     const value = e.target.value;
-    userFunction.updateScope(value);
+    functionDefinition.updateScope(value);
   };
 
   const handleTypeChange = (e) => {
     const value = e.target.value;
-    userFunction.updateType(value);
-    if (value === 'readonly') userFunction.updateStateMutability('view');
-    else userFunction.updateStateMutability('');
+    functionDefinition.updateType(value);
+    functionDefinition.updateStateMutability(value === 'readonly' ? 'view' : '');
   };
 
   const handleStateMutabilityChange = (e) => {
     const value = e.target.value;
-    userFunction.updateStateMutability(value);
+    functionDefinition.updateStateMutability(value);
   };
 
   const handleVirtualChange = (e) => {
     const value = e.target.value;
-    userFunction.updateVirtual(value);
+    functionDefinition.updateVirtual(value);
   };
 
   const handlePayableChange = (e) => {
     const value = e.target.value;
-    userFunction.updatePayable(value);
+    functionDefinition.updatePayable(value);
   };
 
   useEffect(() => {
     setShowPayableField(type === 'not-readonly' && (scopes?.scope === 'public' || scopes?.scope === 'external'));
   }, [scopes?.scope, type]);
 
-  const redirectToFunctiondDesignCavas = async () => {
-    if (hasError) return;
-    onClose();
-    const { data } = await userFunction.createFunction({ functionInfo: functionState });
-    const { _id } = data;
-    router.push(`${router.asPath}/functions/${_id}`);
+  const functionInfo = (data) => {
+    return `${data.name.value}-${(data.params || []).map((p) => p.type).join('-')}`;
   };
 
-  // useEffect(() => {
-  //   console.log('functionState: ', functionState);
-  // }, [functionState]);
+  const checkExistingFunction = () => {
+    const currentFunction = functionInfo(functionDefinitionState);
+    if (!functions) return false;
+    return functions.find((item) => item._id !== functionDefinitionState._id && item.key === currentFunction);
+  };
+
+  const checkFormError = () => {
+    if (!name.value) return true;
+    if (params.find((item) => !item.label.value)) return true;
+    return !!returns.find((item) => !item.label.value);
+  };
+
+  const handleConfirm = async () => {
+    if (checkFormError()) {
+      functionDefinition.updateName({
+        ...name,
+        errorMessage: !name.value ? 'This field is required' : '',
+      });
+
+      const updatedParams = params.map((item) => ({
+        ...item,
+        label: {
+          value: item.label.value,
+          errorMessage: !item.label.value ? 'This field is required' : '',
+        },
+      }));
+
+      const updatedReturns = returns.map((item) => ({
+        ...item,
+        label: {
+          value: item.label.value,
+          errorMessage: !item.label.value ? 'This field is required' : '',
+        },
+      }));
+
+      functionDefinition.updateParameters(updatedParams);
+      functionDefinition.updateReturns(updatedReturns);
+      return;
+    }
+
+    if (checkExistingFunction()) {
+      setIsDuplicated(true);
+      return;
+    }
+
+    if (!onSubmit) return;
+    onSubmit();
+  };
+
+  useEffect(() => {
+    setIsDuplicated(false);
+  }, [functionDefinitionState.params]);
 
   return (
-    <Modal open={open} onClose={onClose}>
+    <Modal
+      open={open}
+      onClose={(e, reason) => {
+        if (reason === 'backdropClick') return;
+        onClose();
+      }}>
       <ModalBox width="900px">
         <ModalHeader title="Function" onClose={onClose} />
         <Scrollbars autoHeight autoHeightMax={600}>
-          <ModalBody>
-            <FunctionNameField setFormError={setHasError} />
-            <ParametersField setFormError={setHasError} />
+          <ModalBody edited={mode === 'view' ? 0 : 1}>
+            <FunctionNameField />
+            <ParametersField isDuplicated={isDuplicated} />
 
             <Grid container spacing={2}>
               <Grid item xs={4}>
@@ -140,17 +198,19 @@ const CreateFunctionModal = ({ open, onClose }) => {
               </Grid>
             </Grid>
             <div>
-              <ReturnField setFormError={setHasError} />
+              <ReturnField />
             </div>
           </ModalBody>
         </Scrollbars>
-        <ModalFooter>
-          <SecondaryButton onClick={onClose}>Cancel</SecondaryButton>
-          <PrimaryButton onClick={redirectToFunctiondDesignCavas}>Continue</PrimaryButton>
-        </ModalFooter>
+        {mode !== 'view' && (
+          <ModalFooter>
+            <SecondaryButton onClick={onCancel}>Cancel</SecondaryButton>
+            <PrimaryButton onClick={handleConfirm}>Continue</PrimaryButton>
+          </ModalFooter>
+        )}
       </ModalBox>
     </Modal>
   );
 };
 
-export default CreateFunctionModal;
+export default InfoFunctionModal;
