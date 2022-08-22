@@ -4,6 +4,7 @@ import { BaseAutocomplete, Container, Error, Label } from './AutoComplete.style'
 
 export default function SingleAutoComplete({
   label,
+  colorLabel,
   options,
   loading,
   value = { value: '', label: '' },
@@ -23,7 +24,7 @@ export default function SingleAutoComplete({
   return (
     <Container>
       {label && (
-        <Label>
+        <Label colorLabel={colorLabel}>
           {label}
           {isRequired && '*'}
         </Label>

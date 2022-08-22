@@ -110,7 +110,7 @@ const FunctionItem = ({ data, nodeType }) => {
 
   const redirectToFunctionPage = () => {
     const { _id } = data;
-    route.push(`/functions/${_id}`);
+    route.push(`${route.asPath}/functions/${_id}`);
   };
 
   return (

@@ -16,6 +16,7 @@ import initialModule from './initialModule';
 import eventError from './eventError';
 import enumState from './enum';
 import userFunction from './userFunction';
+import declaration from './declaration';
 
 export {
   ticket,
@@ -36,4 +37,5 @@ export {
   eventError,
   enumState,
   userFunction,
+  declaration
 };

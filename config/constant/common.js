@@ -2,6 +2,7 @@ export const ELEMENT_TYPE = {
   INPUT: 'INPUT',
   SELECT: 'SELECT',
   TAG: 'TAG',
+  CHECK: 'CHECK',
 };
 
 export const MODE = {
@@ -174,6 +175,10 @@ export const VALUE_TYPE_OPTIONS = [
   {
     value: 'bool',
     label: 'bool',
+  },
+  {
+    value: 'bytes',
+    label: 'bytes',
   },
   {
     value: 'bytes1',
@@ -617,3 +622,50 @@ export const STRUCT_USERINFO = {
     },
   ],
 };
+
+export const ASSIGN_TYPE = {
+  VALUE_INPUT: 'value_input',
+  PARAMS: 'params',
+  STATE: 'state',
+  EXPRESSION: 'expression',
+};
+
+export const ASSIGN_TYPE_OPTION = [
+  {
+    value: ASSIGN_TYPE.VALUE_INPUT,
+    label: 'Value Input',
+  },
+  {
+    value: ASSIGN_TYPE.STATE,
+    label: 'State Variable',
+  },
+  {
+    value: ASSIGN_TYPE.PARAMS,
+    label: 'Params',
+  },
+  {
+    value: ASSIGN_TYPE.EXPRESSION,
+    label: 'Expression',
+  },
+];
+
+export const LOCATION_TYPE = {
+  MEMORY: 'memory',
+  CALL_DATA: 'call_data',
+  STORAGE: 'storage',
+};
+
+export const LOCATION_TYPE_OPTION = [
+  {
+    value: LOCATION_TYPE.MEMORY,
+    label: 'Memory',
+  },
+  {
+    value: LOCATION_TYPE.CALL_DATA,
+    label: 'Call Data',
+  },
+  {
+    value: LOCATION_TYPE.STORAGE,
+    label: 'Storage',
+  },
+];

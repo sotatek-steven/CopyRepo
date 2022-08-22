@@ -4,7 +4,7 @@ import IconInfo from 'assets/icon/icon-info.svg';
 import { IconButton, Tooltip } from '@mui/material';
 import Label from '../atom/Label';
 
-const LabelContainer = styled('div')({
+const LabelContainer = styled('div')(({ theme, type }) => ({
   display: 'flex',
   justifyContent: 'space-between',
   '.MuiIconButton-root': {
@@ -12,8 +12,11 @@ const LabelContainer = styled('div')({
     '&:hover': {
       backgroundColor: 'unset',
     },
+    '& > svg > path': {
+      fill: type === 'basic' ? theme.palette.text.primary : theme.palette.primary.light,
+    },
   },
-});
+}));
 
 const InputBasic = styled('input')(({ theme, error }) => ({
   backgroundColor: theme.palette.background.light,
@@ -38,22 +41,24 @@ const Error = styled('div')(({ theme }) => ({
   marginTop: 8,
 }));
 
-const Input = ({ label, isRequired, tooltip, errorText, error, value = '', ...props }) => {
+const Input = ({ label, typeLabel, isRequired, tooltip, errorText, error, value = '', ...props }) => {
   return (
     <>
-      <LabelContainer htmlFor={props.id}>
-        <Label className="title">
-          {label}
-          {isRequired && '*'}
-        </Label>
-        {tooltip && (
-          <Tooltip title={tooltip} placement="top" arrow>
-            <IconButton>
-              <IconInfo />
-            </IconButton>
-          </Tooltip>
-        )}
-      </LabelContainer>
+      {label && (
+        <LabelContainer htmlFor={props.id} type={typeLabel}>
+          <Label className="title" type={typeLabel}>
+            {label}
+            {isRequired && '*'}
+          </Label>
+          {tooltip && (
+            <Tooltip title={tooltip} placement="top" arrow>
+              <IconButton>
+                <IconInfo />
+              </IconButton>
+            </Tooltip>
+          )}
+        </LabelContainer>
+      )}
       <InputBasic value={value} error={error ? 1 : 0} onBlur={props?.onChange} {...props} />
       {!!errorText && <Error>{errorText}</Error>}
     </>

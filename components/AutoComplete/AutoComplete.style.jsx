@@ -38,9 +38,9 @@ const BaseAutocomplete = styled(Autocomplete)(({ theme }) => ({
   },
 }));
 
-const Label = styled('div')(({ theme }) => ({
+const Label = styled('div')(({ theme, colorLabel }) => ({
   fontFamily: 'Segoe UI',
-  color: theme.palette.primary.light,
+  color: colorLabel || theme.palette.primary.light,
   fontSize: 16,
   fontWeight: 600,
   marginBottom: 3,

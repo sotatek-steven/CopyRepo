@@ -3,6 +3,7 @@ import FunctionActionList from '@/components/functionsPage/FunctionActionList';
 import FunctionControl from '@/components/functionsPage/FunctionControl';
 import FunctionSidebar from '@/components/functionsPage/FunctionSidebar';
 import DesignLayout from '@/components/layout/DesignLayout';
+import useModulePage from '@/components/ModulePage/hooks/useModulePage';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { styled, Tab } from '@mui/material';
 import { useRouter } from 'next/router';
@@ -116,17 +117,16 @@ const TAB_LIST = [
 
 const FunctionPage = () => {
   const router = useRouter();
-  const { id } = router.query;
+  const { functionId } = router.query;
   const { userFunction } = useDispatch();
+  const { fetchDetailModule } = useModulePage();
   const [tab, setTab] = useState('workflow_view');
-  const [nodes, setNodes] = useState([]);
-  const [edges, setEdges] = useState([]);
 
   useEffect(() => {
     const fetchDetailFunction = async () => {
       try {
-        if (!id) return;
-        const data = await userFunction.getDetailFunction(id);
+        if (!functionId) return;
+        const data = await userFunction.getDetailFunction(functionId);
         userFunction.update(data);
       } catch (error) {
         console.log('Failed to fetch detail function: ', error);
@@ -134,10 +134,11 @@ const FunctionPage = () => {
     };
 
     fetchDetailFunction();
+    fetchDetailModule();
     return () => {
       userFunction.update({});
     };
-  }, [id]);
+  }, [functionId]);
 
   const handleChangeTab = (e, newValue) => {
     setTab(newValue);
@@ -157,7 +158,7 @@ const FunctionPage = () => {
         <TabPanelContent value="workflow_view">
           <ContentWrapper>
             <div className="div-canvas">
-              <ControlStructureCanvas initialNodes={nodes} initialEdges={edges} />
+              <ControlStructureCanvas />
             </div>
             <div className="div-func-list">
               <FunctionSidebar />

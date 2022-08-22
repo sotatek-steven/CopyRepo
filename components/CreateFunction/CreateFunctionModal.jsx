@@ -77,7 +77,7 @@ const CreateFunctionModal = ({ open, onClose }) => {
     onClose();
     const { data } = await userFunction.createFunction({ functionInfo: functionState });
     const { _id } = data;
-    router.push(`/functions/${_id}`);
+    router.push(`${router.asPath}/functions/${_id}`);
   };
 
   // useEffect(() => {
