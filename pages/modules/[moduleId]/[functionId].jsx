@@ -2,9 +2,12 @@ import ControlStructureCanvas from '@/components/ControlStructureCanvas';
 import FunctionActionList from '@/components/FunctionsPage/FunctionActionList';
 import FunctionInfo from '@/components/FunctionsPage/FunctionInfo';
 import FunctionSidebar from '@/components/functionsPage/FunctionSidebar';
+import useDeclaration from '@/components/functionsPage/hooks/useDeclaration';
 import DesignLayout from '@/components/layout/DesignLayout';
+import { VALUE_TYPE_OPTIONS } from '@/config/constant/common';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { styled, Tab } from '@mui/material';
+import _ from 'lodash';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 import { useDispatch } from 'react-redux';
@@ -117,9 +120,9 @@ const TAB_LIST = [
 const FunctionPage = () => {
   const router = useRouter();
   const { moduleId, functionId } = router.query;
-  const { userFunction, initialFunction, userModule, functions, functionDefinition } = useDispatch();
+  const { userFunction, initialFunction, userModule, functions, functionDefinition, declaration } = useDispatch();
   const [tab, setTab] = useState('workflow_view');
-  // const { fetchDetailModule } = useModulePage();
+  const { convertDeclaration } = useDeclaration();
 
   const handleChangeTab = (e, newValue) => {
     setTab(newValue);
@@ -166,6 +169,17 @@ const FunctionPage = () => {
         // fetch detail module
         const moduleData = await userModule.getDetailModule(moduleId);
         userModule.update(moduleData);
+        // get list type for declaration modal
+        const typeStructs = moduleData?.sources?.structs?.map((item) => {
+          return {
+            value: item?._id,
+            label: item?.name,
+          };
+        });
+        declaration.setListType(_.concat(VALUE_TYPE_OPTIONS, typeStructs));
+        // Convert Declaration
+        const listDeclaration = convertDeclaration(data.block);
+        declaration.updateDeclarations(listDeclaration);
 
         //fetch all of functions
         functions.getAllUserFunctions();

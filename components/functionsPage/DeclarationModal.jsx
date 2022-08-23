@@ -1,28 +1,29 @@
 import { ASSIGN_TYPE_OPTION, ELEMENT_TYPE, IS_ARRAY_OPTION, LOCATION_TYPE_OPTION } from '@/config/constant/common';
 import { Checkbox, useTheme } from '@mui/material';
 import { styled } from '@mui/material/styles';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import SingleAutoComplete from '../AutoComplete/SingleAutoComplete';
 import FormModal from '../FormModal';
 import { Input } from '../Input';
 import useDeclaration from './hooks/useDeclaration';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
+import ExpressionModal from '../ExpressionModal';
 
-const Container = styled('div')(({ theme }) => ({
+const Container = styled('div')({
   display: 'flex',
   paddingLeft: 10,
   gap: 30,
-}));
+});
 
-const ItemContainer = styled('div')(({ theme }) => ({
+const ItemContainer = styled('div')({
   width: '25%',
-}));
+});
 
-const CheckBoxContainer = styled('div')(({ theme }) => ({
+const CheckBoxContainer = styled('div')({
   width: '100%',
   marginTop: 30,
-}));
+});
 
 const tooltipText = (
   <div>
@@ -36,7 +37,19 @@ const tooltipText = (
 
 const DeclarationModal = ({ open, onClose, onComfirm }) => {
   const theme = useTheme();
-  const { dataDeclaration, listType, handleChange, isShowInputText, isShowLocation } = useDeclaration();
+  const { dataDeclaration, listType, handleChange, isShowInputText, isShowLocation, isShowExpression } =
+    useDeclaration();
+  const [expressionModalOpen, setExpressionModalOpen] = useState(false);
+
+  useEffect(() => {
+    setExpressionModalOpen(isShowExpression());
+  }, [dataDeclaration?.assignType]);
+
+  const handleCancelExpression = () => {
+    setExpressionModalOpen(false);
+  };
+
+  const handleSubmitExpression = () => {};
 
   return (
     <FormModal
@@ -52,9 +65,9 @@ const DeclarationModal = ({ open, onClose, onComfirm }) => {
           <SingleAutoComplete
             label={'Type'}
             colorLabel={theme.palette.text.primary}
-            value={listType?.find((type) => type.value === dataDeclaration?.type)}
+            value={listType?.find((type) => type.value === dataDeclaration?.declarationType)}
             options={listType}
-            onChange={(e, newValue) => handleChange('type', ELEMENT_TYPE.SELECT, newValue)}
+            onChange={(e, newValue) => handleChange('declarationType', ELEMENT_TYPE.SELECT, newValue)}
           />
         </ItemContainer>
         <ItemContainer>
@@ -81,9 +94,11 @@ const DeclarationModal = ({ open, onClose, onComfirm }) => {
           <Input
             label="Name"
             typeLabel={'basic'}
-            value={dataDeclaration?.name}
+            isRequired={true}
+            value={dataDeclaration?.indentifier}
+            errorText={dataDeclaration?.indentifierError}
             tooltip={tooltipText}
-            onChange={(e) => handleChange('name', ELEMENT_TYPE.INPUT, e)}
+            onChange={(e) => handleChange('indentifier', ELEMENT_TYPE.INPUT, e)}
           />
         </ItemContainer>
       </Container>
@@ -114,6 +129,12 @@ const DeclarationModal = ({ open, onClose, onComfirm }) => {
             />
           </ItemContainer>
         )}
+        <ExpressionModal
+          open={expressionModalOpen}
+          onClose={() => setExpressionModalOpen(false)}
+          onCancel={handleCancelExpression}
+          onSubmit={handleSubmitExpression}
+        />
       </Container>
     </FormModal>
   );
