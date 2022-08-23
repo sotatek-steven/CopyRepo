@@ -52,12 +52,22 @@ const useDeclaration = () => {
     return isShow;
   };
 
+  const isShowExpression = () => {
+    let isShow = false;
+    if (dataDeclaration?.isAssign && dataDeclaration?.assignType === ASSIGN_TYPE.EXPRESSION) {
+      isShow = true;
+    }
+
+    return isShow;
+  };
+
   return {
     dataDeclaration,
     listType,
     handleChange,
     isShowLocation,
     isShowInputText,
+    isShowExpression,
   };
 };
 
