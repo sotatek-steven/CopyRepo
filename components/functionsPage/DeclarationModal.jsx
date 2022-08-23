@@ -10,20 +10,20 @@ import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import ExpressionModal from '../ExpressionModal';
 
-const Container = styled('div')(({ theme }) => ({
+const Container = styled('div')({
   display: 'flex',
   paddingLeft: 10,
   gap: 30,
-}));
+});
 
-const ItemContainer = styled('div')(({ theme }) => ({
+const ItemContainer = styled('div')({
   width: '25%',
-}));
+});
 
-const CheckBoxContainer = styled('div')(({ theme }) => ({
+const CheckBoxContainer = styled('div')({
   width: '100%',
   marginTop: 30,
-}));
+});
 
 const tooltipText = (
   <div>
@@ -65,9 +65,9 @@ const DeclarationModal = ({ open, onClose, onComfirm }) => {
           <SingleAutoComplete
             label={'Type'}
             colorLabel={theme.palette.text.primary}
-            value={listType?.find((type) => type.value === dataDeclaration?.type)}
+            value={listType?.find((type) => type.value === dataDeclaration?.declarationType)}
             options={listType}
-            onChange={(e, newValue) => handleChange('type', ELEMENT_TYPE.SELECT, newValue)}
+            onChange={(e, newValue) => handleChange('declarationType', ELEMENT_TYPE.SELECT, newValue)}
           />
         </ItemContainer>
         <ItemContainer>
@@ -94,9 +94,11 @@ const DeclarationModal = ({ open, onClose, onComfirm }) => {
           <Input
             label="Name"
             typeLabel={'basic'}
-            value={dataDeclaration?.name}
+            isRequired={true}
+            value={dataDeclaration?.indentifier}
+            errorText={dataDeclaration?.indentifierError}
             tooltip={tooltipText}
-            onChange={(e) => handleChange('name', ELEMENT_TYPE.INPUT, e)}
+            onChange={(e) => handleChange('indentifier', ELEMENT_TYPE.INPUT, e)}
           />
         </ItemContainer>
       </Container>

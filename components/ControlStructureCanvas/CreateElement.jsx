@@ -1,41 +1,33 @@
-import _ from 'lodash';
+import ObjectID from 'bson-objectid';
 
-export const createNodes = (functions, coordinates) => {
-  if (!functions || !coordinates) return [];
-  let edges = [];
-
-  const nodes = coordinates.map((item) => {
-    const { position, func: functionId } = item;
-    const type = 'simpleRectangle';
-    const data = functions.find((funcData) => {
-      return funcData._id === functionId;
-    });
-
-    edges = _.unionBy(_.concat(edges, createEdges(item?.func, data?.dependencies)), 'id');
+export const createNodes = (data) => {
+  const nodes = data.map((item) => {
     return {
-      id: item?.func,
-      type,
+      id: ObjectID(32).toHexString(),
       data: {
-        ...data,
+        ...item,
+        label: item?.indentifier,
       },
-      position,
+      type: item?.type,
+      position: item?.position,
     };
   });
-
-  return { nodes, edges };
+  return nodes;
 };
 
-export const createEdges = (nodeId, dependencies) => {
-  if (!dependencies?.length) return [];
-  const edges = dependencies?.map((depen) => {
-    return {
-      id: `${depen}-${nodeId}`,
-      source: depen,
-      target: nodeId,
+export const createEdges = (nodes) => {
+  if (!nodes || nodes.length < 2) return [];
+  const edges = [];
+  for (let i = 0; i < nodes.length - 1; i++) {
+    const source = nodes[i].id;
+    const target = nodes[i + 1].id;
+    edges.push({
+      id: `${source}-${target}`,
+      source,
+      target,
       markerEnd: { type: 'arrowclosed', color: '#fff' },
       style: { strokeWidth: 2 },
-    };
-  });
-
+    });
+  }
   return edges;
 };
