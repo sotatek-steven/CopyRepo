@@ -3,10 +3,10 @@ import React, { useEffect, useState } from 'react';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import ParameterItem from './ParameterItem';
 import { useDispatch, useSelector } from 'react-redux';
-import { NEW_PARAMETER } from '@/store/models/userFunction';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import ObjectID from 'bson-objectid';
+import { NEW_PARAMETER } from '@/store/models/functionDefinition';
 
 const AddButton = styled(AddCircleIcon)(({ theme }) => ({
   color: theme.palette.primary.main,
@@ -25,71 +25,79 @@ const TitleWrapper = styled('div')({
   alignItems: 'center',
 });
 
-const ParametersField = ({ setFormError }) => {
-  const { params } = useSelector((state) => state.userFunction);
-  const { userFunction } = useDispatch();
-  const [hasParameters, setHasParameters] = useState(false);
+const Header = styled('div')({
+  display: 'flex',
+  alignItems: 'center',
+  gap: 20,
+});
 
-  const hanleAddParameter = () => {
-    const _params = [...params, { ...NEW_PARAMETER, id: ObjectID(32).toHexString() }];
-    userFunction.updateParameters(_params);
+const Error = styled('p')(({ theme }) => ({
+  color: theme.palette.error.main,
+  fontSize: 14,
+  margin: 0,
+}));
+
+const ParametersField = ({ isDuplicated }) => {
+  const { params } = useSelector((state) => state.functionDefinition);
+  const { functionDefinition } = useDispatch();
+  const [hasParameters, setHasParameters] = useState(params.length > 0);
+
+  const handleAddParameter = () => {
+    const _params = [...params, { ...NEW_PARAMETER, _id: ObjectID(32).toHexString() }];
+    functionDefinition.updateParameters(_params);
   };
 
   const handleRemoveParameter = (parameterId) => {
-    const updatedParameters = params.filter((item) => item.id !== parameterId);
+    const updatedParameters = params.filter((item) => item._id !== parameterId);
     if (!updatedParameters.length) setHasParameters(false);
-    userFunction.updateParameters(updatedParameters);
+    functionDefinition.updateParameters(updatedParameters);
   };
 
-  const updateParameter = (parameter) => {
+  const onUpdate = (parameter) => {
     const updatedParameters = params.map((item) => {
-      if (item.id !== parameter.id) return item;
+      if (item._id !== parameter._id) return item;
       return parameter;
     });
 
-    userFunction.updateParameters(updatedParameters);
+    functionDefinition.updateParameters(updatedParameters);
   };
 
   useEffect(() => {
     if (hasParameters && params.length > 0) return;
     if (!hasParameters) {
-      userFunction.updateParameters([]);
+      functionDefinition.updateParameters([]);
       return;
     }
 
-    hanleAddParameter();
+    handleAddParameter();
   }, [hasParameters]);
 
   return (
     <>
-      <TitleWrapper>
-        <Checkbox
-          icon={<CheckBoxOutlineBlankIcon />}
-          checkedIcon={<CheckBoxIcon />}
-          checked={hasParameters}
-          onClick={() => setHasParameters((hasParameters) => !hasParameters)}
-        />
-        Include Paramerters?
-      </TitleWrapper>
+      <Header>
+        <TitleWrapper>
+          <Checkbox
+            icon={<CheckBoxOutlineBlankIcon />}
+            checkedIcon={<CheckBoxIcon />}
+            checked={hasParameters}
+            onClick={() => setHasParameters((hasParameters) => !hasParameters)}
+          />
+          Include Paramerters?
+        </TitleWrapper>
+        {isDuplicated && <Error>Parameters types and order are duplicated, please update the parameters</Error>}
+      </Header>
+
       {hasParameters && (
         <Grid container spacing={2} sx={{ paddingLeft: '30px' }}>
           <Grid item xs={11}>
             <ListWrapper>
               {params.map((item, index) => {
-                return (
-                  <ParameterItem
-                    key={index}
-                    data={item}
-                    onRemove={handleRemoveParameter}
-                    onUpdate={updateParameter}
-                    setFormError={setFormError}
-                  />
-                );
+                return <ParameterItem onUpdate={onUpdate} key={index} data={item} onRemove={handleRemoveParameter} />;
               })}
             </ListWrapper>
           </Grid>
           <Grid sx={{ display: 'flex', alignItems: 'end', justifyContent: 'end' }} item xs={1}>
-            <AddButton onClick={hanleAddParameter} />
+            <AddButton onClick={handleAddParameter} />
           </Grid>
         </Grid>
       )}

@@ -1,13 +1,11 @@
-import { styled } from '@mui/material';
-import React, { useState } from 'react';
-import MoreVertIcon from '@mui/icons-material/MoreVert';
-import Popover from '@mui/material/Popover';
-import ModuleInfoModal from './ModuleInfoModal';
-import { useDispatch, useSelector } from 'react-redux';
-import ConfirmDialog from '../atom/Dialog/ConfirmDialog';
+import { Popover, styled } from '@mui/material';
 import { useRouter } from 'next/router';
-import { MODE } from '@/config/constant/common';
+import React, { useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import BackButton from '../atom/BackButton';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
+import InfoFunctionModal from '../CreateFunction/InfoFunctionModal';
+import ConfirmDialog from '../atom/Dialog/ConfirmDialog';
 import _ from 'lodash';
 
 const Wrapper = styled('div')(({ theme }) => ({
@@ -15,7 +13,9 @@ const Wrapper = styled('div')(({ theme }) => ({
   alignItems: 'center',
   gap: '11px',
   position: 'absolute',
-  top: 32,
+  zIndex: 100,
+  top: 100,
+  left: 60,
   color: theme.palette.primary.light,
   ...theme.typography.h2,
   fontFamily: 'Segoe UI',
@@ -39,41 +39,34 @@ const moreVertIconStyle = {
   cursor: 'pointer',
 };
 
-const ModuleControl = () => {
+const FunctionInfo = () => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const [infoModalOpen, setInfoModalOpen] = useState(false);
+  const [functionModalOpen, setFunctionModalOpen] = useState(false);
   const [saveChangeDialogOpen, setSaveChangeDialogOpen] = useState(false);
 
   const route = useRouter();
-  const { userModule } = useDispatch();
-  const moduleState = useSelector((state) => state.userModule);
-  const initialModuleState = useSelector((state) => state.initialModule);
+  const { userFunction, functionDefinition } = useDispatch();
+  const functionState = useSelector((state) => state.userFunction);
+  const functionDefinitionState = useSelector((state) => state.functionDefinition);
+  const initialFunctionState = useSelector((state) => state.initialFunction);
 
-  const redirectToContractPage = () => {
-    // const { _id: id } = contractState.current;
-    // console.log('contractState.current: ', contractState.current);
-    // if (!id) return;
-    // route.push(`/smartcontract/${id}`);
+  const redirectToModulePage = () => {
     route.back();
   };
 
-  const handleConfirm = async () => {
-    // console.log('initialModuleState : ', JSON.stringify({ ...initialModuleState, updatedAt: '' }));
-    // console.log('moduleState: ', JSON.stringify({ ...moduleState, updatedAt: '' }));
-    if (
-      moduleState.owner === 'system' ||
-      _.isEqual({ ...initialModuleState, updatedAt: '' }, { ...moduleState, updatedAt: '' })
-    ) {
-      redirectToContractPage();
+  const handleSaveConfirm = async () => {
+    // console.log(initialFunctionState);
+    // console.log(functionState);
+    if (functionState.owner === 'system' || _.isEqual(initialFunctionState, functionState)) {
+      redirectToModulePage();
       return;
     }
-    console.log('no redirect');
     setSaveChangeDialogOpen(true);
   };
 
   const saveChangeAndRedirect = async () => {
-    await userModule.updateModule({ moduleId: moduleState._id, moduleInfo: moduleState });
-    redirectToContractPage();
+    userFunction.updateFunction(functionState);
+    redirectToModulePage();
   };
 
   const handleClick = (event) => {
@@ -88,15 +81,28 @@ const ModuleControl = () => {
   const id = open ? 'simple-popover' : undefined;
 
   const handleInfoModalOpen = () => {
-    setInfoModalOpen(true);
+    setFunctionModalOpen(true);
     handlePopoverClose();
+  };
+
+  const handleSubmit = async () => {
+    const dataTransferApi = await functionDefinition.convertToDataTransferApi(functionDefinitionState);
+    userFunction.updateDefinition(dataTransferApi);
+    setFunctionModalOpen(false);
+  };
+
+  const handleCancel = async () => {
+    setFunctionModalOpen(false);
+    if (functionState?.owner === 'system') return;
+    const FEData = await functionDefinition.convertToFEDataDisplay(functionState);
+    functionDefinition.update(FEData);
   };
 
   return (
     <>
       <Wrapper>
-        <BackButton onClick={handleConfirm} />
-        <span>{moduleState.name}</span>
+        <BackButton onClick={handleSaveConfirm} />
+        <span>{functionState?.name}</span>
         <MoreVertIcon sx={moreVertIconStyle} onClick={handleClick} />
         <Popover
           sx={{
@@ -112,21 +118,22 @@ const ModuleControl = () => {
             vertical: 'bottom',
             horizontal: 'right',
           }}>
-          <ModuleActionItem onClick={handleInfoModalOpen}>Module Infomation</ModuleActionItem>
+          <ModuleActionItem onClick={handleInfoModalOpen}>Function Infomation</ModuleActionItem>
         </Popover>
       </Wrapper>
 
-      <ModuleInfoModal
-        mode={MODE.EDIT}
-        open={infoModalOpen}
-        onClose={() => setInfoModalOpen(false)}
-        data={moduleState}
+      <InfoFunctionModal
+        open={functionModalOpen}
+        onClose={() => setFunctionModalOpen(false)}
+        onCancel={handleCancel}
+        onSubmit={handleSubmit}
+        mode={functionState?.owner === 'system' ? 'view' : 'edit'}
       />
 
       <ConfirmDialog
         open={saveChangeDialogOpen}
         onClose={() => setSaveChangeDialogOpen(false)}
-        onDisagree={redirectToContractPage}
+        onDisagree={redirectToModulePage}
         onAgree={saveChangeAndRedirect}
         title="You have unsave changes"
         closeText="Discard"
@@ -136,4 +143,4 @@ const ModuleControl = () => {
   );
 };
 
-export default ModuleControl;
+export default FunctionInfo;

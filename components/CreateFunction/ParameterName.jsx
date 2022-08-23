@@ -1,9 +1,8 @@
-import { REGEX } from '@/config/constant/regex';
 import { InputAdornment, styled, TextField, Tooltip } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSelector } from 'react-redux';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
-const regex = new RegExp(REGEX.VARIABLE_NAME);
+import useValidateVariableName from '@/hooks/useValidateVariableName';
 
 const InputBasic = styled(TextField)(({ theme, error }) => ({
   backgroundColor: theme.palette.background.light,
@@ -47,132 +46,60 @@ const TooltipWrapper = styled('div')(({ theme, focus, error }) => ({
 
 const TOOLTIP_NAME = 'Beginning character: Must be letter\nFollowing characters only contain: Letters, digits, (_)';
 
-const ParameterName = ({ value, setValue, setFormError }) => {
-  const moduleState = useSelector((state) => state.userModule);
-  const functionState = useSelector((state) => state.userFunction);
-  const { variables: stateVariables } = useSelector((state) => state.userModule);
-  const [error, setError] = useState(false);
-  const [errorMessage, setErrorMessage] = useState('');
+const ParameterName = ({ label, id, updateLabel }) => {
+  const { checkExistingStateVariable, validateSyntax, checkExistingParameter, checkExistingFunction } =
+    useValidateVariableName();
   const [onFocus, setOnFocus] = useState(false);
 
-  const checkExistingFunction = (functionName) => {
-    if (functionState.name === functionName) return true;
-    const functions = moduleState.sources.functions;
-    if (!functions) return false;
-    return functions.find((item) => item.name === functionName);
-  };
-
-  const checkExistingParameter = (parameterName) => {
-    const { parameters } = functionState;
-    if (!parameters) return false;
-    return parameters.find((item) => item.name === parameterName);
-  };
-
-  const checkExistingIdentifier = (parameterName) => {
-    const { mappings, structs, values } = stateVariables;
-    let names = [];
-    mappings.forEach((items) => {
-      names.push(items.label);
-    });
-
-    structs.forEach((items) => {
-      names.push(items.label);
-    });
-
-    values.forEach((items) => {
-      names.push(items.label);
-    });
-
-    return names.find((name) => name === parameterName);
-  };
-
   const validateParameterName = (value) => {
-    if (!value) {
-      setError(false);
-      setErrorMessage('');
-      setFormError(true);
-      return;
-    }
-
-    const match = regex.test(value);
-    if (!match) {
-      setError(true);
-      setErrorMessage('Invalid declaration');
-      setFormError(true);
-      return;
-    }
-
-    if (checkExistingFunction(value)) {
-      setError(true);
-      setErrorMessage('Found an existing function with the same name');
-      setFormError(true);
-      return;
-    }
-
-    if (checkExistingParameter(value)) {
-      setError(true);
-      setErrorMessage('Found an existing parameter with the same name');
-      setFormError(true);
-      return;
-    }
-
-    if (checkExistingIdentifier(value)) {
-      setError(true);
-      setErrorMessage('Identifier already declared');
-      setFormError(true);
-      return;
-    }
-
-    setError(false);
-    setErrorMessage('');
-    setFormError(false);
+    if (!value) return '';
+    if (!validateSyntax(value)) return 'Invalid declaration';
+    if (checkExistingFunction(value)) return 'Found an existing function with the same name';
+    if (checkExistingParameter(value, id)) return 'Found an existing parameter with the same name';
+    if (checkExistingStateVariable(value)) return 'Identifier already declared';
   };
 
   const handleNameChange = (e) => {
     const value = e.target.value.trim();
-    setValue(value);
-    validateParameterName(value);
+    const errorMessage = validateParameterName(value);
+
+    updateLabel({ value, errorMessage });
   };
 
-  const handleVariableNameFocus = () => {
+  const handleVariableNameFocus = (event) => {
+    const { value } = event.target;
     setOnFocus(true);
     if (value) return;
-    setError(false);
-    setErrorMessage('');
+    updateLabel({ value, errorMessage: '' });
   };
 
   const handleVariableNameFocusOut = (event) => {
     setOnFocus(false);
     const { value } = event.target;
     if (value) return;
-    setError(true);
-    setErrorMessage('This field is required');
-  };
 
-  useEffect(() => {
-    validateParameterName(value);
-  }, [functionState.name]);
+    updateLabel({ value, errorMessage: 'This field is required' });
+  };
 
   return (
     <Container sx={{ position: 'relative' }}>
-      <TooltipWrapper focus={onFocus ? 1 : 0} error={error ? 1 : 0}>
+      <TooltipWrapper focus={onFocus ? 1 : 0} error={label.errorMessage ? 1 : 0}>
         <Tooltip title={TOOLTIP_NAME} placement="top" arrow>
           <ErrorOutlineIcon style={{ fontSize: 13 }} />
         </Tooltip>
       </TooltipWrapper>
       <InputBasic
-        id="outlined-adornment-amount"
         label="Name"
-        value={value}
+        value={label.value}
         onChange={handleNameChange}
-        error={error ? 1 : 0}
+        error={label.errorMessage ? 1 : 0}
         onFocus={handleVariableNameFocus}
         onBlur={handleVariableNameFocusOut}
         InputProps={{
           startAdornment: <InputAdornment position="start"></InputAdornment>,
         }}
       />
-      {!!errorMessage && <Error>{errorMessage}</Error>}
+      {!!label.errorMessage && <Error>{label.errorMessage}</Error>}
     </Container>
   );
 };

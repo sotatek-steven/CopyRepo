@@ -7,6 +7,7 @@ import { IconButton, Popover } from '@mui/material';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import FunctionDetail from '../ModulePage/FunctionDetail';
 import { useRouter } from 'next/router';
+import { useSelector } from 'react-redux';
 
 const Item = styled('div')(({ theme, disable }) => ({
   gap: '17px',
@@ -74,6 +75,7 @@ const options = [
 ];
 
 const FunctionItem = ({ data, nodeType }) => {
+  const moduleState = useSelector((state) => state.userModule);
   const [anchorEl, setAnchorEl] = useState(null);
   const [isOpenFunctionDetail, setIsOpenFunctionDetail] = useState(false);
   const route = useRouter();
@@ -110,7 +112,7 @@ const FunctionItem = ({ data, nodeType }) => {
 
   const redirectToFunctionPage = () => {
     const { _id } = data;
-    route.push(`${route.asPath}/functions/${_id}`);
+    route.push(`/modules/${moduleState._id}/${_id}`);
   };
 
   return (
@@ -122,8 +124,8 @@ const FunctionItem = ({ data, nodeType }) => {
       <div>
         <DragIcon />
       </div>
-      <div className="content" onClick={redirectToFunctionPage}>
-        <div className="div-name">
+      <div className="content">
+        <div className="div-name" onClick={redirectToFunctionPage}>
           <Text>{data.name}</Text>
         </div>
         <div className="icon-action">

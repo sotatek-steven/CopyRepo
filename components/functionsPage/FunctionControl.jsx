@@ -36,7 +36,7 @@ const moreVertIconStyle = {
 
 const FunctionControl = () => {
   const [anchorEl, setAnchorEl] = useState(null);
-  const userFunction = useSelector((state) => state.userFunction);
+  const functionState = useSelector((state) => state.userFunction);
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -57,7 +57,7 @@ const FunctionControl = () => {
     <>
       <Wrapper>
         <BackButton />
-        <span>{userFunction.name}</span>
+        <span>{functionState.name}</span>
         <MoreVertIcon sx={moreVertIconStyle} onClick={handleClick} />
         <Popover
           sx={{

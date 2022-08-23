@@ -1,5 +1,5 @@
 import { Box, Grid, styled } from '@mui/material';
-import React from 'react';
+import React, { useEffect } from 'react';
 import Select from '../Select';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
 import { IS_ARRAY_OPTION, LOCATION_OPTIONS, VALUE_TYPE_OPTIONS } from '@/config/constant/common';
@@ -12,49 +12,30 @@ const RemoveButton = styled('div')(({ theme }) => ({
   paddingTop: 10,
 }));
 
-const ParameterItem = ({ data, onRemove, onUpdate, setFormError }) => {
+const ParameterItem = ({ data, onRemove, onUpdate }) => {
+  const { label, type, isArray, location, _id } = data;
   const moduleState = useSelector((state) => state.userModule);
-  const { label, type, isArray, location } = data;
 
-  const handleLabelChange = (value) => {
-    const updatedData = { ...data, label: value };
-    if (!onUpdate) return;
+  const handleLabelChange = (updatedLabel) => {
+    const updatedData = { ...data, label: updatedLabel };
     onUpdate(updatedData);
   };
 
   const handleLocationChange = (event) => {
     const value = event.target.value;
     const updatedData = { ...data, location: value };
-    if (!onUpdate) return;
     onUpdate(updatedData);
   };
 
   const handleTypeChange = (event) => {
     const value = event.target.value;
     const updatedData = { ...data, type: value };
-
-    const { structs } = moduleState.sources;
-    const structOptions = structs.map((item) => item.name);
-    const bytesOptions = [];
-    VALUE_TYPE_OPTIONS.forEach((item) => {
-      if (item.value.includes('bytes')) bytesOptions.push(item.value);
-    });
-    const typeIsArray = ['string', ...bytesOptions, ...structOptions];
-
-    const _isArray = !!typeIsArray.find((item) => item === value);
-    if (_isArray) {
-      updatedData.isArray = _isArray;
-      updatedData.location = 'memory';
-    }
-
-    if (!onUpdate) return;
     onUpdate(updatedData);
   };
 
   const handleIsArrayChange = (event) => {
     const value = event.target.value;
     const updatedData = { ...data, isArray: value };
-    if (!onUpdate) return;
     onUpdate(updatedData);
   };
 
@@ -75,6 +56,30 @@ const ParameterItem = ({ data, onRemove, onUpdate, setFormError }) => {
     return options;
   };
 
+  useEffect(() => {
+    const updateLocation = () => {
+      const { structs } = moduleState.sources;
+      const structOptions = structs.map((item) => item.name);
+      const bytesOptions = [];
+      VALUE_TYPE_OPTIONS.forEach((item) => {
+        if (item.value.includes('bytes')) bytesOptions.push(item.value);
+      });
+      const typeIsArray = ['string', ...bytesOptions, ...structOptions];
+
+      let _location = location;
+      if (!typeIsArray.find((item) => item === type) && !isArray) {
+        _location = '';
+      } else {
+        _location = location || 'memory';
+      }
+
+      const updatedData = { ...data, location: _location };
+      onUpdate(updatedData);
+    };
+
+    updateLocation();
+  }, [type, isArray]);
+
   return (
     <Grid container spacing={2}>
       <Grid item xs={3}>
@@ -89,18 +94,18 @@ const ParameterItem = ({ data, onRemove, onUpdate, setFormError }) => {
       <Grid item xs={2}>
         <Select placeholder="IsArray" value={isArray} options={IS_ARRAY_OPTION} onChange={handleIsArrayChange} />
       </Grid>
-      {isArray && (
+      {location && (
         <Grid item xs={2}>
           <Select placeholder="Location" value={location} options={LOCATION_OPTIONS} onChange={handleLocationChange} />
         </Grid>
       )}
       <Grid sx={{ display: 'flex', alignContent: 'center' }} item xs={4}>
         <Box sx={{ flexGrow: 1 }}>
-          <ParameterName setFormError={setFormError} value={label} setValue={handleLabelChange} />
+          <ParameterName label={label} id={_id} updateLabel={handleLabelChange} />
         </Box>
       </Grid>
       <Grid sx={{ display: 'flex', justifyContent: 'end' }} item xs={1}>
-        <RemoveButton onClick={() => onRemove(data.id)}>
+        <RemoveButton onClick={() => onRemove(data._id)}>
           <RemoveCircleOutlineIcon />
         </RemoveButton>
       </Grid>

@@ -136,7 +136,7 @@ const TAB_LIST = [
 ];
 
 const ModulePage = () => {
-  const { userModule, functions } = useDispatch();
+  const { userModule } = useDispatch();
   const router = useRouter();
   const { moduleId } = router.query;
   const moduleModeState = useSelector((state) => state.moduleMode);

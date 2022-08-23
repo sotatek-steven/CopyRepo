@@ -5,6 +5,9 @@ export const ELEMENT_TYPE = {
   CHECK: 'CHECK',
 };
 
+export const VARIABLE_NAME_TOOLTIP =
+  'Beginning character: Must be letter\nFollowing characters only contain: Letters, digits, (_)';
+
 export const MODE = {
   CREATE: 'CREATE',
   EDIT: 'EDIT',

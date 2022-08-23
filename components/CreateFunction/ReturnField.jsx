@@ -6,8 +6,8 @@ import Select from '../Select';
 import { useDispatch, useSelector } from 'react-redux';
 import { BOOLEAN_OPTIONS } from '@/config/constant/common';
 import ParameterItem from './ParameterItem';
-import { NEW_PARAMETER } from '@/store/models/userFunction';
 import ObjectID from 'bson-objectid';
+import { NEW_PARAMETER } from '@/store/models/functionDefinition';
 
 const AddButton = styled(AddCircleIcon)(({ theme }) => ({
   color: theme.palette.primary.main,
@@ -21,10 +21,10 @@ const ListWrapper = styled('div')({
   gap: 20,
 });
 
-const ReturnField = ({ setFormError }) => {
-  const { returns: returnData, type } = useSelector((state) => state.userFunction);
-  const [hasReturn, setHasReturn] = useState(false);
-  const { userFunction } = useDispatch();
+const ReturnField = () => {
+  const { returns: returnData, type } = useSelector((state) => state.functionDefinition);
+  const [hasReturn, setHasReturn] = useState(returnData.length > 0);
+  const { functionDefinition } = useDispatch();
 
   const handleReturnChange = (e) => {
     const value = e.target.value;
@@ -32,29 +32,29 @@ const ReturnField = ({ setFormError }) => {
   };
 
   const hanleAddItem = () => {
-    returnData.push({ ...NEW_PARAMETER, id: ObjectID(32).toHexString() });
-    userFunction.updateReturn(returnData);
+    returnData.push({ ...NEW_PARAMETER, _id: ObjectID(32).toHexString() });
+    functionDefinition.updateReturns(returnData);
   };
 
   const handleRemoveItem = (itemId) => {
-    const updatedReturnData = returnData.filter((el) => itemId !== el.id);
+    const updatedReturnData = returnData.filter((el) => itemId !== el._id);
     if (!updatedReturnData.length) setHasReturn(false);
-    userFunction.updateReturn(updatedReturnData);
+    functionDefinition.updateReturns(updatedReturnData);
   };
 
-  const updateReturn = (parameter) => {
+  const updateReturns = (parameter) => {
     const updatedReturnData = returnData.map((item) => {
-      if (item.id !== parameter.id) return item;
+      if (item._id !== parameter._id) return item;
       return parameter;
     });
 
-    userFunction.updateReturn(updatedReturnData);
+    functionDefinition.updateReturns(updatedReturnData);
   };
 
   useEffect(() => {
     if (hasReturn && returnData.length > 0) return;
     if (!hasReturn) {
-      userFunction.updateReturn([]);
+      functionDefinition.updateReturns([]);
       return;
     }
 
@@ -83,15 +83,7 @@ const ReturnField = ({ setFormError }) => {
           <Grid item xs={11}>
             <ListWrapper>
               {returnData.map((item, index) => {
-                return (
-                  <ParameterItem
-                    setFormError={setFormError}
-                    data={item}
-                    key={index}
-                    onUpdate={updateReturn}
-                    onRemove={handleRemoveItem}
-                  />
-                );
+                return <ParameterItem data={item} key={index} onUpdate={updateReturns} onRemove={handleRemoveItem} />;
               })}
             </ListWrapper>
           </Grid>
