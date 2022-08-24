@@ -2,7 +2,7 @@ import { styled } from '@mui/material/styles';
 import { Handle, Position } from 'react-flow-renderer';
 
 const Container = styled('div')(({ theme }) => ({
-  border: 'solid 1px #BEA75A',
+  border: `solid 1px ${theme.shape.backgroundNode}`,
   borderRadius: '50%',
   width: '80px',
   height: '80px',
@@ -10,7 +10,7 @@ const Container = styled('div')(({ theme }) => ({
   alignItems: 'center',
   justifyContent: 'center',
   color: theme.palette.primary.contrastText,
-  backgroundColor: '#BEA75A',
+  backgroundColor: theme.shape.backgroundNode,
 }));
 
 const CircleNode = ({ id, data }) => (
