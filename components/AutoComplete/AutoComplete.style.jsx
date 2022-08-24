@@ -1,9 +1,9 @@
-import { Autocomplete } from '@mui/material';
+import { Autocomplete, autocompleteClasses, Popper } from '@mui/material';
 import { styled } from '@mui/material/styles';
 
-const Container = styled('div')(({ theme }) => ({
+const Container = styled('div')({
   width: '100%',
-}));
+});
 
 const BaseAutocomplete = styled(Autocomplete)(({ theme }) => ({
   '.MuiOutlinedInput-root': {
@@ -52,4 +52,11 @@ const Error = styled('div')(({ theme }) => ({
   marginTop: 8,
 }));
 
-export { Container, BaseAutocomplete, Label, Error };
+const StyledPopper = styled(Popper)(({ theme }) => ({
+  [`& .${autocompleteClasses.listbox}`]: {
+    height: 200,
+    background: theme.palette.background.dark,
+  },
+}));
+
+export { Container, BaseAutocomplete, Label, Error, StyledPopper };
