@@ -1,4 +1,5 @@
 import { Box } from '@mui/system';
+import ObjectID from 'bson-objectid';
 import React, { useEffect, useRef, useCallback, useMemo, useState } from 'react';
 import ReactFlow, {
   Controls,
@@ -11,8 +12,6 @@ import ReactFlow, {
 } from 'react-flow-renderer';
 import { useDispatch, useSelector } from 'react-redux';
 import CustomNodes from '../CustomNode';
-import DeclarationModal from '../functionsPage/DeclarationModal';
-import useDeclaration from '../functionsPage/hooks/useDeclaration';
 import { createEdges, createNodes } from './CreateElement';
 
 const styles = {
@@ -25,20 +24,10 @@ const styles = {
 
 const ControlStructureCanvas = () => {
   const reactFlowWrapper = useRef(null);
-  const { userModule, declaration } = useDispatch();
-  const moduleState = useSelector((state) => state.userModule);
-  const { indentifierError } = useDeclaration();
-  const { declarations, declaration: dataDeclaration, position } = useSelector((state) => state.declaration);
+  const { declaration } = useDispatch();
+  const { declarations, declaEditing } = useSelector((state) => state.declaration);
   const nodeTypes = useMemo(() => CustomNodes, []);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
-  const [isOpenDeclaration, setIsOpenDeclaration] = useState(false);
-
-  // Reset Declaration
-  useEffect(() => {
-    if (!isOpenDeclaration) {
-      declaration.resetDeclaration();
-    }
-  }, [isOpenDeclaration]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
 
@@ -62,9 +51,41 @@ const ControlStructureCanvas = () => {
         x: event.clientX - reactFlowBounds.left,
         y: event.clientY - reactFlowBounds.top,
       });
-      declaration.setPosition(position);
-      setIsOpenDeclaration(true);
+
+      const dataDecla = [...declarations];
+
+      dataDecla.push({
+        textDeclaration: '',
+        _id: ObjectID(32).toHexString(),
+        position,
+        type: 'declaration',
+        mode: 'editing',
+      });
+      declaration.updateDeclarations(dataDecla);
     }
+  };
+
+  const handleChangeMode = (declarationId) => {
+    if (declaEditing) return;
+
+    const data = [...declarations];
+    data.forEach((item) => {
+      item['mode'] = item?._id === declarationId ? 'editing' : 'init';
+    });
+
+    declaration.updateDeclarations(data);
+    declaration.setDeclaEditing(declarationId);
+  };
+
+  const handleConfirm = (declarationId, textValue) => {
+    const data = [...declarations];
+    data.forEach((item) => {
+      item['mode'] = 'init';
+      item['textDeclaration'] = item?._id === declarationId ? textValue : item?.textDeclaration;
+    });
+
+    declaration.updateDeclarations(data);
+    declaration.setDeclaEditing('');
   };
 
   const onDragOver = useCallback((event) => {
@@ -72,20 +93,6 @@ const ControlStructureCanvas = () => {
     if (!event.dataTransfer) return;
     event.dataTransfer.dropEffect = 'move';
   }, []);
-
-  const onNodeDragStop = (event, node) => {
-    const { data, position } = node;
-    const { coordinates } = moduleState.sources;
-    const updatedCoordinates = coordinates.map((item) => {
-      return item.func === data._id
-        ? {
-            ...item,
-            position,
-          }
-        : item;
-    });
-    userModule.updateCoordinates(updatedCoordinates);
-  };
 
   const onEdgeUpdate = (oldEdge, newConnection) => {
     setEdges((els) => updateEdge(oldEdge, newConnection, els));
@@ -106,10 +113,19 @@ const ControlStructureCanvas = () => {
       indentifier: 'End',
       type: 'circle',
       position: {
-        x: data[data?.length - 1]?.position?.x + 300 || 200,
+        x:
+          data[data?.length - 1]?.mode === 'editing'
+            ? data[data?.length - 1]?.position?.x + 600
+            : data[data?.length - 1]?.position?.x + 300 || 500,
         y: data[data?.length - 1]?.position?.y || 200,
       },
     };
+
+    data.forEach((item) => {
+      item.handleChangeMode = handleChangeMode;
+      item.handleConfirm = handleConfirm;
+    });
+
     data.unshift(START_NODE);
     data.push(END_NODE);
     setNodes(createNodes(data));
@@ -119,21 +135,6 @@ const ControlStructureCanvas = () => {
     setEdges(createEdges(nodes));
   }, [nodes]);
 
-  const onComfirm = () => {
-    // check error declaration
-    const errorText = indentifierError(dataDeclaration?.indentifier);
-    if (errorText) {
-      const declara = { ...dataDeclaration, indentifierError: errorText };
-      declaration.updateDeclaration(declara);
-      return;
-    }
-
-    const data = [...declarations];
-    data.push({ ...dataDeclaration, position, type: 'declaration' });
-    declaration.updateDeclarations(data);
-    setIsOpenDeclaration(false);
-  };
-
   return (
     <ReactFlowProvider>
       <Box sx={{ ...styles.backgroundFlow }} style={{ height: '100%', position: 'relative' }} ref={reactFlowWrapper}>
@@ -141,7 +142,6 @@ const ControlStructureCanvas = () => {
           nodes={nodes}
           edges={edges}
           onNodesChange={onNodesChange}
-          onNodeDragStop={onNodeDragStop}
           onEdgesChange={onEdgesChange}
           onDrop={onDrop}
           onInit={setReactFlowInstance}
@@ -157,7 +157,6 @@ const ControlStructureCanvas = () => {
           <Background color="#aaa" gap={16} />
         </ReactFlow>
       </Box>
-      <DeclarationModal open={isOpenDeclaration} onClose={() => setIsOpenDeclaration(false)} onComfirm={onComfirm} />
     </ReactFlowProvider>
   );
 };
