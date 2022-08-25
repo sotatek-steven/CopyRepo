@@ -5,9 +5,9 @@ const Container = styled('div')({
   width: '100%',
 });
 
-const BaseAutocomplete = styled(Autocomplete)(({ theme }) => ({
+const BaseAutocomplete = styled(Autocomplete)(({ theme, background = theme.palette.background.light }) => ({
   '.MuiOutlinedInput-root': {
-    backgroundColor: theme.palette.background.light,
+    backgroundColor: background,
     color: theme.palette.text.primary,
     height: 45,
     borderRadius: 5,
@@ -54,8 +54,9 @@ const Error = styled('div')(({ theme }) => ({
 
 const StyledPopper = styled(Popper)(({ theme }) => ({
   [`& .${autocompleteClasses.listbox}`]: {
-    height: 200,
+    maxHeight: 200,
     background: theme.palette.background.dark,
+    // zIndex: 1000,
   },
 }));
 

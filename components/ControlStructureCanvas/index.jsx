@@ -37,21 +37,18 @@ const ControlStructureCanvas = () => {
 
   const onDrop = (event) => {
     event.preventDefault();
-    const data = JSON.parse(event.dataTransfer.getData('foo'));
-    if (data?.name === 'Declaration') {
-      const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect();
-      if (!event.dataTransfer) return;
-      const type = event.dataTransfer.getData('application/reactflow');
-      // check if the dropped element is valid
-      if (typeof type === 'undefined' || !type || !reactFlowInstance || !reactFlowBounds) {
-        return;
-      }
+    const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect();
+    if (!event.dataTransfer) return;
+    const type = event.dataTransfer.getData('application/reactflow');
+    // check if the dropped element is valid
+    if (typeof type === 'undefined' || !type || !reactFlowInstance || !reactFlowBounds) return;
+    const position = reactFlowInstance.project({
+      x: event.clientX - reactFlowBounds.left,
+      y: event.clientY - reactFlowBounds.top,
+    });
 
-      const position = reactFlowInstance.project({
-        x: event.clientX - reactFlowBounds.left,
-        y: event.clientY - reactFlowBounds.top,
-      });
-
+    // const data = JSON.parse(event.dataTransfer.getData('foo'));
+    if (type === 'declaration') {
       const dataDecla = [...declarations];
 
       dataDecla.push({
@@ -59,6 +56,21 @@ const ControlStructureCanvas = () => {
         _id: ObjectID(32).toHexString(),
         position,
         type: 'declaration',
+        mode: 'editing',
+      });
+      declaration.updateDeclarations(dataDecla);
+    }
+
+    if (type === 'assignment') {
+      const dataDecla = [...declarations];
+      dataDecla.push({
+        data: {
+          variable: null,
+          value: '',
+        },
+        _id: ObjectID(32).toHexString(),
+        position,
+        type: 'assignment',
         mode: 'editing',
       });
       declaration.updateDeclarations(dataDecla);

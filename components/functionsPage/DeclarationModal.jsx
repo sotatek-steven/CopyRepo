@@ -9,7 +9,6 @@ import useDeclaration from './hooks/useDeclaration';
 import CheckBoxIcon from '@mui/icons-material/CheckBox';
 import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 import ExpressionModal from '../ExpressionModal';
-// import AssignmentBlock from '../AssignmentBlock';
 
 const Container = styled('div')({
   display: 'flex',
@@ -131,7 +130,6 @@ const DeclarationModal = ({ open, onClose, onComfirm }) => {
           </ItemContainer>
         )}
 
-        {/* <AssignmentBlock /> */}
         <ExpressionModal
           open={expressionModalOpen}
           onClose={() => setExpressionModalOpen(false)}

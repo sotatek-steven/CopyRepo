@@ -4,6 +4,7 @@ import RectangleNode from './RectangleNode';
 import SimpleRectangleNode from './SimpleRectangleNode';
 import CircleNode from './CircleNode';
 import DeclarationNode from './DeclarationNode';
+import AssignmentNode from './AssigmentNode';
 
 const CustomNodes = {
   rectangle: RectangleNode,
@@ -12,6 +13,7 @@ const CustomNodes = {
   simpleRectangle: SimpleRectangleNode,
   circle: CircleNode,
   declaration: DeclarationNode,
+  assignment: AssignmentNode,
 };
 
 export default CustomNodes;
