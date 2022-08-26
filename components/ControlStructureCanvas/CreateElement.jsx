@@ -8,7 +8,7 @@ export const createNodes = (data) => {
         ...item,
         label: item?.indentifier,
       },
-      type: item?.type,
+      type: item?.typeNode,
       position: item?.position,
     };
   });
