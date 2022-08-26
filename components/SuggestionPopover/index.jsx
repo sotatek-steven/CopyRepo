@@ -3,7 +3,7 @@ import { styled } from '@mui/material';
 
 const Container = styled('div')(({ theme, open, position }) => ({
   position: 'absolute',
-  zIndex: '1000',
+  zIndex: '100',
   top: position.top,
   left: position.left,
   display: open === 1 ? 'block' : 'none',

@@ -18,19 +18,21 @@ const Container = styled('div')(({ theme }) => ({
   },
 }));
 
+const ControlStructures = [
+  { name: 'Declaration', nodeType: 'declaration' },
+  { name: 'Assignment', nodeType: 'assignment' },
+  { name: 'Logics', nodeType: '' },
+];
+
 const FunctionSidebar = () => {
   return (
     <Container>
       <div className="title">Control Structures</div>
       <div className="list-structure" style={{ flexGrow: 1 }}>
         <Scrollbars autoHide>
-          {![{ name: 'Declaration' }, { name: 'Assignment' }, { name: 'Logics' }]?.length && (
-            <span> Control Structures not found</span>
-          )}
-          {!![{ name: 'Declaration' }, { name: 'Assignment' }, { name: 'Logics' }]?.length &&
-            [{ name: 'Declaration' }, { name: 'Assignment' }, { name: 'Logics' }]?.map((item, index) => {
-              return <ControlStructureItem key={index} data={item} nodeType="simpleRectangle" />;
-            })}
+          {ControlStructures.map((item, index) => {
+            return <ControlStructureItem key={index} data={item} nodeType={item.nodeType} />;
+          })}
         </Scrollbars>
       </div>
     </Container>

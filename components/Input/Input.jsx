@@ -3,6 +3,7 @@ import React from 'react';
 import IconInfo from 'assets/icon/icon-info.svg';
 import { IconButton, Tooltip } from '@mui/material';
 import Label from '../atom/Label';
+import { Input as InputBasic } from './input.style';
 
 const LabelContainer = styled('div')(({ theme, type }) => ({
   display: 'flex',
@@ -15,23 +16,6 @@ const LabelContainer = styled('div')(({ theme, type }) => ({
     '& > svg > path': {
       fill: type === 'basic' ? theme.palette.text.primary : theme.palette.primary.light,
     },
-  },
-}));
-
-const InputBasic = styled('input')(({ theme, error }) => ({
-  backgroundColor: theme.palette.background.light,
-  color: theme.palette.text.primary,
-  height: 45,
-  borderRadius: 5,
-  border: error ? 'solid 1px red' : `solid 1px ${theme.palette.background.light}`,
-  outline: 'none',
-  width: '100%',
-  fontSize: 14,
-  fontWeight: theme.typography.fontWeightBold,
-  padding: '0px 15px',
-  fontFamily: theme.typography.fontFamily,
-  '&::placeholder': {
-    fontSize: '10px',
   },
 }));
 
