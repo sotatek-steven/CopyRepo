@@ -28,14 +28,12 @@ const ControlStructureCanvas = () => {
   const { declarations, declaEditing } = useSelector((state) => state.declaration);
   const nodeTypes = useMemo(() => CustomNodes, []);
   const [reactFlowInstance, setReactFlowInstance] = useState(null);
-
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
-
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
-
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
 
   const onDrop = (event) => {
+    if (declaEditing) return;
     event.preventDefault();
     const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect();
     if (!event.dataTransfer) return;
@@ -50,15 +48,17 @@ const ControlStructureCanvas = () => {
     // const data = JSON.parse(event.dataTransfer.getData('foo'));
     if (type === 'declaration') {
       const dataDecla = [...declarations];
+      const _id = ObjectID(32).toHexString();
 
       dataDecla.push({
         textDeclaration: '',
-        _id: ObjectID(32).toHexString(),
+        _id,
         position,
-        type: 'declaration',
+        typeNode: 'declaration',
         mode: 'editing',
       });
       declaration.updateDeclarations(dataDecla);
+      declaration.setDeclaEditing(_id);
     }
 
     if (type === 'assignment') {
@@ -70,7 +70,7 @@ const ControlStructureCanvas = () => {
         },
         _id: ObjectID(32).toHexString(),
         position,
-        type: 'assignment',
+        typeNode: 'assignment',
         mode: 'editing',
       });
       declaration.updateDeclarations(dataDecla);
@@ -81,20 +81,33 @@ const ControlStructureCanvas = () => {
     if (declaEditing) return;
 
     const data = [...declarations];
-    data.forEach((item) => {
-      item['mode'] = item?._id === declarationId ? 'editing' : 'init';
-    });
+    const index = declarations.findIndex((item) => item?._id === declarationId);
+    data[index]['mode'] = 'editing';
 
     declaration.updateDeclarations(data);
     declaration.setDeclaEditing(declarationId);
   };
 
-  const handleConfirm = (declarationId, textValue) => {
+  const handleConfirm = (declarationId, nodeData) => {
     const data = [...declarations];
-    data.forEach((item) => {
-      item['mode'] = 'init';
-      item['textDeclaration'] = item?._id === declarationId ? textValue : item?.textDeclaration;
-    });
+    const index = declarations.findIndex((item) => item?._id === declarationId);
+    // Update Declaration
+    data[index]['mode'] = 'init';
+    data[index]['type'] = nodeData?.type;
+    data[index]['indentifier'] = nodeData?.indentifier;
+    data[index]['isArray'] = nodeData?.isArray;
+    data[index]['location'] = nodeData?.location;
+    data[index]['value'] = nodeData?.value;
+    data[index]['textDeclaration'] = nodeData?.textDeclaration;
+
+    declaration.updateDeclarations(data);
+    declaration.setDeclaEditing('');
+  };
+
+  const handleCancel = (declarationId) => {
+    const data = [...declarations];
+    const index = declarations.findIndex((item) => item?._id === declarationId);
+    data[index]['mode'] = 'init';
 
     declaration.updateDeclarations(data);
     declaration.setDeclaEditing('');
@@ -118,12 +131,12 @@ const ControlStructureCanvas = () => {
     const data = [...declarations];
     const START_NODE = {
       indentifier: 'Start',
-      type: 'circle',
+      typeNode: 'circle',
       position: { x: data[0]?.position?.x - 200 || 200, y: data[0]?.position?.y || 200 },
     };
     const END_NODE = {
       indentifier: 'End',
-      type: 'circle',
+      typeNode: 'circle',
       position: {
         x:
           data[data?.length - 1]?.mode === 'editing'
@@ -136,6 +149,7 @@ const ControlStructureCanvas = () => {
     data.forEach((item) => {
       item.handleChangeMode = handleChangeMode;
       item.handleConfirm = handleConfirm;
+      item.handleCancel = handleCancel;
     });
 
     data.unshift(START_NODE);

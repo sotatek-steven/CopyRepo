@@ -1,3 +1,5 @@
+import _ from 'lodash';
+
 export const ELEMENT_TYPE = {
   INPUT: 'INPUT',
   SELECT: 'SELECT',
@@ -654,7 +656,7 @@ export const ASSIGN_TYPE_OPTION = [
 
 export const LOCATION_TYPE = {
   MEMORY: 'memory',
-  CALL_DATA: 'call_data',
+  CALL_DATA: 'calldata',
   STORAGE: 'storage',
 };
 
@@ -672,3 +674,196 @@ export const LOCATION_TYPE_OPTION = [
     label: 'Storage',
   },
 ];
+
+const mapBrkets = { '{': 1, '}': '{', '[': 1, ']': '[', '(': 1, ')': '(' };
+const mapAsignOerations = {
+  '=': '=',
+  '+=': '+',
+  '-=': '-',
+  '*=': '*',
+  '/=': '/',
+};
+
+export const isKey = (c) => {
+  if (c == '_') {
+    return true;
+  }
+  if (!isNaN(c)) {
+    return true;
+  }
+  if (typeof c == 'string' && c.toLowerCase() !== c.toUpperCase()) {
+    return true;
+  }
+  return false;
+};
+
+export const canSplit = (startSequence, c, element) => {
+  if (startSequence) return false;
+  if (c == ' ') return true;
+  if ('=!<>+-&|'.includes(c) && '=!<>+-&|'.includes(element[element.length - 1])) {
+    return false;
+  }
+  if (!isKey(c)) {
+    return true;
+  }
+  if (!element.length) {
+    return false;
+  }
+  if (!isKey(element[element.length - 1])) {
+    return true;
+  }
+};
+
+export const checkBacklash = (startSequence, backlashes, c) => {
+  if (c != '\\') {
+    if (backlashes.length > 0 && backlashes.length % 2) {
+      throw { message: 'backlash is wrong. number is odd' };
+    }
+    backlashes.splice(0);
+    return;
+  }
+  if (!startSequence) {
+    throw { message: 'backlash is wrong' };
+  }
+  backlashes.push(c);
+};
+
+export const splitElements = (text) => {
+  text = text.trim();
+  const brackets = [];
+  let startSequence = undefined;
+  let backlashes = [];
+  const elements = [];
+  const element = [];
+  let startComment = false;
+  for (const c of text.split('')) {
+    if (c == '\n') {
+      startComment = false;
+      elements.push(element.join(''));
+      elements.push('\n');
+      element.splice(0);
+      continue;
+    }
+    if (startComment) {
+      continue;
+    }
+    if (canSplit(startSequence, c, element)) {
+      if (c == '/' && element.length == 1 && element[0] == '/') {
+        startComment = true;
+        element.splice(0);
+        continue;
+      }
+      if (element.length == 0 || (element.length == 1 && [' ', '\t'].includes(element[0]))) {
+        console.log('splitElements');
+      } else {
+        elements.push(element.join(''));
+      }
+
+      element.splice(0);
+    }
+    element.push(c);
+    checkBacklash(startSequence, backlashes, c);
+    if (startSequence && c == startSequence) {
+      startSequence = undefined;
+      continue;
+    }
+    if (startSequence && c != startSequence) {
+      continue;
+    }
+    if (['"', "'"].includes(c)) {
+      startSequence = c;
+      continue;
+    }
+
+    if (!mapBrkets[c]) {
+      continue;
+    }
+    if (mapBrkets[c] === 1) {
+      brackets.push(c);
+      continue;
+    }
+
+    if (!brackets.length) {
+      throw { message: 'Has syntax at block, the brackets is empty', currentChar: c, brackets: brackets, element };
+    }
+    if (brackets[brackets.length - 1] !== mapBrkets[c]) {
+      console.log('content');
+      throw {
+        message: 'Has syntax at block, the last brackets is difference',
+        currentChar: c,
+        brackets: brackets,
+        element,
+      };
+    }
+    brackets.pop();
+  }
+  elements.push(element.join('').trim());
+  return elements;
+};
+
+export const convertToDeclaration = (parts) => {
+  let node = {};
+  const arrayIndexs = [];
+  let isArray = false;
+  let index = 0;
+  let arraySigns = 0;
+  const beginElements = [];
+  let assignOperation = undefined;
+  parts = parts.map((item) => (item = item.trim()));
+
+  if (parts[parts.length - 1] === ';') {
+    parts = _.dropRight(parts);
+  }
+
+  while (index < parts.length) {
+    if (parts[index] == '[') {
+      arrayIndexs.push(parts[index]);
+      isArray = true;
+      arraySigns++;
+      index++;
+      continue;
+    }
+    if (parts[index] == ']') {
+      arrayIndexs.push(parts[index]);
+      arraySigns--;
+      index++;
+      continue;
+    }
+    if (arraySigns > 0) {
+      arrayIndexs.push(parts[index]);
+      index++;
+      continue;
+    }
+    if (mapAsignOerations[parts[index]]) {
+      assignOperation = parts[index];
+      parts.splice(0, index + 1);
+      index = 0;
+      break;
+    }
+
+    beginElements.push(parts[index]);
+    index++;
+  }
+  if (beginElements[beginElements.length - 1] == ')') {
+    beginElements.splice(0);
+    index = 0;
+  }
+
+  if (beginElements.length) node.indentifier = beginElements.pop();
+  if (beginElements.length) node.type = beginElements.shift();
+  if (beginElements.length) node.location = beginElements.shift();
+  node.isArray = !!node.type && isArray;
+  node.errorIsArray = false;
+
+  if (arraySigns) {
+    node.errorIsArray = true;
+  }
+
+  if (assignOperation) {
+    const value = parts.reduce((value, item) => {
+      return value.concat(item);
+    }, '');
+    node.value = value;
+  }
+  return node;
+};
