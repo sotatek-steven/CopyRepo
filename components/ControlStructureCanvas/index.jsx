@@ -32,7 +32,7 @@ const ControlStructureCanvas = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
 
-  const onDrop = (event) => {
+  const handleDrop = (event) => {
     if (declaEditing) return;
     event.preventDefault();
     const reactFlowBounds = reactFlowWrapper.current?.getBoundingClientRect();
@@ -134,14 +134,27 @@ const ControlStructureCanvas = () => {
       typeNode: 'circle',
       position: { x: data[0]?.position?.x - 200 || 200, y: data[0]?.position?.y || 200 },
     };
+
+    const DROP_NODE = {
+      handleDrop: handleDrop,
+      typeNode: 'drop',
+      position: {
+        x:
+          data[data?.length - 1]?.mode === 'editing'
+            ? data[data?.length - 1]?.position?.x + 500
+            : data[data?.length - 1]?.position?.x + 300 || 500,
+        y: data[data?.length - 1]?.position?.y || 200,
+      },
+    };
+
     const END_NODE = {
       indentifier: 'End',
       typeNode: 'circle',
       position: {
         x:
           data[data?.length - 1]?.mode === 'editing'
-            ? data[data?.length - 1]?.position?.x + 600
-            : data[data?.length - 1]?.position?.x + 300 || 500,
+            ? data[data?.length - 1]?.position?.x + 800
+            : data[data?.length - 1]?.position?.x + 600 || 800,
         y: data[data?.length - 1]?.position?.y || 200,
       },
     };
@@ -153,7 +166,9 @@ const ControlStructureCanvas = () => {
     });
 
     data.unshift(START_NODE);
+    data.push(DROP_NODE);
     data.push(END_NODE);
+
     setNodes(createNodes(data));
   };
 
@@ -169,7 +184,7 @@ const ControlStructureCanvas = () => {
           edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
-          onDrop={onDrop}
+          // onDrop={onDrop}
           onInit={setReactFlowInstance}
           onDragOver={onDragOver}
           onConnect={onConnect}
