@@ -12,17 +12,12 @@ const logicBlocks = createModel({
       },
     },
     {
-      // id: ObjectID(24).toHexString(),
-      id: 'trang',
+      id: ObjectID(24).toHexString(),
       type: 'drop',
       position: {
         x: 600,
         y: 400,
       },
-
-      // data: {
-      //   onDrop,
-      // },
     },
     {
       id: ObjectID(24).toHexString(),
@@ -35,7 +30,6 @@ const logicBlocks = createModel({
   ],
   reducers: {
     set: (blocksList, data) => {
-      console.log('gkuhgsl');
       return data;
     },
     updateBlock: (blocksList, block) => {

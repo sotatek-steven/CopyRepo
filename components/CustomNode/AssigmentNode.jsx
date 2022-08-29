@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import { PrimaryButton } from '../ButtonStyle';
-import { Autocomplete, Grid, styled, TextField, useTheme } from '@mui/material';
+import { Button, Grid, styled, TextField, useTheme } from '@mui/material';
 import { BaseAutocomplete, StyledPopper } from '../AutoComplete/AutoComplete.style';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useMemo } from 'react';
 import { Input } from '../Input/input.style';
+import IconCancel from 'assets/icon/IconCancel.svg';
+import IconConfirm from 'assets/icon/IconConfirm.svg';
 
 const Card = styled('article')(({ color, theme }) => ({
   padding: '10px 15px',
@@ -68,22 +70,24 @@ const Body = styled('div')({
 
 const AssignmentNode = ({ data }) => {
   const theme = useTheme();
-  const { _id, mode, variable: initialVariable, value: initialValue, handleChangeMode, handleConfirm } = data;
-  console.log();
+  const [mode, setMode] = useState('editing');
   const { variables } = useSelector((state) => state.userModule);
   const functionState = useSelector((state) => state.userFunction);
+  const { logicBlocks } = useDispatch();
+
   const variableOptions = useMemo(() => {
     const values = variables?.values || [];
+    const _values = values.map((item) => ({ ...item, position: 'globalVariable' }));
     const params = functionState.params || [];
-    return values.concat(params);
+    const _params = params.map((item) => ({ ...item, position: 'params' }));
+    return _values.concat(_params);
   }, [variables, functionState.params]);
 
-  const [variable, setVariable] = useState(initialVariable);
-  const [value, setValue] = useState(initialValue);
+  const [variable, setVariable] = useState(data?.indentifier);
+  const [value, setValue] = useState(data?.value);
   const [errorMessage, setErrorMessage] = useState('');
 
   const handleVariableChange = (e, value) => {
-    console.log('gfkdsgsld');
     console.log(value);
     setVariable(value);
   };
@@ -93,7 +97,7 @@ const AssignmentNode = ({ data }) => {
     setValue(_value);
   };
 
-  const validateAssignment = () => {
+  const handleConfirm = () => {
     if (!variable) {
       setErrorMessage('Missing variable');
       return;
@@ -103,12 +107,30 @@ const AssignmentNode = ({ data }) => {
       setErrorMessage('Missing variable');
       return;
     }
+
+    setErrorMessage('');
+    const { label, isArray, position } = variable;
+    const updatedData = {
+      ...data,
+      indentifier: label,
+      isArray,
+      position,
+      assignOperation: '=',
+      value,
+    };
+
+    logicBlocks.updateBlock(updatedData);
+    setMode('view');
+  };
+
+  const handleCancel = () => {
+    setMode('view');
   };
 
   return (
     <>
-      {mode === 'init' && (
-        <Card id={_id} onDoubleClick={() => handleChangeMode(_id)}>
+      {mode === 'view' && (
+        <Card onDoubleClick={() => setMode('editing')}>
           <CardBody>
             {`${variable} = ${value}`}
             <Handle type="target" position={Position.Left} id="a" style={{ background: '#555' }} />
@@ -124,14 +146,10 @@ const AssignmentNode = ({ data }) => {
               <Grid item xs={4}>
                 <BaseAutocomplete
                   background={theme.palette.background.default}
-                  disablePortal
                   options={variableOptions}
-                  sx={{
-                    width: '100%',
-                  }}
+                  value={value}
                   renderInput={(params) => <TextField {...params} />}
                   onChange={handleVariableChange}
-                  value={variable}
                   PopperComponent={StyledPopper}
                 />
               </Grid>
@@ -147,10 +165,15 @@ const AssignmentNode = ({ data }) => {
             {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
           </Body>
           <Footer>
-            <PrimaryButton onClick={validateAssignment}>OK</PrimaryButton>
+            <Button className="action-icon" onClick={handleCancel}>
+              <IconCancel />
+            </Button>
+            <Button className="action-icon" onClick={handleConfirm}>
+              <IconConfirm />
+            </Button>
           </Footer>
-          <Handle type="target" position={Position.Left} id="a" style={{ background: '#555' }} />
-          <Handle type="source" position={Position.Right} id="c" style={{ background: '#555' }} />
+          <Handle type="target" position={Position.Top} id="a" style={{ background: '#555' }} />
+          <Handle type="source" position={Position.Bottom} id="c" style={{ background: '#555' }} />
         </EditingContainer>
       )}
     </>
