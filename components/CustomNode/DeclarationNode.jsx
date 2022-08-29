@@ -7,7 +7,6 @@ import IconCancel from 'assets/icon/IconCancel.svg';
 import IconConfirm from 'assets/icon/IconConfirm.svg';
 import IconEditNode from 'assets/icon/IconEditNode.svg';
 import IconDeleteNode from 'assets/icon/IconDeleteNode.svg';
-import SuggestionPopover from '../SuggestionPopover';
 import { convertToDeclaration, splitElements } from '@/config/constant/common';
 import useDeclaration from '../functionsPage/hooks/useDeclaration';
 
@@ -103,37 +102,38 @@ const DeclarationNode = ({ data }) => {
   const { _id, mode, textDeclaration, handleChangeMode, handleConfirm, handleCancel } = data;
   const [inputText, setInputText] = useState(textDeclaration);
   const [errorText, setErrorText] = useState('');
-  const [isOpenSuggest, setIsOpenSuggest] = useState(false);
-  const [position, setPosition] = useState({ top: 62, left: 32 });
   const { validateDeclaration } = useDeclaration();
 
   const handleChange = (e) => {
-    let element = document.getElementById(`${_id}`);
-    setIsOpenSuggest(true);
-    const plusLeft =
-      e.target.selectionEnd * 8 <= element.offsetWidth - 40 ? e.target.selectionEnd * 8 : element.offsetWidth - 40;
-    setPosition({
-      top: element.offsetTop + 30,
-      left: element.offsetLeft + plusLeft,
-    });
-
     setInputText(e.target.value);
   };
 
-  const onConfirm = () => {
+  const checkValidateText = () => {
     // Validate Declaration
     const element = splitElements(inputText);
     const nodeData = convertToDeclaration(element);
     const errorMess = validateDeclaration(nodeData);
 
-    if (errorMess) {
-      setErrorText(errorMess);
-      return;
-    }
+    setErrorText(errorMess);
+
+    return { errorMess, nodeData };
+  };
+
+  const onConfirm = () => {
+    // Validate Declaration
+    const { errorMess, nodeData } = checkValidateText();
+    if (errorMess) return;
 
     // Update Declaration
     nodeData.textDeclaration = inputText;
     handleConfirm(_id, nodeData);
+  };
+
+  const onCancel = () => {
+    // Validate Declaration
+    const { errorMess } = checkValidateText();
+    if (errorMess) return;
+    handleCancel(_id);
   };
 
   return (
@@ -159,8 +159,7 @@ const DeclarationNode = ({ data }) => {
         <EditingContainer>
           <Title>DECLARATION</Title>
           <ItemContainer error={errorText}>
-            <Input id={_id} value={inputText} onClick={handleChange} onChange={handleChange} onKeyDown={handleChange} />
-            <SuggestionPopover open={isOpenSuggest} position={position} options={[{ label: 1 }, { label: 2 }]} />
+            <Input id={_id} value={inputText} onChange={handleChange} onKeyDown={handleChange} />
             {!!errorText && (
               <ErrorContainer>
                 <div className="icon">
@@ -171,7 +170,7 @@ const DeclarationNode = ({ data }) => {
             )}
           </ItemContainer>
           <ActionContainer>
-            <Button className="action-icon" onClick={() => handleCancel(_id)}>
+            <Button className="action-icon" onClick={onCancel}>
               <IconCancel />
             </Button>
             <Button className="action-icon" onClick={onConfirm}>

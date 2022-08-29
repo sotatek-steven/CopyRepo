@@ -849,7 +849,7 @@ export const convertToDeclaration = (parts) => {
     index = 0;
   }
 
-  if (beginElements.length) node.indentifier = beginElements.pop();
+  if (beginElements.length >= 2) node.indentifier = beginElements.pop();
   if (beginElements.length) node.type = beginElements.shift();
   if (beginElements.length) node.location = beginElements.shift();
   node.isArray = !!node.type && isArray;

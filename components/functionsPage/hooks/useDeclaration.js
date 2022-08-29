@@ -59,6 +59,10 @@ const useDeclaration = () => {
       return 'Location is invalid';
     }
 
+    if (!data?.indentifier) {
+      return 'Indentifier is required';
+    }
+
     if (data?.indentifier && !validateSyntax(data?.indentifier)) {
       return 'Indentifier is invalid';
     }
