@@ -148,13 +148,13 @@ const FunctionPage = () => {
         const moduleData = await userModule.getDetailModule(moduleId);
         userModule.update(moduleData);
         // get list type for declaration modal
-        // const typeStructs = moduleData?.sources?.structs?.map((item) => {
-        //   return {
-        //     value: item?._id,
-        //     label: item?.name,
-        //   };
-        // });
-        // declaration.setListType(_.concat(VALUE_TYPE_OPTIONS, typeStructs));
+        const typeStructs = moduleData?.sources?.structs?.map((item) => {
+          return {
+            value: item?._id,
+            label: item?.name,
+          };
+        });
+        functions.setListType(_.concat(VALUE_TYPE_OPTIONS, typeStructs));
         // // Convert Declaration
         // const listDeclaration = convertDeclaration(data.block);
         // declaration.updateDeclarations(listDeclaration);

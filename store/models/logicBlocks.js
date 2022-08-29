@@ -17,7 +17,7 @@ const logicBlocks = createModel({
       type: 'drop',
       position: {
         x: 600,
-        y: 400,
+        y: 500,
       },
 
       // data: {
@@ -46,7 +46,7 @@ const logicBlocks = createModel({
     addBlock: (blocksList, block) => [...blocksList, block],
     removeBlock: (blocksList, blockId) => blocksList.filter((el) => el.id !== blockId),
   },
-  effects: () => {
+  effects: (dispatch) => {
     return {
       convertToFEDataDisplay(blockData) {
         const blocksList = [];
@@ -89,6 +89,9 @@ const logicBlocks = createModel({
         return blocksList;
       },
       // convertToDataTransferApi(data) {},
+      checkDeclarationEditing() {
+        console.log('logicBlocks', logicBlocks);
+      },
     };
   },
 });

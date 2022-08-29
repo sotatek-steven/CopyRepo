@@ -5,9 +5,11 @@ import { toast } from 'react-toastify';
 const functions = createModel({
   state: {
     functions: [],
+    listType: [],
   },
   reducers: {
     setFunctions: (state, functions) => ({ ...state, functions }),
+    setListType: (state, listType) => ({ ...state, listType }),
   },
   effects: (dispatch) => {
     const { functions, player } = dispatch;
