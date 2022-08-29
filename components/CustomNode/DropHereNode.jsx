@@ -1,6 +1,8 @@
 import { styled } from '@mui/material';
+import ObjectID from 'bson-objectid';
 import React, { useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
+import { useDispatch, useSelector } from 'react-redux';
 
 const Card = styled('article')(({ theme, isAllowDrop }) => ({
   padding: '10px 15px',
@@ -15,7 +17,7 @@ const Card = styled('article')(({ theme, isAllowDrop }) => ({
   borderColor: ` ${isAllowDrop ? theme.palette.success.main : theme.palette.text.primary}`,
 }));
 
-const CardBody = styled('div')(({ theme }) => ({
+const CardBody = styled('div')({
   display: 'flex',
   flexDirection: 'column',
   flexGrow: 1,
@@ -23,10 +25,12 @@ const CardBody = styled('div')(({ theme }) => ({
   justifyContent: 'center',
   fontFamily: 'Segoe UI',
   fontStyle: 'italic',
-}));
+});
 
-const DropHereNode = ({ _id, data }) => {
-  const { handleDrop } = data;
+const DropHereNode = (props) => {
+  const { id, xPos, yPos } = props;
+  const logicBlocksState = useSelector((state) => state.logicBlocks);
+  const { logicBlocks } = useDispatch();
   const [isAllowDrop, setIsAllowDrop] = useState(false);
 
   const allowDrop = (event) => {
@@ -39,17 +43,44 @@ const DropHereNode = ({ _id, data }) => {
     event.preventDefault();
   };
 
-  const onDrop = (event) => {
-    handleDrop(event);
+  const handleDrop = (event) => {
+    event.preventDefault();
+    if (!event.dataTransfer) return;
+    const type = event.dataTransfer.getData('application/reactflow');
+
+    const newNode = {
+      id: ObjectID(24).toHexString(),
+      type: type,
+      position: {
+        x: xPos,
+        y: yPos,
+      },
+      data: null,
+    };
+
+    const dropItemIndex = logicBlocksState.findIndex((item) => item.id === id);
+
+    const updateDropItem = {
+      id,
+      type: 'drop',
+      position: {
+        x: xPos,
+        y: yPos + 100,
+      },
+    };
+
+    const _logicBlocksState = [...logicBlocksState];
+    _logicBlocksState.splice(dropItemIndex, 1, newNode, updateDropItem);
+    logicBlocks.set(_logicBlocksState);
   };
 
   return (
     <>
-      <Card id={_id} isAllowDrop={isAllowDrop} onDragOver={allowDrop} onDragLeave={notAllowDrop} onDrop={onDrop}>
+      <Card isAllowDrop={isAllowDrop} onDragOver={allowDrop} onDragLeave={notAllowDrop} onDrop={handleDrop}>
         <CardBody>
           Drop item here
-          <Handle type="target" position={Position.Left} id="a" style={{ background: '#555' }} />
-          <Handle type="source" position={Position.Right} id="c" style={{ background: '#555' }} />
+          <Handle type="target" position={Position.Top} id="a" style={{ background: '#555' }} />
+          <Handle type="source" position={Position.Bottom} id="c" style={{ background: '#555' }} />
         </CardBody>
       </Card>
     </>

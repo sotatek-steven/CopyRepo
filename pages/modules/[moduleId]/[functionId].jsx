@@ -120,35 +120,13 @@ const TAB_LIST = [
 const FunctionPage = () => {
   const router = useRouter();
   const { moduleId, functionId } = router.query;
-  const { userFunction, initialFunction, userModule, functions, functionDefinition, declaration } = useDispatch();
+  const { userFunction, initialFunction, userModule, functions, functionDefinition } = useDispatch();
   const [tab, setTab] = useState('workflow_view');
-  const { convertDeclaration } = useDeclaration();
+  // const { convertDeclaration } = useDeclaration();
 
   const handleChangeTab = (e, newValue) => {
     setTab(newValue);
   };
-
-  // useEffect(() => {
-  //   const fetchDetailFunction = async () => {
-  //     try {
-  //       if (!functionId) return;
-  //       const data = await userFunction.getDetailFunction(functionId);
-  //       userFunction.update(data);
-  //     } catch (error) {
-  //       console.log('Failed to fetch detail function: ', error);
-  //     }
-  //   };
-
-  //   fetchDetailFunction();
-  //   fetchDetailModule();
-  //   return () => {
-  //     userFunction.update({});
-  //   };
-  // }, [functionId]);
-
-  // const handleChangeTab = (e, newValue) => {
-  //   setTab(newValue);
-  // };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -170,16 +148,16 @@ const FunctionPage = () => {
         const moduleData = await userModule.getDetailModule(moduleId);
         userModule.update(moduleData);
         // get list type for declaration modal
-        const typeStructs = moduleData?.sources?.structs?.map((item) => {
-          return {
-            value: item?._id,
-            label: item?.name,
-          };
-        });
-        declaration.setListType(_.concat(VALUE_TYPE_OPTIONS, typeStructs));
-        // Convert Declaration
-        const listDeclaration = convertDeclaration(data.block);
-        declaration.updateDeclarations(listDeclaration);
+        // const typeStructs = moduleData?.sources?.structs?.map((item) => {
+        //   return {
+        //     value: item?._id,
+        //     label: item?.name,
+        //   };
+        // });
+        // declaration.setListType(_.concat(VALUE_TYPE_OPTIONS, typeStructs));
+        // // Convert Declaration
+        // const listDeclaration = convertDeclaration(data.block);
+        // declaration.updateDeclarations(listDeclaration);
 
         //fetch all of functions
         functions.getAllUserFunctions();

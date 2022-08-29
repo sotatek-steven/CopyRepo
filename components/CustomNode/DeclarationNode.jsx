@@ -138,6 +138,13 @@ const DeclarationNode = ({ data }) => {
 
   return (
     <>
+      <Card id={_id} onDoubleClick={() => handleChangeMode(_id)}>
+        <CardBody>
+          {textDeclaration || 'Declaration'}
+          <Handle type="target" position={Position.Left} id="a" style={{ background: '#555' }} />
+          <Handle type="source" position={Position.Right} id="c" style={{ background: '#555' }} />
+        </CardBody>
+      </Card>
       {mode === 'init' && (
         <Card id={_id}>
           <CardBody>
