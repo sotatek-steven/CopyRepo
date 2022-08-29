@@ -4,7 +4,7 @@ import _ from 'lodash';
 import { useSelector } from 'react-redux';
 
 const useDeclaration = () => {
-  const { listType } = useSelector((state) => state.declaration);
+  const { listType } = useSelector((state) => state.functions);
   const { validateSyntax, checkExistingFunction, checkExistingStateVariable } = useValidateVariableName();
 
   const indentifierError = (value) => {

@@ -6,9 +6,10 @@ import ErrorIconDeclaration from 'assets/icon/ErrorIconDeclaration.svg';
 import IconCancel from 'assets/icon/IconCancel.svg';
 import IconConfirm from 'assets/icon/IconConfirm.svg';
 import IconEditNode from 'assets/icon/IconEditNode.svg';
-import IconDeleteNode from 'assets/icon/IconDeleteNode.svg';
 import { convertToDeclaration, splitElements } from '@/config/constant/common';
 import useDeclaration from '../functionsPage/hooks/useDeclaration';
+import { useDispatch, useSelector } from 'react-redux';
+import ButtonRemoveNode from '../atom/ButtonRemoveNode';
 
 const Card = styled('article')(({ color, theme }) => ({
   padding: '10px 15px',
@@ -98,11 +99,14 @@ const AbsoluteContainer = styled('div')(({ theme }) => ({
   },
 }));
 
-const DeclarationNode = ({ data }) => {
-  const { _id, mode, textDeclaration, handleChangeMode, handleConfirm, handleCancel } = data;
-  const [inputText, setInputText] = useState(textDeclaration);
+const DeclarationNode = ({ id, data }) => {
+  const logicBlocksState = useSelector((state) => state.logicBlocks);
+
+  const [inputText, setInputText] = useState(data?.textDeclaration || '');
   const [errorText, setErrorText] = useState('');
   const { validateDeclaration } = useDeclaration();
+  const { logicBlocks } = useDispatch();
+  const [mode, setMode] = useState('editing');
 
   const handleChange = (e) => {
     setInputText(e.target.value);
@@ -121,44 +125,29 @@ const DeclarationNode = ({ data }) => {
 
   const onConfirm = () => {
     // Validate Declaration
-    const { errorMess, nodeData } = checkValidateText();
+    const { errorMess } = checkValidateText();
     if (errorMess) return;
 
     // Update Declaration
-    nodeData.textDeclaration = inputText;
-    handleConfirm(_id, nodeData);
-  };
+    const _logicBlocksState = [...logicBlocksState];
+    const index = logicBlocksState.findIndex((item) => item?.id === id);
 
-  const onCancel = () => {
-    // Validate Declaration
-    const { errorMess } = checkValidateText();
-    if (errorMess) return;
-    handleCancel(_id);
+    _logicBlocksState[index]['data']['mode'] = 'init';
+    _logicBlocksState[index]['data']['textDeclaration'] = inputText;
+
+    logicBlocks.set(_logicBlocksState);
   };
 
   return (
     <>
-      <Card id={_id} onDoubleClick={() => handleChangeMode(_id)}>
-        <CardBody>
-          {textDeclaration || 'Declaration'}
-          <Handle type="target" position={Position.Left} id="a" style={{ background: '#555' }} />
-          <Handle type="source" position={Position.Right} id="c" style={{ background: '#555' }} />
-        </CardBody>
-      </Card>
       {mode === 'init' && (
-        <Card id={_id}>
-          <CardBody>
-            {textDeclaration}
-            <Handle type="target" position={Position.Left} id="a" style={{ background: '#555' }} />
-            <Handle type="source" position={Position.Right} id="c" style={{ background: '#555' }} />
-          </CardBody>
+        <Card>
+          <CardBody>{data?.textDeclaration}</CardBody>
           <AbsoluteContainer className="action-node">
-            <Button className="action-icon" onClick={() => handleChangeMode(_id)}>
+            <Button className="action-icon" onClick={() => setMode('editing')}>
               <IconEditNode />
             </Button>
-            <Button className="action-icon">
-              <IconDeleteNode />
-            </Button>
+            <ButtonRemoveNode id={id} />
           </AbsoluteContainer>
         </Card>
       )}
@@ -166,7 +155,7 @@ const DeclarationNode = ({ data }) => {
         <EditingContainer>
           <Title>DECLARATION</Title>
           <ItemContainer error={errorText}>
-            <Input id={_id} value={inputText} onChange={handleChange} onKeyDown={handleChange} />
+            <Input value={inputText} onChange={handleChange} onKeyDown={handleChange} />
             {!!errorText && (
               <ErrorContainer>
                 <div className="icon">
@@ -177,17 +166,17 @@ const DeclarationNode = ({ data }) => {
             )}
           </ItemContainer>
           <ActionContainer>
-            <Button className="action-icon" onClick={onCancel}>
+            <Button className="action-icon" onClick={() => setMode('init')}>
               <IconCancel />
             </Button>
             <Button className="action-icon" onClick={onConfirm}>
               <IconConfirm />
             </Button>
           </ActionContainer>
-          <Handle type="target" position={Position.Left} id="a" style={{ background: '#555' }} />
-          <Handle type="source" position={Position.Right} id="c" style={{ background: '#555' }} />
         </EditingContainer>
       )}
+      <Handle type="target" position={Position.Top} id="a" style={{ background: '#555' }} />
+      <Handle type="source" position={Position.Bottom} id="c" style={{ background: '#555' }} />
     </>
   );
 };

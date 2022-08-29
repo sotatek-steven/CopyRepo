@@ -1,5 +1,4 @@
 import OvalNode from './OvalNode';
-import DiamondNode from './DiamondNode';
 import RectangleNode from './RectangleNode';
 import SimpleRectangleNode from './SimpleRectangleNode';
 import CircleNode from './CircleNode';
@@ -8,10 +7,10 @@ import AssignmentNode from './AssigmentNode';
 import InitialNode from './InitialNode';
 import ActivityFinalNode from './AcitvityFinalNode';
 import DropHereNode from './DropHereNode';
+import ConditionNode from './ConditionNode';
 
 const CustomNodes = {
   rectangle: RectangleNode,
-  diamond: DiamondNode,
   oval: OvalNode,
   simpleRectangle: SimpleRectangleNode,
   circle: CircleNode,
@@ -20,6 +19,7 @@ const CustomNodes = {
   initial: InitialNode,
   activityFinal: ActivityFinalNode,
   drop: DropHereNode,
+  condition: ConditionNode,
 };
 
 export default CustomNodes;
