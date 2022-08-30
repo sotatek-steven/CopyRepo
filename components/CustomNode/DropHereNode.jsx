@@ -50,7 +50,7 @@ const yPlus = 300;
 
 const DropHereNode = (props) => {
   const { id, xPos, yPos } = props;
-  const logicBlocksState = useSelector((state) => state.logicBlocks);
+  const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
   const { logicBlocks } = useDispatch();
   const [isAllowDrop, setIsAllowDrop] = useState(false);
 
@@ -64,7 +64,7 @@ const DropHereNode = (props) => {
     event.preventDefault();
   };
 
-  const createLogicBlocks = () => {
+  const createIfElseBlocks = () => {
     return [
       {
         id: ObjectID(24).toHexString(),
@@ -103,7 +103,7 @@ const DropHereNode = (props) => {
     let newBlocks = [];
     switch (type) {
       case 'logic':
-        newBlocks = newBlocks.concat(createLogicBlocks());
+        newBlocks = newBlocks.concat(createIfElseBlocks());
         break;
       default: {
         newBlocks.push({
@@ -118,7 +118,7 @@ const DropHereNode = (props) => {
       }
     }
 
-    const dropItemIndex = logicBlocksState.findIndex((item) => item.id === id);
+    const dropItemIndex = blocksState.findIndex((item) => item.id === id);
     const updateDropItem = {
       id,
       type: 'drop',
@@ -133,13 +133,13 @@ const DropHereNode = (props) => {
       type: 'activityFinal',
       position: {
         x: xPos,
-        y: logicBlocksState[logicBlocksState.length - 1].position.y + yPlus,
+        y: blocksState[blocksState.length - 1].position.y + yPlus,
       },
     };
 
-    const _logicBlocksState = [...logicBlocksState];
-    _logicBlocksState.splice(dropItemIndex, 2, ...newBlocks, updateDropItem, activityFinalNode);
-    logicBlocks.set(_logicBlocksState);
+    const _blocksState = [...blocksState];
+    _blocksState.splice(dropItemIndex, 2, ...newBlocks, updateDropItem, activityFinalNode);
+    logicBlocks.setBlocks(_blocksState);
     setIsAllowDrop(false);
   };
 

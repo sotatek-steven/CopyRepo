@@ -2,40 +2,41 @@ import { createModel } from '@rematch/core';
 import ObjectID from 'bson-objectid';
 
 const logicBlocks = createModel({
-  state: [
-    {
-      id: ObjectID(24).toHexString(),
-      type: 'initial',
-      position: {
-        x: 600,
-        y: 300,
+  state: {
+    nodes: [
+      {
+        id: ObjectID(24).toHexString(),
+        type: 'initial',
+        position: {
+          x: 600,
+          y: 300,
+        },
       },
-    },
-    {
-      id: ObjectID(24).toHexString(),
-      type: 'drop',
-      position: {
-        x: 600,
-        y: 500,
+      {
+        id: ObjectID(24).toHexString(),
+        type: 'drop',
+        position: {
+          x: 600,
+          y: 500,
+        },
       },
-    },
-    {
-      id: ObjectID(24).toHexString(),
-      type: 'activityFinal',
-      position: {
-        x: 600,
-        y: 700,
+      {
+        id: ObjectID(24).toHexString(),
+        type: 'activityFinal',
+        position: {
+          x: 600,
+          y: 700,
+        },
       },
-    },
-  ],
+    ],
+    edges: [],
+  },
   reducers: {
-    set: (blocksList, data) => {
-      return data;
+    setBlocks: (state, data) => {
+      return { ...state, nodes: data };
     },
-    updateBlock: (blocksList, blockId, blockData) => {
-      console.log('block: ', blockData);
-      const indexOfBlock = blocksList.findIndex((el) => el.id === blockId);
-      console.log('indexOfBlock: ', indexOfBlock);
+    updateBlock: (state, blockId, blockData) => {
+      const { nodes: blocksList } = state;
       const updatedBlocksList = blocksList.map((item) => {
         if (item.id === blockId)
           return {
@@ -45,10 +46,17 @@ const logicBlocks = createModel({
 
         return item;
       });
-      return updatedBlocksList;
+      return { ...state, nodes: updatedBlocksList };
     },
-    addBlock: (blocksList, block) => [...blocksList, block],
-    removeBlock: (blocksList, blockId) => blocksList.filter((el) => el.id !== blockId),
+    addBlock: (state, block) => {
+      const { nodes: blocksList } = state;
+      return { ...state, nodes: [...blocksList, block] };
+    },
+    removeBlock: (state, blockId) => {
+      const { nodes: blocksList } = state;
+      const updatedBlocksList = blocksList.filter((el) => el.id !== blockId);
+      return { ...state, nodes: updatedBlocksList };
+    },
   },
   effects: (dispatch) => {
     return {
@@ -71,8 +79,8 @@ const logicBlocks = createModel({
               parentNode = createParentNode(blockData.parent.position, parentNodeId);
               blocksList.push(parentNode);
               blocksList.push(createConditionNode(position, blockData.conditions, parentNode.id));
-              if (nextTrue) createBlocks(nextTrue, parentNode.id);
-              if (nextFalse) createBlocks(nextFalse, parentNode.id);
+              if (nextTrue) createBlocks({ ...nextTrue, branch: 'true' }, parentNode.id);
+              if (nextFalse) createBlocks({ ...nextFalse, branch: 'false' }, parentNode.id);
               break;
             case 'logic':
               blocksList.push(createLogicNode(position, params, parentNodeId));

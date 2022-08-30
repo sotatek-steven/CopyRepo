@@ -5,11 +5,11 @@ import IconDeleteNode from 'assets/icon/IconDeleteNode.svg';
 import { useSelector } from 'react-redux';
 
 const ButtonRemoveNode = ({ id }) => {
-  const logicBlocksState = useSelector((state) => state.logicBlocks);
+  const { nodes } = useSelector((state) => state.logicBlocks);
   const { removeNode, deleteDropNode } = useBlock();
 
   const onClick = () => {
-    const node = logicBlocksState.find((item) => item?.id === id);
+    const node = nodes.find((item) => item?.id === id);
     if (node?.type !== 'drop') {
       removeNode(id);
     } else {
