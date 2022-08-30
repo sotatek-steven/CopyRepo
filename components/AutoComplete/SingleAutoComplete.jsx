@@ -2,7 +2,7 @@ import TextField from '@mui/material/TextField';
 import ArrowDown from 'assets/icon/arrow-down.svg';
 import { BaseAutocomplete, Container, Error, Label } from './AutoComplete.style';
 
-export default function SingleAutoComplete({
+const SingleAutoComplete = ({
   label,
   colorLabel,
   options,
@@ -14,7 +14,7 @@ export default function SingleAutoComplete({
   getOptionLabelCustom,
   renderOptionCustom,
   disabled = false,
-}) {
+}) => {
   const getOptionLabelDefault = (option) => option.label;
   const renderOptionDefault = (props, option) => (
     <div className="item" component="li" {...props}>
@@ -54,4 +54,6 @@ export default function SingleAutoComplete({
       {!!errorText && <Error>{errorText}</Error>}
     </Container>
   );
-}
+};
+
+export default SingleAutoComplete;

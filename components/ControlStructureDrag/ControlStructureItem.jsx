@@ -1,13 +1,13 @@
 /* eslint-disable no-param-reassign */
-import React, { useState } from 'react';
+import React from 'react';
 import { styled } from '@mui/material/styles';
 import DragIcon from '../../assets/icon/drag.svg';
 
-const Item = styled('div')(({ theme, disable }) => ({
+const Item = styled('div')(({ theme }) => ({
   gap: '17px',
   alignContent: 'center',
   padding: '11px 19px',
-  display: disable === 'true' ? 'none' : 'flex',
+  display: 'flex',
   transition: 'background 0.2s',
 
   ':hover': {
@@ -34,31 +34,20 @@ const Text = styled('div')(({ theme }) => ({
   maxWidth: 352,
 }));
 
-const ControlStructureItem = ({ data, nodeType }) => {
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const open = Boolean(anchorEl);
-  const id = open ? 'simple-popover' : undefined;
-
+const ControlStructureItem = ({ name, nodeType }) => {
   const onDragStart = (event, nodeType) => {
     event.dataTransfer?.setData('application/reactflow', nodeType);
-    const dataJson = JSON.stringify(data);
-    event.dataTransfer.setData('foo', dataJson);
     event.dataTransfer.effectAllowed = 'move';
   };
 
   return (
-    <Item
-      onDragStart={(event) => onDragStart(event, nodeType)}
-      draggable
-      key={data._id}
-      disable={data?.disable?.toString()}>
+    <Item onDragStart={(event) => onDragStart(event, nodeType)} draggable>
       <div>
         <DragIcon />
       </div>
       <div className="content">
         <div className="div-name">
-          <Text>{data.name}</Text>
+          <Text>{name}</Text>
         </div>
       </div>
     </Item>
