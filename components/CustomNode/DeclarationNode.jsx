@@ -100,7 +100,7 @@ const AbsoluteContainer = styled('div')(({ theme }) => ({
 }));
 
 const DeclarationNode = ({ id, data }) => {
-  const logicBlocksState = useSelector((state) => state.logicBlocks);
+  const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
 
   const [inputText, setInputText] = useState(data?.textDeclaration || '');
   const [errorText, setErrorText] = useState('');
@@ -129,13 +129,13 @@ const DeclarationNode = ({ id, data }) => {
     if (errorMess) return;
 
     // Update Declaration
-    const _logicBlocksState = [...logicBlocksState];
-    const index = logicBlocksState.findIndex((item) => item?.id === id);
+    const _blocksState = [...blocksState];
+    const index = blocksState.findIndex((item) => item?.id === id);
 
-    _logicBlocksState[index]['data']['mode'] = 'init';
-    _logicBlocksState[index]['data']['textDeclaration'] = inputText;
+    _blocksState[index]['data']['mode'] = 'init';
+    _blocksState[index]['data']['textDeclaration'] = inputText;
 
-    logicBlocks.set(_logicBlocksState);
+    logicBlocks.setBlocks(_blocksState);
   };
 
   return (

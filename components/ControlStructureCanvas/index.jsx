@@ -24,14 +24,14 @@ const styles = {
 
 const ControlStructureCanvas = () => {
   const reactFlowWrapper = useRef(null);
-  const logicBlocksState = useSelector((state) => state.logicBlocks);
+  const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
   const nodeTypes = useMemo(() => CustomNodes, []);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   useEffect(() => {
-    setNodes(logicBlocksState);
-  }, [logicBlocksState]);
+    setNodes(blocksState);
+  }, [blocksState]);
 
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
 

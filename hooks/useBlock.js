@@ -1,25 +1,25 @@
 import { useDispatch, useSelector } from 'react-redux';
 
 const useBlock = () => {
-  const logicBlocksState = useSelector((state) => state.logicBlocks);
+  const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
   const { logicBlocks } = useDispatch();
 
   const removeNode = (id) => {
-    const _logicBlocksState = [...logicBlocksState];
-    const index = logicBlocksState.findIndex((item) => item?.id === id);
+    const _blocksState = [...blocksState];
+    const index = blocksState.findIndex((item) => item?.id === id);
 
-    _logicBlocksState[index]['type'] = 'drop';
-    _logicBlocksState[index]['data'] = null;
+    _blocksState[index]['type'] = 'drop';
+    _blocksState[index]['data'] = null;
 
-    logicBlocks.set(_logicBlocksState);
+    logicBlocks.setBlocks(_blocksState);
   };
 
   const deleteDropNode = (id) => {
-    const _logicBlocksState = [...logicBlocksState];
-    const index = logicBlocksState.findIndex((item) => item?.id === id);
+    const _blocksState = [...blocksState];
+    const index = blocksState.findIndex((item) => item?.id === id);
 
-    _logicBlocksState.splice(index, 1);
-    logicBlocks.set(_logicBlocksState);
+    _blocksState.splice(index, 1);
+    logicBlocks.setBlocks(_blocksState);
   };
 
   return {
