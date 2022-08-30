@@ -32,10 +32,20 @@ const logicBlocks = createModel({
     set: (blocksList, data) => {
       return data;
     },
-    updateBlock: (blocksList, block) => {
-      const indexOfBlock = blocksList.findIndex((el) => el.id === block.id);
-      blocksList[indexOfBlock] = block;
-      return blocksList;
+    updateBlock: (blocksList, blockId, blockData) => {
+      console.log('block: ', blockData);
+      const indexOfBlock = blocksList.findIndex((el) => el.id === blockId);
+      console.log('indexOfBlock: ', indexOfBlock);
+      const updatedBlocksList = blocksList.map((item) => {
+        if (item.id === blockId)
+          return {
+            ...item,
+            data: blockData,
+          };
+
+        return item;
+      });
+      return updatedBlocksList;
     },
     addBlock: (blocksList, block) => [...blocksList, block],
     removeBlock: (blocksList, blockId) => blocksList.filter((el) => el.id !== blockId),
