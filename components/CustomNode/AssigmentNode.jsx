@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import { Button, Grid, styled, TextField, useTheme } from '@mui/material';
 import { BaseAutocomplete, StyledPopper } from '../AutoComplete/AutoComplete.style';
@@ -33,8 +33,6 @@ const CardBody = styled('div')(({ theme }) => ({
   flexGrow: 1,
   alignItems: 'center',
   justifyContent: 'center',
-  fontFamily: 'Segoe UI',
-  fontWeight: theme.typography.fontWeightBold,
 }));
 
 const EditingContainer = styled('div')(({ theme }) => ({
@@ -48,6 +46,7 @@ const EditingContainer = styled('div')(({ theme }) => ({
 const Title = styled('div')(({ theme }) => ({
   width: 'fit-content',
   background: theme.shape.backgroundNode,
+  color: theme.palette.background.dark,
   position: 'absolute',
   padding: 8,
   top: '-20px',
@@ -101,33 +100,50 @@ const AssignmentNode = ({ data, id }) => {
     return _values.concat(_params);
   }, [variables, functionState.params]);
 
-  const [variable, setVariable] = useState(data?.indentifier);
-  const [value, setValue] = useState(data?.value);
+  const [variable, setVariable] = useState(null);
+  const [value, setValue] = useState('');
   const [mode, setMode] = useState('editing');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [variableError, setVariableError] = useState('');
+  const [valueError, setValueError] = useState('');
+
+  useEffect(() => {
+    if (!data) {
+      setVariable(null);
+      setValue('');
+      return;
+    }
+    const { indentifier, value } = data;
+    setVariable({ label: indentifier });
+    setValue(value);
+  }, [data]);
 
   const handleVariableChange = (e, value) => {
-    console.log(value);
     setVariable(value);
+    if (!value) setVariableError('This field required');
+    else setVariableError('');
   };
 
   const handleValueChange = (e) => {
     const _value = e.target.value;
     setValue(_value);
+    if (!value) setValueError('This field required');
+    else setValueError('');
   };
 
   const handleConfirm = () => {
+    let hasError = false;
     if (!variable) {
-      setErrorMessage('Missing variable');
-      return;
+      setVariableError('This field required');
+      hasError = true;
     }
-
     if (!value) {
-      setErrorMessage('Missing variable');
-      return;
+      setValueError('This field required');
+      hasError = true;
     }
+    if (hasError) return;
 
-    setErrorMessage('');
+    setVariableError('');
+    setValueError('');
     const { label, isArray, position } = variable;
     const updatedData = {
       ...data,
@@ -138,13 +154,33 @@ const AssignmentNode = ({ data, id }) => {
       value,
     };
 
-    logicBlocks.updateBlock(updatedData);
+    logicBlocks.updateBlock(id, updatedData);
     setMode('view');
   };
 
   const handleCancel = () => {
     setMode('view');
-    setErrorMessage('');
+    setVariableError('');
+    setValueError('');
+
+    if (!data) {
+      setVariable(null);
+      setValue('');
+      return;
+    }
+    const { indentifier, value } = data;
+    setVariable({ label: indentifier });
+    setValue(value);
+  };
+
+  const handleFocus = () => {
+    setValueError('');
+  };
+
+  const handleOutFocus = () => {
+    if (!value) {
+      setValueError('This field required');
+    }
   };
 
   return (
@@ -169,26 +205,36 @@ const AssignmentNode = ({ data, id }) => {
           <Title>Assignment</Title>
           <Body>
             <Grid container spacing={2}>
-              <Grid item xs={4}>
+              <Grid item xs={5}>
                 <BaseAutocomplete
                   background={theme.palette.background.default}
                   options={variableOptions}
-                  value={value}
+                  isOptionEqualToValue={(option, value) => option.label === value.label}
+                  value={variable}
                   renderInput={(params) => <TextField {...params} />}
                   onChange={handleVariableChange}
                   PopperComponent={StyledPopper}
+                  error={variableError ? 1 : 0}
                 />
+                {variableError && <ErrorMessage>{variableError}</ErrorMessage>}
               </Grid>
-              <Grid item xs={2}>
+              <Grid item xs={1}>
                 <EqualWrapper>
                   <span>=</span>
                 </EqualWrapper>
               </Grid>
               <Grid item xs={6}>
-                <Input background="default" value={value} onChange={handleValueChange} />
+                <Input
+                  onFocus={handleFocus}
+                  onBlur={handleOutFocus}
+                  error={valueError ? 1 : 0}
+                  background="default"
+                  value={value}
+                  onChange={handleValueChange}
+                />
+                {valueError && <ErrorMessage>{valueError}</ErrorMessage>}
               </Grid>
             </Grid>
-            {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
           </Body>
           <Footer>
             <Button className="action-icon" onClick={handleCancel}>
