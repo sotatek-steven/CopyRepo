@@ -43,7 +43,7 @@ const Input = ({ label, typeLabel, isRequired, tooltip, errorText, error, value 
           )}
         </LabelContainer>
       )}
-      <InputBasic value={value} error={error ? 1 : 0} onBlur={props?.onChange} {...props} />
+      <InputBasic value={value} error={error ? 1 : 0} {...props} />
       {!!errorText && <Error>{errorText}</Error>}
     </>
   );
