@@ -5,6 +5,7 @@ import FunctionSidebar from '@/components/functionsPage/FunctionSidebar';
 import useDeclaration from '@/components/functionsPage/hooks/useDeclaration';
 import DesignLayout from '@/components/layout/DesignLayout';
 import { VALUE_TYPE_OPTIONS } from '@/config/constant/common';
+import { FAKE_DATA } from '@/store/models/fakeData';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { styled, Tab } from '@mui/material';
 import _ from 'lodash';
@@ -168,6 +169,18 @@ const FunctionPage = () => {
 
     fetchData();
   }, [functionId, moduleId]);
+
+  const { logicBlocks } = useDispatch();
+
+  // useEffect(() => {
+  //   const convertData = async () => {
+  //     const { nodes, edges } = await logicBlocks.convertToFEDataDisplay(FAKE_DATA);
+  //     console.log('nodes: ', nodes);
+  //     console.log('edges: ', edges);
+  //   };
+
+  //   convertData();
+  // }, []);
 
   return (
     <div>

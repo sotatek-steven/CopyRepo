@@ -62,53 +62,77 @@ const logicBlocks = createModel({
     return {
       convertToFEDataDisplay(blockData) {
         const blocksList = [];
-        const createBlocks = (blockData, parentNodeId) => {
+        const edgesList = [];
+        const createBlocks = (blockData, groupId, parent) => {
           let parentNode;
+          let newNode;
+          let conditionNode;
           const { type, next, position, nextTrue, nextFalse, params } = blockData;
           switch (type) {
             case 'init':
-              blocksList.push(createInitNode(position));
+              newNode = createInitNode(position);
+              blocksList.push(newNode);
               break;
             case 'declaration':
-              blocksList.push(createDeclarationNode(position, params, parentNodeId));
+              newNode = createDeclarationNode(position, params, groupId);
+              blocksList.push(newNode);
               break;
             case 'assignment':
-              blocksList.push(createAssignmentNode(position, params, parentNodeId));
+              newNode = createAssignmentNode(position, params, groupId);
+              blocksList.push(newNode);
               break;
             case 'condition':
-              parentNode = createParentNode(blockData.parent.position, parentNodeId);
+              parentNode = createParentNode(blockData.parent.position, groupId);
+              newNode = parentNode;
               blocksList.push(parentNode);
-              blocksList.push(createConditionNode(position, blockData.conditions, parentNode.id));
-              if (nextTrue) createBlocks({ ...nextTrue, branch: 'true' }, parentNode.id);
-              if (nextFalse) createBlocks({ ...nextFalse, branch: 'false' }, parentNode.id);
+              conditionNode = createConditionNode(position, blockData.conditions, parentNode.id);
+              blocksList.push(conditionNode);
+              if (nextTrue) createBlocks({ ...nextTrue, branch: 'true' }, parentNode.id, conditionNode.id);
+              if (nextFalse) createBlocks({ ...nextFalse, branch: 'false' }, parentNode.id, conditionNode.id);
               break;
             case 'logic':
-              blocksList.push(createLogicNode(position, params, parentNodeId));
+              newNode = createLogicNode(position, params, groupId);
+              blocksList.push(newNode);
               break;
             case 'finish':
-              blocksList.push(createFinishNode(position, { action: blockData.action, params }, parentNodeId));
+              newNode = createFinishNode(position, { action: blockData.action, params }, groupId);
+              blocksList.push(newNode);
               break;
             case 'activityFinal':
-              blocksList.push(createActivityFinalNode(position));
+              newNode = createActivityFinalNode(position);
+              blocksList.push(newNode);
               break;
           }
 
+          if (parent && newNode) {
+            edgesList.push(createEdge(newNode.id, parent));
+          }
           if (!next) return;
-          createBlocks(next);
+          createBlocks(next, null, newNode.id);
         };
 
         createBlocks(blockData);
-        return blocksList;
+        return {
+          nodes: blocksList,
+          edges: edgesList,
+        };
       },
       // convertToDataTransferApi(data) {},
-      checkDeclarationEditing() {
-        console.log('logicBlocks', logicBlocks);
-      },
     };
   },
 });
 
 export default logicBlocks;
+
+const createEdge = (target, source) => {
+  return {
+    id: `${source}-${target}`,
+    source,
+    target,
+    markerEnd: { type: 'arrowclosed', color: '#fff' },
+    style: { strokeWidth: 2 },
+  };
+};
 
 const createInitNode = (position) => {
   return {
@@ -118,14 +142,14 @@ const createInitNode = (position) => {
   };
 };
 
-const createDeclarationNode = (position, data, parentNodeId) => {
-  if (parentNodeId)
+const createDeclarationNode = (position, data, groupId) => {
+  if (groupId)
     return {
       id: ObjectID(24).toHexString(),
       type: 'declaration',
       position,
       data,
-      parentNode: parentNodeId,
+      parentNode: groupId,
       extent: 'parent',
     };
   return {
@@ -136,14 +160,14 @@ const createDeclarationNode = (position, data, parentNodeId) => {
   };
 };
 
-const createAssignmentNode = (position, data, parentNodeId) => {
-  if (parentNodeId)
+const createAssignmentNode = (position, data, groupId) => {
+  if (groupId)
     return {
       id: ObjectID(24).toHexString(),
       type: 'assignment',
       position,
       data,
-      parentNode: parentNodeId,
+      parentNode: groupId,
       extent: 'parent',
     };
   return {
@@ -154,14 +178,14 @@ const createAssignmentNode = (position, data, parentNodeId) => {
   };
 };
 
-const createConditionNode = (position, data, parentNodeId) => {
-  if (parentNodeId)
+const createConditionNode = (position, data, groupId) => {
+  if (groupId)
     return {
       id: ObjectID(24).toHexString(),
       type: 'condition',
       position: position,
       data,
-      parentNode: parentNodeId,
+      parentNode: groupId,
       extent: 'parent',
     };
   return {
@@ -172,8 +196,8 @@ const createConditionNode = (position, data, parentNodeId) => {
   };
 };
 
-const createParentNode = (position, parentNodeId) => {
-  if (parentNodeId)
+const createParentNode = (position, groupId) => {
+  if (groupId)
     return {
       id: ObjectID(24).toHexString(),
       type: 'parent',
@@ -182,7 +206,7 @@ const createParentNode = (position, parentNodeId) => {
         width: 300,
         height: 200,
       },
-      parentNode: parentNodeId,
+      parentNode: groupId,
     };
   return {
     id: ObjectID(24).toHexString(),
@@ -195,14 +219,14 @@ const createParentNode = (position, parentNodeId) => {
   };
 };
 
-const createLogicNode = (position, data, parentNodeId) => {
-  if (parentNodeId)
+const createLogicNode = (position, data, groupId) => {
+  if (groupId)
     return {
       id: ObjectID(24).toHexString(),
       type: 'logic',
       position,
       data,
-      parentNode: parentNodeId,
+      parentNode: groupId,
       extent: 'parent',
     };
   return {
@@ -213,14 +237,14 @@ const createLogicNode = (position, data, parentNodeId) => {
   };
 };
 
-const createFinishNode = (position, data, parentNodeId) => {
-  if (parentNodeId)
+const createFinishNode = (position, data, groupId) => {
+  if (groupId)
     return {
       id: ObjectID(24).toHexString(),
       type: 'finish',
       position,
       data,
-      parentNode: parentNodeId,
+      parentNode: groupId,
       extent: 'parent',
     };
   return {
