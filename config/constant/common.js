@@ -81,7 +81,7 @@ export const EVENT_ERROR_OPTION = [
 ];
 
 export const CONDITION_TYPE = {
-  NONE: 'none',
+  NONE: 'end',
   AND: 'and',
   OR: 'or',
 };
