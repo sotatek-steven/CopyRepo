@@ -157,6 +157,7 @@ const DeclarationNode = ({ id, data }) => {
     delete _blocksState[index]['data'].errorIsArray;
 
     logicBlocks.setBlocks(_blocksState);
+    setMode('view');
   };
 
   return (
