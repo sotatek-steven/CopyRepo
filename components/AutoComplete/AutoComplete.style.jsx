@@ -5,13 +5,14 @@ const Container = styled('div')({
   width: '100%',
 });
 
-const BaseAutocomplete = styled(Autocomplete)(({ theme, background = theme.palette.background.light }) => ({
+const BaseAutocomplete = styled(Autocomplete)(({ theme, background = theme.palette.background.light, error }) => ({
   '.MuiOutlinedInput-root': {
     backgroundColor: background,
     color: theme.palette.text.primary,
     height: 45,
     borderRadius: 5,
-    border: 'none',
+    border: `solid 1px`,
+    borderColor: error ? theme.palette.error.main : background,
     outline: 'none',
     width: '100%',
     fontSize: 14,

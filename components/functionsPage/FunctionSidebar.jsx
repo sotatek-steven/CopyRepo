@@ -21,7 +21,7 @@ const Container = styled('div')(({ theme }) => ({
 const ControlStructures = [
   { name: 'Declaration', nodeType: 'declaration' },
   { name: 'Assignment', nodeType: 'assignment' },
-  { name: 'Logics', nodeType: '' },
+  { name: 'Logics', nodeType: 'logic' },
 ];
 
 const FunctionSidebar = () => {
@@ -31,7 +31,7 @@ const FunctionSidebar = () => {
       <div className="list-structure" style={{ flexGrow: 1 }}>
         <Scrollbars autoHide>
           {ControlStructures.map((item, index) => {
-            return <ControlStructureItem key={index} data={item} nodeType={item.nodeType} />;
+            return <ControlStructureItem key={index} name={item.name} nodeType={item.nodeType} />;
           })}
         </Scrollbars>
       </div>

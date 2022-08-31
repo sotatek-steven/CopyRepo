@@ -1,11 +1,14 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
-import { PrimaryButton } from '../ButtonStyle';
-import { Autocomplete, Grid, styled, TextField, useTheme } from '@mui/material';
+import { Button, Grid, styled, TextField, useTheme } from '@mui/material';
 import { BaseAutocomplete, StyledPopper } from '../AutoComplete/AutoComplete.style';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useMemo } from 'react';
 import { Input } from '../Input/input.style';
+import IconCancel from 'assets/icon/IconCancel.svg';
+import IconEditNode from 'assets/icon/IconEditNode.svg';
+import IconConfirm from 'assets/icon/IconConfirm.svg';
+import ButtonRemoveNode from '../atom/ButtonRemoveNode';
 
 const Card = styled('article')(({ color, theme }) => ({
   padding: '10px 15px',
@@ -17,6 +20,11 @@ const Card = styled('article')(({ color, theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   color: theme.palette.primary.contrastText,
+  '&:hover': {
+    '.action-node': {
+      display: 'flex',
+    },
+  },
 }));
 
 const CardBody = styled('div')(({ theme }) => ({
@@ -25,8 +33,6 @@ const CardBody = styled('div')(({ theme }) => ({
   flexGrow: 1,
   alignItems: 'center',
   justifyContent: 'center',
-  fontFamily: 'Segoe UI',
-  fontWeight: theme.typography.fontWeightBold,
 }));
 
 const EditingContainer = styled('div')(({ theme }) => ({
@@ -40,6 +46,7 @@ const EditingContainer = styled('div')(({ theme }) => ({
 const Title = styled('div')(({ theme }) => ({
   width: 'fit-content',
   background: theme.shape.backgroundNode,
+  color: theme.palette.background.dark,
   position: 'absolute',
   padding: 8,
   top: '-20px',
@@ -66,53 +73,130 @@ const Body = styled('div')({
   height: 130,
 });
 
-const AssignmentNode = ({ data }) => {
+const AbsoluteContainer = styled('div')(({ theme }) => ({
+  display: 'none',
+  justifyContent: 'end',
+  position: 'absolute',
+  right: 12,
+  '.action-icon': {
+    minWidth: 28,
+    '&:hover': {
+      background: theme.palette.success.main,
+    },
+  },
+}));
+
+const AssignmentNode = ({ data, id }) => {
   const theme = useTheme();
-  const { _id, mode, variable: initialVariable, value: initialValue, handleChangeMode, handleConfirm } = data;
-  console.log();
   const { variables } = useSelector((state) => state.userModule);
   const functionState = useSelector((state) => state.userFunction);
+  const { logicBlocks } = useDispatch();
+
   const variableOptions = useMemo(() => {
     const values = variables?.values || [];
+    const _values = values.map((item) => ({ ...item, position: 'globalVariable' }));
     const params = functionState.params || [];
-    return values.concat(params);
+    const _params = params.map((item) => ({ ...item, position: 'params' }));
+    return _values.concat(_params);
   }, [variables, functionState.params]);
 
-  const [variable, setVariable] = useState(initialVariable);
-  const [value, setValue] = useState(initialValue);
-  const [errorMessage, setErrorMessage] = useState('');
+  const [variable, setVariable] = useState(null);
+  const [value, setValue] = useState('');
+  const [mode, setMode] = useState('editing');
+  const [variableError, setVariableError] = useState('');
+  const [valueError, setValueError] = useState('');
+
+  useEffect(() => {
+    if (!data) {
+      setVariable(null);
+      setValue('');
+      return;
+    }
+    const { indentifier, value } = data;
+    setVariable({ label: indentifier });
+    setValue(value);
+  }, [data]);
 
   const handleVariableChange = (e, value) => {
-    console.log('gfkdsgsld');
-    console.log(value);
     setVariable(value);
+    if (!value) setVariableError('This field required');
+    else setVariableError('');
   };
 
   const handleValueChange = (e) => {
     const _value = e.target.value;
     setValue(_value);
+    if (!value) setValueError('This field required');
+    else setValueError('');
   };
 
-  const validateAssignment = () => {
+  const handleConfirm = () => {
+    let hasError = false;
     if (!variable) {
-      setErrorMessage('Missing variable');
+      setVariableError('This field required');
+      hasError = true;
+    }
+    if (!value) {
+      setValueError('This field required');
+      hasError = true;
+    }
+    if (hasError) return;
+
+    setVariableError('');
+    setValueError('');
+    const { label, isArray, position } = variable;
+    const updatedData = {
+      ...data,
+      indentifier: label,
+      isArray,
+      position,
+      assignOperation: '=',
+      value,
+    };
+
+    logicBlocks.updateBlock(id, updatedData);
+    setMode('view');
+  };
+
+  const handleCancel = () => {
+    setMode('view');
+    setVariableError('');
+    setValueError('');
+
+    if (!data) {
+      setVariable(null);
+      setValue('');
       return;
     }
+    const { indentifier, value } = data;
+    setVariable({ label: indentifier });
+    setValue(value);
+  };
 
+  const handleFocus = () => {
+    setValueError('');
+  };
+
+  const handleOutFocus = () => {
     if (!value) {
-      setErrorMessage('Missing variable');
-      return;
+      setValueError('This field required');
     }
   };
 
   return (
     <>
-      {mode === 'init' && (
-        <Card id={_id} onDoubleClick={() => handleChangeMode(_id)}>
+      {mode === 'view' && (
+        <Card onDoubleClick={() => setMode('editing')}>
+          <AbsoluteContainer className="action-node">
+            <Button className="action-icon" onClick={() => setMode('editing')}>
+              <IconEditNode />
+            </Button>
+            <ButtonRemoveNode id={id} />
+          </AbsoluteContainer>
           <CardBody>
-            {`${variable} = ${value}`}
-            <Handle type="target" position={Position.Left} id="a" style={{ background: '#555' }} />
-            <Handle type="source" position={Position.Right} id="c" style={{ background: '#555' }} />
+            {variable && value ? `${variable.label} = ${value}` : 'Assignment Block'}
+            <Handle type="target" position={Position.Top} id="a" style={{ background: '#555' }} />
+            <Handle type="source" position={Position.Bottom} id="c" style={{ background: '#555' }} />
           </CardBody>
         </Card>
       )}
@@ -121,36 +205,47 @@ const AssignmentNode = ({ data }) => {
           <Title>Assignment</Title>
           <Body>
             <Grid container spacing={2}>
-              <Grid item xs={4}>
+              <Grid item xs={5}>
                 <BaseAutocomplete
                   background={theme.palette.background.default}
-                  disablePortal
                   options={variableOptions}
-                  sx={{
-                    width: '100%',
-                  }}
+                  isOptionEqualToValue={(option, value) => option.label === value.label}
+                  value={variable}
                   renderInput={(params) => <TextField {...params} />}
                   onChange={handleVariableChange}
-                  value={variable}
                   PopperComponent={StyledPopper}
+                  error={variableError ? 1 : 0}
                 />
+                {variableError && <ErrorMessage>{variableError}</ErrorMessage>}
               </Grid>
-              <Grid item xs={2}>
+              <Grid item xs={1}>
                 <EqualWrapper>
                   <span>=</span>
                 </EqualWrapper>
               </Grid>
               <Grid item xs={6}>
-                <Input background="default" value={value} onChange={handleValueChange} />
+                <Input
+                  onFocus={handleFocus}
+                  onBlur={handleOutFocus}
+                  error={valueError ? 1 : 0}
+                  background="default"
+                  value={value}
+                  onChange={handleValueChange}
+                />
+                {valueError && <ErrorMessage>{valueError}</ErrorMessage>}
               </Grid>
             </Grid>
-            {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
           </Body>
           <Footer>
-            <PrimaryButton onClick={validateAssignment}>OK</PrimaryButton>
+            <Button className="action-icon" onClick={handleCancel}>
+              <IconCancel />
+            </Button>
+            <Button className="action-icon" onClick={handleConfirm}>
+              <IconConfirm />
+            </Button>
           </Footer>
-          <Handle type="target" position={Position.Left} id="a" style={{ background: '#555' }} />
-          <Handle type="source" position={Position.Right} id="c" style={{ background: '#555' }} />
+          <Handle type="target" position={Position.Top} id="a" style={{ background: '#555' }} />
+          <Handle type="source" position={Position.Bottom} id="c" style={{ background: '#555' }} />
         </EditingContainer>
       )}
     </>

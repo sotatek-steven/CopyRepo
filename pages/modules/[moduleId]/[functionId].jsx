@@ -5,6 +5,7 @@ import FunctionSidebar from '@/components/functionsPage/FunctionSidebar';
 import useDeclaration from '@/components/functionsPage/hooks/useDeclaration';
 import DesignLayout from '@/components/layout/DesignLayout';
 import { VALUE_TYPE_OPTIONS } from '@/config/constant/common';
+import { FAKE_DATA, simpleData } from '@/store/models/fakeData';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { styled, Tab } from '@mui/material';
 import _ from 'lodash';
@@ -120,35 +121,13 @@ const TAB_LIST = [
 const FunctionPage = () => {
   const router = useRouter();
   const { moduleId, functionId } = router.query;
-  const { userFunction, initialFunction, userModule, functions, functionDefinition, declaration } = useDispatch();
+  const { userFunction, initialFunction, userModule, functions, functionDefinition } = useDispatch();
   const [tab, setTab] = useState('workflow_view');
-  const { convertDeclaration } = useDeclaration();
+  // const { convertDeclaration } = useDeclaration();
 
   const handleChangeTab = (e, newValue) => {
     setTab(newValue);
   };
-
-  // useEffect(() => {
-  //   const fetchDetailFunction = async () => {
-  //     try {
-  //       if (!functionId) return;
-  //       const data = await userFunction.getDetailFunction(functionId);
-  //       userFunction.update(data);
-  //     } catch (error) {
-  //       console.log('Failed to fetch detail function: ', error);
-  //     }
-  //   };
-
-  //   fetchDetailFunction();
-  //   fetchDetailModule();
-  //   return () => {
-  //     userFunction.update({});
-  //   };
-  // }, [functionId]);
-
-  // const handleChangeTab = (e, newValue) => {
-  //   setTab(newValue);
-  // };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -176,10 +155,10 @@ const FunctionPage = () => {
             label: item?.name,
           };
         });
-        declaration.setListType(_.concat(VALUE_TYPE_OPTIONS, typeStructs));
-        // Convert Declaration
-        const listDeclaration = convertDeclaration(data.block);
-        declaration.updateDeclarations(listDeclaration);
+        functions.setListType(_.concat(VALUE_TYPE_OPTIONS, typeStructs));
+        // // Convert Declaration
+        // const listDeclaration = convertDeclaration(data.block);
+        // declaration.updateDeclarations(listDeclaration);
 
         //fetch all of functions
         functions.getAllUserFunctions();
@@ -190,6 +169,19 @@ const FunctionPage = () => {
 
     fetchData();
   }, [functionId, moduleId]);
+
+  const { logicBlocks } = useDispatch();
+
+  useEffect(() => {
+    const convertData = async () => {
+      // Init data
+      const { nodes, edges } = await logicBlocks.createInitNode();
+      logicBlocks.setBlocks(nodes);
+      logicBlocks.setEdgeBlocks(edges);
+    };
+
+    convertData();
+  }, []);
 
   return (
     <div>

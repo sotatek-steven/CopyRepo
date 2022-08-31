@@ -16,7 +16,7 @@ import initialModule from './initialModule';
 import eventError from './eventError';
 import enumState from './enum';
 import userFunction from './userFunction';
-import declaration from './declaration';
+import logicBlocks from './logicBlocks';
 import initialFunction from './initialFunction';
 import functionDefinition from './functionDefinition';
 
@@ -39,7 +39,7 @@ export {
   eventError,
   enumState,
   userFunction,
-  declaration,
+  logicBlocks,
   initialFunction,
   functionDefinition,
 };
