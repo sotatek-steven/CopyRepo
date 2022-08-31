@@ -172,15 +172,16 @@ const FunctionPage = () => {
 
   const { logicBlocks } = useDispatch();
 
-  // useEffect(() => {
-  //   const convertData = async () => {
-  //     const { nodes, edges } = await logicBlocks.convertToFEDataDisplay(FAKE_DATA);
-  //     console.log('nodes: ', nodes);
-  //     console.log('edges: ', edges);
-  //   };
+  useEffect(() => {
+    const convertData = async () => {
+      // Init data
+      const { nodes, edges } = await logicBlocks.createInitNode();
+      logicBlocks.setBlocks(nodes);
+      logicBlocks.setEdgeBlocks(edges);
+    };
 
-  //   convertData();
-  // }, []);
+    convertData();
+  }, []);
 
   return (
     <div>

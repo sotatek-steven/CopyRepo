@@ -1,5 +1,5 @@
 import { Button, styled } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import { Input } from '../Input';
 import ErrorIconDeclaration from 'assets/icon/ErrorIconDeclaration.svg';
@@ -102,14 +102,26 @@ const AbsoluteContainer = styled('div')(({ theme }) => ({
 const DeclarationNode = ({ id, data }) => {
   const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
 
-  const [inputText, setInputText] = useState(data?.textDeclaration || '');
+  const [inputText, setInputText] = useState('');
   const [errorText, setErrorText] = useState('');
   const { validateDeclaration } = useDeclaration();
   const { logicBlocks } = useDispatch();
   const [mode, setMode] = useState('editing');
 
+  useEffect(() => {
+    if (mode === 'editing') {
+      setInputText(data?.textDeclaration);
+    }
+  }, [data, mode]);
+
   const handleChange = (e) => {
-    setInputText(e.target.value);
+    let value = e.target.value;
+    const lastChar = value.substr(value.length - 1);
+    if (lastChar === '[') {
+      value = `${value}]`;
+    }
+
+    setInputText(value);
   };
 
   const checkValidateText = () => {
@@ -132,7 +144,7 @@ const DeclarationNode = ({ id, data }) => {
     const _blocksState = [...blocksState];
     const index = blocksState.findIndex((item) => item?.id === id);
 
-    _blocksState[index]['data']['mode'] = 'init';
+    _blocksState[index]['data']['mode'] = 'view';
     _blocksState[index]['data']['textDeclaration'] = inputText;
 
     logicBlocks.setBlocks(_blocksState);
@@ -140,9 +152,9 @@ const DeclarationNode = ({ id, data }) => {
 
   return (
     <>
-      {mode === 'init' && (
+      {mode === 'view' && (
         <Card>
-          <CardBody>{data?.textDeclaration}</CardBody>
+          <CardBody>{data?.textDeclaration || 'Declaration'}</CardBody>
           <AbsoluteContainer className="action-node">
             <Button className="action-icon" onClick={() => setMode('editing')}>
               <IconEditNode />
@@ -166,7 +178,7 @@ const DeclarationNode = ({ id, data }) => {
             )}
           </ItemContainer>
           <ActionContainer>
-            <Button className="action-icon" onClick={() => setMode('init')}>
+            <Button className="action-icon" onClick={() => setMode('view')}>
               <IconCancel />
             </Button>
             <Button className="action-icon" onClick={onConfirm}>

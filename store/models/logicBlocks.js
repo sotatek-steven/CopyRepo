@@ -3,37 +3,15 @@ import ObjectID from 'bson-objectid';
 
 const logicBlocks = createModel({
   state: {
-    nodes: [
-      {
-        id: ObjectID(24).toHexString(),
-        type: 'initial',
-        position: {
-          x: 600,
-          y: 300,
-        },
-      },
-      {
-        id: ObjectID(24).toHexString(),
-        type: 'drop',
-        position: {
-          x: 600,
-          y: 500,
-        },
-      },
-      {
-        id: ObjectID(24).toHexString(),
-        type: 'activityFinal',
-        position: {
-          x: 600,
-          y: 700,
-        },
-      },
-    ],
+    nodes: [],
     edges: [],
   },
   reducers: {
     setBlocks: (state, data) => {
       return { ...state, nodes: data };
+    },
+    setEdgeBlocks: (state, data) => {
+      return { ...state, edges: data };
     },
     updateBlock: (state, blockId, blockData) => {
       const { nodes: blocksList } = state;
@@ -60,6 +38,36 @@ const logicBlocks = createModel({
   },
   effects: (dispatch) => {
     return {
+      createInitNode() {
+        const nodes = [];
+        const edges = [];
+
+        nodes.push(
+          createInitNode({
+            x: 600,
+            y: 300,
+          })
+        );
+
+        nodes.push(
+          createDropItemNode({
+            x: 600,
+            y: 500,
+          })
+        );
+        nodes.push(
+          createActivityFinalNode({
+            x: 600,
+            y: 700,
+          })
+        );
+
+        for (let index = 1; index < nodes.length; index++) {
+          edges.push(createEdge(nodes[index].id, nodes[index - 1].id));
+        }
+
+        return { nodes, edges };
+      },
       convertToFEDataDisplay(blockData) {
         const blocksList = [];
         const edgesList = [];
@@ -134,15 +142,16 @@ const createEdge = (target, source) => {
   };
 };
 
-const createInitNode = (position) => {
+export const createInitNode = (position) => {
   return {
     id: ObjectID(24).toHexString(),
     type: 'initial',
     position,
+    dragHandle: 'dragHandle',
   };
 };
 
-const createDeclarationNode = (position, data, groupId) => {
+export const createDeclarationNode = (position, data, groupId) => {
   if (groupId)
     return {
       id: ObjectID(24).toHexString(),
@@ -151,16 +160,18 @@ const createDeclarationNode = (position, data, groupId) => {
       data,
       parentNode: groupId,
       extent: 'parent',
+      dragHandle: 'dragHandle',
     };
   return {
     id: ObjectID(24).toHexString(),
     type: 'declaration',
     position,
     data,
+    dragHandle: 'dragHandle',
   };
 };
 
-const createAssignmentNode = (position, data, groupId) => {
+export const createAssignmentNode = (position, data, groupId) => {
   if (groupId)
     return {
       id: ObjectID(24).toHexString(),
@@ -169,16 +180,18 @@ const createAssignmentNode = (position, data, groupId) => {
       data,
       parentNode: groupId,
       extent: 'parent',
+      dragHandle: 'dragHandle',
     };
   return {
     id: ObjectID(24).toHexString(),
     type: 'assignment',
     position,
     data,
+    dragHandle: 'dragHandle',
   };
 };
 
-const createConditionNode = (position, data, groupId) => {
+export const createConditionNode = (position, data, groupId) => {
   if (groupId)
     return {
       id: ObjectID(24).toHexString(),
@@ -187,16 +200,18 @@ const createConditionNode = (position, data, groupId) => {
       data,
       parentNode: groupId,
       extent: 'parent',
+      dragHandle: 'dragHandle',
     };
   return {
     id: ObjectID(24).toHexString(),
     type: 'condition',
     position: position,
     data,
+    dragHandle: 'dragHandle',
   };
 };
 
-const createParentNode = (position, groupId) => {
+export const createParentNode = (position, groupId) => {
   if (groupId)
     return {
       id: ObjectID(24).toHexString(),
@@ -207,6 +222,7 @@ const createParentNode = (position, groupId) => {
         height: 200,
       },
       parentNode: groupId,
+      dragHandle: 'dragHandle',
     };
   return {
     id: ObjectID(24).toHexString(),
@@ -216,10 +232,11 @@ const createParentNode = (position, groupId) => {
       width: 300,
       height: 200,
     },
+    dragHandle: 'dragHandle',
   };
 };
 
-const createLogicNode = (position, data, groupId) => {
+export const createLogicNode = (position, data, groupId) => {
   if (groupId)
     return {
       id: ObjectID(24).toHexString(),
@@ -228,16 +245,18 @@ const createLogicNode = (position, data, groupId) => {
       data,
       parentNode: groupId,
       extent: 'parent',
+      dragHandle: 'dragHandle',
     };
   return {
     id: ObjectID(24).toHexString(),
     type: 'logic',
     position,
     data,
+    dragHandle: 'dragHandle',
   };
 };
 
-const createFinishNode = (position, data, groupId) => {
+export const createFinishNode = (position, data, groupId) => {
   if (groupId)
     return {
       id: ObjectID(24).toHexString(),
@@ -246,19 +265,31 @@ const createFinishNode = (position, data, groupId) => {
       data,
       parentNode: groupId,
       extent: 'parent',
+      dragHandle: 'dragHandle',
     };
   return {
     id: ObjectID(24).toHexString(),
     type: 'finish',
     position,
     data,
+    dragHandle: 'dragHandle',
   };
 };
 
-const createActivityFinalNode = (position) => {
+export const createActivityFinalNode = (position) => {
   return {
     id: ObjectID(24).toHexString(),
     type: 'activityFinal',
     position,
+    dragHandle: 'dragHandle',
+  };
+};
+
+export const createDropItemNode = (position) => {
+  return {
+    id: ObjectID(24).toHexString(),
+    type: 'drop',
+    position,
+    dragHandle: 'dragHandle',
   };
 };

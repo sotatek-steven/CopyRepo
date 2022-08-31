@@ -46,11 +46,11 @@ const AbsoluteContainer = styled('div')(({ theme }) => ({
   },
 }));
 
-const yPlus = 300;
+const yPlus = 700;
 
 const DropHereNode = (props) => {
   const { id, xPos, yPos } = props;
-  const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
+  const { nodes: blocksState, edges: edgesState } = useSelector((state) => state.logicBlocks);
   const { logicBlocks } = useDispatch();
   const [isAllowDrop, setIsAllowDrop] = useState(false);
 
@@ -64,82 +64,162 @@ const DropHereNode = (props) => {
     event.preventDefault();
   };
 
+  const createEdge = (source, target, type, label, sourceHandle) => {
+    return {
+      id: `${source}-${target}`,
+      source,
+      target,
+      type: type,
+      label: label,
+      sourceHandle,
+      markerEnd: { type: 'arrowclosed', color: '#fff' },
+      style: { strokeWidth: 2 },
+    };
+  };
+
+  const createParentNode = (position) => {
+    return {
+      id: id,
+      type: 'parent',
+      position: position,
+    };
+  };
+
+  const createConditionNode = (position, idNode, data) => {
+    return {
+      id: idNode,
+      type: 'condition',
+      position: position,
+      data,
+      parentNode: id,
+      extent: 'parent',
+      dragHandle: 'dragHandle',
+    };
+  };
+
+  const createDropItemNode = (position, idNode) => {
+    return {
+      id: idNode,
+      type: 'drop',
+      position,
+      parentNode: id,
+      extent: 'parent',
+      dragHandle: 'dragHandle',
+    };
+  };
+
   const createIfElseBlocks = () => {
-    return [
-      {
-        id: ObjectID(24).toHexString(),
-        type: 'condition',
-        position: {
-          x: xPos,
-          y: yPos,
-        },
-        data: null,
-      },
-      {
-        id: ObjectID(24).toHexString(),
-        type: 'drop',
-        position: {
-          x: xPos - 100,
-          y: yPos + 200,
-        },
-        data: null,
-      },
-      {
-        id: ObjectID(24).toHexString(),
-        type: 'drop',
-        position: {
-          x: xPos + 100,
-          y: yPos + 200,
-        },
-        data: null,
-      },
-    ];
+    const conditionId = ObjectID(24).toHexString();
+    const dropIdTrue = ObjectID(24).toHexString();
+    const dropIdFalse = ObjectID(24).toHexString();
+
+    const nodes = [];
+
+    nodes.push(createParentNode({ x: xPos, y: yPos }));
+    nodes.push(createConditionNode({ x: 250, y: 15 }, conditionId, {}));
+    nodes.push(createDropItemNode({ x: 50, y: 300 }, dropIdTrue));
+    nodes.push(createDropItemNode({ x: 450, y: 300 }, dropIdFalse));
+
+    const edges = [];
+    // Edge True
+    edges.push(createEdge(conditionId, dropIdTrue, 'step', 'Yes', 'left'));
+    // Edge False
+    edges.push(createEdge(conditionId, dropIdFalse, 'step', 'No', 'right'));
+
+    return { nodes, edges };
   };
 
   const handleDrop = (event) => {
     event.preventDefault();
     if (!event.dataTransfer) return;
     const type = event.dataTransfer.getData('application/reactflow');
+    const dataBlock = blocksState.find((item) => item.id === id);
+    console.log('dataBlock', dataBlock);
+
     let newBlocks = [];
+    let newEdges = [];
     switch (type) {
       case 'logic':
-        newBlocks = newBlocks.concat(createIfElseBlocks());
+        {
+          const { nodes, edges } = createIfElseBlocks();
+          newBlocks = newBlocks.concat(nodes);
+          newEdges = newEdges.concat(edges);
+        }
         break;
       default: {
-        newBlocks.push({
-          id: ObjectID(24).toHexString(),
-          type: type,
-          position: {
-            x: xPos,
-            y: yPos,
-          },
-          data: null,
-        });
+        if (dataBlock?.parentNode) {
+          newBlocks.push({
+            id: id,
+            type: type,
+            position: {
+              x: xPos,
+              y: yPos,
+            },
+            data: null,
+            parentNode: dataBlock?.parentNode,
+            extent: 'parent',
+            dragHandle: 'dragHandle',
+          });
+        } else {
+          newBlocks.push({
+            id: id,
+            type: type,
+            position: {
+              x: xPos,
+              y: yPos,
+            },
+            data: null,
+            dragHandle: 'dragHandle',
+          });
+        }
       }
     }
 
-    const dropItemIndex = blocksState.findIndex((item) => item.id === id);
+    const dropId = ObjectID(24).toHexString();
+    const endId = ObjectID(24).toHexString();
+
     const updateDropItem = {
-      id,
+      id: dropId,
       type: 'drop',
       position: {
         x: xPos,
         y: yPos + yPlus,
       },
+      dragHandle: 'dragHandle',
     };
 
     const activityFinalNode = {
-      id: ObjectID(24).toHexString(),
+      id: endId,
       type: 'activityFinal',
       position: {
         x: xPos,
         y: blocksState[blocksState.length - 1].position.y + yPlus,
       },
+      dragHandle: 'dragHandle',
     };
 
-    const _blocksState = [...blocksState];
-    _blocksState.splice(dropItemIndex, 2, ...newBlocks, updateDropItem, activityFinalNode);
+    let _blocksState = [...blocksState];
+    let _edgesState = [...edgesState];
+
+    if (dataBlock?.parentNode) {
+      newBlocks.push({ ...updateDropItem, parentNode: dataBlock?.parentNode, extent: 'parent' });
+      newEdges.push(createEdge(id, dropId));
+    } else {
+      const dropItemIndex = blocksState.findIndex((item) => item.id === id);
+      _blocksState.splice(dropItemIndex, 2);
+
+      newBlocks.push(updateDropItem);
+      newBlocks.push(activityFinalNode);
+      newEdges.push(createEdge(id, dropId));
+      newEdges.push(createEdge(dropId, endId));
+    }
+
+    _blocksState = _blocksState.concat(newBlocks);
+    _edgesState = _edgesState.concat(newEdges);
+
     logicBlocks.setBlocks(_blocksState);
+    logicBlocks.setEdgeBlocks(_edgesState);
+
     setIsAllowDrop(false);
   };
 

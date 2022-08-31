@@ -80,6 +80,27 @@ export const EVENT_ERROR_OPTION = [
   },
 ];
 
+export const CONDITION_TYPE = {
+  NONE: 'none',
+  AND: 'and',
+  OR: 'or',
+};
+
+export const CONDITION_OPTION = [
+  {
+    value: CONDITION_TYPE.AND,
+    label: 'AND',
+  },
+  {
+    value: CONDITION_TYPE.OR,
+    label: 'OR',
+  },
+  {
+    value: CONDITION_TYPE.NONE,
+    label: 'NONE',
+  },
+];
+
 export const SCOPE_OPTIONS = [
   {
     value: 'public',

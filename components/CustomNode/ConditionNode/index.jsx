@@ -1,12 +1,14 @@
 import { Button, styled } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
-// import { Input } from '../Input/input.style';
 import IconCancel from 'assets/icon/IconCancel.svg';
 import IconEditNode from 'assets/icon/IconEditNode.svg';
 import IconConfirm from 'assets/icon/IconConfirm.svg';
 import ButtonRemoveNode from '@/components/atom/ButtonRemoveNode';
-import { Input } from '@/components/Input/input.style';
+import SingleAutoComplete from '@/components/AutoComplete/SingleAutoComplete';
+import { CONDITION_OPTION, CONDITION_TYPE, ELEMENT_TYPE } from '@/config/constant/common';
+import ObjectID from 'bson-objectid';
+import { Input } from '@/components/Input';
 
 const CardBody = styled('article')(({ theme }) => ({
   border: 'solid 1px #BEA75A',
@@ -39,6 +41,7 @@ const Card = styled('div')(({ theme }) => ({
 const EditingContainer = styled('div')(({ theme }) => ({
   padding: 30,
   width: 468,
+  height: 'fit-content',
   border: `1.5px dashed ${theme.palette.success.main}`,
   background: theme.palette.background.light,
 }));
@@ -55,35 +58,32 @@ const Title = styled('div')(({ theme }) => ({
   clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
 }));
 
-const Body = styled('div')({
-  height: 100,
-});
+const Body = styled('div')(({ theme, isError }) => ({
+  marginBottom: 20,
+  '.operation': {
+    width: '30%',
+    marginTop: isError ? 0 : 20,
+
+    '.MuiOutlinedInput-root': {
+      backgroundColor: theme.palette.background.default,
+    },
+  },
+}));
 
 const Footer = styled('div')({
   display: 'flex',
   justifyContent: 'end',
+  position: 'absolute',
+  right: 20,
+  bottom: 20,
 });
-
-const ErrorMessage = styled('p')(({ theme }) => ({
-  color: theme.palette.error.main,
-}));
-
-// const Content = styled('p')(({ theme }) => ({
-//   margin: 0,
-//   textAlign: 'center',
-//   fontSize: 14,
-//   fontFamily: 'Segoe UI',
-//   fontWeight: theme.typography.fontWeightBold,
-//   ...theme.components.truncate.twoLineEllipsis,
-//   wordBreak: 'break-all',
-// }));
 
 const AbsoluteContainer = styled('div')(({ theme }) => ({
   display: 'none',
   justifyContent: 'end',
   position: 'absolute',
   top: 0,
-  right: 0,
+  right: 15,
   zIndex: 10,
   '.action-icon': {
     minWidth: 28,
@@ -102,22 +102,24 @@ const ButtonWrapper = styled('div')({
 });
 
 const ConditionNode = ({ data, id }) => {
-  const [mode, setMode] = useState('editing');
-  const [errorMessage, setErrorMessage] = useState('this is an error');
-  const [value, setValue] = useState('');
+  const [listData, setListData] = useState([]);
+  const [mode, setMode] = useState('view');
+
+  useEffect(() => {
+    if (!data?.length) {
+      setListData([{ id: ObjectID(32).toHexString(), condition: '', operation: CONDITION_TYPE.NONE }]);
+    }
+  }, [data]);
 
   const handleConfirm = () => {
     // if (!variable) {
     //   setErrorMessage('Missing variable');
     //   return;
     // }
-
     // if (!value) {
     //   setErrorMessage('Missing variable');
     //   return;
     // }
-
-    setErrorMessage('');
     // const { label, isArray, position } = variable;
     // const updatedData = {
     //   ...data,
@@ -127,19 +129,39 @@ const ConditionNode = ({ data, id }) => {
     //   assignOperation: '=',
     //   value,
     // };
-
     // logicBlocks.updateBlock(updatedData);
-    setMode('view');
+    // setMode('view');
   };
 
   const handleCancel = () => {
     setMode('view');
-    setErrorMessage('');
   };
 
-  const handleChange = (e) => {
-    const _value = e.target.value;
-    setValue(_value);
+  const handleChange = (itemId, field, e, type) => {
+    const iData = listData.findIndex(({ id }) => id === itemId);
+    let dataClone = [...listData];
+    switch (type) {
+      case ELEMENT_TYPE.INPUT:
+        dataClone[iData][field] = e.target.value;
+        dataClone[iData]['errorCondition'] = e.target.value ? '' : 'This field is required';
+        break;
+      case ELEMENT_TYPE.SELECT:
+        dataClone[iData][field] = e.value;
+        if (
+          dataClone[dataClone.length - 1].operation === CONDITION_TYPE.AND ||
+          dataClone[dataClone.length - 1].operation === CONDITION_TYPE.OR
+        ) {
+          dataClone.push({ id: ObjectID(32).toHexString(), condition: '', operation: CONDITION_TYPE.NONE });
+        } else if (e.value === CONDITION_TYPE.NONE) {
+          dataClone = dataClone.slice(0, iData + 1);
+        }
+
+        break;
+      default:
+        break;
+    }
+
+    setListData(dataClone);
   };
 
   return (
@@ -150,23 +172,38 @@ const ConditionNode = ({ data, id }) => {
             <Button className="action-icon" onClick={() => setMode('editing')}>
               <IconEditNode />
             </Button>
-            <ButtonRemoveNode id={id} />
           </AbsoluteContainer>
           <CardBody onDoubleClick={() => setMode('editing')}>IF</CardBody>
 
-          <Handle type="target" position={Position.Top} style={{ background: '#555' }} />
-          <Handle type="target" position={Position.Right} style={{ background: '#555' }} />
-          <Handle type="target" position={Position.Bottom} style={{ background: '#555' }} />
-          <Handle type="source" position={Position.Left} style={{ background: '#555' }} />
+          <Handle type="target" position={Position.Top} id="top" style={{ background: '#555' }} />
+          <Handle type="source" position={Position.Right} id="right" style={{ background: '#555' }} />
+          <Handle type="target" position={Position.Bottom} id="bottom" style={{ background: '#555' }} />
+          <Handle type="source" position={Position.Left} id="left" style={{ background: '#555' }} />
         </Card>
       )}
       {mode === 'editing' && (
         <EditingContainer>
           <Title>If</Title>
-          <Body>
-            <Input background="dark" value={value} onChange={handleChange} onKeyDown={handleChange} />
-            {errorMessage && <ErrorMessage>{errorMessage}</ErrorMessage>}
-          </Body>
+          {listData?.length &&
+            listData.map((item) => {
+              return (
+                <Body key={item?.id} isError={!!item?.errorCondition}>
+                  <Input
+                    background="dark"
+                    value={item?.condition}
+                    errorText={item?.errorCondition}
+                    onChange={(e) => handleChange(item?.id, 'condition', e, ELEMENT_TYPE.INPUT)}
+                  />
+                  <div className="operation">
+                    <SingleAutoComplete
+                      value={CONDITION_OPTION.find((option) => option.value === item?.operation)}
+                      options={CONDITION_OPTION}
+                      onChange={(e, newValue) => handleChange(item?.id, 'operation', newValue, ELEMENT_TYPE.SELECT)}
+                    />
+                  </div>
+                </Body>
+              );
+            })}
           <Footer>
             <ButtonWrapper className="action-icon" onClick={handleCancel}>
               <IconCancel />
@@ -175,8 +212,9 @@ const ConditionNode = ({ data, id }) => {
               <IconConfirm />
             </ButtonWrapper>
           </Footer>
-          <Handle type="target" position={Position.Top} id="a" style={{ background: '#555' }} />
-          <Handle type="source" position={Position.Bottom} id="c" style={{ background: '#555' }} />
+          <Handle type="target" position={Position.Top} id="top" style={{ background: '#555' }} />
+          <Handle type="source" position={Position.Left} id="left" style={{ background: '#555' }} />
+          <Handle type="source" position={Position.Right} id="right" style={{ background: '#555' }} />
         </EditingContainer>
       )}
     </>
