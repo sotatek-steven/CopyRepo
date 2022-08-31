@@ -82,6 +82,7 @@ const DropHereNode = (props) => {
       id: id,
       type: 'parent',
       position: position,
+      dragHandle: 'dragHandle',
     };
   };
 
@@ -155,7 +156,7 @@ const DropHereNode = (props) => {
               x: xPos,
               y: yPos,
             },
-            data: null,
+            data: {},
             parentNode: dataBlock?.parentNode,
             extent: 'parent',
             dragHandle: 'dragHandle',
@@ -168,7 +169,7 @@ const DropHereNode = (props) => {
               x: xPos,
               y: yPos,
             },
-            data: null,
+            data: {},
             dragHandle: 'dragHandle',
           });
         }

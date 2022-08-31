@@ -4,11 +4,11 @@ import { Handle, Position } from 'react-flow-renderer';
 import IconCancel from 'assets/icon/IconCancel.svg';
 import IconEditNode from 'assets/icon/IconEditNode.svg';
 import IconConfirm from 'assets/icon/IconConfirm.svg';
-import ButtonRemoveNode from '@/components/atom/ButtonRemoveNode';
 import SingleAutoComplete from '@/components/AutoComplete/SingleAutoComplete';
 import { CONDITION_OPTION, CONDITION_TYPE, ELEMENT_TYPE } from '@/config/constant/common';
 import ObjectID from 'bson-objectid';
 import { Input } from '@/components/Input';
+import { useDispatch, useSelector } from 'react-redux';
 
 const CardBody = styled('article')(({ theme }) => ({
   border: 'solid 1px #BEA75A',
@@ -102,35 +102,42 @@ const ButtonWrapper = styled('div')({
 });
 
 const ConditionNode = ({ data, id }) => {
+  const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
+  const { logicBlocks } = useDispatch();
+
   const [listData, setListData] = useState([]);
   const [mode, setMode] = useState('view');
 
   useEffect(() => {
-    if (!data?.length) {
+    if (mode === 'view') return;
+    if (!data?.inputs?.length) {
       setListData([{ id: ObjectID(32).toHexString(), condition: '', operation: CONDITION_TYPE.NONE }]);
+    } else {
+      const dataConvert = [];
+      for (let index = 0; index <= data?.inputs?.length - 2; index += 2) {
+        dataConvert.push({
+          id: ObjectID(32).toHexString(),
+          condition: data?.inputs[index],
+          operation: data?.inputs[index + 1],
+        });
+      }
+      setListData(dataConvert);
     }
-  }, [data]);
+  }, [data, mode]);
 
   const handleConfirm = () => {
-    // if (!variable) {
-    //   setErrorMessage('Missing variable');
-    //   return;
-    // }
-    // if (!value) {
-    //   setErrorMessage('Missing variable');
-    //   return;
-    // }
-    // const { label, isArray, position } = variable;
-    // const updatedData = {
-    //   ...data,
-    //   indentifier: label,
-    //   isArray,
-    //   position,
-    //   assignOperation: '=',
-    //   value,
-    // };
-    // logicBlocks.updateBlock(updatedData);
-    // setMode('view');
+    const inputs = [];
+    for (let index = 0; index < listData.length; index++) {
+      inputs.push(listData[index].condition);
+      inputs.push(listData[index].operation);
+    }
+    // Update Declaration
+    const _blocksState = [...blocksState];
+    const index = blocksState.findIndex((item) => item?.id === id);
+    _blocksState[index]['data'] = { inputs };
+
+    logicBlocks.setBlocks(_blocksState);
+    setMode('view');
   };
 
   const handleCancel = () => {
