@@ -35,6 +35,10 @@ const logicBlocks = createModel({
       const updatedBlocksList = blocksList.filter((el) => el.id !== blockId);
       return { ...state, nodes: updatedBlocksList };
     },
+    addEdge: (state, newEdge) => {
+      const { edges } = state;
+      return { ...state, edges: [...edges, newEdge] };
+    },
   },
   effects: (dispatch) => {
     return {
