@@ -35,6 +35,10 @@ const logicBlocks = createModel({
       const updatedBlocksList = blocksList.filter((el) => el.id !== blockId);
       return { ...state, nodes: updatedBlocksList };
     },
+    addEdge: (state, newEdge) => {
+      const { edges } = state;
+      return { ...state, edges: [...edges, newEdge] };
+    },
   },
   effects: (dispatch) => {
     return {
@@ -111,11 +115,18 @@ const logicBlocks = createModel({
               blocksList.push(newNode);
               break;
           }
+          if (!type) {
+            newNode = createDropNode(position, false);
+            blocksList.push(newNode);
+          }
 
           if (parent && newNode) {
             edgesList.push(createEdge(newNode.id, parent));
           }
-          if (!next) return;
+
+          if (!next) {
+            return;
+          }
           createBlocks(next, null, newNode.id);
         };
 
@@ -291,5 +302,14 @@ export const createDropItemNode = (position) => {
     type: 'drop',
     position,
     dragHandle: 'dragHandle',
+  };
+};
+
+const createDropNode = (position, allowDelete) => {
+  return {
+    id: ObjectID(24).toHexString(),
+    type: 'drop',
+    position,
+    allowDelete: allowDelete,
   };
 };

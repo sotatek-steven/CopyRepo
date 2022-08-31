@@ -5,7 +5,7 @@ import FunctionSidebar from '@/components/functionsPage/FunctionSidebar';
 import useDeclaration from '@/components/functionsPage/hooks/useDeclaration';
 import DesignLayout from '@/components/layout/DesignLayout';
 import { VALUE_TYPE_OPTIONS } from '@/config/constant/common';
-import { FAKE_DATA } from '@/store/models/fakeData';
+import { FAKE_DATA, simpleData } from '@/store/models/fakeData';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { styled, Tab } from '@mui/material';
 import _ from 'lodash';
