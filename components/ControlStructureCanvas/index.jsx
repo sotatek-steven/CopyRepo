@@ -9,6 +9,7 @@ import ReactFlow, {
   useEdgesState,
   addEdge,
   updateEdge,
+  Controls,
 } from 'react-flow-renderer';
 import { useSelector } from 'react-redux';
 import CustomNodes from '../CustomNode';
@@ -24,16 +25,17 @@ const styles = {
 
 const ControlStructureCanvas = () => {
   const reactFlowWrapper = useRef(null);
-  const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
+  const { nodes: blocksState, edges: edgesState } = useSelector((state) => state.logicBlocks);
   const nodeTypes = useMemo(() => CustomNodes, []);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   useEffect(() => {
     setNodes(blocksState);
-  }, [blocksState]);
+    setEdges(edgesState);
+  }, [blocksState, edgesState]);
 
-  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), [setEdges]);
+  const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
 
   const onDragOver = useCallback((event) => {
     event.preventDefault();
@@ -45,9 +47,9 @@ const ControlStructureCanvas = () => {
     setEdges((els) => updateEdge(oldEdge, newConnection, els));
   };
 
-  useEffect(() => {
-    setEdges(createEdges(nodes));
-  }, [nodes]);
+  // useEffect(() => {
+  //   setEdges(createEdges(nodes));
+  // }, [nodes]);
 
   return (
     <ReactFlowProvider>
@@ -57,16 +59,14 @@ const ControlStructureCanvas = () => {
           edges={edges}
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
+          draggable={false}
           // onDrop={onDrop}
           onDragOver={onDragOver}
           onConnect={onConnect}
           nodeTypes={nodeTypes}
           defaultZoom={1}
+          zoomOnScroll={false}
           onEdgeUpdate={onEdgeUpdate}>
-          {/* <Controls
-            style={{ bottom: '100px', left: '65px' }}
-            // onInteractiveChange={lockCanvas}
-          /> */}
           <Background color="#aaa" gap={16} />
         </ReactFlow>
       </Box>

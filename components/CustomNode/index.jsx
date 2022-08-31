@@ -8,6 +8,7 @@ import InitialNode from './InitialNode';
 import ActivityFinalNode from './AcitvityFinalNode';
 import DropHereNode from './DropHereNode';
 import ConditionNode from './ConditionNode';
+import ParentNode from './ParentNode';
 
 const CustomNodes = {
   rectangle: RectangleNode,
@@ -20,6 +21,7 @@ const CustomNodes = {
   activityFinal: ActivityFinalNode,
   drop: DropHereNode,
   condition: ConditionNode,
+  parent: ParentNode,
 };
 
 export default CustomNodes;
