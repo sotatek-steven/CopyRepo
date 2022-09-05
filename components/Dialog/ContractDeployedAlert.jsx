@@ -26,7 +26,7 @@ const Wrapper = styled('div')(({ theme }) => ({
 
 const ContractDeployedAlert = ({ address, txHash }) => {
   return (
-    <div style={{ position: 'fixed', bottom: 10, left: '50%', transform: 'translateX(-50%)' }}>
+    <div style={{ position: 'fixed', bottom: 10, left: '50%', transform: 'translateX(-50%)', zIndex: 1000 }}>
       <Wrapper>
         <Title id="alert-dialog-title">{'This Smart Contract has been deployed with wallet:'}</Title>
         <Content>

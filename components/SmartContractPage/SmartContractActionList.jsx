@@ -53,7 +53,7 @@ const SmartContractActionList = () => {
 
   useEffect(() => {
     contract.setInfoContractModalOpen(contractState.current.status === 'init');
-    setContractDeployedAlertOpen(contractState.current.status === 'deployed')
+    setContractDeployedAlertOpen(contractState.current.status === 'deployed');
   }, [contractState.current.status]);
 
   const handleDeployContractModalClose = (_, reason) => {
@@ -138,10 +138,9 @@ const SmartContractActionList = () => {
         title="Confirm to deploy this Smart Contract"
       />
 
-      {contractDeployedAlertOpen && <ContractDeployedAlert
-        txHash={contractState.current.transaction}
-        address={contractState.current.address}
-      />}
+      {contractDeployedAlertOpen && (
+        <ContractDeployedAlert txHash={contractState.current.transaction} address={contractState.current.address} />
+      )}
       {loading && <SavingScreen title="Loading" />}
     </>
   );
