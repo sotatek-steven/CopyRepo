@@ -9,6 +9,7 @@ import IconCancel from 'assets/icon/IconCancel.svg';
 import IconEditNode from 'assets/icon/IconEditNode.svg';
 import IconConfirm from 'assets/icon/IconConfirm.svg';
 import ButtonRemoveNode from '../atom/ButtonRemoveNode';
+import _ from 'lodash';
 
 const Card = styled('article')(({ color, theme }) => ({
   padding: '10px 15px',
@@ -107,13 +108,13 @@ const AssignmentNode = ({ data, id }) => {
   const [valueError, setValueError] = useState('');
 
   useEffect(() => {
-    if (!data) {
+    if (!data || _.isEmpty(data)) {
       setVariable(null);
       setValue('');
       return;
     }
-    const { indentifier, value } = data;
-    setVariable({ label: indentifier });
+    const { identifier, value } = data;
+    setVariable({ label: identifier });
     setValue(value);
   }, [data]);
 
@@ -147,7 +148,7 @@ const AssignmentNode = ({ data, id }) => {
     const { label, isArray, position } = variable;
     const updatedData = {
       ...data,
-      indentifier: label,
+      identifier: label,
       isArray,
       position,
       assignOperation: '=',
@@ -168,8 +169,8 @@ const AssignmentNode = ({ data, id }) => {
       setValue('');
       return;
     }
-    const { indentifier, value } = data;
-    setVariable({ label: indentifier });
+    const { identifier, value } = data;
+    setVariable({ label: identifier });
     setValue(value);
   };
 

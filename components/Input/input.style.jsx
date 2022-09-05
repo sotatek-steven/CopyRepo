@@ -7,7 +7,7 @@ export const Input = styled('input')(({ theme, error, background = 'light' }) =>
     color: theme.palette.text.primary,
     height: 45,
     borderRadius: 5,
-    border: error ? 'solid 1px red' : `solid 1px ${backgroundColor}`,
+    border: error ? `solid 1px ${theme.palette.error.main}` : `solid 1px ${backgroundColor}`,
     outline: 'none',
     width: '100%',
     fontSize: 14,
