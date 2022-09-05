@@ -5,7 +5,7 @@ import FunctionSidebar from '@/components/functionsPage/FunctionSidebar';
 import useDeclaration from '@/components/functionsPage/hooks/useDeclaration';
 import DesignLayout from '@/components/layout/DesignLayout';
 import { VALUE_TYPE_OPTIONS } from '@/config/constant/common';
-import { FAKE_DATA, simpleData } from '@/store/models/fakeData';
+import { FAKE_DATA, FAKE_EDGES, FAKE_NODES, simpleData } from '@/store/models/fakeData';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { styled, Tab } from '@mui/material';
 import _ from 'lodash';
@@ -178,6 +178,13 @@ const FunctionPage = () => {
       const { nodes, edges } = await logicBlocks.createInitNode();
       logicBlocks.setBlocks(nodes);
       logicBlocks.setEdgeBlocks(edges);
+
+      // const { nodes: _nodes, edges: _edges } = await logicBlocks.convertToFEDataDisplay(FAKE_DATA);
+      // console.log('nodes: ', JSON.stringify(_nodes));
+      // console.log('edges: ', JSON.stringify(_edges));
+
+      // const blocks = await logicBlocks.convertToDataTransferApi({ nodes: FAKE_NODES, edges: FAKE_EDGES });
+      // console.log('blocks: ', blocks);
     };
 
     convertData();
