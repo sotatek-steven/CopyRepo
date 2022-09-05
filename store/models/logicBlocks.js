@@ -1,5 +1,6 @@
 import { createModel } from '@rematch/core';
 import ObjectID from 'bson-objectid';
+import _ from 'lodash';
 
 const logicBlocks = createModel({
   state: {
@@ -114,10 +115,9 @@ const logicBlocks = createModel({
               newNode = createActivityFinalNode(position);
               blocksList.push(newNode);
               break;
-          }
-          if (!type) {
-            newNode = createDropNode(position, false);
-            blocksList.push(newNode);
+            case undefined:
+              newNode = createDropNode(position, false);
+              blocksList.push(newNode);
           }
 
           if (parent && newNode) {
@@ -136,12 +136,137 @@ const logicBlocks = createModel({
           edges: edgesList,
         };
       },
-      // convertToDataTransferApi(data) {},
+      convertToDataTransferApi({ nodes, edges }) {
+        const { nodes: _nodes, edges: _edges } = removeParentNode({ nodes, edges });
+        console.log('nodes: ', _nodes);
+        console.log('edges: ', _edges);
+
+        const initialNode = _nodes.find((item) => item.type === 'initial');
+        // console.log('initialNode: ', initialNode);
+
+        let block = {};
+
+        const createBlocks = (blocks, node) => {
+          console.log('node: ', node);
+          const { type, position, data, id } = node;
+
+          switch (type) {
+            case 'initial':
+              blocks.type = 'init';
+              blocks.position = position;
+              break;
+            case 'declaration':
+              blocks.type = 'declaration';
+              blocks.position = position;
+              blocks.params = data;
+              break;
+            case 'condition': {
+              blocks.type = 'condition';
+              blocks.position = position;
+              blocks.conditions = data;
+              blocks.parent = {};
+              blocks.parent.position = node.parent.position;
+              const _edgeTrue = _edges.find((edge) => edge.source === id && edge.label === 'True');
+              if (_edgeTrue) {
+                const nextNode = _nodes.find((item) => item.id === _edgeTrue.target);
+                console.log('nextTrueNode: ', nextNode);
+                blocks.nextTrue = {};
+                createBlocks(blocks.nextTrue, nextNode);
+              }
+              const _edgeFalse = _edges.find((edge) => edge.source === id && edge.label === 'False');
+              if (_edgeFalse) {
+                const nextNode = _nodes.find((item) => item.id === _edgeFalse.target);
+                console.log('nextFalseNode: ', nextNode);
+                // blocks.nextFalse = createBlocks(nextNode);
+                blocks.nextFalse = {};
+                createBlocks(blocks.nextFalse, nextNode);
+              }
+              break;
+            }
+            case 'finish':
+              blocks.type = 'finish';
+              blocks.position = position;
+              blocks.action = data.action;
+              blocks.params = data.params;
+              break;
+            case 'logic':
+              blocks.type = 'logic';
+              blocks.position = position;
+              blocks.params = data;
+              break;
+            case 'activityFinal':
+              blocks.type = 'activityFinal';
+              blocks.position = position;
+              break;
+            case 'drop':
+              blocks.position = position;
+              break;
+          }
+
+          const _edge = _edges.find((edge) => edge.source === id && _.isUndefined(edge.label));
+
+          if (!_edge) return;
+          const nextNode = _nodes.find((item) => item.id === _edge.target);
+          console.log('nextNode: ', nextNode);
+          blocks.next = {};
+          createBlocks(blocks.next, nextNode);
+        };
+
+        createBlocks(block, initialNode);
+        return block;
+      },
     };
   },
 });
 
 export default logicBlocks;
+
+const removeParentNode = ({ nodes, edges }) => {
+  let _nodes = nodes;
+  let _edges = edges;
+
+  for (const node of nodes) {
+    if (node.type !== 'parent') continue;
+    const { id: parentNodeId, position: parentNodePosition } = node;
+
+    const preNodeId = edges.find((edge) => edge.target === parentNodeId).source;
+
+    const nextNodeId = edges.find((edge) => edge.source === parentNodeId).target;
+
+    const directChildNode = nodes.find((node) => {
+      const { id, parentNode } = node;
+      const hasPreNode = !!edges.find((edge) => edge.target === id);
+      return parentNode === parentNodeId && !hasPreNode;
+    });
+
+    //add info of parent node to data of direct child node
+    _nodes = _nodes.map((node) => {
+      if (node.id === directChildNode.id)
+        return {
+          ...node,
+          parent: {
+            position: parentNodePosition,
+          },
+        };
+
+      return node;
+    });
+
+    //remove parent node
+    _nodes = _nodes.filter((node) => node.id !== parentNodeId);
+
+    //remove edge of parent node
+    _edges = _edges.filter((edge) => edge.target !== parentNodeId && edge.source !== parentNodeId);
+
+    //create edge between pre node, direct child node and next node
+    _edges.push(createEdge(directChildNode.id, preNodeId), createEdge(nextNodeId, directChildNode.id));
+  }
+
+  return {
+    nodes: _nodes,
+    edges: _edges,
+  };
+};
 
 const createEdge = (target, source) => {
   return {

@@ -123,9 +123,9 @@ const DropHereNode = (props) => {
 
     const edges = [];
     // Edge True
-    edges.push(createEdge(conditionId, dropIdTrue, 'step', 'Yes', 'left'));
+    edges.push(createEdge(conditionId, dropIdTrue, 'step', 'True', 'left'));
     // Edge False
-    edges.push(createEdge(conditionId, dropIdFalse, 'step', 'No', 'right'));
+    edges.push(createEdge(conditionId, dropIdFalse, 'step', 'False', 'right'));
 
     return { nodes, edges };
   };
