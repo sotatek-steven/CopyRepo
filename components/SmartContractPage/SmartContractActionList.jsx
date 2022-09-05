@@ -139,7 +139,7 @@ const SmartContractActionList = () => {
       />
 
       {contractDeployedAlertOpen && (
-        <ContractDeployedAlert txHash={contractState.current.transaction} address={contractState.current.address} />
+        <ContractDeployedAlert txHash={contractState.current.hash} address={contractState.current.address} />
       )}
       {loading && <SavingScreen title="Loading" />}
     </>

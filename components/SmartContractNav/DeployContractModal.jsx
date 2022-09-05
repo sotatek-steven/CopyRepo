@@ -54,7 +54,6 @@ const DeployContractModal = ({ open, onClose, onDeploy }) => {
     const updatedParameters = parameters.map((parameter) =>
       parameter.label === label ? { ...parameter, value } : parameter
     );
-    console.log(updatedParameters);
     setParameters(updatedParameters);
   };
 
@@ -90,7 +89,15 @@ const DeployContractModal = ({ open, onClose, onDeploy }) => {
                 const _label = `${label}(${type})`;
                 return (
                   <InputWrapper key={_id}>
-                    <Input label={_label} id={_id} placeholder={value || ''} name={label} isRequired={true} onChange={handleParametersChange} />
+                    <Input
+                      label={_label}
+                      id={_id}
+                      placeholder={value || ''}
+                      value={value}
+                      name={label}
+                      isRequired={true}
+                      onChange={handleParametersChange}
+                    />
                   </InputWrapper>
                 );
               })}
