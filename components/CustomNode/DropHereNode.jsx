@@ -16,11 +16,6 @@ const Card = styled('article')(({ theme, isAllowDrop }) => ({
   color: theme.palette.text.primary,
   border: `1px dashed`,
   borderColor: ` ${isAllowDrop ? theme.palette.success.main : theme.palette.text.primary}`,
-  '&:hover': {
-    '.action-node': {
-      display: 'flex',
-    },
-  },
 }));
 
 const CardBody = styled('div')({
@@ -34,14 +29,17 @@ const CardBody = styled('div')({
 });
 
 const AbsoluteContainer = styled('div')(({ theme }) => ({
-  display: 'none',
+  display: 'flex',
   justifyContent: 'end',
   position: 'absolute',
-  right: 12,
+  height: 25,
+  right: 0,
+  top: -26,
   '.action-icon': {
     minWidth: 28,
+    background: theme.palette.success.main,
     '&:hover': {
-      background: theme.palette.success.main,
+      background: theme.palette.success.light,
     },
   },
 }));
@@ -123,9 +121,9 @@ const DropHereNode = (props) => {
 
     const edges = [];
     // Edge True
-    edges.push(createEdge(conditionId, dropIdTrue, 'step', 'Yes', 'left'));
+    edges.push(createEdge(conditionId, dropIdTrue, 'step', 'True', 'left'));
     // Edge False
-    edges.push(createEdge(conditionId, dropIdFalse, 'step', 'No', 'right'));
+    edges.push(createEdge(conditionId, dropIdFalse, 'step', 'False', 'right'));
 
     return { nodes, edges };
   };

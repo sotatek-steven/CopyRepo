@@ -66,6 +66,9 @@ const ControlStructureCanvas = () => {
           nodeTypes={nodeTypes}
           defaultZoom={1}
           zoomOnScroll={false}
+          zoomOnPinch={false}
+          zoomOnDoubleClick={false}
+          zoomActivationKeyCode={false}
           onEdgeUpdate={onEdgeUpdate}>
           <Background color="#aaa" gap={16} />
         </ReactFlow>
