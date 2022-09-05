@@ -103,10 +103,8 @@ const SmartContractActionList = () => {
   return (
     <>
       <Container>
-        {/* <PrimaryButton onClick={() => contract.setInfoContractModalOpen(true)}>Edit Info</PrimaryButton> */}
         {contractState.current.status !== 'deployed' && (
           <>
-            {/* <PrimaryButton onClick={() => setDeployContractModalOpen(true)}>Next</PrimaryButton> */}
             <ButtonBox onClick={() => setDeployContractModalOpen(true)}>
               <RightArrowIcon />
             </ButtonBox>
@@ -139,7 +137,7 @@ const SmartContractActionList = () => {
       />
 
       {contractDeployedAlertOpen && (
-        <ContractDeployedAlert txHash={contractState.current.transaction} address={contractState.current.address} />
+        <ContractDeployedAlert txHash={contractState.current.hash} address={contractState.current.address} />
       )}
       {loading && <SavingScreen title="Loading" />}
     </>
