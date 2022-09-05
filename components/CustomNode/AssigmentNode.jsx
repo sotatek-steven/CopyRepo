@@ -58,7 +58,7 @@ const EqualWrapper = styled('div')({
 const Footer = styled('div')({
   display: 'flex',
   justifyContent: 'end',
-  padding: '0px 20px',
+  gap: 5,
 });
 
 const ErrorMessage = styled('p')(({ theme }) => ({
@@ -83,6 +83,18 @@ const AbsoluteContainer = styled('div')(({ theme }) => ({
     '&:hover': {
       background: theme.palette.success.light,
     },
+  },
+}));
+
+const ButtonWrapper = styled('div')(({ theme }) => ({
+  height: 45,
+  width: 45,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  borderRadius: 5,
+  '&:hover': {
+    background: '#504e4d',
   },
 }));
 
@@ -237,12 +249,12 @@ const AssignmentNode = ({ data, id }) => {
             </Grid>
           </Body>
           <Footer>
-            <Button className="action-icon" onClick={handleCancel}>
+            <ButtonWrapper className="action-icon" onClick={handleCancel}>
               <IconCancel />
-            </Button>
-            <Button className="action-icon" onClick={handleConfirm}>
+            </ButtonWrapper>
+            <ButtonWrapper className="action-icon" onClick={handleConfirm}>
               <IconConfirm />
-            </Button>
+            </ButtonWrapper>
           </Footer>
           <Handle type="target" position={Position.Top} id="a" style={{ background: '#555' }} />
           <Handle type="source" position={Position.Bottom} id="c" style={{ background: '#555' }} />
