@@ -21,20 +21,15 @@ const Card = styled('article')(({ color, theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   color: theme.palette.primary.contrastText,
-  '&:hover': {
-    '.action-node': {
-      display: 'flex',
-    },
-  },
 }));
 
-const CardBody = styled('div')(({ theme }) => ({
+const CardBody = styled('div')({
   display: 'flex',
   flexDirection: 'column',
   flexGrow: 1,
   alignItems: 'center',
   justifyContent: 'center',
-}));
+});
 
 const EditingContainer = styled('div')(({ theme }) => ({
   padding: 30,
@@ -75,14 +70,18 @@ const Body = styled('div')({
 });
 
 const AbsoluteContainer = styled('div')(({ theme }) => ({
-  display: 'none',
+  display: 'flex',
   justifyContent: 'end',
   position: 'absolute',
-  right: 12,
+  height: 25,
+  right: 0,
+  top: -25,
+  gap: 2,
   '.action-icon': {
     minWidth: 28,
+    background: theme.palette.success.main,
     '&:hover': {
-      background: theme.palette.success.main,
+      background: theme.palette.success.light,
     },
   },
 }));
