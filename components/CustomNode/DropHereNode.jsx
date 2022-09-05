@@ -46,8 +46,6 @@ const AbsoluteContainer = styled('div')(({ theme }) => ({
   },
 }));
 
-const yPlus = 700;
-
 const DropHereNode = (props) => {
   const { id, xPos, yPos } = props;
   const { nodes: blocksState, edges: edgesState } = useSelector((state) => state.logicBlocks);
@@ -77,12 +75,17 @@ const DropHereNode = (props) => {
     };
   };
 
-  const createParentNode = (position) => {
+  const createParentNode = (position, parentId = '') => {
     return {
       id: id,
       type: 'parent',
       position: position,
       dragHandle: 'dragHandle',
+      parentNode: parentId,
+      data: {
+        width: 700,
+        height: 500,
+      },
     };
   };
 
@@ -109,15 +112,15 @@ const DropHereNode = (props) => {
     };
   };
 
-  const createIfElseBlocks = () => {
+  const createIfElseBlocks = (dataBlock) => {
     const conditionId = ObjectID(24).toHexString();
     const dropIdTrue = ObjectID(24).toHexString();
     const dropIdFalse = ObjectID(24).toHexString();
 
     const nodes = [];
 
-    nodes.push(createParentNode({ x: xPos, y: yPos }));
-    nodes.push(createConditionNode({ x: 250, y: 15 }, conditionId, {}));
+    nodes.push(createParentNode(dataBlock?.position, dataBlock?.parentNode));
+    nodes.push(createConditionNode({ x: 275, y: 15 }, conditionId, {}));
     nodes.push(createDropItemNode({ x: 50, y: 300 }, dropIdTrue));
     nodes.push(createDropItemNode({ x: 450, y: 300 }, dropIdFalse));
 
@@ -130,32 +133,69 @@ const DropHereNode = (props) => {
     return { nodes, edges };
   };
 
+  const updateWidthHeight = (listNode, currentNode) => {
+    if (currentNode?.parentNode) {
+      const currentNew = listNode?.find((item) => item.id === currentNode.parentNode);
+      const index = listNode?.findIndex((item) => item.id === currentNew.id);
+      // update width, height
+      if (currentNode?.type !== 'condition') {
+        listNode[index].data = {
+          width: listNode[index].data?.width + 200,
+          height: listNode[index].data?.height + 300,
+        };
+      } else {
+        listNode[index].data = {
+          width: listNode[index].data?.width + 600,
+          height: listNode[index].data?.height + 1100,
+        };
+      }
+
+      for (let i = index + 1; i < listNode.length; i++) {
+        if (!listNode[i].parentNode) {
+          listNode[i].position.y = listNode[i].position.y + 300;
+        }
+      }
+
+      if (currentNew?.parentNode) {
+        updateWidthHeight(listNode, currentNew);
+      }
+    }
+
+    return listNode;
+  };
+
   const handleDrop = (event) => {
     event.preventDefault();
     if (!event.dataTransfer) return;
     const type = event.dataTransfer.getData('application/reactflow');
     const dataBlock = blocksState.find((item) => item.id === id);
+    const index = blocksState.findIndex((item) => item.id === id);
+
     console.log('dataBlock', dataBlock);
 
     let newBlocks = [];
     let newEdges = [];
+    let yPlus = 0;
     switch (type) {
       case 'logic':
         {
-          const { nodes, edges } = createIfElseBlocks();
+          console.log('1');
+          const { nodes, edges } = createIfElseBlocks(dataBlock);
           newBlocks = newBlocks.concat(nodes);
           newEdges = newEdges.concat(edges);
+          yPlus = 600;
         }
         break;
       default: {
+        console.log('2');
+
+        yPlus = 300;
+
         if (dataBlock?.parentNode) {
           newBlocks.push({
             id: id,
             type: type,
-            position: {
-              x: xPos,
-              y: yPos,
-            },
+            position: dataBlock?.position,
             data: {},
             parentNode: dataBlock?.parentNode,
             extent: 'parent',
@@ -183,8 +223,8 @@ const DropHereNode = (props) => {
       id: dropId,
       type: 'drop',
       position: {
-        x: xPos,
-        y: yPos + yPlus,
+        ...dataBlock?.position,
+        y: dataBlock?.position.y + yPlus,
       },
       dragHandle: 'dragHandle',
     };
@@ -203,11 +243,12 @@ const DropHereNode = (props) => {
     let _edgesState = [...edgesState];
 
     if (dataBlock?.parentNode) {
+      _blocksState.splice(index, 1);
+
       newBlocks.push({ ...updateDropItem, parentNode: dataBlock?.parentNode, extent: 'parent' });
       newEdges.push(createEdge(id, dropId));
     } else {
-      const dropItemIndex = blocksState.findIndex((item) => item.id === id);
-      _blocksState.splice(dropItemIndex, 2);
+      _blocksState.splice(index, 2);
 
       newBlocks.push(updateDropItem);
       newBlocks.push(activityFinalNode);
@@ -215,10 +256,15 @@ const DropHereNode = (props) => {
       newEdges.push(createEdge(dropId, endId));
     }
 
+    console.log('newBlocks', newBlocks);
+    const currentNode = type === 'condition' ? newBlocks[1] : newBlocks[0];
+
     _blocksState = _blocksState.concat(newBlocks);
     _edgesState = _edgesState.concat(newEdges);
 
-    logicBlocks.setBlocks(_blocksState);
+    const updateBlock = updateWidthHeight(_blocksState, currentNode);
+
+    logicBlocks.setBlocks(updateBlock);
     logicBlocks.setEdgeBlocks(_edgesState);
 
     setIsAllowDrop(false);
