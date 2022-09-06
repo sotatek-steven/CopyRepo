@@ -45,7 +45,12 @@ const AbsoluteContainer = styled('div')(({ theme }) => ({
 }));
 
 const DropHereNode = (props) => {
-  const { id, xPos, yPos } = props;
+  const {
+    id,
+    xPos,
+    yPos,
+    data: { allowRemove },
+  } = props;
   const { nodes: blocksState, edges: edgesState } = useSelector((state) => state.logicBlocks);
   const { logicBlocks } = useDispatch();
   const [isAllowDrop, setIsAllowDrop] = useState(false);
@@ -266,9 +271,11 @@ const DropHereNode = (props) => {
   return (
     <>
       <Card isAllowDrop={isAllowDrop} onDragOver={allowDrop} onDragLeave={notAllowDrop} onDrop={handleDrop}>
-        <AbsoluteContainer className="action-node">
-          <ButtonRemoveNode id={id} />
-        </AbsoluteContainer>
+        {allowRemove && (
+          <AbsoluteContainer className="action-node">
+            <ButtonRemoveNode id={id} />
+          </AbsoluteContainer>
+        )}
         <CardBody>
           Drop item here
           <Handle type="target" position={Position.Top} id="a" style={{ background: '#555' }} />
