@@ -112,6 +112,7 @@ const DropHereNode = (props) => {
       parentNode: id,
       extent: 'parent',
       dragHandle: 'dragHandle',
+      data: { allowRemove: true },
     };
   };
 
@@ -220,6 +221,7 @@ const DropHereNode = (props) => {
     const updateDropItem = {
       id: dropId,
       type: 'drop',
+      data: { allowRemove },
       position: {
         ...dataBlock?.position,
         y: dataBlock?.position.y + yPlus,
