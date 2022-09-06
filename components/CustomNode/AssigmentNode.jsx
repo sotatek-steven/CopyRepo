@@ -114,7 +114,7 @@ const AssignmentNode = ({ data, id }) => {
 
   const [variable, setVariable] = useState(null);
   const [value, setValue] = useState('');
-  const [mode, setMode] = useState('editing');
+  const [mode, setMode] = useState(_.isEmpty(data) ? 'editing' : 'view');
   const [variableError, setVariableError] = useState('');
   const [valueError, setValueError] = useState('');
 

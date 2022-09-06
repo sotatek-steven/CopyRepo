@@ -10,6 +10,7 @@ import { convertToDeclaration, splitElements } from '@/config/constant/common';
 import useDeclaration from '../functionsPage/hooks/useDeclaration';
 import { useDispatch, useSelector } from 'react-redux';
 import ButtonRemoveNode from '../atom/ButtonRemoveNode';
+import _ from 'lodash';
 
 const Card = styled('article')(({ color, theme }) => ({
   padding: '10px 15px',
@@ -106,7 +107,8 @@ const DeclarationNode = ({ id, data }) => {
   const [errorText, setErrorText] = useState('');
   const { validateDeclaration } = useDeclaration();
   const { logicBlocks } = useDispatch();
-  const [mode, setMode] = useState('editing');
+  const [mode, setMode] = useState(_.isEmpty(data) ? 'editing' : 'view');
+  // const [mode, setMode] = useState('view');
 
   const convertDataToText = () => {
     return `${data?.type ? data?.type : ''} ${data?.isArray ? '[]' : ''} ${data?.location ? data?.location : ''} ${
