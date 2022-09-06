@@ -7,15 +7,46 @@ const useBlock = () => {
 
   const removeNode = (id) => {
     let _blocksState = [...blocksState];
+    let _edgesState = [...edges];
     const index = blocksState.findIndex((item) => item?.id === id);
 
     _blocksState[index]['type'] = 'drop';
-    _blocksState[index]['data'] = {
-      allowRemove: true,
-    };
+    _blocksState[index]['data'] = { allowRemove: true };
 
-    _blocksState = updateDropItemNodes(_blocksState, edges);
+    // list data will remove
+    const listRemove = removeChildrenByParentId(_blocksState, id);
+    _blocksState = _blocksState.filter((item) => !listRemove.includes(item?.id));
+    _edgesState = _edgesState.filter((item) => !listRemove.includes(item?.source));
+
+    _blocksState = updateDropItemNodes(_blocksState, _edgesState);
     logicBlocks.setBlocks(_blocksState);
+    logicBlocks.setEdgeBlocks(_edgesState);
+  };
+
+  const removeChildrenByParentId = (listBlock, blockId, init = []) => {
+    let tempId = '';
+    for (let i = 0; i < listBlock.length; i++) {
+      if (listBlock[i].parentNode && listBlock[i].parentNode === blockId) {
+        if (!tempId) {
+          for (let j = 0; j < listBlock.length; j++) {
+            // if node have children
+            if (listBlock[j].parentNode === listBlock[i].id) {
+              tempId = listBlock[i].id;
+              break;
+            }
+          }
+        }
+        // push to list will remove
+        init.push(listBlock[i].id);
+      }
+    }
+
+    if (tempId) {
+      removeChildrenByParentId(listBlock, tempId, init);
+    }
+
+    // return list id will delete
+    return init;
   };
 
   const deleteDropNode = (id) => {
@@ -47,7 +78,6 @@ const useBlock = () => {
     dropItemNodes.forEach((node) => {
       const { id } = node;
       const index = nodes.findIndex((item) => item?.id === id);
-
       //find next block and pre block
       const nextBlockId = edges.find((item) => item.source === id).target;
       const nextBlock = nodes.find((item) => item.id === nextBlockId);

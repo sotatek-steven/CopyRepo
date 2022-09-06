@@ -66,7 +66,7 @@ const logicBlocks = createModel({
               x: 600,
               y: 500,
             },
-            true
+            false
           )
         );
         nodes.push(
