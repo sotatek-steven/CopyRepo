@@ -54,6 +54,7 @@ const Title = styled('div')(({ theme }) => ({
   padding: 8,
   top: '-20px',
   left: '-40px',
+  color: theme.palette.text.colorNode,
 }));
 
 const ItemContainer = styled('div')(({ theme, error }) => ({
@@ -126,9 +127,46 @@ const DeclarationNode = ({ id, data }) => {
 
   const handleChange = (e) => {
     let value = e.target.value;
-    const lastChar = value.substr(value.length - 1);
-    if (lastChar === '[') {
-      value = `${value}]`;
+    const indexEqual = value.lastIndexOf('=');
+
+    switch (e.key) {
+      case '[':
+        value = `${value}]`;
+        break;
+      case '{': {
+        const index = value.lastIndexOf('{');
+        if (indexEqual > -1 && index > indexEqual) {
+          value = `${value}}`;
+        }
+        break;
+      }
+
+      case '(': {
+        const index = value.lastIndexOf('(');
+        if (indexEqual > -1 && index > indexEqual) {
+          value = `${value})`;
+        }
+        break;
+      }
+
+      case "'": {
+        const index = value.lastIndexOf("'");
+        if (indexEqual > -1 && index > indexEqual) {
+          value = `${value}'`;
+        }
+        break;
+      }
+
+      case '"': {
+        const index = value.lastIndexOf('"');
+        if (indexEqual > -1 && index > indexEqual) {
+          value = `${value}"`;
+        }
+        break;
+      }
+
+      default:
+        break;
     }
 
     setInputText(value);
@@ -179,7 +217,7 @@ const DeclarationNode = ({ id, data }) => {
         <EditingContainer>
           <Title>DECLARATION</Title>
           <ItemContainer error={errorText}>
-            <Input value={inputText} onChange={handleChange} onKeyDown={handleChange} />
+            <Input value={inputText} onChange={handleChange} onKeyUp={handleChange} />
             {!!errorText && (
               <ErrorContainer>
                 <div className="icon">
