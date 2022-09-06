@@ -1,7 +1,6 @@
-import { FAKE_DATA } from '@/store/models/fakeData';
 import { Box } from '@mui/system';
-import ObjectID from 'bson-objectid';
-import React, { useEffect, useRef, useCallback, useMemo, useState } from 'react';
+import _ from 'lodash';
+import React, { useEffect, useRef, useCallback, useMemo } from 'react';
 import ReactFlow, {
   Background,
   useNodesState,
@@ -9,11 +8,9 @@ import ReactFlow, {
   useEdgesState,
   addEdge,
   updateEdge,
-  Controls,
 } from 'react-flow-renderer';
 import { useSelector } from 'react-redux';
 import CustomNodes from '../CustomNode';
-import { createEdges } from './CreateElement';
 
 const styles = {
   backgroundFlow: {
@@ -31,6 +28,7 @@ const ControlStructureCanvas = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   useEffect(() => {
+    console.log('blocksState', _.uniqBy(blocksState, 'id'));
     setNodes(blocksState);
     setEdges(edgesState);
   }, [blocksState, edgesState]);

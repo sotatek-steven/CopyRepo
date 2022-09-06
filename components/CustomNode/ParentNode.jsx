@@ -3,10 +3,10 @@ import React from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import ButtonRemoveNode from '../atom/ButtonRemoveNode';
 
-const Card = styled('article')(({ theme }) => ({
+const Card = styled('article')(({ theme, width, height }) => ({
   padding: '10px 15px',
-  width: 700,
-  height: 500,
+  width: width,
+  height: height,
   backgroundColor: theme.palette.background.parentNode,
   display: 'flex',
   flexDirection: 'column',
@@ -43,12 +43,10 @@ const AbsoluteContainer = styled('div')(({ theme }) => ({
   },
 }));
 
-const ParentNode = (props) => {
-  const { id } = props;
-
+const ParentNode = ({ id, data }) => {
   return (
     <>
-      <Card>
+      <Card width={data?.width || 700} height={data?.height || 500}>
         <AbsoluteContainer className="action-node">
           <ButtonRemoveNode id={id} />
         </AbsoluteContainer>
