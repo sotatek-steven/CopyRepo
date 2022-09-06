@@ -61,10 +61,13 @@ const logicBlocks = createModel({
         );
 
         nodes.push(
-          createDropItemNode({
-            x: 600,
-            y: 500,
-          })
+          createDropItemNode(
+            {
+              x: 600,
+              y: 500,
+            },
+            true
+          )
         );
         nodes.push(
           createActivityFinalNode({
@@ -272,7 +275,7 @@ const removeParentNode = ({ nodes, edges }) => {
   };
 };
 
-const createEdge = (target, source) => {
+export const createEdge = (target, source) => {
   return {
     id: `${source}-${target}`,
     source,
@@ -425,20 +428,22 @@ export const createActivityFinalNode = (position) => {
   };
 };
 
-export const createDropItemNode = (position) => {
+export const createDropItemNode = (position, allowRemove) => {
   return {
     id: ObjectID(24).toHexString(),
     type: 'drop',
     position,
     dragHandle: 'dragHandle',
+    data: { allowRemove },
   };
 };
 
-const createDropNode = (position, allowDelete) => {
+const createDropNode = (position, allowRemove) => {
   return {
     id: ObjectID(24).toHexString(),
     type: 'drop',
     position,
-    allowDelete: allowDelete,
+    dragHandle: 'dragHandle',
+    data: { allowRemove },
   };
 };
