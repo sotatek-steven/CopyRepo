@@ -14,7 +14,8 @@ const useBlock = () => {
     _blocksState[index]['data'] = { allowRemove: true };
 
     // list data will remove
-    const listRemove = removeChildrenByParentId(_blocksState, id);
+    const listRemove = removeChildrenByParentId(_blocksState, [id]);
+    listRemove.shift();
     _blocksState = _blocksState.filter((item) => !listRemove.includes(item?.id));
     _edgesState = _edgesState.filter((item) => !listRemove.includes(item?.source));
 
@@ -23,30 +24,35 @@ const useBlock = () => {
     logicBlocks.setEdgeBlocks(_edgesState);
   };
 
-  const removeChildrenByParentId = (listBlock, blockId, init = []) => {
-    let tempId = '';
+  const removeChildrenByParentId = (listBlock, listIdRemove) => {
+    let isParent = false;
+    const blockTemp = [...listBlock];
     for (let i = 0; i < listBlock.length; i++) {
-      if (listBlock[i].parentNode && listBlock[i].parentNode === blockId) {
-        if (!tempId) {
+      if (listBlock[i].parentNode && listIdRemove.includes(listBlock[i].parentNode)) {
+        if (!isParent) {
           for (let j = 0; j < listBlock.length; j++) {
             // if node have children
             if (listBlock[j].parentNode === listBlock[i].id) {
-              tempId = listBlock[i].id;
+              isParent = true;
               break;
             }
           }
         }
+
         // push to list will remove
-        init.push(listBlock[i].id);
+        listIdRemove.push(listBlock[i].id);
+        // remove element removed
+        const index = blockTemp.findIndex((item) => item?.id === listBlock[i].id);
+        blockTemp.splice(index, 1);
       }
     }
 
-    if (tempId) {
-      removeChildrenByParentId(listBlock, tempId, init);
+    if (isParent) {
+      removeChildrenByParentId(blockTemp, listIdRemove);
     }
 
     // return list id will delete
-    return init;
+    return listIdRemove;
   };
 
   const deleteDropNode = (id) => {
