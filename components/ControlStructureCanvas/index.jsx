@@ -28,7 +28,8 @@ const ControlStructureCanvas = () => {
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
   useEffect(() => {
-    console.log('blocksState', _.uniqBy(blocksState, 'id'));
+    // console.log('blocksState', blocksState);
+    // console.log('edgesState: ', edgesState);
     setNodes(blocksState);
     setEdges(edgesState);
   }, [blocksState, edgesState]);

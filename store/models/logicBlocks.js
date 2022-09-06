@@ -40,6 +40,11 @@ const logicBlocks = createModel({
       const { edges } = state;
       return { ...state, edges: [...edges, newEdge] };
     },
+    removeEdge: (state, edgeId) => {
+      const { edges } = state;
+      const updatedEdges = edges.filter((el) => el.id !== edgeId);
+      return { ...state, edges: updatedEdges };
+    },
   },
   effects: (dispatch) => {
     return {
@@ -138,16 +143,12 @@ const logicBlocks = createModel({
       },
       convertToDataTransferApi({ nodes, edges }) {
         const { nodes: _nodes, edges: _edges } = removeParentNode({ nodes, edges });
-        console.log('nodes: ', _nodes);
-        console.log('edges: ', _edges);
 
         const initialNode = _nodes.find((item) => item.type === 'initial');
-        // console.log('initialNode: ', initialNode);
 
         let block = {};
 
         const createBlocks = (blocks, node) => {
-          console.log('node: ', node);
           const { type, position, data, id } = node;
 
           switch (type) {
@@ -169,15 +170,12 @@ const logicBlocks = createModel({
               const _edgeTrue = _edges.find((edge) => edge.source === id && edge.label === 'True');
               if (_edgeTrue) {
                 const nextNode = _nodes.find((item) => item.id === _edgeTrue.target);
-                console.log('nextTrueNode: ', nextNode);
                 blocks.nextTrue = {};
                 createBlocks(blocks.nextTrue, nextNode);
               }
               const _edgeFalse = _edges.find((edge) => edge.source === id && edge.label === 'False');
               if (_edgeFalse) {
                 const nextNode = _nodes.find((item) => item.id === _edgeFalse.target);
-                console.log('nextFalseNode: ', nextNode);
-                // blocks.nextFalse = createBlocks(nextNode);
                 blocks.nextFalse = {};
                 createBlocks(blocks.nextFalse, nextNode);
               }
@@ -207,7 +205,6 @@ const logicBlocks = createModel({
 
           if (!_edge) return;
           const nextNode = _nodes.find((item) => item.id === _edge.target);
-          console.log('nextNode: ', nextNode);
           blocks.next = {};
           createBlocks(blocks.next, nextNode);
         };

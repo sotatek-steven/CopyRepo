@@ -18,11 +18,11 @@ const useBlock = () => {
     const index = blocksState.findIndex((item) => item?.id === id);
 
     //find next block and pre block
-    const nextBlockId = edges.findLast((item) => item.source === id).target;
-    const nextBlock = blocksState.findLast((item) => item.id === nextBlockId);
+    const nextBlockId = edges.find((item) => item.source === id).target;
+    const nextBlock = blocksState.find((item) => item.id === nextBlockId);
 
-    const preBlockId = edges.findLast((item) => item.target === id).source;
-    const preBlock = blocksState.findLast((item) => item.id === preBlockId);
+    const preBlockId = edges.find((item) => item.target === id).source;
+    const preBlock = blocksState.find((item) => item.id === preBlockId);
 
     if (!nextBlock || nextBlock.type === 'activityFinal') {
       if (preBlock.type === 'drop') {

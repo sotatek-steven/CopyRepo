@@ -21,13 +21,17 @@ const Container = styled('div')(() => ({
 }));
 
 const FunctionActionList = () => {
-  const { userFunction, initialFunction } = useDispatch();
+  const { userFunction, initialFunction, logicBlocks } = useDispatch();
   const functionState = useSelector((state) => state.userFunction);
+  const logicBlocksState = useSelector((state) => state.logicBlocks);
   const [errorsModalOpen, setErrorsModalOpen] = useState(false);
   const [errors, setErrors] = useState([]);
 
   const saveFunction = async () => {
-    const { code, data } = await userFunction.updateFunction(functionState);
+    //update block field
+    const blockData = await logicBlocks.convertToDataTransferApi(logicBlocksState);
+
+    const { code, data } = await userFunction.updateFunction({ ...functionState, block: blockData });
     delete data.updatedAt;
     userFunction.update(data);
 
