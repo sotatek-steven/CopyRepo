@@ -8,6 +8,7 @@ const logicBlocks = createModel({
     edges: [],
   },
   reducers: {
+    set: (state, data) => data,
     setBlocks: (state, data) => {
       return { ...state, nodes: data };
     },
@@ -79,6 +80,7 @@ const logicBlocks = createModel({
         return { nodes, edges };
       },
       convertToFEDataDisplay(blockData) {
+        // console.log('blockData: ', blockData);
         const blocksList = [];
         const edgesList = [];
         const createBlocks = (blockData, groupId, parent) => {
@@ -158,6 +160,11 @@ const logicBlocks = createModel({
               break;
             case 'declaration':
               blocks.type = 'declaration';
+              blocks.position = position;
+              blocks.params = data;
+              break;
+            case 'assignment':
+              blocks.type = 'assignment';
               blocks.position = position;
               blocks.params = data;
               break;

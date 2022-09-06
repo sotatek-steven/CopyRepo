@@ -145,6 +145,16 @@ const FunctionPage = () => {
         const FEData = await functionDefinition.convertToFEDataDisplay(data);
         functionDefinition.update(FEData);
 
+        // set logicBlocks data
+        if (data.block) {
+          const _blocksData = await logicBlocks.convertToFEDataDisplay(data.block);
+          logicBlocks.set(_blocksData);
+        } else {
+          const { nodes, edges } = await logicBlocks.createInitNode();
+          logicBlocks.setBlocks(nodes);
+          logicBlocks.setEdgeBlocks(edges);
+        }
+
         // fetch detail module
         const moduleData = await userModule.getDetailModule(moduleId);
         userModule.update(moduleData);
@@ -168,27 +178,31 @@ const FunctionPage = () => {
     };
 
     fetchData();
+
+    return () => {
+      logicBlocks.set({ nodes: [], edges: [] });
+    };
   }, [functionId, moduleId]);
 
   const { logicBlocks } = useDispatch();
 
-  useEffect(() => {
-    const convertData = async () => {
-      // Init data
-      const { nodes, edges } = await logicBlocks.createInitNode();
-      logicBlocks.setBlocks(nodes);
-      logicBlocks.setEdgeBlocks(edges);
+  // useEffect(() => {
+  //   const convertData = async () => {
+  //     // Init data
+  //     const { nodes, edges } = await logicBlocks.createInitNode();
+  //     logicBlocks.setBlocks(nodes);
+  //     logicBlocks.setEdgeBlocks(edges);
 
-      // const { nodes: _nodes, edges: _edges } = await logicBlocks.convertToFEDataDisplay(FAKE_DATA);
-      // console.log('nodes: ', JSON.stringify(_nodes));
-      // console.log('edges: ', JSON.stringify(_edges));
+  //     // const { nodes: _nodes, edges: _edges } = await logicBlocks.convertToFEDataDisplay(FAKE_DATA);
+  //     // console.log('nodes: ', JSON.stringify(_nodes));
+  //     // console.log('edges: ', JSON.stringify(_edges));
 
-      // const blocks = await logicBlocks.convertToDataTransferApi({ nodes: FAKE_NODES, edges: FAKE_EDGES });
-      // console.log('blocks: ', blocks);
-    };
+  //     // const blocks = await logicBlocks.convertToDataTransferApi({ nodes: FAKE_NODES, edges: FAKE_EDGES });
+  //     // console.log('blocks: ', blocks);
+  //   };
 
-    convertData();
-  }, []);
+  //   convertData();
+  // }, []);
 
   return (
     <div>
