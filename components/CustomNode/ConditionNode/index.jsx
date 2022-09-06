@@ -44,6 +44,11 @@ const EditingContainer = styled('div')(({ theme }) => ({
   height: 'fit-content',
   border: `1.5px dashed ${theme.palette.success.main}`,
   background: theme.palette.background.light,
+  '.nowheel': {
+    height: 140,
+    paddingRight: 10,
+    overflowY: 'scroll',
+  },
 }));
 
 const Title = styled('div')(({ theme }) => ({
@@ -73,7 +78,6 @@ const Body = styled('div')(({ theme, isError }) => ({
 const Footer = styled('div')({
   display: 'flex',
   justifyContent: 'end',
-  position: 'absolute',
   right: 20,
   bottom: 20,
 });
@@ -126,6 +130,20 @@ const ConditionNode = ({ data, id }) => {
   }, [data, mode]);
 
   const handleConfirm = () => {
+    let isError = false;
+    const temp = listData.map((item) => {
+      if (!item?.condition) {
+        item.errorCondition = 'This field is required';
+        isError = true;
+      }
+      return item;
+    });
+
+    if (isError) {
+      setListData(temp);
+      return;
+    }
+
     const inputs = [];
     for (let index = 0; index < listData.length; index++) {
       inputs.push(listData[index].condition);
@@ -191,26 +209,29 @@ const ConditionNode = ({ data, id }) => {
       {mode === 'editing' && (
         <EditingContainer>
           <Title>If</Title>
-          {listData?.length &&
-            listData.map((item) => {
-              return (
-                <Body key={item?.id} isError={!!item?.errorCondition}>
-                  <Input
-                    background="dark"
-                    value={item?.condition}
-                    errorText={item?.errorCondition}
-                    onChange={(e) => handleChange(item?.id, 'condition', e, ELEMENT_TYPE.INPUT)}
-                  />
-                  <div className="operation">
-                    <SingleAutoComplete
-                      value={CONDITION_OPTION.find((option) => option.value === item?.operation)}
-                      options={CONDITION_OPTION}
-                      onChange={(e, newValue) => handleChange(item?.id, 'operation', newValue, ELEMENT_TYPE.SELECT)}
+          <div className="nowheel">
+            {listData?.length &&
+              listData.map((item) => {
+                return (
+                  <Body key={item?.id} isError={!!item?.errorCondition}>
+                    <Input
+                      background="dark"
+                      value={item?.condition}
+                      errorText={item?.errorCondition}
+                      onChange={(e) => handleChange(item?.id, 'condition', e, ELEMENT_TYPE.INPUT)}
                     />
-                  </div>
-                </Body>
-              );
-            })}
+                    <div className="operation">
+                      <SingleAutoComplete
+                        value={CONDITION_OPTION.find((option) => option.value === item?.operation)}
+                        options={CONDITION_OPTION}
+                        onChange={(e, newValue) => handleChange(item?.id, 'operation', newValue, ELEMENT_TYPE.SELECT)}
+                      />
+                    </div>
+                  </Body>
+                );
+              })}
+          </div>
+
           <Footer>
             <ButtonWrapper className="action-icon" onClick={handleCancel}>
               <IconCancel />

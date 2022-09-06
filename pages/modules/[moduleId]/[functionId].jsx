@@ -109,10 +109,6 @@ const TAB_LIST = [
     value: 'workflow_view',
   },
   {
-    name: 'Form View',
-    value: 'form_view',
-  },
-  {
     name: 'Code View',
     value: 'code_view',
   },
@@ -226,9 +222,6 @@ const FunctionPage = () => {
                 <FunctionSidebar />
               </div>
             </ContentWrapper>
-          </TabPanelContent>
-          <TabPanelContent value="form_view">
-            <div>Form View</div>
           </TabPanelContent>
           <TabPanelContent value="code_view">
             <div>Code View</div>
