@@ -169,15 +169,12 @@ const DropHereNode = (props) => {
     const dataBlock = blocksState.find((item) => item.id === id);
     const index = blocksState.findIndex((item) => item.id === id);
 
-    console.log('dataBlock', dataBlock);
-
     let newBlocks = [];
     let newEdges = [];
     let yPlus = 0;
     switch (type) {
       case 'logic':
         {
-          console.log('1');
           const { nodes, edges } = createIfElseBlocks(dataBlock);
           newBlocks = newBlocks.concat(nodes);
           newEdges = newEdges.concat(edges);
@@ -185,8 +182,6 @@ const DropHereNode = (props) => {
         }
         break;
       default: {
-        console.log('2');
-
         yPlus = 300;
 
         if (dataBlock?.parentNode) {
@@ -247,6 +242,7 @@ const DropHereNode = (props) => {
       newEdges.push(createEdge(id, dropId));
     } else {
       _blocksState.splice(index, 2);
+      _edgesState.splice(edgesState.length - 1, 1);
 
       newBlocks.push(updateDropItem);
       newBlocks.push(activityFinalNode);
@@ -254,7 +250,6 @@ const DropHereNode = (props) => {
       newEdges.push(createEdge(dropId, endId));
     }
 
-    console.log('newBlocks', newBlocks);
     const currentNode = type === 'condition' ? newBlocks[1] : newBlocks[0];
 
     _blocksState = _blocksState.concat(newBlocks);
