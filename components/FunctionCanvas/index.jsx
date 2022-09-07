@@ -36,8 +36,8 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
   const { structs } = useSelector((state) => state.struct);
   const { enums } = useSelector((state) => state.enumState);
   const nodeTypes = useMemo(() => CustomNodes, []);
-  const { handelAddStruct } = useStructPage();
-  const { handelAddEnum } = useEnumPage();
+  const { handelAddStruct, convertStructToFEDisplay } = useStructPage();
+  const { handelAddEnum, convertEnumToFEDisplay } = useEnumPage();
   const [identifierModalOpen, setIdentifierModalOpen] = useState(false);
   const [stateVariablesOfDropFunctions, setStateVariablesOfDropFunctions] = useState([]);
 
@@ -132,50 +132,33 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
     setEdges(initialEdges);
   }, [initialNodes, initialEdges]);
 
-  const createNodeFromFunc = (funcData, type, position, newNode = [], listFunc = [], listStruct = [], listEnum = []) => {
+  const createNodeFromFunc = (
+    funcData,
+    type,
+    position,
+    newNode = [],
+    listFunc = [],
+    listStruct = [],
+    listEnum = []
+  ) => {
     let funcDepen = [];
 
     // Create Struct
     const listStructName = _.concat(structs, listStruct).map((item) => item?.name);
     const listEnumName = _.concat(enums, listEnum).map((item) => item?.name);
 
-
-    funcData?.globalVariables?.every((variable) => {
-      if (variable?.type.toUpperCase() === FUNCTION_TYPE.POOLINFO && !listStructName.includes(FUNCTION_TYPE.POOLINFO)) {
-        listStruct.push(STRUCT_POOLINFO);
-        return false;
+    funcData?.structs?.forEach((struct) => {
+      if (!listStructName.includes(struct?.name)) {
+        listStruct.push(struct);
       }
-      return true;
-    });
-
-    funcData?.globalVariables?.every((variable) => {
-      if (
-        variable?.type.toUpperCase()?.includes(FUNCTION_TYPE.USERINFO) &&
-        !listStructName.includes(FUNCTION_TYPE.USERINFO)
-      ) {
-        listStruct.push(STRUCT_USERINFO);
-        return false;
-      }
-      return true;
     });
 
     // Create Enum
-    funcData?.enums
-      ?.filter((item) => !listEnumName.includes(item?.name))
-      ?.forEach((item) => {
-        const values = item?.content?.map((con) => {
-          return {
-            ...con,
-            name: con?.label,
-          }
-        })
-
-        listEnum.push({
-          ...item,
-          errorName: null,
-          values,
-        })
-      })
+    funcData?.enums?.forEach((item) => {
+      if (!listEnumName.includes(item?.name)) {
+        listEnum.push(item);
+      }
+    });
 
     // Create Node
     newNode.push({
@@ -269,8 +252,8 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
       setStateVariablesOfDropFunctions(stateVariables);
       setNodes((nds) => _.unionBy(_.concat(nds, newNode), 'id'));
       addNewFuctionToModule(listFunc, position);
-      handelAddStruct(listStruct);
-      handelAddEnum(listEnum);
+      handelAddStruct(convertStructToFEDisplay(listStruct));
+      handelAddEnum(convertEnumToFEDisplay(listEnum));
     },
     [reactFlowInstance, setNodes, moduleState.functions, nodes]
   );
@@ -318,9 +301,9 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
     const updatedCoordinates = coordinates.map((item) => {
       return item.func === data._id
         ? {
-          ...item,
-          position,
-        }
+            ...item,
+            position,
+          }
         : item;
     });
     userModule.updateCoordinates(updatedCoordinates);
@@ -348,7 +331,7 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
           onEdgeUpdate={onEdgeUpdate}>
           <Controls
             style={{ bottom: '100px', left: '65px' }}
-          // onInteractiveChange={lockCanvas}
+            // onInteractiveChange={lockCanvas}
           />
           <Background color="#aaa" gap={16} />
         </ReactFlow>

@@ -579,8 +579,8 @@ export const ENUM_ITEM = [
 ];
 
 export const FUNCTION_TYPE = {
-  POOLINFO: 'POOLINFO',
-  USERINFO: 'USERINFO',
+  POOLINFO: 'PoolInfo',
+  USERINFO: 'UserInfo',
 };
 
 export const STRUCT_POOLINFO = {

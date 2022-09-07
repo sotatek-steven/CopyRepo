@@ -9,7 +9,8 @@ const BaseAutocomplete = styled(Autocomplete)(({ theme, background = theme.palet
   '.MuiOutlinedInput-root': {
     backgroundColor: background,
     color: theme.palette.text.primary,
-    height: 45,
+    minHeight: 45,
+    height: 'fit-content',
     borderRadius: 5,
     border: `solid 1px`,
     borderColor: error ? theme.palette.error.main : background,
@@ -25,15 +26,12 @@ const BaseAutocomplete = styled(Autocomplete)(({ theme, background = theme.palet
   },
   '.MuiButtonBase-root': {
     padding: 5,
-    display: 'none',
 
     ':first-of-type': {
       display: 'inline-flex',
     },
   },
-  '.MuiAutocomplete-tag': {
-    maxWidth: 'calc(100% - 70px)',
-  },
+
   '.MuiChip-root': {
     backgroundColor: theme.palette.primary.main,
   },
