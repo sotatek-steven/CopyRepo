@@ -129,7 +129,7 @@ const ConditionNode = ({ data, id }) => {
     }
   }, [data, mode]);
 
-  const handleConfirm = () => {
+  const isDataError = () => {
     let isError = false;
     const temp = listData.map((item) => {
       if (!item?.condition) {
@@ -138,12 +138,16 @@ const ConditionNode = ({ data, id }) => {
       }
       return item;
     });
+    setListData(temp);
 
-    if (isError) {
-      setListData(temp);
-      return;
-    }
+    return isError;
+  };
 
+  const handleConfirm = () => {
+    // check data
+    if (isDataError()) return;
+
+    // if haven't error
     const inputs = [];
     for (let index = 0; index < listData.length; index++) {
       inputs.push(listData[index].condition);
