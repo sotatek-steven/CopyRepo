@@ -179,7 +179,7 @@ const DropHereNode = (props) => {
     let newEdges = [];
     let yPlus = 0;
     switch (type) {
-      case 'logic':
+      case 'if_else':
         {
           const { nodes, edges } = createIfElseBlocks(dataBlock);
           newBlocks = newBlocks.concat(nodes);

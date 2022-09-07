@@ -113,8 +113,8 @@ const logicBlocks = createModel({
               if (nextTrue) createBlocks({ ...nextTrue, branch: 'true' }, parentNode.id, conditionNode.id);
               if (nextFalse) createBlocks({ ...nextFalse, branch: 'false' }, parentNode.id, conditionNode.id);
               break;
-            case 'logic':
-              newNode = createLogicNode(position, params, groupId);
+            case 'if_else':
+              newNode = createIfElseNode(position, params, groupId);
               blocksList.push(newNode);
               break;
             case 'finish':
@@ -197,8 +197,8 @@ const logicBlocks = createModel({
               blocks.action = data.action;
               blocks.params = data.params;
               break;
-            case 'logic':
-              blocks.type = 'logic';
+            case 'if_else':
+              blocks.type = 'if_else';
               blocks.position = position;
               blocks.params = data;
               break;
@@ -379,11 +379,11 @@ export const createParentNode = (position, groupId) => {
   };
 };
 
-export const createLogicNode = (position, data, groupId) => {
+export const createIfElseNode = (position, data, groupId) => {
   if (groupId)
     return {
       id: ObjectID(24).toHexString(),
-      type: 'logic',
+      type: 'if_else',
       position,
       data,
       parentNode: groupId,
@@ -392,7 +392,7 @@ export const createLogicNode = (position, data, groupId) => {
     };
   return {
     id: ObjectID(24).toHexString(),
-    type: 'logic',
+    type: 'if_else',
     position,
     data,
     dragHandle: 'dragHandle',

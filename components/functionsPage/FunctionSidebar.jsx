@@ -21,7 +21,18 @@ const Container = styled('div')(({ theme }) => ({
 const ControlStructures = [
   { name: 'Declaration', nodeType: 'declaration' },
   { name: 'Assignment', nodeType: 'assignment' },
-  { name: 'Logics', nodeType: 'logic' },
+  { name: 'IF - ELSE', nodeType: 'if_else' },
+  { name: 'FOR LOOP', nodeType: 'for_loop' },
+  { name: 'WHILE LOOP', nodeType: 'while_loop' },
+  { name: 'DO WHILE LOOP', nodeType: 'do_while_loop' },
+  { name: 'RETURN', nodeType: 'return' },
+  { name: 'THROW', nodeType: 'throw' },
+  { name: 'REQUIRE', nodeType: 'require' },
+  { name: 'REVERT', nodeType: 'revert' },
+  { name: 'ASSERT', nodeType: 'assert' },
+  { name: 'EMIT', nodeType: 'emit' },
+  { name: 'BREAK', nodeType: 'break' },
+  { name: 'CONTINUE', nodeType: 'continue' },
 ];
 
 const FunctionSidebar = () => {
