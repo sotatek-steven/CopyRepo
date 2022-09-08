@@ -16,9 +16,11 @@ const object = createModel({
   state: {
     objects: [],
     types: TYPES,
+    numberError: 0,
   },
   reducers: {
     setObjects: (state, objects) => ({ ...state, objects }),
+    setNumberError: (state, numberError) => ({ ...state, numberError }),
   },
   effects: (dispatch) => {
     return {};

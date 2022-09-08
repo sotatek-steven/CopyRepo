@@ -11,6 +11,7 @@ import { makeStyles } from '@mui/styles';
 import ErrorsCompileModal from '../ErrorsCompileModal';
 import useEventErrorTab from '../EventErrorTabPanel/hooks/useEventErrorTab';
 import useEnumPage from '../EnumTabPanel/hooks/useEnumPage';
+import useValuesTab from '../ValuesPanel/hooks/useValuesTab';
 
 export const useStyles = makeStyles(() => {
   return {
@@ -33,6 +34,7 @@ const ModuleActionList = () => {
   const [errors, setErrors] = useState([]);
 
   const { handleErrorStructs } = useStructPage();
+  const { valueHasError } = useValuesTab();
   const { objectHasError } = useObjectTab();
   const { checkErrorTab } = useEventErrorTab();
   const { checkErrorEnumTab } = useEnumPage();
@@ -43,7 +45,13 @@ const ModuleActionList = () => {
     if (isErrorStruct) {
       return;
     }
-    if (objectHasError() || checkErrorTab() || checkErrorEnumTab()) return;
+
+    const valueError = valueHasError();
+    const objectError = objectHasError();
+    const eventError = checkErrorTab();
+    const enumError = checkErrorEnumTab();
+
+    if (valueError || objectError || eventError || enumError) return;
 
     const { code, data } = await userModule.updateModule();
 

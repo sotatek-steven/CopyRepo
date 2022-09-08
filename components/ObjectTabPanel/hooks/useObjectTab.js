@@ -1,6 +1,7 @@
 /* eslint-disable no-case-declarations */
 import { ELEMENT_TYPE, INIT_OBJECT_TYPE, OBJECT_TYPE } from '@/config/constant/common';
 import { REGEX } from '@/config/constant/regex';
+import ObjectID from 'bson-objectid';
 import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -12,27 +13,67 @@ const useObjectTab = () => {
   const moduleState = useSelector((state) => state.userModule);
   const { object, userModule } = useDispatch();
 
+  const checkDuplicateName = (data) => {
+    let numErr = 0;
+    const duplicateNames = data.map(({ name }) => name).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i);
+    data.forEach((item) => {
+      if (duplicateNames?.includes(item.name)) {
+        item.errorName = 'Variable name cannot be duplicated';
+        numErr++;
+      } else {
+        item.errorName = null;
+      }
+    });
+
+    return { data, numErr };
+  };
+
   const handleAddObject = ({ initObject = INIT_OBJECT_TYPE }) => {
     const init = JSON.parse(JSON.stringify(initObject));
-    const data = [...objects];
-    data.push({ ...init, _id: Date.now() });
+    const initData = init?.map((item) => {
+      return {
+        ...item,
+        _id: ObjectID(32).toHexString(),
+      };
+    });
+    let data = _.concat(objects, initData);
+    let numberErr = 0;
+
+    if (initData[0]?.name) {
+      const { data: dataValidate, numErr } = checkDuplicateName(data);
+      data = dataValidate;
+      numberErr = numErr;
+    }
+
     object.setObjects(data);
+    object.setNumberError(numberErr);
     const dataClone = convertToObjectModule(data);
     userModule.updateObjects(dataClone);
+
+    return !!numberErr;
   };
 
   const handleRemoveObject = (objectId) => {
     const iObject = objects.findIndex(({ _id }) => _id === objectId);
-    const data = [...objects];
+    let data = [...objects];
+    let numberErr = 0;
+
     data.splice(iObject, 1);
+
+    const { data: dataValidate, numErr } = checkDuplicateName(data);
+    data = dataValidate;
+    numberErr = numErr;
+
+    object.setObjects(data);
+    object.setNumberError(numberErr);
     const dataClone = convertToObjectModule(data);
     userModule.updateObjects(dataClone);
-    object.setObjects(data);
   };
 
   const handleChangeObject = (objectId, field, e, type) => {
     const iObject = objects.findIndex(({ _id }) => _id === objectId);
-    const data = [...objects];
+    let data = [...objects];
+    let numberErr = 0;
 
     switch (type) {
       case ELEMENT_TYPE.INPUT:
@@ -97,7 +138,12 @@ const useObjectTab = () => {
         break;
     }
 
+    const { data: dataValidate, numErr } = checkDuplicateName(data);
+    data = dataValidate;
+    numberErr = numErr;
+
     object.setObjects(data);
+    object.setNumberError(numberErr);
     const dataClone = convertToObjectModule(data);
     userModule.updateObjects(dataClone);
   };
@@ -228,21 +274,23 @@ const useObjectTab = () => {
 
   const objectHasError = () => {
     let isError = false;
-    const data = [...objects];
+    let data = [...objects];
+    let numberErr = 0;
+
     data.forEach((item) => {
       if (!item?.name) {
         item.errorName = 'Variable name should not be empty';
         isError = true;
+        numberErr++;
       } else if (!regex.test(item?.name?.trim())) {
         item.errorName = 'Invalid variable name';
         isError = true;
+        numberErr++;
       }
     });
 
     object.setObjects(data);
-    if (isError) {
-      toast.warning('Object tab has errors');
-    }
+    object.setNumberError(numberErr);
 
     return isError;
   };

@@ -18,6 +18,7 @@ import FunctionCanvas from '@/components/FunctionCanvas';
 import AddFieldTab from '@/components/ModulePage/AddFieldTab';
 import useObjectTab from '@/components/ObjectTabPanel/hooks/useObjectTab';
 import useModulePage from '@/components/ModulePage/hooks/useModulePage';
+import useValuesTab from '@/components/ValuesPanel/hooks/useValuesTab';
 
 const ContentWapper = styled('div')(() => ({
   display: 'flex',
@@ -99,6 +100,19 @@ const TabListContent = styled(TabList)(({ theme }) => ({
   '.MuiTabs-flexContainer': {
     padding: '4px 0px',
   },
+  '.number-error': {
+    display: 'flex',
+    width: 24,
+    height: 24,
+    background: theme.palette.common.white,
+    color: theme.palette.primary.red1,
+    borderRadius: '50%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    right: 0,
+    top: 0,
+  },
 }));
 
 const TabItem = styled(Tab)(() => ({
@@ -141,7 +155,11 @@ const ModulePage = () => {
   const { moduleId } = router.query;
   const moduleModeState = useSelector((state) => state.moduleMode);
   const moduleState = useSelector((state) => state.userModule);
+  const { numberError: numberErrorObject } = useSelector((state) => state.object);
+  const { numberError: numberErrorValue } = useSelector((state) => state.value);
+  const { numberError: numberErrorEvent } = useSelector((state) => state.eventError);
   const { moduleMode, template } = useDispatch();
+  const { valueHasError } = useValuesTab();
   const { objectHasError } = useObjectTab();
   const { fetchDetailModule } = useModulePage();
   const [tabVertical, setTabVertical] = useState('canvas');
@@ -151,6 +169,11 @@ const ModulePage = () => {
   const theme = useTheme();
   const [sources, setSource] = useState(null);
   const [addFieldTab, setAddFieldTab] = useState('values');
+  const [totalError, setTotalError] = useState(0);
+
+  useEffect(() => {
+    setTotalError(numberErrorObject + numberErrorValue + numberErrorEvent);
+  }, [numberErrorObject, numberErrorValue, numberErrorEvent]);
 
   useEffect(() => {
     fetchDetailModule();
@@ -178,7 +201,9 @@ const ModulePage = () => {
   }, [moduleState.lines]);
 
   const handleChangeTabVertical = (e, newValue) => {
-    if (objectHasError()) return;
+    const valueError = valueHasError();
+    const objectError = objectHasError();
+    if (valueError || objectError) return;
 
     setTabVertical(newValue);
   };
@@ -196,9 +221,15 @@ const ModulePage = () => {
           className="vertical-tab"
           onChange={handleChangeTabVertical}
           aria-label="lab API tabs example">
-          {TAB_LIST_VERTICAL.map((tab) => (
-            <TabItem key={tab.value} icon={tab.icon} label={tab.name} value={tab.value} />
-          ))}
+          {TAB_LIST_VERTICAL.map((tab) => {
+            const label = (
+              <>
+                <div className="label">{tab.name}</div>
+                {tab.value === 'fields' && !!totalError && <div className="number-error">{totalError}</div>}
+              </>
+            );
+            return <TabItem key={tab.value} icon={tab.icon} label={label} value={tab.value} />;
+          })}
         </TabListContent>
       </TabListContainer>
       <TabPanelContent value="canvas">
