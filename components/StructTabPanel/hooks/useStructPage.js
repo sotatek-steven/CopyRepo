@@ -116,7 +116,7 @@ const useStructPage = () => {
     }
     const variable = JSON.parse(JSON.stringify(VARIABLE));
     const data = [...structs];
-    data[iStruct]?.variables?.push({ ...variable, _id: Date.now(), });
+    data[iStruct]?.variables?.push({ ...variable, _id: Date.now() });
 
     struct.setStructs(data);
     userModule.updateStructs(convertStructs(data));
@@ -202,13 +202,13 @@ const useStructPage = () => {
             data[iStruct].variables[iVariable].name.errorName = 'Invalid variable name';
           } else {
             duplicateArr = checkDuplicateVariableName(data[iStruct].variables);
-  
+
             data[iStruct].variables.forEach(({ name }) => {
               name.errorName = !!duplicateArr?.includes(name.value) && 'Variable name cannot be duplicated';
             });
           }
         }
-        
+
         break;
       case ELEMENT_TYPE.SELECT:
         data[iStruct].variables[iVariable].type.value = e.value;

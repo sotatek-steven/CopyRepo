@@ -6,7 +6,7 @@ import Select from '../../Select';
 import { PAIR_TYPE } from '.';
 import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
-import { VALUE_TYPE_OPTIONS } from '@/config/constant/common';
+import { generateDataType } from '@/config/constant/common';
 
 const Container = styled('div')({
   display: 'flex',
@@ -34,7 +34,7 @@ const Value = ({ value, type, lenthOfData, updateValue, returnToPreviousValue, i
       value: struct.name,
       label: struct.name,
     }));
-    return [...VALUE_TYPE_OPTIONS, ...data];
+    return [...generateDataType(), ...data];
   }, [moduleState.sources.structs]);
 
   const handleChange = (event) => {
