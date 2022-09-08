@@ -36,13 +36,21 @@ const useStructPage = () => {
     const typeTemp = await getTypeByStruct(lstStruct);
     const listType = _.concat(types, typeTemp);
 
-    const data = lstStruct?.map((struct, idxStruct) => {
-      const variables = struct.content.map((content, idxContent) => {
-        const type = listType.find((item) => item?.label === content?.type);
+    const data = convertStructToFEDisplay(lstStruct);
+
+    const dataOrigin = JSON.parse(JSON.stringify(data));
+    struct.setOriginStructs(dataOrigin);
+    struct.setStructs(data);
+    struct.setTypes(listType);
+  };
+
+  const convertStructToFEDisplay = (lstStruct) => {
+    const data = lstStruct?.map((struct) => {
+      const variables = struct.content.map((content) => {
         return {
-          _id: `${EDIT_ID}_${idxStruct}_${idxContent}`,
+          _id: content?._id,
           type: {
-            value: type?.value || 'string',
+            value: content?.type || 'string',
           },
           name: {
             value: content?.label,
@@ -51,17 +59,14 @@ const useStructPage = () => {
       });
 
       return {
-        _id: `${EDIT_ID}_${idxStruct}`,
+        _id: struct?._id,
         structId: struct?._id,
         name: struct?.name,
         variables: variables,
       };
     });
 
-    const dataOrigin = JSON.parse(JSON.stringify(data));
-    struct.setOriginStructs(dataOrigin);
-    struct.setStructs(data);
-    struct.setTypes(listType);
+    return data;
   };
 
   const convertStructs = (data) => {
@@ -116,7 +121,7 @@ const useStructPage = () => {
     }
     const variable = JSON.parse(JSON.stringify(VARIABLE));
     const data = [...structs];
-    data[iStruct]?.variables?.push({ ...variable, _id: Date.now(), });
+    data[iStruct]?.variables?.push({ ...variable, _id: Date.now() });
 
     struct.setStructs(data);
     userModule.updateStructs(convertStructs(data));
@@ -202,13 +207,13 @@ const useStructPage = () => {
             data[iStruct].variables[iVariable].name.errorName = 'Invalid variable name';
           } else {
             duplicateArr = checkDuplicateVariableName(data[iStruct].variables);
-  
+
             data[iStruct].variables.forEach(({ name }) => {
               name.errorName = !!duplicateArr?.includes(name.value) && 'Variable name cannot be duplicated';
             });
           }
         }
-        
+
         break;
       case ELEMENT_TYPE.SELECT:
         data[iStruct].variables[iVariable].type.value = e.value;
@@ -270,6 +275,7 @@ const useStructPage = () => {
     handleChangeNameStruct,
     handleChangeVariable,
     handleErrorStructs,
+    convertStructToFEDisplay,
   };
 };
 

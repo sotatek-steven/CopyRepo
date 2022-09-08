@@ -11,6 +11,14 @@ const useEnumPage = () => {
   const { enumState, userModule } = useDispatch();
 
   const getEnums = async (lstEnum) => {
+    const data = convertEnumToFEDisplay(lstEnum);
+
+    const dataOrigin = JSON.parse(JSON.stringify(data));
+    enumState.setOriginEnums(dataOrigin);
+    enumState.setEnums(data);
+  };
+
+  const convertEnumToFEDisplay = (lstEnum) => {
     const data = lstEnum?.map((item) => {
       const values = item?.content.map((con) => {
         return {
@@ -25,9 +33,7 @@ const useEnumPage = () => {
       };
     });
 
-    const dataOrigin = JSON.parse(JSON.stringify(data));
-    enumState.setOriginEnums(dataOrigin);
-    enumState.setEnums(data);
+    return data;
   };
 
   const handelAddEnum = (initEnum) => {
@@ -124,12 +130,12 @@ const useEnumPage = () => {
         item.errorName = 'This field is required';
         isError = true;
       }
-      item?.values.map(value => {
+      item?.values.map((value) => {
         if (!value?.name.trim()) {
-          value.errorName = 'Value should not be empty'
+          value.errorName = 'Value should not be empty';
           isError = true;
         }
-      })
+      });
     });
 
     enumState.setEnums(data);
@@ -150,6 +156,7 @@ const useEnumPage = () => {
     handelRemoveValue,
     handleChangeValue,
     checkErrorEnumTab,
+    convertEnumToFEDisplay,
   };
 };
 

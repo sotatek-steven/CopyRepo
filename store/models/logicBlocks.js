@@ -175,6 +175,7 @@ const logicBlocks = createModel({
               blocks.type = 'condition';
               blocks.position = position;
               blocks.conditions = data;
+              blocks.inputs = data?.inputs;
               blocks.parent = {};
               blocks.parent.position = node.parent.position;
               const _edgeTrue = _edges.find((edge) => edge.source === id && edge.label === 'True');
