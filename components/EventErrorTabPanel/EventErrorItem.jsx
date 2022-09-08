@@ -1,4 +1,4 @@
-import { ELEMENT_TYPE, EVENT_ERROR_OPTION, EVENT_ERROR_TYPE, VALUE_TYPE_OPTIONS } from '@/config/constant/common';
+import { ELEMENT_TYPE, EVENT_ERROR_OPTION, EVENT_ERROR_TYPE, generateDataType } from '@/config/constant/common';
 import SingleAutoComplete from '../AutoComplete/SingleAutoComplete';
 import { Input } from '../Input';
 import {
@@ -129,8 +129,8 @@ const EventErrorItem = ({
                 <Item>
                   <SingleAutoComplete
                     label={'Type'}
-                    value={VALUE_TYPE_OPTIONS.find((type) => type.value === param?.type)}
-                    options={VALUE_TYPE_OPTIONS}
+                    value={generateDataType().find((type) => type.value === param?.type)}
+                    options={generateDataType()}
                     onChange={(e, newValue) =>
                       handleChangeParam(dataItem?._id, param?._id, newValue, 'type', ELEMENT_TYPE.SELECT)
                     }

@@ -4,7 +4,7 @@ import FunctionInfo from '@/components/FunctionsPage/FunctionInfo';
 import FunctionSidebar from '@/components/functionsPage/FunctionSidebar';
 import useDeclaration from '@/components/functionsPage/hooks/useDeclaration';
 import DesignLayout from '@/components/layout/DesignLayout';
-import { VALUE_TYPE_OPTIONS } from '@/config/constant/common';
+import { generateDataType } from '@/config/constant/common';
 import { FAKE_DATA, FAKE_EDGES, FAKE_NODES, simpleData } from '@/store/models/fakeData';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { styled, Tab } from '@mui/material';
@@ -161,7 +161,7 @@ const FunctionPage = () => {
             label: item?.name,
           };
         });
-        functions.setListType(_.concat(VALUE_TYPE_OPTIONS, typeStructs));
+        functions.setListType(_.concat(generateDataType(), typeStructs));
         // // Convert Declaration
         // const listDeclaration = convertDeclaration(data.block);
         // declaration.updateDeclarations(listDeclaration);

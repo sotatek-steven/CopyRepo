@@ -1,10 +1,10 @@
 import {
   BOOLEAN_OPTIONS,
   ELEMENT_TYPE,
+  generateDataType,
   IS_CONSTANT,
   PLACE_HOLDER,
   SCOPE_OPTIONS,
-  VALUE_TYPE_OPTIONS,
 } from '@/config/constant/common';
 import { useSelector } from 'react-redux';
 import { Input } from '../Input';
@@ -55,8 +55,8 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
       {/* <Item> */}
       <Item sx={{ overflow: 'unset' }}>
         <SingleAutoComplete
-          value={VALUE_TYPE_OPTIONS.find((item) => item.value === value?.type)}
-          options={VALUE_TYPE_OPTIONS}
+          value={generateDataType().find((item) => item.value === value?.type)}
+          options={generateDataType()}
           onChange={(e, newValue) => handleChangeValue(value?._id, 'type', newValue, ELEMENT_TYPE.SELECT)}
         />
       </Item>

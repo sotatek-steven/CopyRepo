@@ -3,7 +3,7 @@ import React from 'react';
 import Label from '../../atom/Label';
 import Select from '../../Select';
 import { PAIR_TYPE } from '.';
-import { VALUE_TYPE_OPTIONS } from '@/config/constant/common';
+import { generateDataType } from '@/config/constant/common';
 
 const Container = styled('div')({
   display: 'flex',
@@ -35,7 +35,7 @@ const Key = ({ value, type, id, updateKey }) => {
       <LabelCustom>Key</LabelCustom>
 
       <div style={{ width: '24%' }}>
-        <Select options={VALUE_TYPE_OPTIONS} value={value} onChange={handleChange} menuProps={true} />
+        <Select options={generateDataType()} value={value} onChange={handleChange} menuProps={true} />
       </div>
     </Container>
   );
