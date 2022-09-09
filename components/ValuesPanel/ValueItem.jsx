@@ -91,7 +91,7 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
         </Box>
       </Item>
       <Tooltip
-        title={getPlaceholderDefaultValue}
+        title={getPlaceholderDefaultValue || ''}
         disableHoverListener={!getPlaceholderDefaultValue}
         disableFocusListener={!getPlaceholderDefaultValue}>
         <Item>

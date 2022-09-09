@@ -84,6 +84,7 @@ const AddFieldTab = ({ tab }) => {
   const [activeTab, setActiveTab] = useState('values');
   const { numberError: numberErrorObject } = useSelector((state) => state.object);
   const { numberError: numberErrorValue } = useSelector((state) => state.value);
+  const { numberError: numberErrorMapping } = useSelector((state) => state.mapping);
   const { numberError: numberErrorEvent } = useSelector((state) => state.eventError);
 
   useEffect(() => {
@@ -103,7 +104,9 @@ const AddFieldTab = ({ tab }) => {
                 <div className="label">{tab.label}</div>
                 {tab.id === 'objects' && !!numberErrorObject && <div className="number-error">{numberErrorObject}</div>}
                 {tab.id === 'values' && !!numberErrorValue && <div className="number-error">{numberErrorValue}</div>}
-                {/* {tab.id === 'mappings' && !!numberError && <div className="number-error">{numberError}</div>} */}
+                {tab.id === 'mappings' && !!numberErrorMapping && (
+                  <div className="number-error">{numberErrorMapping}</div>
+                )}
                 {tab.id === 'events-errors' && !!numberErrorEvent && (
                   <div className="number-error">{numberErrorEvent}</div>
                 )}

@@ -1,31 +1,52 @@
-import { ELEMENT_TYPE, INIT_VALUE_TYPE, NEW_ID } from '@/config/constant/common';
+import { ELEMENT_TYPE, INIT_VALUE_TYPE } from '@/config/constant/common';
 import { REGEX } from '@/config/constant/regex';
 import ObjectID from 'bson-objectid';
 import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 
+const regex = new RegExp(REGEX.VARIABLE_NAME);
+
 const useValuesTab = () => {
   const { values } = useSelector((state) => state.value);
   const { value, userModule } = useDispatch();
 
-  const checkDuplicateName = (data) => {
+  const checkValidateValue = (data, funcIds = []) => {
     let numErr = 0;
+
     const duplicateNames = data.map(({ label }) => label).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i);
     data.forEach((item) => {
-      if (duplicateNames?.includes(item.label)) {
-        item.errorName = 'Variable name cannot be duplicated';
+      if (item?.label) {
+        if (duplicateNames?.includes(item.label)) {
+          item.errorName = 'Variable name cannot be duplicated';
+          numErr++;
+          const index = funcIds.findIndex((func) => func?.id === item?.functionId);
+
+          if (index > -1) {
+            funcIds[index].totalError++;
+          } else {
+            funcIds.push({
+              id: item?.functionId,
+              totalError: 1,
+            });
+          }
+        } else {
+          if (!regex.test(item?.label?.trim())) {
+            item.errorName = 'Invalid variable name';
+            numErr++;
+          } else {
+            item.errorName = null;
+          }
+        }
+      } else if (item?.errorName) {
         numErr++;
-      } else {
-        item.errorName = null;
       }
     });
 
-    return { data, numErr };
+    return { data, numErr, funcIds };
   };
 
-  const handleAddValues = (initValue = INIT_VALUE_TYPE) => {
-    const init = JSON.parse(JSON.stringify(initValue));
-    const initData = init?.map((item) => {
+  const handleAddValues = (initValue) => {
+    const initData = initValue?.map((item) => {
       return {
         ...item,
         _id: ObjectID(32).toHexString(),
@@ -33,17 +54,19 @@ const useValuesTab = () => {
     });
     let data = _.concat(values, initData);
     let numberErr = 0;
+    let functionError = [];
 
-    if (initData[0]?.label) {
-      const { data: dataValidate, numErr } = checkDuplicateName(data);
-      data = dataValidate;
-      numberErr = numErr;
-    }
+    const { data: dataValidate, numErr, funcIds } = checkValidateValue(data);
+    data = dataValidate;
+    numberErr = numErr;
+    functionError = funcIds;
 
     value.setValues(data);
     value.setNumberError(numberErr);
     const dataClone = convertToValuesModule(data);
     userModule.updateValues(dataClone);
+
+    return functionError;
   };
 
   const handleRemoveValue = (valueId) => {
@@ -53,7 +76,7 @@ const useValuesTab = () => {
 
     data.splice(iValue, 1);
 
-    const { data: dataValidate, numErr } = checkDuplicateName(data);
+    const { data: dataValidate, numErr } = checkValidateValue(data);
     data = dataValidate;
     numberErr = numErr;
 
@@ -75,11 +98,8 @@ const useValuesTab = () => {
           if (data[iValue]['constant'] == true) data[iValue][field] = e.target.value.toUpperCase();
 
           data[iValue]['errorName'] = null;
-          const regex = new RegExp(REGEX.VARIABLE_NAME);
           if (!e.target.value.trim()) {
             data[iValue]['errorName'] = 'This field is required';
-          } else if (!regex.test(e.target.value.trim())) {
-            data[iValue]['errorName'] = 'Invalid variable name';
           }
         }
 
@@ -119,7 +139,7 @@ const useValuesTab = () => {
         break;
     }
 
-    const { data: dataValidate, numErr } = checkDuplicateName(data);
+    const { data: dataValidate, numErr } = checkValidateValue(data);
     data = dataValidate;
     numberErr = numErr;
 
