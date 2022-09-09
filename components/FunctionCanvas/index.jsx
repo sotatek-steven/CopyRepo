@@ -39,15 +39,11 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
   const { handelAddStruct, convertStructToFEDisplay } = useStructPage();
   const { handelAddEnum, convertEnumToFEDisplay } = useEnumPage();
   const [identifierModalOpen, setIdentifierModalOpen] = useState(false);
-  const [stateVariablesOfDropFunctions, setStateVariablesOfDropFunctions] = useState([]);
+  const [missingIdentifiers, setMissingIdentifiers] = useState([]);
 
   const handleIdentifierModalClose = () => {
     setIdentifierModalOpen(false);
   };
-
-  // useEffect(() => {
-  //   console.log('identifier: ', identifierModalOpen);
-  // }, [identifierModalOpen]);
 
   /**
    * @param {*} id to update node list of react flow
@@ -203,9 +199,8 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
     return { newNode, listFunc, listStruct, listEnum };
   };
 
-  const getStateVariables = (listFunc) => {
-    listFunc?.concat(listFunc);
-    const stateVariable = listFunc.reduce((arr, item) => {
+  const getMissingIdentifiers = (listFunc) => {
+    const allMissingIdentifiers = listFunc.reduce((arr, item) => {
       const { globalVariables, _id } = item;
       const updatedGlobalVariables = globalVariables?.map((item) => ({
         ...item,
@@ -214,7 +209,19 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
       return arr.concat(updatedGlobalVariables);
     }, []);
 
-    return stateVariable;
+    //remove duplicate missing variables
+    const missingIdentifiers = allMissingIdentifiers.filter(
+      (item, index) =>
+        allMissingIdentifiers.findIndex((el) => {
+          delete el._id;
+          delete el.func;
+          delete item._id;
+          delete item.func;
+          return _.isEqual(item, el);
+        }) === index
+    );
+
+    return missingIdentifiers;
   };
 
   const onDrop = useCallback(
@@ -244,12 +251,11 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
       //add new node
       const { newNode, listFunc, listStruct, listEnum } = createNodeFromFunc(data, type, position);
 
-      const stateVariables = getStateVariables(listFunc);
-
       //open Identifier modal
       const isOpen = !!data.globalVariables.length;
       setIdentifierModalOpen(isOpen);
-      setStateVariablesOfDropFunctions(stateVariables);
+      setMissingIdentifiers(getMissingIdentifiers(listFunc));
+
       setNodes((nds) => _.unionBy(_.concat(nds, newNode), 'id'));
       addNewFuctionToModule(listFunc, position);
       handelAddStruct(convertStructToFEDisplay(listStruct));
@@ -262,8 +268,6 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
     userModule.updateFunctions(modules);
     userModule.updateCoordinates(coordinates);
     userModule.updateLibraries(libraries);
-    // const { data } = await userModule.updateModule();
-    // userModule.update(data);
   };
 
   const addNewFuctionToModule = (funcData, position) => {
@@ -329,20 +333,16 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
           onDragOver={onDragOver}
           defaultZoom={1}
           onEdgeUpdate={onEdgeUpdate}>
-          <Controls
-            style={{ bottom: '100px', left: '65px' }}
-            // onInteractiveChange={lockCanvas}
-          />
+          <Controls style={{ bottom: '100px', left: '65px' }} />
           <Background color="#aaa" gap={16} />
         </ReactFlow>
       </Box>
       <IndentifierModal
         open={identifierModalOpen}
         onClose={handleIdentifierModalClose}
-        stateVariables={stateVariablesOfDropFunctions}
+        identifiers={missingIdentifiers}
         redirectToAddField={redirectToAddField}
       />
-      {/* <ErrorsCompileModal /> */}
     </ReactFlowProvider>
   );
 };

@@ -9,7 +9,7 @@ import useValuesTab from '../ValuesPanel/hooks/useValuesTab';
 const SelectVariable = ({ label, options, variable, redirectToAddField }) => {
   const { userModule } = useDispatch();
   const moduleState = useSelector((state) => state.userModule);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState('declare new one');
   const { handleAddValues, converToValueShow } = useValuesTab();
   const { handleAddObject, convertToObjectShow } = useObjectTab();
 

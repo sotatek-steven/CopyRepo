@@ -40,7 +40,7 @@ const generateTypeOfMapping = (mapping, stringbuffer = []) => {
 
 const defaulItem = { value: 'declare new one', label: 'Declare new one' };
 
-const IndentifierModal = ({ open, onClose, stateVariables, redirectToAddField }) => {
+const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) => {
   const moduleState = useSelector((state) => state.userModule);
   const [globalVariables, setGlobalVariables] = useState([]);
 
@@ -89,8 +89,8 @@ const IndentifierModal = ({ open, onClose, stateVariables, redirectToAddField })
         <ModalHeader type="warning" title="Unidentified identifiers" onClose={onClose} />
         <Scrollbars style={{ marginTop: 45 }} autoHeightMax={460} autoHeight>
           <ModalBody>
-            {stateVariables &&
-              stateVariables.map((item, index) => {
+            {identifiers &&
+              identifiers.map((item, index) => {
                 const { type, isArray, label, objectType } = item;
                 let options = [{ ...defaulItem, category: objectType }];
                 globalVariables.forEach((element) => {
