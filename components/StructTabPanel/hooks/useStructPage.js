@@ -1,4 +1,4 @@
-import { ELEMENT_TYPE, EDIT_ID } from '@/config/constant/common';
+import { ELEMENT_TYPE, EDIT_ID, generateDataType } from '@/config/constant/common';
 import { REGEX } from '@/config/constant/regex';
 import _ from 'lodash';
 import { useMemo } from 'react';
@@ -29,12 +29,12 @@ const useStructPage = () => {
   const { struct, userModule } = useDispatch();
 
   const getTypeByStruct = (lstStruct) => {
-    return lstStruct?.map((item, idxStruct) => ({ value: `${EDIT_ID}_${idxStruct}`, label: item?.name }));
+    return lstStruct?.map((item) => ({ value: item?.name, label: item?.name }));
   };
 
   const getStructs = async (lstStruct) => {
     const typeTemp = await getTypeByStruct(lstStruct);
-    const listType = _.concat(types, typeTemp);
+    const listType = _.concat(generateDataType(), typeTemp);
 
     const data = convertStructToFEDisplay(lstStruct);
 
@@ -108,8 +108,17 @@ const useStructPage = () => {
     }
     const data = [...structs];
     data.splice(iStruct, 1);
+    const duplicateArr = checkDuplicateStructName(data);
+
+    data.forEach((item) => {
+      item.errorName = !!duplicateArr?.includes(item?.name) && 'Struct name cannot be duplicated';
+    });
+
+    const typeTemp = getTypeByStruct(data);
+    const listType = _.concat(generateDataType(), typeTemp);
 
     struct.setStructs(data);
+    struct.setTypes(listType);
     userModule.updateStructs(convertStructs(data));
   };
 
@@ -147,8 +156,8 @@ const useStructPage = () => {
     userModule.updateStructs(convertStructs(data));
   };
 
-  const checkDuplicateStructName = () => {
-    const duplicateNames = structs.map(({ name }) => name).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i);
+  const checkDuplicateStructName = (data) => {
+    const duplicateNames = data.map(({ name }) => name).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i);
     return duplicateNames;
   };
 
@@ -162,7 +171,7 @@ const useStructPage = () => {
     if (!value?.trim()) {
       data[iStruct].errorName = 'This field is required';
     }
-    const duplicateArr = checkDuplicateStructName();
+    const duplicateArr = checkDuplicateStructName(data);
 
     data.forEach((item) => {
       item.errorName = !!duplicateArr?.includes(item?.name) && 'Struct name cannot be duplicated';

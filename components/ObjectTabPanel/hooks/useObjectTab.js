@@ -4,7 +4,6 @@ import { REGEX } from '@/config/constant/regex';
 import ObjectID from 'bson-objectid';
 import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 
 const regex = new RegExp(REGEX.VARIABLE_NAME);
 
@@ -13,24 +12,42 @@ const useObjectTab = () => {
   const moduleState = useSelector((state) => state.userModule);
   const { object, userModule } = useDispatch();
 
-  const checkDuplicateName = (data) => {
+  const checkValidateObject = (data, funcIds = []) => {
     let numErr = 0;
     const duplicateNames = data.map(({ name }) => name).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i);
     data.forEach((item) => {
-      if (duplicateNames?.includes(item.name)) {
-        item.errorName = 'Variable name cannot be duplicated';
+      if (item?.name) {
+        if (duplicateNames?.includes(item.name)) {
+          item.errorName = 'Variable name cannot be duplicated';
+          numErr++;
+          const index = funcIds.findIndex((func) => func?.id === item?.functionId);
+
+          if (index > -1) {
+            funcIds[index].totalError++;
+          } else {
+            funcIds.push({
+              id: item?.functionId,
+              totalError: 1,
+            });
+          }
+        } else {
+          if (!regex.test(item?.name?.trim())) {
+            item.errorName = 'Invalid variable name';
+            numErr++;
+          } else {
+            item.errorName = null;
+          }
+        }
+      } else if (item?.errorName) {
         numErr++;
-      } else {
-        item.errorName = null;
       }
     });
 
-    return { data, numErr };
+    return { data, numErr, funcIds };
   };
 
-  const handleAddObject = (initObject = INIT_OBJECT_TYPE) => {
-    const init = JSON.parse(JSON.stringify(initObject));
-    const initData = init?.map((item) => {
+  const handleAddObject = (initObject) => {
+    const initData = initObject?.map((item) => {
       return {
         ...item,
         _id: ObjectID(24).toHexString(),
@@ -38,19 +55,19 @@ const useObjectTab = () => {
     });
     let data = _.concat(objects, initData);
     let numberErr = 0;
+    let functionError = [];
 
-    if (initData[0]?.name) {
-      const { data: dataValidate, numErr } = checkDuplicateName(data);
-      data = dataValidate;
-      numberErr = numErr;
-    }
+    const { data: dataValidate, numErr, funcIds } = checkValidateObject(data);
+    data = dataValidate;
+    numberErr = numErr;
+    functionError = funcIds;
 
     object.setObjects(data);
     object.setNumberError(numberErr);
     const dataClone = convertToObjectModule(data);
     userModule.updateObjects(dataClone);
 
-    return !!numberErr;
+    return functionError;
   };
 
   const handleRemoveObject = (objectId) => {
@@ -60,7 +77,7 @@ const useObjectTab = () => {
 
     data.splice(iObject, 1);
 
-    const { data: dataValidate, numErr } = checkDuplicateName(data);
+    const { data: dataValidate, numErr } = checkValidateObject(data);
     data = dataValidate;
     numberErr = numErr;
 
@@ -83,8 +100,6 @@ const useObjectTab = () => {
 
           if (!e.target.value.trim()) {
             data[iObject]['errorName'] = 'Variable name should not be empty';
-          } else if (!regex.test(e.target.value.trim())) {
-            data[iObject]['errorName'] = 'Invalid variable name';
           }
         }
         break;
@@ -138,7 +153,7 @@ const useObjectTab = () => {
         break;
     }
 
-    const { data: dataValidate, numErr } = checkDuplicateName(data);
+    const { data: dataValidate, numErr } = checkValidateObject(data);
     data = dataValidate;
     numberErr = numErr;
 

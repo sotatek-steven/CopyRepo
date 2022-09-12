@@ -19,6 +19,7 @@ import userFunction from './userFunction';
 import logicBlocks from './logicBlocks';
 import initialFunction from './initialFunction';
 import functionDefinition from './functionDefinition';
+import mapping from './mapping';
 
 export {
   ticket,
@@ -42,4 +43,5 @@ export {
   logicBlocks,
   initialFunction,
   functionDefinition,
+  mapping,
 };

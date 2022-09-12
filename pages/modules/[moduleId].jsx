@@ -157,6 +157,7 @@ const ModulePage = () => {
   const moduleState = useSelector((state) => state.userModule);
   const { numberError: numberErrorObject } = useSelector((state) => state.object);
   const { numberError: numberErrorValue } = useSelector((state) => state.value);
+  const { numberError: numberErrorMapping } = useSelector((state) => state.mapping);
   const { numberError: numberErrorEvent } = useSelector((state) => state.eventError);
   const { moduleMode, template } = useDispatch();
   const { valueHasError } = useValuesTab();
@@ -172,8 +173,8 @@ const ModulePage = () => {
   const [totalError, setTotalError] = useState(0);
 
   useEffect(() => {
-    setTotalError(numberErrorObject + numberErrorValue + numberErrorEvent);
-  }, [numberErrorObject, numberErrorValue, numberErrorEvent]);
+    setTotalError(numberErrorObject + numberErrorValue + numberErrorMapping + numberErrorEvent);
+  }, [numberErrorObject, numberErrorValue, numberErrorMapping, numberErrorEvent]);
 
   useEffect(() => {
     fetchDetailModule();

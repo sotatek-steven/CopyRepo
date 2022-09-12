@@ -5,6 +5,7 @@ import useObjectTab from './hooks/useObjectTab';
 import ObjectItem from './ObjectItem';
 import Scrollbars from 'react-custom-scrollbars';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import { INIT_OBJECT_TYPE } from '@/config/constant/common';
 
 const ObjectTabPanel = () => {
   const {
@@ -38,7 +39,7 @@ const ObjectTabPanel = () => {
           ))}
         </BodyContent>
         <Footer>
-          <PrimaryButton width="135px" onClick={handleAddObject}>
+          <PrimaryButton width="135px" onClick={() => handleAddObject(INIT_OBJECT_TYPE)}>
             <AddCircleOutlineIcon style={{ fontSize: 18 }} />
             Add Object
           </PrimaryButton>
