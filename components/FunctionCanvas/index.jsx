@@ -209,14 +209,19 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
     }, []);
 
     //remove duplicate missing variables
-    const missingIdentifiers = allMissingIdentifiers.filter(
-      (item, index) =>
-        allMissingIdentifiers.findIndex((el) => {
-          const _item = { ...item, _id: null, func: null };
-          const _el = { ...el, _id: null, func: null };
-          return _.isEqual(_item, _el);
-        }) === index
-    );
+    const paramsMapper = {};
+    allMissingIdentifiers.forEach((el) => {
+      const key = JSON.stringify(_.omit(el, ['func', '_id']));
+      if (!paramsMapper[key]) {
+        paramsMapper[key] = [];
+      }
+      paramsMapper[key].push(el);
+    });
+
+    const missingIdentifiers = Object.entries(paramsMapper).map(([key, value]) => ({
+      ...JSON.parse(key),
+      func: value.map((e) => e.func),
+    }));
 
     return missingIdentifiers;
   };
