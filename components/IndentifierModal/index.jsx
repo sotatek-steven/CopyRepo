@@ -129,6 +129,7 @@ const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) =>
         switch (identifier.objectType) {
           case 'values': {
             const { func, label, type, isArray, scope, constant, valueDefault } = identifier;
+            const mappingToFunctions = func.map((item) => `${item}-${label}`);
             newValues.push({
               label,
               type,
@@ -136,13 +137,14 @@ const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) =>
               scope,
               constant,
               functionId: func,
-              functions: [`${func}-${label}`],
+              functions: mappingToFunctions,
               valueDefault,
             });
             break;
           }
           case 'objects': {
             const { func, label, type, isArray, scope, constant, valueDefault } = identifier;
+            const mappingToFunctions = func.map((item) => `${item}-${label}`);
             newObjects.push({
               name: label,
               item: type,
@@ -151,7 +153,7 @@ const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) =>
               scope,
               constant,
               functionId: func,
-              functions: [`${func}-${label}`],
+              functions: mappingToFunctions,
               valueDefault,
             });
             break;
@@ -160,12 +162,13 @@ const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) =>
             const { func, label, scope } = identifier;
             const { mapping } = identifier;
             if (!mappings) return;
+            const mappingToFunctions = func.map((item) => ({ func: item, variable: label }));
 
             const newMappingItem = {
               _id: ObjectID(),
               label: label,
               scope,
-              functions: [{ func, variable: label }],
+              functions: mappingToFunctions,
               type: mapping,
             };
             newMappings.push(newMappingItem);
