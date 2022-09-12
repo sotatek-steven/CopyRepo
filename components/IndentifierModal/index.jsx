@@ -11,18 +11,24 @@ import useObjectTab from '../ObjectTabPanel/hooks/useObjectTab';
 import ObjectID from 'bson-objectid';
 
 const ModalBody = styled('div')({
-  padding: '0px 30px',
+  padding: '20px 30px',
 });
 
 const ModalFooter = styled('div')({
   display: 'flex',
   justifyContent: 'end',
-  padding: '35px 30px 30px',
+  padding: '0px 30px 30px',
 });
 
 const SelectWrapper = styled('div')({
   marginBottom: 15,
 });
+
+const Message = styled('p')(({ theme }) => ({
+  color: theme.palette.primary.light,
+  margin: '0px 0px 20px',
+  fontFamily: 'Segoe UI',
+}));
 
 const generateTypeOfMapping = (mapping, stringbuffer = []) => {
   stringbuffer.push('mapping');
@@ -189,8 +195,9 @@ const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) =>
       }}>
       <ModalBox maxheight="700px">
         <ModalHeader type="warning" title="Unidentified identifiers" />
-        <Scrollbars style={{ marginTop: 45 }} autoHeightMax={460} autoHeight>
+        <Scrollbars autoHeightMax={460} autoHeight>
           <ModalBody>
+            <Message>{`A new state variable will be declared taking the same name of the identifier if you choose the option 'Declare new one'`}</Message>
             {identifiers &&
               identifiers.map((item, index) => {
                 const { type, isArray, label } = item;
