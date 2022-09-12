@@ -34,7 +34,7 @@ const Key = ({ value, type, id, updateKey }) => {
       {type !== PAIR_TYPE.first && <Line />}
       <LabelCustom>Key</LabelCustom>
 
-      <div style={{ width: '24%' }}>
+      <div style={{ width: '20%', marginLeft: 44 }}>
         <Select options={generateDataType()} value={value} onChange={handleChange} menuProps={true} />
       </div>
     </Container>

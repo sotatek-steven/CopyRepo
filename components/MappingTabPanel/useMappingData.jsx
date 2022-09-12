@@ -1,50 +1,17 @@
-import { REGEX } from '@/config/constant/regex';
-import _ from 'lodash';
+import useModule from '@/hooks/useModule';
 import { useDispatch, useSelector } from 'react-redux';
-const regex = new RegExp(REGEX.VARIABLE_NAME);
 
 const useMappingData = (id) => {
   const {
     variables: { mappings },
   } = useSelector((state) => state.userModule);
   const { userModule, mapping } = useDispatch();
+  const { checkValidateMapping } = useModule();
 
   const data = mappings.find((item) => item._id === id);
 
-  const duplicateNames = _.uniq(
-    mappings.map(({ label }) => label).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i)
-  );
-
   const updateValue = (newValue, oldValue) => {
     return typeof newValue !== 'undefined' ? newValue : oldValue;
-  };
-
-  const checkValidateMapping = (data) => {
-    let numErr = 0;
-    const duplicateNames = _.uniq(data.map(({ label }) => label).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i));
-
-    data.forEach((item) => {
-      if (item?.label.trim()) {
-        if (duplicateNames?.includes(item.label)) {
-          numErr++;
-          item.error = true;
-          item.errorText = 'Variable name cannot be duplicated';
-        } else {
-          if (!regex.test(item?.label?.trim())) {
-            numErr++;
-            item.error = true;
-            item.errorText = 'Invalid variable name';
-          } else {
-            item.error = false;
-            item.errorText = null;
-          }
-        }
-      } else if (item.errorText) {
-        numErr++;
-      }
-    });
-
-    return { data, numErr };
   };
 
   const updateData = ({ scope, label, functions, type }, isAddNew = false) => {
@@ -70,13 +37,14 @@ const useMappingData = (id) => {
       };
     });
 
-    const { data, numErr } = checkValidateMapping(updatedMapping);
+    const { data, numErr, funcIds } = checkValidateMapping(updatedMapping);
 
     mapping.setNumberError(numErr);
+    mapping.setErrorFunctions(funcIds);
     userModule.updateMappings(data);
   };
 
-  return [data, updateData, duplicateNames];
+  return [data, updateData, checkValidateMapping];
 };
 
 export default useMappingData;

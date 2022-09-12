@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import StructTabPanel from '../StructTabPanel';
 import EnumTabPanel from '../EnumTabPanel';
+import useStructPage from '../StructTabPanel/hooks/useStructPage';
 
 const ButtonWrapper = styled('div')(() => ({
   position: 'absolute',
@@ -60,6 +61,7 @@ const Library = () => {
   const { library } = useDispatch();
   const { originStructs, structs } = useSelector((state) => state.struct);
   const [activeTab, setActiveTab] = useState(getActiveTab(moduleModeState));
+  const { handleErrorStructs } = useStructPage();
 
   useEffect(() => {
     const fetchImportedLibraries = async () => {
@@ -80,7 +82,16 @@ const Library = () => {
   }, []);
 
   const handleBackToDesign = () => {
-    if (JSON.stringify(originStructs) !== JSON.stringify(structs)) {
+    // check error in struct page
+    if (handleErrorStructs()) {
+      return;
+    }
+
+    // delete errorName property
+    const tempStructs = [...structs];
+    tempStructs.forEach((item) => delete item.errorName);
+
+    if (JSON.stringify(originStructs) !== JSON.stringify(tempStructs)) {
       toast.error('You must save the module before leaving', {
         position: 'top-right',
         autoClose: 5000,
