@@ -1,4 +1,3 @@
-import { FUNCTION_TYPE, STRUCT_POOLINFO, STRUCT_USERINFO } from '@/config/constant/common';
 import { Box } from '@mui/system';
 import _ from 'lodash';
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
@@ -174,7 +173,7 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
     funcDepen.forEach((depen, index) => {
       position = {
         ...position,
-        y: position.y + (index + 1) * 120,
+        y: position.y - (index + 1) * 120,
       };
       newNode.push({
         id: depen?._id,
@@ -280,7 +279,7 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
       return {
         position: {
           ...position,
-          y: position.y + (index + 1) * 120,
+          y: position.y - (index + 1) * 120,
         },
         func: item?._id,
       };
