@@ -28,12 +28,12 @@ const useObjectTab = () => {
     return { data, numErr };
   };
 
-  const handleAddObject = ({ initObject = INIT_OBJECT_TYPE }) => {
+  const handleAddObject = (initObject = INIT_OBJECT_TYPE) => {
     const init = JSON.parse(JSON.stringify(initObject));
     const initData = init?.map((item) => {
       return {
         ...item,
-        _id: ObjectID(32).toHexString(),
+        _id: ObjectID(24).toHexString(),
       };
     });
     let data = _.concat(objects, initData);

@@ -213,11 +213,9 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
     const missingIdentifiers = allMissingIdentifiers.filter(
       (item, index) =>
         allMissingIdentifiers.findIndex((el) => {
-          delete el._id;
-          delete el.func;
-          delete item._id;
-          delete item.func;
-          return _.isEqual(item, el);
+          const _item = { ...item, _id: null, func: null };
+          const _el = { ...el, _id: null, func: null };
+          return _.isEqual(_item, _el);
         }) === index
     );
 

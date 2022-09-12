@@ -2,10 +2,13 @@ import { Modal, styled } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { ModalBox } from '../atom/ModalBox';
 import { PrimaryButton } from '../ButtonStyle';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import Scrollbars from 'react-custom-scrollbars';
 import SelectVariable from './SelectVariable';
 import { ModalHeader } from '../atom/Modal';
+import useValuesTab from '../ValuesPanel/hooks/useValuesTab';
+import useObjectTab from '../ObjectTabPanel/hooks/useObjectTab';
+import ObjectID from 'bson-objectid';
 
 const ModalBody = styled('div')({
   padding: '0px 30px',
@@ -43,6 +46,16 @@ const defaulItem = { value: 'declare new one', label: 'Declare new one' };
 const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) => {
   const moduleState = useSelector((state) => state.userModule);
   const [globalVariables, setGlobalVariables] = useState([]);
+  const [mappings, setMappings] = useState([]);
+
+  const { userModule } = useDispatch();
+  const { handleAddValues } = useValuesTab();
+  const { handleAddObject } = useObjectTab();
+
+  useEffect(() => {
+    const initialMappings = identifiers.map((item) => ({ identifier: item, selectedOption: defaulItem }));
+    setMappings(initialMappings);
+  }, [identifiers]);
 
   useEffect(() => {
     if (!moduleState.variables) return;
@@ -81,18 +94,107 @@ const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) =>
     });
 
     setGlobalVariables(globalVariables);
-  }, [moduleState.variables]);
+  }, [moduleState]);
+
+  const handleChange = (identifier, selectedOption) => {
+    const updatedMappings = mappings.map((item) => {
+      if (item.identifier.label === identifier.label)
+        return {
+          ...item,
+          selectedOption,
+        };
+      return item;
+    });
+    setMappings(updatedMappings);
+  };
+
+  // useEffect(() => {
+  //   console.log('mappings: ', mappings);
+  // }, [mappings]);
+
+  const handleSubmit = () => {
+    let newValues = [];
+    let newObjects = [];
+    let newMappings = moduleState?.variables?.mappings || [];
+
+    mappings.forEach((item) => {
+      const { identifier, selectedOption } = item;
+      if (selectedOption.value === 'declare new one') {
+        switch (identifier.objectType) {
+          case 'values': {
+            const { func, label, type, isArray, scope, constant, valueDefault } = identifier;
+            newValues.push({
+              label,
+              type,
+              isArray,
+              scope,
+              constant,
+              functionId: func,
+              functions: [`${func}-${label}`],
+              valueDefault,
+            });
+            break;
+          }
+          case 'objects': {
+            const { func, label, type, isArray, scope, constant, valueDefault } = identifier;
+            newObjects.push({
+              name: label,
+              item: type,
+              type: 'struct',
+              isArray,
+              scope,
+              constant,
+              functionId: func,
+              functions: [`${func}-${label}`],
+              valueDefault,
+            });
+            break;
+          }
+          case 'mappings': {
+            const { func, label, scope } = identifier;
+            const { mapping } = identifier;
+            if (!mappings) return;
+
+            const newMappingItem = {
+              _id: ObjectID(),
+              label: label,
+              scope,
+              functions: [{ func, variable: label }],
+              type: mapping,
+            };
+            newMappings.push(newMappingItem);
+
+            break;
+          }
+        }
+
+        return;
+      }
+    });
+    handleAddValues(newValues);
+    handleAddObject(newObjects);
+    userModule.updateMappings(newMappings);
+    onClose();
+  };
 
   return (
-    <Modal aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description" open={open} onClose={onClose}>
+    <Modal
+      aria-labelledby="modal-modal-title"
+      aria-describedby="modal-modal-description"
+      open={open}
+      onClose={(_, reason) => {
+        if (reason !== 'backdropClick') {
+          onClose();
+        }
+      }}>
       <ModalBox maxheight="700px">
-        <ModalHeader type="warning" title="Unidentified identifiers" onClose={onClose} />
+        <ModalHeader type="warning" title="Unidentified identifiers" />
         <Scrollbars style={{ marginTop: 45 }} autoHeightMax={460} autoHeight>
           <ModalBody>
             {identifiers &&
               identifiers.map((item, index) => {
-                const { type, isArray, label, objectType } = item;
-                let options = [{ ...defaulItem, category: objectType }];
+                const { type, isArray, label } = item;
+                let options = [{ ...defaulItem }];
                 globalVariables.forEach((element) => {
                   const { type: _type, isArray: _isArray, label: _label } = element;
 
@@ -103,9 +205,10 @@ const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) =>
                   <SelectWrapper key={index}>
                     <SelectVariable
                       redirectToAddField={redirectToAddField}
-                      variable={item}
+                      identifier={item}
                       label={`${label} ( ${type}, isArray: ${isArray} )`}
                       options={options}
+                      onChange={handleChange}
                     />
                   </SelectWrapper>
                 );
@@ -113,7 +216,7 @@ const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) =>
           </ModalBody>
         </Scrollbars>
         <ModalFooter>
-          <PrimaryButton onClick={onClose}>Continue</PrimaryButton>
+          <PrimaryButton onClick={handleSubmit}>Continue</PrimaryButton>
         </ModalFooter>
       </ModalBox>
     </Modal>

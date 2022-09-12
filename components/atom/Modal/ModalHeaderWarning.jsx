@@ -38,7 +38,7 @@ const ModalHeaderWarning = ({ title, onClose }) => {
         <WarningIcon />
         <Title>{title}</Title>
       </TitleWrapper>
-      <CloseButton onClick={onClose} />
+      {onClose && <CloseButton onClick={onClose} />}
     </Container>
   );
 };
