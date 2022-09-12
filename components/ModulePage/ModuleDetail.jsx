@@ -52,13 +52,7 @@ const ModuleDetail = ({ open, onClose, moduleId }) => {
   }, [open, moduleId]);
 
   return (
-    <FormModal
-      height={600}
-      width={750}
-      open={open}
-      onClose={onClose}
-      title={'Mintable Token Details'}
-      showFooter={false}>
+    <FormModal height={600} width={750} open={open} onClose={onClose} title={moduleInfo?.name} showFooter={false}>
       <Container>
         <GasContainer>
           <div className="title">Gas fee:</div>
