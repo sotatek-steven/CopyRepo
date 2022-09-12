@@ -1,12 +1,13 @@
-import { styled } from '@mui/material';
+import { styled, Tooltip } from '@mui/material';
 import React, { useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useSelector } from 'react-redux';
 import ActionPopover from './ActionPopover';
 import { Handle, Position } from 'react-flow-renderer';
+import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
 
-const Card = styled('article')(({ color, theme }) => ({
+const Card = styled('article')(({ color, theme, error }) => ({
   padding: '10px 15px',
   borderRadius: 30,
   width: 208,
@@ -16,6 +17,8 @@ const Card = styled('article')(({ color, theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   color: theme.palette.primary.contrastText,
+  border: error === 1 ? `solid 2px ${theme.palette.primary.red1}` : 'none',
+  position: 'relative',
 }));
 
 const CardHeader = styled('header')(() => ({
@@ -51,6 +54,21 @@ const Content = styled('p')(({ theme }) => ({
   wordBreak: 'break-all',
 }));
 
+const ErrorFlag = styled('div')(({ theme }) => ({
+  background: theme.palette.primary.light2,
+  display: 'flex',
+  alignItems: 'center',
+  textAlign: 'center',
+  justifyContent: 'center',
+  color: theme.palette.text.primary,
+  borderRadius: '5px 5px 0px 0px',
+  width: 21,
+  height: 19,
+  position: 'absolute',
+  right: '25px',
+  top: '-20px',
+}));
+
 const SimpleRectangleNode = ({ data, id }) => {
   const { name, onDeleteNode, _id: functionId, color } = data;
   const [anchorEl, setAnchorEl] = useState(null);
@@ -74,7 +92,15 @@ const SimpleRectangleNode = ({ data, id }) => {
 
   return (
     <>
-      <Card color={color}>
+      <Card color={color} error={0}>
+        <Tooltip
+          title={`The name of the variable mapped to this function identifier is duplicated with another declared variable. Please go to 'Add Fields' to changes the variable name. Or you can remove duplicated variables and map all of desired functions under a single variable`}
+          placement="top"
+          arrow>
+          <ErrorFlag>
+            <ErrorOutlineIcon fontSize="14px" />
+          </ErrorFlag>
+        </Tooltip>
         <CardHeader>
           <Button onClick={handlePopoverOpen}>
             <MoreVertIcon />
