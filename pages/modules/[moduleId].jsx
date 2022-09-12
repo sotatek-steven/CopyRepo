@@ -201,9 +201,9 @@ const ModulePage = () => {
   }, [moduleState.lines]);
 
   const handleChangeTabVertical = (e, newValue) => {
-    const valueError = valueHasError();
-    const objectError = objectHasError();
-    if (valueError || objectError) return;
+    // const valueError = valueHasError();
+    // const objectError = objectHasError();
+    // if (valueError || objectError) return;
 
     setTabVertical(newValue);
   };

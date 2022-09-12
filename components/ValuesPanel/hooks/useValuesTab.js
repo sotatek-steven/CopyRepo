@@ -23,7 +23,7 @@ const useValuesTab = () => {
     return { data, numErr };
   };
 
-  const handleAddValues = ({ initValue = INIT_VALUE_TYPE }) => {
+  const handleAddValues = (initValue = INIT_VALUE_TYPE) => {
     const init = JSON.parse(JSON.stringify(initValue));
     const initData = init?.map((item) => {
       return {
