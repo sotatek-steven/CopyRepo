@@ -18,11 +18,13 @@ const value = createModel({
     types: TYPES,
     count: 0,
     numberError: 0,
+    errorFunctions: [],
   },
   reducers: {
     setValues: (state, values) => ({ ...state, values }),
     setCount: (state, count) => ({ ...state, count }),
     setNumberError: (state, numberError) => ({ ...state, numberError }),
+    setErrorFunctions: (state, errorFunctions) => ({ ...state, errorFunctions }),
   },
   effects: (dispatch) => {
     return {};

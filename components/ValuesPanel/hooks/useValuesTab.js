@@ -1,5 +1,6 @@
-import { ELEMENT_TYPE, INIT_VALUE_TYPE } from '@/config/constant/common';
+import { ELEMENT_TYPE } from '@/config/constant/common';
 import { REGEX } from '@/config/constant/regex';
+import useModule from '@/hooks/useModule';
 import ObjectID from 'bson-objectid';
 import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,30 +10,25 @@ const regex = new RegExp(REGEX.VARIABLE_NAME);
 const useValuesTab = () => {
   const { values } = useSelector((state) => state.value);
   const { value, userModule } = useDispatch();
+  const { checkMapToFunction } = useModule();
 
   const checkValidateValue = (data, funcIds = []) => {
     let numErr = 0;
-
+    let listMapFunction = [];
     const duplicateNames = data.map(({ label }) => label).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i);
     data.forEach((item) => {
+      listMapFunction = _.concat(listMapFunction, item?.functions);
+
       if (item?.label) {
         if (duplicateNames?.includes(item.label)) {
           item.errorName = 'Variable name cannot be duplicated';
           numErr++;
-          const index = funcIds.findIndex((func) => func?.id === item?.functionId);
-
-          if (index > -1) {
-            funcIds[index].totalError++;
-          } else {
-            funcIds.push({
-              id: item?.functionId,
-              totalError: 1,
-            });
-          }
+          funcIds = _.concat(funcIds, item?.functionId);
         } else {
           if (!regex.test(item?.label?.trim())) {
             item.errorName = 'Invalid variable name';
             numErr++;
+            funcIds = _.concat(funcIds, item?.functionId);
           } else {
             item.errorName = null;
           }
@@ -41,6 +37,9 @@ const useValuesTab = () => {
         numErr++;
       }
     });
+
+    const errorMap = checkMapToFunction('values', listMapFunction);
+    funcIds = _.concat(_.uniq(_.compact(funcIds)), errorMap);
 
     return { data, numErr, funcIds };
   };
@@ -54,34 +53,33 @@ const useValuesTab = () => {
     });
     let data = _.concat(values, initData);
     let numberErr = 0;
-    let functionError = [];
 
     const { data: dataValidate, numErr, funcIds } = checkValidateValue(data);
     data = dataValidate;
     numberErr = numErr;
-    functionError = funcIds;
 
     value.setValues(data);
     value.setNumberError(numberErr);
+    value.setErrorFunctions(funcIds);
+
     const dataClone = convertToValuesModule(data);
     userModule.updateValues(dataClone);
-
-    return functionError;
   };
 
   const handleRemoveValue = (valueId) => {
     const iValue = values.findIndex(({ _id }) => _id === valueId);
     let data = [...values];
     let numberErr = 0;
-
     data.splice(iValue, 1);
 
-    const { data: dataValidate, numErr } = checkValidateValue(data);
+    const { data: dataValidate, numErr, funcIds } = checkValidateValue(data);
     data = dataValidate;
     numberErr = numErr;
 
     value.setValues(data);
     value.setNumberError(numberErr);
+    value.setErrorFunctions(funcIds);
+
     const dataClone = convertToValuesModule(data);
     userModule.updateValues(dataClone);
   };
@@ -139,12 +137,14 @@ const useValuesTab = () => {
         break;
     }
 
-    const { data: dataValidate, numErr } = checkValidateValue(data);
+    const { data: dataValidate, numErr, funcIds } = checkValidateValue(data);
     data = dataValidate;
     numberErr = numErr;
 
     value.setValues(data);
     value.setNumberError(numberErr);
+    value.setErrorFunctions(funcIds);
+
     const dataClone = convertToValuesModule(data);
     userModule.updateValues(dataClone);
   };
@@ -178,7 +178,7 @@ const useValuesTab = () => {
   };
 
   const converToValueShow = (data) => {
-    const cloneData = data?.map((item, iData) => {
+    const cloneData = data?.map((item) => {
       const functions = item?.functions?.map(({ func, variable }) => {
         return `${func}-${variable}`;
       });
@@ -186,7 +186,7 @@ const useValuesTab = () => {
       const valueDefault = item?.valueDefault?.join();
 
       return {
-        _id: iData,
+        _id: ObjectID(32).toHexString(),
         type: item?.type,
         isArray: item?.isArray,
         constant: item?.constant,

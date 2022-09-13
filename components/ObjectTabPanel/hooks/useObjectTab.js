@@ -1,6 +1,7 @@
 /* eslint-disable no-case-declarations */
 import { ELEMENT_TYPE, INIT_OBJECT_TYPE, OBJECT_TYPE } from '@/config/constant/common';
 import { REGEX } from '@/config/constant/regex';
+import useModule from '@/hooks/useModule';
 import ObjectID from 'bson-objectid';
 import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,29 +12,26 @@ const useObjectTab = () => {
   const { objects } = useSelector((state) => state.object);
   const moduleState = useSelector((state) => state.userModule);
   const { object, userModule } = useDispatch();
+  const { checkMapToFunction } = useModule();
 
   const checkValidateObject = (data, funcIds = []) => {
     let numErr = 0;
+    let listMapFunction = [];
+
     const duplicateNames = data.map(({ name }) => name).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i);
     data.forEach((item) => {
+      listMapFunction = _.concat(listMapFunction, item?.functions);
+
       if (item?.name) {
         if (duplicateNames?.includes(item.name)) {
           item.errorName = 'Variable name cannot be duplicated';
           numErr++;
-          const index = funcIds.findIndex((func) => func?.id === item?.functionId);
-
-          if (index > -1) {
-            funcIds[index].totalError++;
-          } else {
-            funcIds.push({
-              id: item?.functionId,
-              totalError: 1,
-            });
-          }
+          funcIds = _.concat(funcIds, item?.functionId);
         } else {
           if (!regex.test(item?.name?.trim())) {
             item.errorName = 'Invalid variable name';
             numErr++;
+            funcIds = _.concat(funcIds, item?.functionId);
           } else {
             item.errorName = null;
           }
@@ -42,6 +40,9 @@ const useObjectTab = () => {
         numErr++;
       }
     });
+
+    const errorMap = checkMapToFunction('objects', listMapFunction);
+    funcIds = _.concat(_.uniq(_.compact(funcIds)), errorMap);
 
     return { data, numErr, funcIds };
   };
@@ -55,19 +56,17 @@ const useObjectTab = () => {
     });
     let data = _.concat(objects, initData);
     let numberErr = 0;
-    let functionError = [];
 
     const { data: dataValidate, numErr, funcIds } = checkValidateObject(data);
     data = dataValidate;
     numberErr = numErr;
-    functionError = funcIds;
 
     object.setObjects(data);
     object.setNumberError(numberErr);
+    object.setErrorFunctions(funcIds);
+
     const dataClone = convertToObjectModule(data);
     userModule.updateObjects(dataClone);
-
-    return functionError;
   };
 
   const handleRemoveObject = (objectId) => {
@@ -77,12 +76,14 @@ const useObjectTab = () => {
 
     data.splice(iObject, 1);
 
-    const { data: dataValidate, numErr } = checkValidateObject(data);
+    const { data: dataValidate, numErr, funcIds } = checkValidateObject(data);
     data = dataValidate;
     numberErr = numErr;
 
     object.setObjects(data);
     object.setNumberError(numberErr);
+    object.setErrorFunctions(funcIds);
+
     const dataClone = convertToObjectModule(data);
     userModule.updateObjects(dataClone);
   };
@@ -153,12 +154,14 @@ const useObjectTab = () => {
         break;
     }
 
-    const { data: dataValidate, numErr } = checkValidateObject(data);
+    const { data: dataValidate, numErr, funcIds } = checkValidateObject(data);
     data = dataValidate;
     numberErr = numErr;
 
     object.setObjects(data);
     object.setNumberError(numberErr);
+    object.setErrorFunctions(funcIds);
+
     const dataClone = convertToObjectModule(data);
     userModule.updateObjects(dataClone);
   };

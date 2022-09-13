@@ -52,7 +52,7 @@ const Value = ({ value, type, lenthOfData, updateValue, returnToPreviousValue, i
     <Container>
       {type !== PAIR_TYPE.first && <Line />}
       <LabelCustom>Value</LabelCustom>
-      <div style={{ width: '24%' }}>
+      <div style={{ width: '20%', marginLeft: 30 }}>
         {(type === PAIR_TYPE.first && lenthOfData === 1) || type === PAIR_TYPE.last ? (
           <Select value={value} options={options} onChange={handleChange} menuProps={true} />
         ) : (

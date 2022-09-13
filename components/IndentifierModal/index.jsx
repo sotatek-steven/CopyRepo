@@ -9,6 +9,7 @@ import { ModalHeader } from '../atom/Modal';
 import useValuesTab from '../ValuesPanel/hooks/useValuesTab';
 import useObjectTab from '../ObjectTabPanel/hooks/useObjectTab';
 import ObjectID from 'bson-objectid';
+import useModule from '@/hooks/useModule';
 
 const ModalBody = styled('div')({
   padding: '20px 30px',
@@ -54,9 +55,10 @@ const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) =>
   const [globalVariables, setGlobalVariables] = useState([]);
   const [mappings, setMappings] = useState([]);
 
-  const { userModule } = useDispatch();
+  const { userModule, mapping } = useDispatch();
   const { handleAddValues } = useValuesTab();
   const { handleAddObject } = useObjectTab();
+  const { checkValidateMapping } = useModule();
 
   useEffect(() => {
     const initialMappings = identifiers.map((item) => ({ identifier: item, selectedOption: defaulItem }));
@@ -182,6 +184,11 @@ const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) =>
     });
     handleAddValues(newValues);
     handleAddObject(newObjects);
+
+    const { numErr, funcIds } = checkValidateMapping(newMappings);
+    mapping.setNumberError(numErr);
+    mapping.setErrorFunctions(funcIds);
+
     userModule.updateMappings(newMappings);
     onClose();
   };

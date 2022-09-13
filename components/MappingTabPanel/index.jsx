@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { compareMappingVariable } from './utils';
 import Scrollbars from 'react-custom-scrollbars';
 import ObjectID from 'bson-objectid';
+import useModule from '@/hooks/useModule';
 
 const Container = styled('div')({
   paddingLeft: 30,
@@ -14,8 +15,9 @@ const Container = styled('div')({
 
 const MappingTabPanel = () => {
   const moduleState = useSelector((state) => state.userModule);
-  const { userModule, mappingVariableOptions } = useDispatch();
+  const { userModule, mappingVariableOptions, mapping } = useDispatch();
   const [error, setError] = useState(true);
+  const { checkValidateMapping } = useModule();
 
   //update mapping variable list
   useEffect(() => {
@@ -88,6 +90,9 @@ const MappingTabPanel = () => {
     } = moduleState;
     if (!mappings) return;
     const updatedMappings = mappings.filter((item) => item._id !== mappingId);
+    const { data, numErr, funcIds } = checkValidateMapping(updatedMappings);
+    mapping.setNumberError(numErr);
+    mapping.setErrorFunctions(funcIds);
     userModule.updateMappings(updatedMappings);
 
     mappingVariableOptions.unregisterAllOptions(mappingId);
