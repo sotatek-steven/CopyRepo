@@ -8,6 +8,7 @@ const mapping = createModel({
   reducers: {
     setNumberError: (state, numberError) => ({ ...state, numberError }),
     setErrorFunctions: (state, errorFunctions) => ({ ...state, errorFunctions }),
+    resetError: (state) => ({ ...state, numberError: 0, errorFunctions: [] }),
   },
   effects: (dispatch) => {
     return {};

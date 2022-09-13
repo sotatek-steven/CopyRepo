@@ -7,7 +7,6 @@ const useModule = () => {
   const moduleState = useSelector((state) => state.userModule);
 
   const checkMapToFunction = (objectType, mapToFunc) => {
-    console.log('moduleState', moduleState.sources.functions);
     const { functions } = moduleState.sources;
     const globalVariables = [];
     functions?.forEach((func) => {
@@ -17,7 +16,6 @@ const useModule = () => {
         }
       });
     });
-    console.log('globalVariables', globalVariables);
     // get difference
     const difference = _.difference(globalVariables, mapToFunc);
     // get error functionId

@@ -100,6 +100,7 @@ const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
             onChange={(e) => handleChangeValue(value?._id, 'valueDefault', e, ELEMENT_TYPE.INPUT)}
             disabled={value.isDefaultValue === true}
             placeholder={getPlaceholderDefaultValue}
+            errorText={value?.errorValueDefault}
           />
         </Item>
       </Tooltip>

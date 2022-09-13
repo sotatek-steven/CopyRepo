@@ -33,7 +33,7 @@ const useValuesTab = () => {
             item.errorName = null;
           }
         }
-      } else if (item?.errorName) {
+      } else if (item?.errorName || item?.errorValueDefault) {
         numErr++;
       }
     });
@@ -48,6 +48,7 @@ const useValuesTab = () => {
     const initData = initValue?.map((item) => {
       return {
         ...item,
+        isDefaultValue: !item?.valueDefault,
         _id: ObjectID(32).toHexString(),
       };
     });
@@ -101,6 +102,13 @@ const useValuesTab = () => {
           }
         }
 
+        if (field === 'valueDefault') {
+          data[iValue]['errorValueDefault'] = null;
+          if (!data[iValue]['isDefaultValue'] && !e.target.value?.trim()) {
+            data[iValue].errorValueDefault = 'Variable value should not be empty';
+          }
+        }
+
         break;
 
       case ELEMENT_TYPE.SELECT:
@@ -122,6 +130,7 @@ const useValuesTab = () => {
             data[iValue][field] = e?.value;
             if (e?.value) {
               data[iValue]['valueDefault'] = '';
+              data[iValue]['errorValueDefault'] = null;
             }
             break;
           case 'functions':
@@ -211,6 +220,11 @@ const useValuesTab = () => {
     data.forEach((item) => {
       if (!item?.label) {
         item.errorName = 'Variable name should not be empty';
+        isError = true;
+        numberErr++;
+      }
+      if (!item?.isDefaultValue && !item?.valueDefault) {
+        item.errorValueDefault = 'Variable value should not be empty';
         isError = true;
         numberErr++;
       }
