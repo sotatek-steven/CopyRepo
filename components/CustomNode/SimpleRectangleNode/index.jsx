@@ -1,11 +1,12 @@
 import { styled, Tooltip } from '@mui/material';
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import CloseIcon from '@mui/icons-material/Close';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import { useSelector } from 'react-redux';
 import ActionPopover from './ActionPopover';
 import { Handle, Position } from 'react-flow-renderer';
 import ErrorOutlineIcon from '@mui/icons-material/ErrorOutline';
+import _ from 'lodash';
 
 const Card = styled('article')(({ color, theme, error }) => ({
   padding: '10px 15px',
@@ -73,6 +74,15 @@ const SimpleRectangleNode = ({ data, id }) => {
   const { name, onDeleteNode, _id: functionId, color } = data;
   const [anchorEl, setAnchorEl] = useState(null);
   const moduleState = useSelector((state) => state.userModule);
+  const mapping = useSelector((state) => state.mapping);
+  const object = useSelector((state) => state.object);
+  const value = useSelector((state) => state.value);
+  const error = useMemo(() => {
+    const errorFunctions = mapping.errorFunctions.concat(object.errorFunctions, value.errorFunctions);
+    const uniqErrorFunctions = _.uniq(errorFunctions);
+
+    return uniqErrorFunctions.includes(id);
+  }, [mapping, object, value]);
 
   const open = Boolean(anchorEl);
 
@@ -92,15 +102,17 @@ const SimpleRectangleNode = ({ data, id }) => {
 
   return (
     <>
-      <Card color={color} error={0}>
-        <Tooltip
-          title={`The name of the variable mapped to this function identifier is duplicated with another declared variable. Please go to 'Add Fields' to changes the variable name. Or you can remove duplicated variables and map all of desired functions under a single variable`}
-          placement="top"
-          arrow>
-          <ErrorFlag>
-            <ErrorOutlineIcon fontSize="14px" />
-          </ErrorFlag>
-        </Tooltip>
+      <Card color={color} error={error ? 1 : 0}>
+        {error && (
+          <Tooltip
+            title={`The name of the variable mapped to this function identifier is duplicated with another declared variable. Please go to 'Add Fields' to changes the variable name. Or you can remove duplicated variables and map all of desired functions under a single variable`}
+            placement="top"
+            arrow>
+            <ErrorFlag>
+              <ErrorOutlineIcon fontSize="14px" />
+            </ErrorFlag>
+          </Tooltip>
+        )}
         <CardHeader>
           <Button onClick={handlePopoverOpen}>
             <MoreVertIcon />
