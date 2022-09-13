@@ -25,7 +25,7 @@ const SaveContractButton = () => {
   const saveContract = async () => {
     setLoading(true);
     const { code, message, data } = await contract.updateContract();
-    setLoading(false);
+
     const errors = data.errors;
     if (code == HTTP_CODE.SUCCESS) {
       if (errors.length > 0) {
@@ -57,6 +57,7 @@ const SaveContractButton = () => {
       return;
     }
     toast.error('saving contract failed!', message);
+    setLoading(false);
   };
 
   return (

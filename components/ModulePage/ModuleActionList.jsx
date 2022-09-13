@@ -12,6 +12,7 @@ import ErrorsCompileModal from '../ErrorsCompileModal';
 import useEventErrorTab from '../EventErrorTabPanel/hooks/useEventErrorTab';
 import useEnumPage from '../EnumTabPanel/hooks/useEnumPage';
 import useValuesTab from '../ValuesPanel/hooks/useValuesTab';
+import SavingScreen from '../Saving';
 
 export const useStyles = makeStyles(() => {
   return {
@@ -32,6 +33,7 @@ const ModuleActionList = () => {
   const { owner } = useSelector((state) => state.userModule);
   const [errorsModalOpen, setErrorsModalOpen] = useState(false);
   const [errors, setErrors] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const { handleErrorStructs } = useStructPage();
   const { valueHasError } = useValuesTab();
@@ -41,6 +43,7 @@ const ModuleActionList = () => {
   const { fetchDetailModule } = useModulePage();
 
   const saveModule = async () => {
+    setLoading(true);
     const isErrorStruct = handleErrorStructs();
     if (isErrorStruct) {
       return;
@@ -68,6 +71,7 @@ const ModuleActionList = () => {
         });
       }
     }
+    setLoading(false);
   };
 
   const handleErrorsModalClose = () => {
@@ -81,6 +85,7 @@ const ModuleActionList = () => {
         {owner?.toLowerCase() !== 'system' && <PrimaryButton onClick={saveModule}>Save Module</PrimaryButton>}
         <ErrorsCompileModal open={errorsModalOpen} onClose={handleErrorsModalClose} errors={errors} />
       </Container>
+      {loading && <SavingScreen />}
     </div>
   );
 };
