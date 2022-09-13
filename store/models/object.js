@@ -23,6 +23,7 @@ const object = createModel({
     setObjects: (state, objects) => ({ ...state, objects }),
     setNumberError: (state, numberError) => ({ ...state, numberError }),
     setErrorFunctions: (state, errorFunctions) => ({ ...state, errorFunctions }),
+    resetError: (state) => ({ ...state, numberError: 0, errorFunctions: [] }),
   },
   effects: (dispatch) => {
     return {};

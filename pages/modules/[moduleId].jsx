@@ -159,9 +159,7 @@ const ModulePage = () => {
   const { numberError: numberErrorValue } = useSelector((state) => state.value);
   const { numberError: numberErrorMapping } = useSelector((state) => state.mapping);
   const { numberError: numberErrorEvent } = useSelector((state) => state.eventError);
-  const { moduleMode, template } = useDispatch();
-  const { valueHasError } = useValuesTab();
-  const { objectHasError } = useObjectTab();
+  const { moduleMode, template, value, object, mapping } = useDispatch();
   const { fetchDetailModule } = useModulePage();
   const [tabVertical, setTabVertical] = useState('canvas');
   const [tabHorizontal, setTabHorizontal] = useState('logic');
@@ -179,6 +177,9 @@ const ModulePage = () => {
   useEffect(() => {
     fetchDetailModule();
     return () => {
+      value.resetError();
+      object.resetError();
+      mapping.resetError();
       userModule.set({});
     };
   }, [moduleId]);
