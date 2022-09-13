@@ -22,6 +22,13 @@ export const PrimaryButton = styled('button')(
     ':hover': {
       opacity: 0.9,
     },
+    '&:disabled': {
+      backgroundColor: '#dedede',
+      borderColor: '#dedede',
+      cursor: 'not-allowed',
+      color: 'gray',
+      opacity: 0.9,
+    },
   })
 );
 
