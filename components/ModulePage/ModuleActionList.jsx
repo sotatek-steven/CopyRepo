@@ -57,7 +57,10 @@ const ModuleActionList = () => {
     const eventError = checkErrorTab();
     const enumError = checkErrorEnumTab();
 
-    if (valueError || objectError || !!mappingError || eventError || enumError) return;
+    if (valueError || objectError || !!mappingError || eventError || enumError) {
+      setLoading(false);
+      return;
+    }
 
     const { code, data } = await userModule.updateModule();
 
