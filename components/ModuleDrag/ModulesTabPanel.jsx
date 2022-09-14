@@ -80,7 +80,7 @@ const ModulesTab = () => {
                   key={index}
                   data={item}
                   fetchModules={fetchModules}
-                  nodeType="rectangle"
+                  nodeType="module"
                   setDataClone={setDataClone}
                   setIsOpenModuleInfo={setIsOpenModuleInfo}
                 />

@@ -1,20 +1,17 @@
 import { Handle, Position } from 'react-flow-renderer';
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { styled } from '@mui/material';
-import SmartContractModal from '../SmartcontractModal';
 import CloseIcon from '@mui/icons-material/Close';
+import ModuleActionPopover from './ModuleActionPopover';
+import SmartContractModal from '@/components/SmartcontractModal';
 
-const Card = styled('div')(({ theme, color }) => ({
+const Card = styled('div')(({ theme }) => ({
   border: 'solid 1px',
   borderRadius: '4px',
   width: '260px',
-  backgroundColor: theme.palette.mode === 'dark' ? '#BEA75A' : '',
+  backgroundColor: theme.shape.backgroundNode,
   cursor: 'pointer',
 }));
-
-// const Item = styled('div')(({ theme }) => ({
-//   color: theme.palette.mode === 'dark' ? '#F7F7F7' : '#F7F7F7',
-// }));
 
 const CardTitle = styled('div')(({ theme }) => ({
   padding: '10px',
@@ -22,6 +19,7 @@ const CardTitle = styled('div')(({ theme }) => ({
   fontSize: 14,
   fontWeight: 600,
   ...theme.components.truncate.singleLineEllipsis,
+  flexGrow: 1,
 }));
 
 const CardBody = styled('div')(({ theme }) => ({
@@ -45,24 +43,17 @@ const Description = styled('div')(({ theme }) => ({
   ...theme.components.truncate.threeLineEllipsis,
 }));
 
-const CloseBtn = styled('div')(({ theme }) => ({
-  padding: '10px',
-  color: 'white',
-  transition: 'color, 0.2s',
-  ':hover': {
-    color: `${theme.palette.text.primary}9c`,
-  },
-}));
-
-// const Status = ({ label, count }) => (
-//   <Item>
-//     <div style={{ fontSize: '18px', fontWeight: 600 }}>{count}</div>
-//     <div style={{ fontSize: '13px', fontWeight: 500 }}>{label}</div>
-//   </Item>
-// );
+const Button = styled('button')({
+  border: 'none',
+  outline: 'none',
+  backgroundColor: 'rgba(0, 0, 0, 0)',
+  padding: 5,
+  cursor: 'pointer',
+});
 
 const RectangleNode = ({ data, id }) => {
   const { description, code, name, onDeleteNode, _id: moduleId, event, color } = data;
+
   const deleteModule = (event) => {
     event.stopPropagation();
     if (!onDeleteNode) return;
@@ -79,43 +70,25 @@ const RectangleNode = ({ data, id }) => {
         <div
           style={{
             display: 'flex',
-            justifyContent: 'space-between',
           }}>
           <CardTitle>
             {code}: {name}
           </CardTitle>
-          <CloseBtn onClick={deleteModule}>
-            <CloseIcon sx={{ fontSize: 17, color: '#000000' }} />
-          </CloseBtn>
+          <Button>
+            <ModuleActionPopover data={data} />
+          </Button>
+
+          <Button onClick={deleteModule}>
+            <CloseIcon sx={{ fontSize: 17 }} />
+          </Button>
         </div>
 
         <CardBody>
-          {/* <div style={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            marginBottom: '10px',
-          }}>
-            <Status label="Tasks" count={4} />
-            <Status label="Functions" count={13} />
-            <Status label="API Services" count={6} />
-          </div> */}
           <Label> Description</Label>
           <Description>{description}</Description>
         </CardBody>
         <Handle type="target" position={Position.Top} id="a" style={{ background: '#555' }} />
-        {/* <Handle
-          type="target"
-          position={Position.Right}
-          id="b"
-          style={{ background: '#555' }}
-        /> */}
         <Handle type="source" position={Position.Bottom} id="c" style={{ background: '#555' }} />
-        {/* <Handle
-          type="source"
-          position={Position.Left}
-          style={{ background: '#555' }}
-          id="d"
-        /> */}
         <div>{data.text}</div>
       </Card>
 

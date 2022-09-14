@@ -1,5 +1,5 @@
 import OvalNode from './OvalNode';
-import RectangleNode from './RectangleNode';
+import ModuleNode from './ModuleNode';
 import SimpleRectangleNode from './SimpleRectangleNode';
 import CircleNode from './CircleNode';
 import DeclarationNode from './DeclarationNode';
@@ -11,7 +11,7 @@ import ConditionNode from './ConditionNode';
 import ParentNode from './ParentNode';
 
 const CustomNodes = {
-  rectangle: RectangleNode,
+  module: ModuleNode,
   oval: OvalNode,
   simpleRectangle: SimpleRectangleNode,
   circle: CircleNode,
