@@ -19,7 +19,7 @@ const FormModal = ({
 }) => {
   const handleSubmit = async (event) => {
     event.currentTarget.disabled = true;
-    onConfirm();
+    onConfirm(event);
   };
 
   return (

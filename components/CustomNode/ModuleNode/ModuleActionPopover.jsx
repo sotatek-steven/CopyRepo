@@ -1,10 +1,12 @@
 import { MODE, MODE_ACTION_MODULE, MODULE_OWNER } from '@/config/constant/common';
 import { Popover, styled } from '@mui/material';
 import { useRouter } from 'next/router';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import ModuleInfoModal from '@/components/ModulePage/ModuleInfoModal';
 import ModuleDetail from '@/components/ModulePage/ModuleDetail';
+import { useMemo } from 'react';
+import { useDispatch } from 'react-redux';
 const Container = styled('div')(({ theme }) => ({
   background: theme.palette.background.default,
   width: 125,
@@ -50,6 +52,14 @@ const ModuleActionPopover = ({ data }) => {
   const [isOpenModuleDetail, setIsOpenModuleDetail] = useState(false);
   const [dataClone, setDataClone] = useState({});
   const [isOpenModuleInfo, setIsOpenModuleInfo] = useState(false);
+  const { userModule } = useDispatch();
+
+  const [moduleInfo, setModuleInfo] = useState({});
+  useEffect(async () => {
+    if (!data) return {};
+    const moduleData = await userModule.getDetailModule(data._id);
+    setModuleInfo(moduleData);
+  }, [data]);
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
@@ -133,7 +143,7 @@ const ModuleActionPopover = ({ data }) => {
           })}
         </Container>
       </Popover>
-      <ModuleDetail open={isOpenModuleDetail} onClose={() => setIsOpenModuleDetail(false)} moduleId={data._id} />
+      <ModuleDetail open={isOpenModuleDetail} onClose={() => setIsOpenModuleDetail(false)} moduleInfo={moduleInfo} />
 
       <ModuleInfoModal mode={MODE.CLONE} open={isOpenModuleInfo} onClose={handleOpenModuleInfo} data={dataClone} />
     </>
