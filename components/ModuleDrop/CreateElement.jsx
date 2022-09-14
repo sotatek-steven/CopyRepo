@@ -6,7 +6,7 @@ export const generateEdgeId = (source, target) => `e${source}-${target}`;
 
 export const createNodes = (modulesData) => {
   const nodes = modulesData.map((item) => {
-    const type = 'rectangle';
+    const type = 'module';
     const position = {
       x: item.position.left,
       y: item.position.top,
