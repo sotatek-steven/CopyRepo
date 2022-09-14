@@ -44,7 +44,7 @@ const useMappingData = (id) => {
     userModule.updateMappings(data);
   };
 
-  return [data, updateData, checkValidateMapping];
+  return [data, updateData];
 };
 
 export default useMappingData;

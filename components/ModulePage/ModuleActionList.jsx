@@ -12,6 +12,7 @@ import ErrorsCompileModal from '../ErrorsCompileModal';
 import useEventErrorTab from '../EventErrorTabPanel/hooks/useEventErrorTab';
 import useEnumPage from '../EnumTabPanel/hooks/useEnumPage';
 import useValuesTab from '../ValuesPanel/hooks/useValuesTab';
+import useModule from '@/hooks/useModule';
 import SavingScreen from '../Saving';
 
 export const useStyles = makeStyles(() => {
@@ -30,7 +31,7 @@ const Container = styled('div')(() => ({
 const ModuleActionList = () => {
   const { userModule, struct } = useDispatch();
   const { structs } = useSelector((state) => state.struct);
-  const { owner } = useSelector((state) => state.userModule);
+  const { owner, variables } = useSelector((state) => state.userModule);
   const [errorsModalOpen, setErrorsModalOpen] = useState(false);
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -41,6 +42,7 @@ const ModuleActionList = () => {
   const { checkErrorTab } = useEventErrorTab();
   const { checkErrorEnumTab } = useEnumPage();
   const { fetchDetailModule } = useModulePage();
+  const { checkValidateMapping } = useModule();
 
   const saveModule = async () => {
     setLoading(true);
@@ -51,10 +53,11 @@ const ModuleActionList = () => {
 
     const valueError = valueHasError();
     const objectError = objectHasError();
+    const { numErr: mappingError } = checkValidateMapping(variables.mappings);
     const eventError = checkErrorTab();
     const enumError = checkErrorEnumTab();
 
-    if (valueError || objectError || eventError || enumError) return;
+    if (valueError || objectError || !!mappingError || eventError || enumError) return;
 
     const { code, data } = await userModule.updateModule();
 
