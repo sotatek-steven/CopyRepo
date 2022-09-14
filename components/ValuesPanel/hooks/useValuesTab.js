@@ -33,7 +33,10 @@ const useValuesTab = () => {
             item.errorName = null;
           }
         }
-      } else if (item?.errorName || item?.errorValueDefault) {
+      } else if (item?.errorName) {
+        numErr++;
+      }
+      if (item?.errorValueDefault) {
         numErr++;
       }
     });
@@ -124,6 +127,12 @@ const useValuesTab = () => {
             if (e?.value) {
               data[iValue]['label'] = data[iValue]['label'].toUpperCase();
               data[iValue]['isArray'] = false;
+
+              if (e?.value === 'constant') {
+                data[iValue]['isDefaultValue'] = false;
+              } else if (e?.value === 'immutable') {
+                data[iValue]['isDefaultValue'] = true;
+              }
             }
             break;
           case 'isDefaultValue':
@@ -131,6 +140,11 @@ const useValuesTab = () => {
             if (e?.value) {
               data[iValue]['valueDefault'] = '';
               data[iValue]['errorValueDefault'] = null;
+              data[iValue]['constant'] =
+                data[iValue]['constant'] === 'constant' ? 'immutable' : data[iValue]['constant'];
+            } else {
+              data[iValue]['constant'] =
+                data[iValue]['constant'] === 'immutable' ? 'constant' : data[iValue]['constant'];
             }
             break;
           case 'functions':
@@ -220,6 +234,9 @@ const useValuesTab = () => {
     data.forEach((item) => {
       if (!item?.label) {
         item.errorName = 'Variable name should not be empty';
+        isError = true;
+        numberErr++;
+      } else if (!!item?.errorName || !!item?.errorValueDefault) {
         isError = true;
         numberErr++;
       }
