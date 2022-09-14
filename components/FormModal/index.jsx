@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Modal } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import { BodyContent, CloseButton, Footer, Header, ModalBox, Title } from './FormModal.style';
@@ -18,7 +18,6 @@ const FormModal = ({
   showSave = true,
 }) => {
   const handleSubmit = async (event) => {
-    event.currentTarget.disabled = true;
     onConfirm(event);
   };
 
