@@ -6,6 +6,7 @@ import useValuesTab from '@/components/ValuesPanel/hooks/useValuesTab';
 import { EVENT_ERROR_TYPE, INIT_VALUE_TYPE } from '@/config/constant/common';
 import _ from 'lodash';
 import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 const useModulePage = () => {
@@ -16,39 +17,45 @@ const useModulePage = () => {
   const { converToValueShow } = useValuesTab();
   const { convertToEventErrorShow } = useEventErrorTab();
   const router = useRouter();
+  const [loading, setLoading] = useState(false);
   const { moduleId } = router.query;
 
   const fetchDetailModule = async () => {
-    if (!moduleId) return;
-    object.setObjects([]);
-    value.setValues(INIT_VALUE_TYPE);
-    const data = await userModule.getDetailModule(moduleId);
-    const events = data?.sources?.events.map((item) => {
-      return {
-        ...item,
-        type: EVENT_ERROR_TYPE.EVENT,
-      };
-    });
-    const errors = data?.sources?.errors.map((item) => {
-      return {
-        ...item,
-        type: EVENT_ERROR_TYPE.ERROR,
-      };
-    });
+    setLoading(true);
+    try {
+      if (!moduleId) return;
+      object.setObjects([]);
+      value.setValues(INIT_VALUE_TYPE);
+      const data = await userModule.getDetailModule(moduleId);
+      const events = data?.sources?.events.map((item) => {
+        return {
+          ...item,
+          type: EVENT_ERROR_TYPE.EVENT,
+        };
+      });
+      const errors = data?.sources?.errors.map((item) => {
+        return {
+          ...item,
+          type: EVENT_ERROR_TYPE.ERROR,
+        };
+      });
 
-    await functions.getAllUserFunctions();
-    getStructs(data?.sources?.structs);
-    getEnums(data?.sources?.enums);
-    convertToObjectShow(data?.variables?.structs);
-    converToValueShow(data?.variables?.values);
-    convertToEventErrorShow(_.concat(events, errors));
-    userModule.set(data);
-    initialModule.setData(data);
+      await functions.getAllUserFunctions();
+      getStructs(data?.sources?.structs);
+      getEnums(data?.sources?.enums);
+      convertToObjectShow(data?.variables?.structs);
+      converToValueShow(data?.variables?.values);
+      convertToEventErrorShow(_.concat(events, errors));
+      userModule.set(data);
+      initialModule.setData(data);
+    } catch (error) {
+      console.log('error');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  return {
-    fetchDetailModule,
-  };
+  return { loading, fetchDetailModule };
 };
 
 export default useModulePage;

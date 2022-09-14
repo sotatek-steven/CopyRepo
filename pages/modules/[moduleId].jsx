@@ -16,9 +16,8 @@ import IconAddField from '@/assets/icon/IconAddField.svg';
 import { createNodes } from '@/components/FunctionCanvas/CreateElement';
 import FunctionCanvas from '@/components/FunctionCanvas';
 import AddFieldTab from '@/components/ModulePage/AddFieldTab';
-import useObjectTab from '@/components/ObjectTabPanel/hooks/useObjectTab';
 import useModulePage from '@/components/ModulePage/hooks/useModulePage';
-import useValuesTab from '@/components/ValuesPanel/hooks/useValuesTab';
+import SavingScreen from '@/components/Saving';
 
 const ContentWapper = styled('div')(() => ({
   display: 'flex',
@@ -155,12 +154,12 @@ const ModulePage = () => {
   const { moduleId } = router.query;
   const moduleModeState = useSelector((state) => state.moduleMode);
   const moduleState = useSelector((state) => state.userModule);
-  const { numberError: numberErrorObject } = useSelector((state) => state.object);
-  const { numberError: numberErrorValue } = useSelector((state) => state.value);
+  const { objects, numberError: numberErrorObject } = useSelector((state) => state.object);
+  const { values, numberError: numberErrorValue } = useSelector((state) => state.value);
   const { numberError: numberErrorMapping } = useSelector((state) => state.mapping);
-  const { numberError: numberErrorEvent } = useSelector((state) => state.eventError);
-  const { moduleMode, template, value, object, mapping } = useDispatch();
-  const { fetchDetailModule } = useModulePage();
+  const { dataEventError, numberError: numberErrorEvent } = useSelector((state) => state.eventError);
+  const { moduleMode, template, value, object, mapping, modules } = useDispatch();
+  const { fetchDetailModule, loading } = useModulePage();
   const [tabVertical, setTabVertical] = useState('canvas');
   const [tabHorizontal, setTabHorizontal] = useState('logic');
   const [nodes, setNodes] = useState([]);
@@ -169,6 +168,35 @@ const ModulePage = () => {
   const [sources, setSource] = useState(null);
   const [addFieldTab, setAddFieldTab] = useState('values');
   const [totalError, setTotalError] = useState(0);
+
+  // Variable name of All Tab
+  useEffect(() => {
+    const listVariableName = [];
+    objects.forEach((item) => {
+      if (item?.name) {
+        listVariableName.push(item?.name);
+      }
+    });
+    values.forEach((item) => {
+      if (item?.label) {
+        listVariableName.push(item?.label);
+      }
+    });
+    dataEventError.forEach((item) => {
+      if (item?.name) {
+        listVariableName.push(item?.name);
+      }
+    });
+    moduleState?.variables?.mappings?.forEach((item) => {
+      if (item?.label) {
+        listVariableName.push(item?.label);
+      }
+    });
+
+    const duplicateNames = listVariableName.map((item) => item).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i);
+
+    modules.setDuplicateNames(duplicateNames);
+  }, [objects, values, dataEventError, moduleState?.variables?.mappings]);
 
   useEffect(() => {
     setTotalError(numberErrorObject + numberErrorValue + numberErrorMapping + numberErrorEvent);
@@ -217,6 +245,8 @@ const ModulePage = () => {
   if (moduleModeState !== ModuleMode.DESIGN) return <Library />;
   return (
     <TabContext value={tabVertical}>
+      {loading && <SavingScreen title="Loading" />}
+
       <TabListContainer>
         <TabListContent
           orientation="vertical"

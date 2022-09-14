@@ -254,9 +254,10 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
       const { newNode, listFunc, listStruct, listEnum } = createNodeFromFunc(data, type, position);
 
       //open Identifier modal
-      const isOpen = !!data.globalVariables.length;
+      const missingIdentify = getMissingIdentifiers(listFunc);
+      const isOpen = !!missingIdentify.length;
       setIdentifierModalOpen(isOpen);
-      setMissingIdentifiers(getMissingIdentifiers(listFunc));
+      setMissingIdentifiers(missingIdentify);
 
       setNodes((nds) => _.unionBy(_.concat(nds, newNode), 'id'));
       addNewFuctionToModule(listFunc, position);

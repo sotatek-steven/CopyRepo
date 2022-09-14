@@ -5,11 +5,11 @@ const regex = new RegExp(REGEX.VARIABLE_NAME);
 
 const useModule = () => {
   const moduleState = useSelector((state) => state.userModule);
+  const { duplicateNames } = useSelector((state) => state.modules);
 
   const checkMapToFunction = (objectType, mapToFunc) => {
-    const { functions } = moduleState.sources;
     const globalVariables = [];
-    functions?.forEach((func) => {
+    moduleState.sources?.functions?.forEach((func) => {
       func?.globalVariables?.forEach((vari) => {
         if (vari?.objectType === objectType) {
           globalVariables.push(`${func?._id}-${vari?.label}`);
@@ -37,7 +37,7 @@ const useModule = () => {
     let numErr = 0;
     let listMapFunction = [];
 
-    const duplicateNames = _.uniq(data?.map(({ label }) => label).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i));
+    // const duplicateNames = _.uniq(data?.map(({ label }) => label).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i));
 
     data.forEach((item) => {
       if (item?.label.trim()) {
