@@ -3,19 +3,28 @@ import { REGEX } from '@/config/constant/regex';
 import useModule from '@/hooks/useModule';
 import ObjectID from 'bson-objectid';
 import _ from 'lodash';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 const regex = new RegExp(REGEX.VARIABLE_NAME);
 
 const useValuesTab = () => {
   const { values } = useSelector((state) => state.value);
+  const { duplicateNames } = useSelector((state) => state.modules);
   const { value, userModule } = useDispatch();
   const { checkMapToFunction } = useModule();
+
+  useEffect(() => {
+    const { data, numErr, funcIds } = checkValidateValue(values);
+    value.setValues(data);
+    value.setNumberError(numErr);
+    value.setErrorFunctions(funcIds);
+  }, [duplicateNames]);
 
   const checkValidateValue = (data, funcIds = []) => {
     let numErr = 0;
     let listMapFunction = [];
-    const duplicateNames = data.map(({ label }) => label).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i);
+    // const duplicateNames = data.map(({ label }) => label).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i);
     data.forEach((item) => {
       listMapFunction = _.concat(listMapFunction, item?.functions);
 
