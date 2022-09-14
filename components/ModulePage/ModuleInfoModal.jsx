@@ -42,9 +42,10 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
   }, [listDomain]);
 
   useEffect(() => {
+    if (!open) return;
     if (!data) return;
     setModuleInfo(data);
-  }, [data]);
+  }, [data, open]);
 
   useEffect(() => {
     if (_.isEmpty(moduleInfo)) return;
@@ -171,7 +172,7 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
   const handleClose = () => {
     if (!onClose) return;
     setErrors({});
-    setModuleInfo({});
+    if (mode === MODE.CREATE) setModuleInfo({});
     onClose();
   };
 
