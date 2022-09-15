@@ -16,10 +16,17 @@ export const createNodes = (functions, coordinates) => {
     if (data?.modifiers?.length) {
       let modiDepen = [];
       data?.modifiers.forEach((modi) => {
-        const idDepen = modi?.content?.dependencies.map((depen) => depen?._id);
+        const idDepen = [];
+        modi?.content?.dependencies.forEach((depen) => {
+          if (Object.keys(depen).includes('_id')) {
+            idDepen.push(depen?._id);
+          } else {
+            idDepen.push(depen);
+          }
+        });
         modiDepen = _.concat(modiDepen, idDepen);
       });
-      dependencies = _.concat(dependencies, modiDepen);
+      dependencies = _.uniq(_.concat(dependencies, modiDepen));
     }
 
     edges = _.unionBy(_.concat(edges, createEdges(item?.func, dependencies)), 'id');
