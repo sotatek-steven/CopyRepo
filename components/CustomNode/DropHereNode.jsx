@@ -45,7 +45,12 @@ const AbsoluteContainer = styled('div')(({ theme }) => ({
 }));
 
 const DropHereNode = (props) => {
-  const { id, xPos, yPos } = props;
+  const {
+    id,
+    xPos,
+    yPos,
+    data: { allowRemove },
+  } = props;
   const { nodes: blocksState, edges: edgesState } = useSelector((state) => state.logicBlocks);
   const { logicBlocks } = useDispatch();
   const [isAllowDrop, setIsAllowDrop] = useState(false);
@@ -107,6 +112,7 @@ const DropHereNode = (props) => {
       parentNode: id,
       extent: 'parent',
       dragHandle: 'dragHandle',
+      data: { allowRemove: true },
     };
   };
 
@@ -169,15 +175,12 @@ const DropHereNode = (props) => {
     const dataBlock = blocksState.find((item) => item.id === id);
     const index = blocksState.findIndex((item) => item.id === id);
 
-    console.log('dataBlock', dataBlock);
-
     let newBlocks = [];
     let newEdges = [];
     let yPlus = 0;
     switch (type) {
-      case 'logic':
+      case 'if_else':
         {
-          console.log('1');
           const { nodes, edges } = createIfElseBlocks(dataBlock);
           newBlocks = newBlocks.concat(nodes);
           newEdges = newEdges.concat(edges);
@@ -185,8 +188,6 @@ const DropHereNode = (props) => {
         }
         break;
       default: {
-        console.log('2');
-
         yPlus = 300;
 
         if (dataBlock?.parentNode) {
@@ -220,6 +221,7 @@ const DropHereNode = (props) => {
     const updateDropItem = {
       id: dropId,
       type: 'drop',
+      data: { allowRemove },
       position: {
         ...dataBlock?.position,
         y: dataBlock?.position.y + yPlus,
@@ -247,6 +249,7 @@ const DropHereNode = (props) => {
       newEdges.push(createEdge(id, dropId));
     } else {
       _blocksState.splice(index, 2);
+      _edgesState.splice(edgesState.length - 1, 1);
 
       newBlocks.push(updateDropItem);
       newBlocks.push(activityFinalNode);
@@ -254,7 +257,6 @@ const DropHereNode = (props) => {
       newEdges.push(createEdge(dropId, endId));
     }
 
-    console.log('newBlocks', newBlocks);
     const currentNode = type === 'condition' ? newBlocks[1] : newBlocks[0];
 
     _blocksState = _blocksState.concat(newBlocks);
@@ -271,9 +273,11 @@ const DropHereNode = (props) => {
   return (
     <>
       <Card isAllowDrop={isAllowDrop} onDragOver={allowDrop} onDragLeave={notAllowDrop} onDrop={handleDrop}>
-        <AbsoluteContainer className="action-node">
-          <ButtonRemoveNode id={id} />
-        </AbsoluteContainer>
+        {allowRemove && (
+          <AbsoluteContainer className="action-node">
+            <ButtonRemoveNode id={id} />
+          </AbsoluteContainer>
+        )}
         <CardBody>
           Drop item here
           <Handle type="target" position={Position.Top} id="a" style={{ background: '#555' }} />

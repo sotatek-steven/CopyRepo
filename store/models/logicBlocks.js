@@ -8,6 +8,7 @@ const logicBlocks = createModel({
     edges: [],
   },
   reducers: {
+    set: (state, data) => data,
     setBlocks: (state, data) => {
       return { ...state, nodes: data };
     },
@@ -40,6 +41,11 @@ const logicBlocks = createModel({
       const { edges } = state;
       return { ...state, edges: [...edges, newEdge] };
     },
+    removeEdge: (state, edgeId) => {
+      const { edges } = state;
+      const updatedEdges = edges.filter((el) => el.id !== edgeId);
+      return { ...state, edges: updatedEdges };
+    },
   },
   effects: (dispatch) => {
     return {
@@ -55,10 +61,13 @@ const logicBlocks = createModel({
         );
 
         nodes.push(
-          createDropItemNode({
-            x: 600,
-            y: 500,
-          })
+          createDropItemNode(
+            {
+              x: 600,
+              y: 500,
+            },
+            false
+          )
         );
         nodes.push(
           createActivityFinalNode({
@@ -74,6 +83,7 @@ const logicBlocks = createModel({
         return { nodes, edges };
       },
       convertToFEDataDisplay(blockData) {
+        // console.log('blockData: ', blockData);
         const blocksList = [];
         const edgesList = [];
         const createBlocks = (blockData, groupId, parent) => {
@@ -103,8 +113,8 @@ const logicBlocks = createModel({
               if (nextTrue) createBlocks({ ...nextTrue, branch: 'true' }, parentNode.id, conditionNode.id);
               if (nextFalse) createBlocks({ ...nextFalse, branch: 'false' }, parentNode.id, conditionNode.id);
               break;
-            case 'logic':
-              newNode = createLogicNode(position, params, groupId);
+            case 'if_else':
+              newNode = createIfElseNode(position, params, groupId);
               blocksList.push(newNode);
               break;
             case 'finish':
@@ -138,16 +148,12 @@ const logicBlocks = createModel({
       },
       convertToDataTransferApi({ nodes, edges }) {
         const { nodes: _nodes, edges: _edges } = removeParentNode({ nodes, edges });
-        console.log('nodes: ', _nodes);
-        console.log('edges: ', _edges);
 
         const initialNode = _nodes.find((item) => item.type === 'initial');
-        // console.log('initialNode: ', initialNode);
 
         let block = {};
 
         const createBlocks = (blocks, node) => {
-          console.log('node: ', node);
           const { type, position, data, id } = node;
 
           switch (type) {
@@ -160,24 +166,27 @@ const logicBlocks = createModel({
               blocks.position = position;
               blocks.params = data;
               break;
+            case 'assignment':
+              blocks.type = 'assignment';
+              blocks.position = position;
+              blocks.params = data;
+              break;
             case 'condition': {
               blocks.type = 'condition';
               blocks.position = position;
               blocks.conditions = data;
+              blocks.inputs = data?.inputs;
               blocks.parent = {};
               blocks.parent.position = node.parent.position;
               const _edgeTrue = _edges.find((edge) => edge.source === id && edge.label === 'True');
               if (_edgeTrue) {
                 const nextNode = _nodes.find((item) => item.id === _edgeTrue.target);
-                console.log('nextTrueNode: ', nextNode);
                 blocks.nextTrue = {};
                 createBlocks(blocks.nextTrue, nextNode);
               }
               const _edgeFalse = _edges.find((edge) => edge.source === id && edge.label === 'False');
               if (_edgeFalse) {
                 const nextNode = _nodes.find((item) => item.id === _edgeFalse.target);
-                console.log('nextFalseNode: ', nextNode);
-                // blocks.nextFalse = createBlocks(nextNode);
                 blocks.nextFalse = {};
                 createBlocks(blocks.nextFalse, nextNode);
               }
@@ -189,8 +198,8 @@ const logicBlocks = createModel({
               blocks.action = data.action;
               blocks.params = data.params;
               break;
-            case 'logic':
-              blocks.type = 'logic';
+            case 'if_else':
+              blocks.type = 'if_else';
               blocks.position = position;
               blocks.params = data;
               break;
@@ -207,7 +216,6 @@ const logicBlocks = createModel({
 
           if (!_edge) return;
           const nextNode = _nodes.find((item) => item.id === _edge.target);
-          console.log('nextNode: ', nextNode);
           blocks.next = {};
           createBlocks(blocks.next, nextNode);
         };
@@ -268,7 +276,7 @@ const removeParentNode = ({ nodes, edges }) => {
   };
 };
 
-const createEdge = (target, source) => {
+export const createEdge = (target, source) => {
   return {
     id: `${source}-${target}`,
     source,
@@ -372,11 +380,11 @@ export const createParentNode = (position, groupId) => {
   };
 };
 
-export const createLogicNode = (position, data, groupId) => {
+export const createIfElseNode = (position, data, groupId) => {
   if (groupId)
     return {
       id: ObjectID(24).toHexString(),
-      type: 'logic',
+      type: 'if_else',
       position,
       data,
       parentNode: groupId,
@@ -385,7 +393,7 @@ export const createLogicNode = (position, data, groupId) => {
     };
   return {
     id: ObjectID(24).toHexString(),
-    type: 'logic',
+    type: 'if_else',
     position,
     data,
     dragHandle: 'dragHandle',
@@ -421,20 +429,22 @@ export const createActivityFinalNode = (position) => {
   };
 };
 
-export const createDropItemNode = (position) => {
+export const createDropItemNode = (position, allowRemove) => {
   return {
     id: ObjectID(24).toHexString(),
     type: 'drop',
     position,
     dragHandle: 'dragHandle',
+    data: { allowRemove },
   };
 };
 
-const createDropNode = (position, allowDelete) => {
+const createDropNode = (position, allowRemove) => {
   return {
     id: ObjectID(24).toHexString(),
     type: 'drop',
     position,
-    allowDelete: allowDelete,
+    dragHandle: 'dragHandle',
+    data: { allowRemove },
   };
 };

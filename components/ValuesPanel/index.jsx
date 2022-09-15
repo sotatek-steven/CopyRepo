@@ -5,7 +5,7 @@ import ValueItem from './ValueItem';
 import useValuesTab from './hooks/useValuesTab';
 import { Box, IconButton, Tooltip, useTheme } from '@mui/material';
 import { Item, ItemContainer } from './ValueTab.style';
-import { TITLE_VALUES_TAB } from '@/config/constant/common';
+import { INIT_VALUE_TYPE, TITLE_VALUES_TAB } from '@/config/constant/common';
 import IconInfo from 'assets/icon/icon-info.svg';
 import { isArray } from 'lodash';
 import Scrollbars from 'react-custom-scrollbars';
@@ -63,7 +63,7 @@ const ValuesTabPanel = () => {
               right: '4%',
             },
           }}>
-          <IconButton aria-label="delete" onClick={handleAddValues}>
+          <IconButton aria-label="delete" onClick={() => handleAddValues(INIT_VALUE_TYPE)}>
             <AddIcon sx={{ color: theme.palette.primary.main }} />
           </IconButton>
         </Box>

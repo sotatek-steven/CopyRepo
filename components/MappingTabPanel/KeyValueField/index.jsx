@@ -100,7 +100,7 @@ const KeyValueField = ({ id, mappingList, setMappingList }) => {
       };
     }, null);
     // if (data.type._id) keyValuesObj['_id'] = data.type._id;
-    updateData({ type: keyValuesObj });
+    updateData({ type: keyValuesObj }, true);
   }, [keyValues]);
 
   return (

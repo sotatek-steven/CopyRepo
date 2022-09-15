@@ -103,10 +103,8 @@ const SmartContractActionList = () => {
   return (
     <>
       <Container>
-        {/* <PrimaryButton onClick={() => contract.setInfoContractModalOpen(true)}>Edit Info</PrimaryButton> */}
         {contractState.current.status !== 'deployed' && (
           <>
-            {/* <PrimaryButton onClick={() => setDeployContractModalOpen(true)}>Next</PrimaryButton> */}
             <ButtonBox onClick={() => setDeployContractModalOpen(true)}>
               <RightArrowIcon />
             </ButtonBox>

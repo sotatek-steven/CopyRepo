@@ -10,6 +10,7 @@ import { convertToDeclaration, splitElements } from '@/config/constant/common';
 import useDeclaration from '../functionsPage/hooks/useDeclaration';
 import { useDispatch, useSelector } from 'react-redux';
 import ButtonRemoveNode from '../atom/ButtonRemoveNode';
+import _ from 'lodash';
 
 const Card = styled('article')(({ color, theme }) => ({
   padding: '10px 15px',
@@ -53,6 +54,7 @@ const Title = styled('div')(({ theme }) => ({
   padding: 8,
   top: '-20px',
   left: '-40px',
+  color: theme.palette.text.colorNode,
 }));
 
 const ItemContainer = styled('div')(({ theme, error }) => ({
@@ -106,7 +108,8 @@ const DeclarationNode = ({ id, data }) => {
   const [errorText, setErrorText] = useState('');
   const { validateDeclaration } = useDeclaration();
   const { logicBlocks } = useDispatch();
-  const [mode, setMode] = useState('editing');
+  const [mode, setMode] = useState(_.isEmpty(data) ? 'editing' : 'view');
+  // const [mode, setMode] = useState('view');
 
   const convertDataToText = () => {
     return `${data?.type ? data?.type : ''} ${data?.isArray ? '[]' : ''} ${data?.location ? data?.location : ''} ${
@@ -124,9 +127,46 @@ const DeclarationNode = ({ id, data }) => {
 
   const handleChange = (e) => {
     let value = e.target.value;
-    const lastChar = value.substr(value.length - 1);
-    if (lastChar === '[') {
-      value = `${value}]`;
+    const indexEqual = value.lastIndexOf('=');
+
+    switch (e.key) {
+      case '[':
+        value = `${value}]`;
+        break;
+      case '{': {
+        const index = value.lastIndexOf('{');
+        if (indexEqual > -1 && index > indexEqual) {
+          value = `${value}}`;
+        }
+        break;
+      }
+
+      case '(': {
+        const index = value.lastIndexOf('(');
+        if (indexEqual > -1 && index > indexEqual) {
+          value = `${value})`;
+        }
+        break;
+      }
+
+      case "'": {
+        const index = value.lastIndexOf("'");
+        if (indexEqual > -1 && index > indexEqual) {
+          value = `${value}'`;
+        }
+        break;
+      }
+
+      case '"': {
+        const index = value.lastIndexOf('"');
+        if (indexEqual > -1 && index > indexEqual) {
+          value = `${value}"`;
+        }
+        break;
+      }
+
+      default:
+        break;
     }
 
     setInputText(value);
@@ -177,7 +217,7 @@ const DeclarationNode = ({ id, data }) => {
         <EditingContainer>
           <Title>DECLARATION</Title>
           <ItemContainer error={errorText}>
-            <Input value={inputText} onChange={handleChange} onKeyDown={handleChange} />
+            <Input value={inputText} onChange={handleChange} onKeyUp={handleChange} />
             {!!errorText && (
               <ErrorContainer>
                 <div className="icon">

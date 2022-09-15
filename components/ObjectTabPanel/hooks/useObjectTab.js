@@ -1,38 +1,105 @@
 /* eslint-disable no-case-declarations */
 import { ELEMENT_TYPE, INIT_OBJECT_TYPE, OBJECT_TYPE } from '@/config/constant/common';
 import { REGEX } from '@/config/constant/regex';
+import useModule from '@/hooks/useModule';
+import ObjectID from 'bson-objectid';
 import _ from 'lodash';
+import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 
 const regex = new RegExp(REGEX.VARIABLE_NAME);
 
 const useObjectTab = () => {
   const { objects } = useSelector((state) => state.object);
   const moduleState = useSelector((state) => state.userModule);
+  const { duplicateNames } = useSelector((state) => state.modules);
   const { object, userModule } = useDispatch();
+  const { checkMapToFunction } = useModule();
 
-  const handleAddObject = ({ initObject = INIT_OBJECT_TYPE }) => {
-    const init = JSON.parse(JSON.stringify(initObject));
-    const data = [...objects];
-    data.push({ ...init, _id: Date.now() });
+  useEffect(() => {
+    const { data, numErr, funcIds } = checkValidateObject(objects);
     object.setObjects(data);
+    object.setNumberError(numErr);
+    object.setErrorFunctions(funcIds);
+  }, [duplicateNames]);
+
+  const checkValidateObject = (data, funcIds = []) => {
+    let numErr = 0;
+    let listMapFunction = [];
+    // const duplicateNames = data.map(({ name }) => name).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i);
+    data.forEach((item) => {
+      listMapFunction = _.concat(listMapFunction, item?.functions);
+
+      if (item?.name) {
+        if (duplicateNames?.includes(item.name)) {
+          item.errorName = 'Variable name cannot be duplicated';
+          numErr++;
+          funcIds = _.concat(funcIds, item?.functionId);
+        } else {
+          if (!regex.test(item?.name?.trim())) {
+            item.errorName = 'Invalid variable name';
+            numErr++;
+            funcIds = _.concat(funcIds, item?.functionId);
+          } else {
+            item.errorName = null;
+          }
+        }
+      } else if (item?.errorName) {
+        numErr++;
+      }
+    });
+
+    const errorMap = checkMapToFunction('objects', listMapFunction);
+    funcIds = _.concat(_.uniq(_.compact(funcIds)), errorMap);
+
+    return { data, numErr, funcIds };
+  };
+
+  const handleAddObject = (initObject) => {
+    const initData = initObject?.map((item) => {
+      return {
+        ...item,
+        _id: ObjectID(24).toHexString(),
+      };
+    });
+    let data = _.concat(objects, initData);
+    let numberErr = 0;
+
+    const { data: dataValidate, numErr, funcIds } = checkValidateObject(data);
+    data = dataValidate;
+    numberErr = numErr;
+
+    object.setObjects(data);
+    object.setNumberError(numberErr);
+    object.setErrorFunctions(funcIds);
+
     const dataClone = convertToObjectModule(data);
     userModule.updateObjects(dataClone);
   };
 
   const handleRemoveObject = (objectId) => {
     const iObject = objects.findIndex(({ _id }) => _id === objectId);
-    const data = [...objects];
+    let data = [...objects];
+    let numberErr = 0;
+
     data.splice(iObject, 1);
+
+    const { data: dataValidate, numErr, funcIds } = checkValidateObject(data);
+    data = dataValidate;
+    numberErr = numErr;
+
+    object.setObjects(data);
+    object.setNumberError(numberErr);
+    object.setErrorFunctions(funcIds);
+
     const dataClone = convertToObjectModule(data);
     userModule.updateObjects(dataClone);
-    object.setObjects(data);
   };
 
   const handleChangeObject = (objectId, field, e, type) => {
     const iObject = objects.findIndex(({ _id }) => _id === objectId);
-    const data = [...objects];
+    let data = [...objects];
+    let numberErr = 0;
 
     switch (type) {
       case ELEMENT_TYPE.INPUT:
@@ -42,8 +109,6 @@ const useObjectTab = () => {
 
           if (!e.target.value.trim()) {
             data[iObject]['errorName'] = 'Variable name should not be empty';
-          } else if (!regex.test(e.target.value.trim())) {
-            data[iObject]['errorName'] = 'Invalid variable name';
           }
         }
         break;
@@ -97,7 +162,14 @@ const useObjectTab = () => {
         break;
     }
 
+    const { data: dataValidate, numErr, funcIds } = checkValidateObject(data);
+    data = dataValidate;
+    numberErr = numErr;
+
     object.setObjects(data);
+    object.setNumberError(numberErr);
+    object.setErrorFunctions(funcIds);
+
     const dataClone = convertToObjectModule(data);
     userModule.updateObjects(dataClone);
   };
@@ -228,21 +300,23 @@ const useObjectTab = () => {
 
   const objectHasError = () => {
     let isError = false;
-    const data = [...objects];
+    let data = [...objects];
+    let numberErr = 0;
+
     data.forEach((item) => {
       if (!item?.name) {
         item.errorName = 'Variable name should not be empty';
         isError = true;
+        numberErr++;
       } else if (!regex.test(item?.name?.trim())) {
         item.errorName = 'Invalid variable name';
         isError = true;
+        numberErr++;
       }
     });
 
     object.setObjects(data);
-    if (isError) {
-      toast.warning('Object tab has errors');
-    }
+    object.setNumberError(numberErr);
 
     return isError;
   };

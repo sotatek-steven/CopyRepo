@@ -1,6 +1,8 @@
+import useModule from '@/hooks/useModule';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { styled, Tab } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import EventErrorTabPanel from '../EventErrorTabPanel';
 import MappingTabPanel from '../MappingTabPanel';
 import ObjectTabPanel from '../ObjectTabPanel';
@@ -52,6 +54,21 @@ const TabListContent = styled(TabList)(({ theme }) => ({
   '.MuiTab-root': {
     fontSize: 16,
   },
+  '.item-tab-label': {
+    display: 'flex',
+    gap: 15,
+    alignItems: 'center',
+    '.number-error': {
+      display: 'flex',
+      width: 24,
+      height: 24,
+      background: theme.palette.common.white,
+      color: theme.palette.primary.red1,
+      borderRadius: '50%',
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+  },
 }));
 
 const TabItem = styled(Tab)({
@@ -67,6 +84,22 @@ const TabPanelContent = styled(TabPanel)({
 const AddFieldTab = ({ tab }) => {
   const [activeTab, setActiveTab] = useState('values');
 
+  const moduleState = useSelector((state) => state.userModule);
+  const { duplicateNames } = useSelector((state) => state.modules);
+  const { numberError: numberErrorObject } = useSelector((state) => state.object);
+  const { numberError: numberErrorValue } = useSelector((state) => state.value);
+  const { numberError: numberErrorMapping } = useSelector((state) => state.mapping);
+  const { numberError: numberErrorEvent } = useSelector((state) => state.eventError);
+  const { userModule, mapping } = useDispatch();
+  const { checkValidateMapping } = useModule();
+
+  useEffect(() => {
+    const { data, numErr, funcIds } = checkValidateMapping(moduleState?.variables?.mappings);
+    mapping.setNumberError(numErr);
+    mapping.setErrorFunctions(funcIds);
+    userModule.updateMappings(data);
+  }, [duplicateNames]);
+
   useEffect(() => {
     setActiveTab(tab);
   }, [tab]);
@@ -78,9 +111,23 @@ const AddFieldTab = ({ tab }) => {
     <TabContext value={activeTab}>
       <Container>
         <TabListContent className="custom-tab" onChange={handleChangeTab}>
-          {TAB_LIST.map((tab) => (
-            <TabItem key={tab.id} label={tab.label} value={tab.id} />
-          ))}
+          {TAB_LIST.map((tab) => {
+            const label = (
+              <div className="item-tab-label">
+                <div className="label">{tab.label}</div>
+                {tab.id === 'objects' && !!numberErrorObject && <div className="number-error">{numberErrorObject}</div>}
+                {tab.id === 'values' && !!numberErrorValue && <div className="number-error">{numberErrorValue}</div>}
+                {tab.id === 'mappings' && !!numberErrorMapping && (
+                  <div className="number-error">{numberErrorMapping}</div>
+                )}
+                {tab.id === 'events-errors' && !!numberErrorEvent && (
+                  <div className="number-error">{numberErrorEvent}</div>
+                )}
+              </div>
+            );
+
+            return <TabItem key={tab.id} label={label} value={tab.id} />;
+          })}
         </TabListContent>
         <TabPanelContent value="values">
           <ValuesTabPanel />

@@ -17,6 +17,10 @@ const FormModal = ({
   width,
   showSave = true,
 }) => {
+  const handleSubmit = async (event) => {
+    onConfirm(event);
+  };
+
   return (
     <Modal open={open} onClose={onClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <ModalBox height={height} width={width}>
@@ -30,7 +34,7 @@ const FormModal = ({
         {showFooter && (
           <Footer>
             <SecondaryButton onClick={onClose}>{closeText}</SecondaryButton>
-            {showSave && <PrimaryButton onClick={onConfirm}>{confirmText}</PrimaryButton>}
+            {showSave && <PrimaryButton onClick={handleSubmit}>{confirmText}</PrimaryButton>}
           </Footer>
         )}
       </ModalBox>

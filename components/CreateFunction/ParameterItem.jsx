@@ -2,7 +2,7 @@ import { Box, Grid, styled } from '@mui/material';
 import React, { useEffect } from 'react';
 import Select from '../Select';
 import RemoveCircleOutlineIcon from '@mui/icons-material/RemoveCircleOutline';
-import { IS_ARRAY_OPTION, LOCATION_OPTIONS, VALUE_TYPE_OPTIONS } from '@/config/constant/common';
+import { generateDataType, IS_ARRAY_OPTION, LOCATION_OPTIONS } from '@/config/constant/common';
 import { useSelector } from 'react-redux';
 import ParameterName from './ParameterName';
 
@@ -52,7 +52,7 @@ const ParameterItem = ({ data, onRemove, onUpdate }) => {
       label: item.name,
     }));
 
-    const options = VALUE_TYPE_OPTIONS.concat(structOptions, enumOptions);
+    const options = generateDataType().concat(structOptions, enumOptions);
     return options;
   };
 
@@ -61,7 +61,7 @@ const ParameterItem = ({ data, onRemove, onUpdate }) => {
       const { structs } = moduleState.sources;
       const structOptions = structs.map((item) => item.name);
       const bytesOptions = [];
-      VALUE_TYPE_OPTIONS.forEach((item) => {
+      generateDataType().forEach((item) => {
         if (item.value.includes('bytes')) bytesOptions.push(item.value);
       });
       const typeIsArray = ['string', ...bytesOptions, ...structOptions];

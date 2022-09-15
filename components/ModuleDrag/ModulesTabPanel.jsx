@@ -6,12 +6,13 @@ import { useDispatch, useSelector } from 'react-redux';
 import ModuleInfoModal from '../ModulePage/ModuleInfoModal';
 import ModuleItem from './ModuleItem';
 import SubMenu from './SubMenu';
+import CircularProgress from '@mui/material/CircularProgress';
 
-const ModuleContainer = styled('div')(({ theme }) => ({
+const ModuleContainer = styled('div')({
   flexGrow: 1,
   display: 'flex',
   flexDirection: 'column',
-}));
+});
 
 const ModulesTab = () => {
   const contractState = useSelector((state) => state.contract);
@@ -19,11 +20,13 @@ const ModulesTab = () => {
   const [modules, setModules] = useState([]);
   const [dataClone, setDataClone] = useState({});
   const [isOpenModuleInfo, setIsOpenModuleInfo] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const theme = useTheme();
 
   const fetchModules = async () => {
     try {
+      setLoading(true);
       const { data: modulesData } = await userModule.getModules();
 
       const modules = modulesData.map((moduleData) => {
@@ -33,6 +36,7 @@ const ModulesTab = () => {
         };
       });
       setModules(modules);
+      setLoading(false);
     } catch (error) {
       console.log('Failed to fetch modules');
     }
@@ -71,8 +75,13 @@ const ModulesTab = () => {
       <SubMenu />
       <div style={{ flexGrow: 1 }}>
         <Scrollbars autoHide>
-          {modules.length <= 0 ? (
-            <div> Module not found</div>
+          {loading ? (
+            <Box sx={{ textAlign: 'center', paddingTop: 30 }}>
+              {' '}
+              <CircularProgress />
+            </Box>
+          ) : modules.length <= 0 ? (
+            <Box sx={{ textAlign: 'center', paddingTop: 30 }}> Module not found</Box>
           ) : (
             modules.map((item, index) => {
               return (
@@ -80,7 +89,7 @@ const ModulesTab = () => {
                   key={index}
                   data={item}
                   fetchModules={fetchModules}
-                  nodeType="rectangle"
+                  nodeType="module"
                   setDataClone={setDataClone}
                   setIsOpenModuleInfo={setIsOpenModuleInfo}
                 />

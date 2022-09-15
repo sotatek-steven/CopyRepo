@@ -4,7 +4,7 @@ import FunctionInfo from '@/components/FunctionsPage/FunctionInfo';
 import FunctionSidebar from '@/components/functionsPage/FunctionSidebar';
 import useDeclaration from '@/components/functionsPage/hooks/useDeclaration';
 import DesignLayout from '@/components/layout/DesignLayout';
-import { VALUE_TYPE_OPTIONS } from '@/config/constant/common';
+import { generateDataType } from '@/config/constant/common';
 import { FAKE_DATA, FAKE_EDGES, FAKE_NODES, simpleData } from '@/store/models/fakeData';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { styled, Tab } from '@mui/material';
@@ -109,10 +109,6 @@ const TAB_LIST = [
     value: 'workflow_view',
   },
   {
-    name: 'Form View',
-    value: 'form_view',
-  },
-  {
     name: 'Code View',
     value: 'code_view',
   },
@@ -145,6 +141,16 @@ const FunctionPage = () => {
         const FEData = await functionDefinition.convertToFEDataDisplay(data);
         functionDefinition.update(FEData);
 
+        // set logicBlocks data
+        if (data.block) {
+          const _blocksData = await logicBlocks.convertToFEDataDisplay(data.block);
+          logicBlocks.set(_blocksData);
+        } else {
+          const { nodes, edges } = await logicBlocks.createInitNode();
+          logicBlocks.setBlocks(nodes);
+          logicBlocks.setEdgeBlocks(edges);
+        }
+
         // fetch detail module
         const moduleData = await userModule.getDetailModule(moduleId);
         userModule.update(moduleData);
@@ -155,7 +161,7 @@ const FunctionPage = () => {
             label: item?.name,
           };
         });
-        functions.setListType(_.concat(VALUE_TYPE_OPTIONS, typeStructs));
+        functions.setListType(_.concat(generateDataType(), typeStructs));
         // // Convert Declaration
         // const listDeclaration = convertDeclaration(data.block);
         // declaration.updateDeclarations(listDeclaration);
@@ -168,27 +174,31 @@ const FunctionPage = () => {
     };
 
     fetchData();
+
+    return () => {
+      logicBlocks.set({ nodes: [], edges: [] });
+    };
   }, [functionId, moduleId]);
 
   const { logicBlocks } = useDispatch();
 
-  useEffect(() => {
-    const convertData = async () => {
-      // Init data
-      const { nodes, edges } = await logicBlocks.createInitNode();
-      logicBlocks.setBlocks(nodes);
-      logicBlocks.setEdgeBlocks(edges);
+  // useEffect(() => {
+  //   const convertData = async () => {
+  //     // Init data
+  //     const { nodes, edges } = await logicBlocks.createInitNode();
+  //     logicBlocks.setBlocks(nodes);
+  //     logicBlocks.setEdgeBlocks(edges);
 
-      // const { nodes: _nodes, edges: _edges } = await logicBlocks.convertToFEDataDisplay(FAKE_DATA);
-      // console.log('nodes: ', JSON.stringify(_nodes));
-      // console.log('edges: ', JSON.stringify(_edges));
+  //     // const { nodes: _nodes, edges: _edges } = await logicBlocks.convertToFEDataDisplay(FAKE_DATA);
+  //     // console.log('nodes: ', JSON.stringify(_nodes));
+  //     // console.log('edges: ', JSON.stringify(_edges));
 
-      // const blocks = await logicBlocks.convertToDataTransferApi({ nodes: FAKE_NODES, edges: FAKE_EDGES });
-      // console.log('blocks: ', blocks);
-    };
+  //     // const blocks = await logicBlocks.convertToDataTransferApi({ nodes: FAKE_NODES, edges: FAKE_EDGES });
+  //     // console.log('blocks: ', blocks);
+  //   };
 
-    convertData();
-  }, []);
+  //   convertData();
+  // }, []);
 
   return (
     <div>
@@ -212,9 +222,6 @@ const FunctionPage = () => {
                 <FunctionSidebar />
               </div>
             </ContentWrapper>
-          </TabPanelContent>
-          <TabPanelContent value="form_view">
-            <div>Form View</div>
           </TabPanelContent>
           <TabPanelContent value="code_view">
             <div>Code View</div>

@@ -32,7 +32,6 @@ export default function MultipleAutoComplete({
       <BaseAutocomplete
         multiple
         disableClearable
-        limitTags={1}
         id="tags-outlined"
         loading={loading}
         value={value}

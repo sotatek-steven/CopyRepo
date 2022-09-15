@@ -16,8 +16,8 @@ import IconAddField from '@/assets/icon/IconAddField.svg';
 import { createNodes } from '@/components/FunctionCanvas/CreateElement';
 import FunctionCanvas from '@/components/FunctionCanvas';
 import AddFieldTab from '@/components/ModulePage/AddFieldTab';
-import useObjectTab from '@/components/ObjectTabPanel/hooks/useObjectTab';
 import useModulePage from '@/components/ModulePage/hooks/useModulePage';
+import SavingScreen from '@/components/Saving';
 
 const ContentWapper = styled('div')(() => ({
   display: 'flex',
@@ -99,6 +99,19 @@ const TabListContent = styled(TabList)(({ theme }) => ({
   '.MuiTabs-flexContainer': {
     padding: '4px 0px',
   },
+  '.number-error': {
+    display: 'flex',
+    width: 24,
+    height: 24,
+    background: theme.palette.common.white,
+    color: theme.palette.primary.red1,
+    borderRadius: '50%',
+    alignItems: 'center',
+    justifyContent: 'center',
+    position: 'absolute',
+    right: 0,
+    top: 0,
+  },
 }));
 
 const TabItem = styled(Tab)(() => ({
@@ -141,9 +154,12 @@ const ModulePage = () => {
   const { moduleId } = router.query;
   const moduleModeState = useSelector((state) => state.moduleMode);
   const moduleState = useSelector((state) => state.userModule);
-  const { moduleMode, template } = useDispatch();
-  const { objectHasError } = useObjectTab();
-  const { fetchDetailModule } = useModulePage();
+  const { objects, numberError: numberErrorObject } = useSelector((state) => state.object);
+  const { values, numberError: numberErrorValue } = useSelector((state) => state.value);
+  const { numberError: numberErrorMapping } = useSelector((state) => state.mapping);
+  const { dataEventError, numberError: numberErrorEvent } = useSelector((state) => state.eventError);
+  const { moduleMode, template, value, object, mapping, modules } = useDispatch();
+  const { fetchDetailModule, loading } = useModulePage();
   const [tabVertical, setTabVertical] = useState('canvas');
   const [tabHorizontal, setTabHorizontal] = useState('logic');
   const [nodes, setNodes] = useState([]);
@@ -151,10 +167,47 @@ const ModulePage = () => {
   const theme = useTheme();
   const [sources, setSource] = useState(null);
   const [addFieldTab, setAddFieldTab] = useState('values');
+  const [totalError, setTotalError] = useState(0);
+
+  // Variable name of All Tab
+  useEffect(() => {
+    const listVariableName = [];
+    objects.forEach((item) => {
+      if (item?.name) {
+        listVariableName.push(item?.name);
+      }
+    });
+    values.forEach((item) => {
+      if (item?.label) {
+        listVariableName.push(item?.label);
+      }
+    });
+    dataEventError.forEach((item) => {
+      if (item?.name) {
+        listVariableName.push(item?.name);
+      }
+    });
+    moduleState?.variables?.mappings?.forEach((item) => {
+      if (item?.label) {
+        listVariableName.push(item?.label);
+      }
+    });
+
+    const duplicateNames = listVariableName.map((item) => item).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i);
+
+    modules.setDuplicateNames(duplicateNames);
+  }, [objects, values, dataEventError, moduleState?.variables?.mappings]);
+
+  useEffect(() => {
+    setTotalError(numberErrorObject + numberErrorValue + numberErrorMapping + numberErrorEvent);
+  }, [numberErrorObject, numberErrorValue, numberErrorMapping, numberErrorEvent]);
 
   useEffect(() => {
     fetchDetailModule();
     return () => {
+      value.resetError();
+      object.resetError();
+      mapping.resetError();
       userModule.set({});
     };
   }, [moduleId]);
@@ -178,7 +231,9 @@ const ModulePage = () => {
   }, [moduleState.lines]);
 
   const handleChangeTabVertical = (e, newValue) => {
-    if (objectHasError()) return;
+    // const valueError = valueHasError();
+    // const objectError = objectHasError();
+    // if (valueError || objectError) return;
 
     setTabVertical(newValue);
   };
@@ -190,15 +245,23 @@ const ModulePage = () => {
   if (moduleModeState !== ModuleMode.DESIGN) return <Library />;
   return (
     <TabContext value={tabVertical}>
+      {loading && <SavingScreen title="Loading" />}
+
       <TabListContainer>
         <TabListContent
           orientation="vertical"
           className="vertical-tab"
           onChange={handleChangeTabVertical}
           aria-label="lab API tabs example">
-          {TAB_LIST_VERTICAL.map((tab) => (
-            <TabItem key={tab.value} icon={tab.icon} label={tab.name} value={tab.value} />
-          ))}
+          {TAB_LIST_VERTICAL.map((tab) => {
+            const label = (
+              <>
+                <div className="label">{tab.name}</div>
+                {tab.value === 'fields' && !!totalError && <div className="number-error">{totalError}</div>}
+              </>
+            );
+            return <TabItem key={tab.value} icon={tab.icon} label={label} value={tab.value} />;
+          })}
         </TabListContent>
       </TabListContainer>
       <TabPanelContent value="canvas">

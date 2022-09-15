@@ -39,26 +39,9 @@ const LibraryContainer = styled('div')(({ theme }) => ({
   },
 }));
 
-const ModuleDetail = ({ open, onClose, moduleId }) => {
-  const { userModule } = useDispatch();
-  const [moduleInfo, setModuleInfo] = useState({});
-  useEffect(async () => {
-    if (open && moduleId) {
-      const data = await userModule.getDetailModule(moduleId);
-      if (data) {
-        setModuleInfo(data);
-      }
-    }
-  }, [open, moduleId]);
-
+const ModuleDetail = ({ open, onClose, moduleInfo }) => {
   return (
-    <FormModal
-      height={600}
-      width={750}
-      open={open}
-      onClose={onClose}
-      title={'Mintable Token Details'}
-      showFooter={false}>
+    <FormModal height={600} width={750} open={open} onClose={onClose} title={moduleInfo?.name} showFooter={false}>
       <Container>
         <GasContainer>
           <div className="title">Gas fee:</div>

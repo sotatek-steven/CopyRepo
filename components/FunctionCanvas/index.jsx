@@ -1,4 +1,3 @@
-import { FUNCTION_TYPE, STRUCT_POOLINFO, STRUCT_USERINFO } from '@/config/constant/common';
 import { Box } from '@mui/system';
 import _ from 'lodash';
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
@@ -36,18 +35,14 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
   const { structs } = useSelector((state) => state.struct);
   const { enums } = useSelector((state) => state.enumState);
   const nodeTypes = useMemo(() => CustomNodes, []);
-  const { handelAddStruct } = useStructPage();
-  const { handelAddEnum } = useEnumPage();
+  const { handelAddStruct, convertStructToFEDisplay } = useStructPage();
+  const { handelAddEnum, convertEnumToFEDisplay } = useEnumPage();
   const [identifierModalOpen, setIdentifierModalOpen] = useState(false);
-  const [stateVariablesOfDropFunctions, setStateVariablesOfDropFunctions] = useState([]);
+  const [missingIdentifiers, setMissingIdentifiers] = useState([]);
 
   const handleIdentifierModalClose = () => {
     setIdentifierModalOpen(false);
   };
-
-  // useEffect(() => {
-  //   console.log('identifier: ', identifierModalOpen);
-  // }, [identifierModalOpen]);
 
   /**
    * @param {*} id to update node list of react flow
@@ -132,50 +127,33 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
     setEdges(initialEdges);
   }, [initialNodes, initialEdges]);
 
-  const createNodeFromFunc = (funcData, type, position, newNode = [], listFunc = [], listStruct = [], listEnum = []) => {
+  const createNodeFromFunc = (
+    funcData,
+    type,
+    position,
+    newNode = [],
+    listFunc = [],
+    listStruct = [],
+    listEnum = []
+  ) => {
     let funcDepen = [];
 
     // Create Struct
     const listStructName = _.concat(structs, listStruct).map((item) => item?.name);
     const listEnumName = _.concat(enums, listEnum).map((item) => item?.name);
 
-
-    funcData?.globalVariables?.every((variable) => {
-      if (variable?.type.toUpperCase() === FUNCTION_TYPE.POOLINFO && !listStructName.includes(FUNCTION_TYPE.POOLINFO)) {
-        listStruct.push(STRUCT_POOLINFO);
-        return false;
+    funcData?.structs?.forEach((struct) => {
+      if (!listStructName.includes(struct?.name)) {
+        listStruct.push(struct);
       }
-      return true;
-    });
-
-    funcData?.globalVariables?.every((variable) => {
-      if (
-        variable?.type.toUpperCase()?.includes(FUNCTION_TYPE.USERINFO) &&
-        !listStructName.includes(FUNCTION_TYPE.USERINFO)
-      ) {
-        listStruct.push(STRUCT_USERINFO);
-        return false;
-      }
-      return true;
     });
 
     // Create Enum
-    funcData?.enums
-      ?.filter((item) => !listEnumName.includes(item?.name))
-      ?.forEach((item) => {
-        const values = item?.content?.map((con) => {
-          return {
-            ...con,
-            name: con?.label,
-          }
-        })
-
-        listEnum.push({
-          ...item,
-          errorName: null,
-          values,
-        })
-      })
+    funcData?.enums?.forEach((item) => {
+      if (!listEnumName.includes(item?.name)) {
+        listEnum.push(item);
+      }
+    });
 
     // Create Node
     newNode.push({
@@ -195,7 +173,7 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
     funcDepen.forEach((depen, index) => {
       position = {
         ...position,
-        y: position.y + (index + 1) * 120,
+        y: position.y - (index + 1) * 120,
       };
       newNode.push({
         id: depen?._id,
@@ -220,9 +198,8 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
     return { newNode, listFunc, listStruct, listEnum };
   };
 
-  const getStateVariables = (listFunc) => {
-    listFunc?.concat(listFunc);
-    const stateVariable = listFunc.reduce((arr, item) => {
+  const getMissingIdentifiers = (listFunc) => {
+    const allMissingIdentifiers = listFunc.reduce((arr, item) => {
       const { globalVariables, _id } = item;
       const updatedGlobalVariables = globalVariables?.map((item) => ({
         ...item,
@@ -231,7 +208,22 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
       return arr.concat(updatedGlobalVariables);
     }, []);
 
-    return stateVariable;
+    //remove duplicate missing variables
+    const paramsMapper = {};
+    allMissingIdentifiers.forEach((el) => {
+      const key = JSON.stringify(_.omit(el, ['func', '_id']));
+      if (!paramsMapper[key]) {
+        paramsMapper[key] = [];
+      }
+      paramsMapper[key].push(el);
+    });
+
+    const missingIdentifiers = Object.entries(paramsMapper).map(([key, value]) => ({
+      ...JSON.parse(key),
+      func: value.map((e) => e.func),
+    }));
+
+    return missingIdentifiers;
   };
 
   const onDrop = useCallback(
@@ -261,16 +253,16 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
       //add new node
       const { newNode, listFunc, listStruct, listEnum } = createNodeFromFunc(data, type, position);
 
-      const stateVariables = getStateVariables(listFunc);
-
       //open Identifier modal
-      const isOpen = !!data.globalVariables.length;
+      const missingIdentify = getMissingIdentifiers(listFunc);
+      const isOpen = !!missingIdentify.length;
       setIdentifierModalOpen(isOpen);
-      setStateVariablesOfDropFunctions(stateVariables);
+      setMissingIdentifiers(missingIdentify);
+
       setNodes((nds) => _.unionBy(_.concat(nds, newNode), 'id'));
       addNewFuctionToModule(listFunc, position);
-      handelAddStruct(listStruct);
-      handelAddEnum(listEnum);
+      handelAddStruct(convertStructToFEDisplay(listStruct));
+      handelAddEnum(convertEnumToFEDisplay(listEnum));
     },
     [reactFlowInstance, setNodes, moduleState.functions, nodes]
   );
@@ -279,8 +271,6 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
     userModule.updateFunctions(modules);
     userModule.updateCoordinates(coordinates);
     userModule.updateLibraries(libraries);
-    // const { data } = await userModule.updateModule();
-    // userModule.update(data);
   };
 
   const addNewFuctionToModule = (funcData, position) => {
@@ -295,7 +285,7 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
       return {
         position: {
           ...position,
-          y: position.y + (index + 1) * 120,
+          y: position.y - (index + 1) * 120,
         },
         func: item?._id,
       };
@@ -318,9 +308,9 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
     const updatedCoordinates = coordinates.map((item) => {
       return item.func === data._id
         ? {
-          ...item,
-          position,
-        }
+            ...item,
+            position,
+          }
         : item;
     });
     userModule.updateCoordinates(updatedCoordinates);
@@ -346,20 +336,16 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
           onDragOver={onDragOver}
           defaultZoom={1}
           onEdgeUpdate={onEdgeUpdate}>
-          <Controls
-            style={{ bottom: '100px', left: '65px' }}
-          // onInteractiveChange={lockCanvas}
-          />
+          <Controls style={{ bottom: '100px', left: '65px' }} />
           <Background color="#aaa" gap={16} />
         </ReactFlow>
       </Box>
       <IndentifierModal
         open={identifierModalOpen}
         onClose={handleIdentifierModalClose}
-        stateVariables={stateVariablesOfDropFunctions}
+        identifiers={missingIdentifiers}
         redirectToAddField={redirectToAddField}
       />
-      {/* <ErrorsCompileModal /> */}
     </ReactFlowProvider>
   );
 };

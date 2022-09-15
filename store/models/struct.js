@@ -1,13 +1,11 @@
-import { VALUE_TYPE_OPTIONS } from '@/config/constant/common';
+import { generateDataType } from '@/config/constant/common';
 import { createModel } from '@rematch/core';
-
-const TYPES = [...VALUE_TYPE_OPTIONS];
 
 const struct = createModel({
   state: {
     originStructs: [],
     structs: [],
-    types: TYPES,
+    types: generateDataType(),
   },
   reducers: {
     setStructs: (state, structs) => ({ ...state, structs }),

@@ -27,6 +27,7 @@ import panaImage from '@/assets/images/steps-pana.png';
 import DefiIcon from '../../assets/icon/defiIcon.svg';
 import NFTIcon from '../../assets/icon/NFTIcon.svg';
 import { useMemo } from 'react';
+import { PrimaryButton } from '@/components/ButtonStyle';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -160,7 +161,7 @@ const Dashboard = () => {
             tabStyle={{ padding: '0px 25px' }}
           />
         </TabWrapper>
-        <Box sx={{ display: 'flex', alignItems: 'center', pt: 2, mx: 2 }}>
+        <Box sx={{ display: 'flex', alignItems: 'center', pt: 2, ml: 2 }}>
           <Search>
             <SearchIconWrapper>
               <SearchIcon sx={{ color: '#F07D60', zIndex: 2 }} />
@@ -172,14 +173,11 @@ const Dashboard = () => {
               placeholder="Search Smart Contract"
             />
           </Search>
-          <Box sx={{ pl: 3, pr: 1 }}>
-            <Button
-              sx={{ color: theme.palette.primary.contrastText, fontWeight: 600, fontSize: '14px' }}
-              variant="contained"
-              startIcon={<AddCircleOutlineOutlinedIcon sx={{ color: theme.palette.background.dark }} />}
-              onClick={() => setOpenCreate(true)}>
-              Create
-            </Button>
+          <Box sx={{ pl: 3 }}>
+            <PrimaryButton onClick={() => setOpenCreate(true)}>
+              <AddCircleOutlineOutlinedIcon sx={{ color: theme.palette.background.dark }} />
+              CREATE
+            </PrimaryButton>
           </Box>
         </Box>
       </Box>
@@ -226,7 +224,6 @@ const Dashboard = () => {
             </Grid>
             <Grid
               sx={{
-                '&:hover': { opacity: 0.7 },
                 paddingLeft: '70px',
               }}
               item

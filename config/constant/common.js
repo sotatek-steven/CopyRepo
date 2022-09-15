@@ -193,213 +193,6 @@ export const IS_CONSTANT = [
   },
 ];
 
-export const VALUE_TYPE_OPTIONS = [
-  {
-    value: 'address',
-    label: 'address',
-  },
-  {
-    value: 'bool',
-    label: 'bool',
-  },
-  {
-    value: 'bytes',
-    label: 'bytes',
-  },
-  {
-    value: 'bytes1',
-    label: 'bytes1',
-  },
-  {
-    value: 'bytes2',
-    label: 'bytes2',
-  },
-  {
-    value: 'bytes3',
-    label: 'bytes3',
-  },
-  {
-    value: 'bytes4',
-    label: 'bytes4',
-  },
-  {
-    value: 'bytes5',
-    label: 'bytes5',
-  },
-  {
-    value: 'bytes6',
-    label: 'bytes6',
-  },
-  {
-    value: 'bytes7',
-    label: 'bytes7',
-  },
-  {
-    value: 'bytes8',
-    label: 'bytes8',
-  },
-  {
-    value: 'bytes9',
-    label: 'bytes9',
-  },
-  {
-    value: 'bytes10',
-    label: 'bytes10',
-  },
-  {
-    value: 'bytes11',
-    label: 'bytes11',
-  },
-  {
-    value: 'bytes12',
-    label: 'bytes12',
-  },
-  {
-    value: 'bytes13',
-    label: 'bytes13',
-  },
-  {
-    value: 'bytes14',
-    label: 'bytes14',
-  },
-  {
-    value: 'bytes15',
-    label: 'bytes15',
-  },
-  {
-    value: 'bytes16',
-    label: 'bytes16',
-  },
-  {
-    value: 'bytes17',
-    label: 'bytes17',
-  },
-  {
-    value: 'bytes18',
-    label: 'bytes18',
-  },
-  {
-    value: 'bytes19',
-    label: 'bytes19',
-  },
-  {
-    value: 'bytes20',
-    label: 'bytes20',
-  },
-  {
-    value: 'bytes21',
-    label: 'bytes21',
-  },
-  {
-    value: 'bytes22',
-    label: 'bytes22',
-  },
-  {
-    value: 'bytes23',
-    label: 'bytes23',
-  },
-  {
-    value: 'bytes24',
-    label: 'bytes24',
-  },
-  {
-    value: 'bytes25',
-    label: 'bytes25',
-  },
-  {
-    value: 'bytes26',
-    label: 'bytes26',
-  },
-  {
-    value: 'bytes27',
-    label: 'bytes27',
-  },
-  {
-    value: 'bytes28',
-    label: 'bytes28',
-  },
-  {
-    value: 'bytes29',
-    label: 'bytes29',
-  },
-  {
-    value: 'bytes30',
-    label: 'bytes30',
-  },
-  {
-    value: 'bytes31',
-    label: 'bytes31',
-  },
-  {
-    value: 'bytes32',
-    label: 'bytes32',
-  },
-  {
-    value: 'IERC20',
-    label: 'IERC20',
-  },
-  {
-    value: 'int',
-    label: 'int',
-  },
-  {
-    value: 'int8',
-    label: 'int8',
-  },
-  {
-    value: 'int16',
-    label: 'int16',
-  },
-  {
-    value: 'int32',
-    label: 'int32',
-  },
-  {
-    value: 'int64',
-    label: 'int64',
-  },
-  {
-    value: 'int128',
-    label: 'int128',
-  },
-  {
-    value: 'int256',
-    label: 'int256',
-  },
-  {
-    value: 'uint',
-    label: 'uint',
-  },
-  {
-    value: 'uint8',
-    label: 'uint8',
-  },
-  {
-    value: 'uint16',
-    label: 'uint16',
-  },
-  {
-    value: 'uint32',
-    label: 'uint32',
-  },
-  {
-    value: 'uint64',
-    label: 'uint64',
-  },
-  {
-    value: 'uint128',
-    label: 'uint128',
-  },
-  {
-    value: 'uint256',
-    label: 'uint256',
-  },
-  {
-    value: 'string',
-    label: 'string',
-  },
-];
-
 export const TITLE_VALUES_TAB = [
   {
     id: 1,
@@ -521,27 +314,30 @@ export const PLACE_HOLDER = {
   [VALUE_TYPE_ENUM.STRING]: 'an empty string (empty value)',
 };
 
-export const INIT_VALUE_TYPE = {
-  _id: Date.now(),
-  type: '',
-  isArray: false,
-  scope: 'public',
-  constant: '',
-  label: '',
-  valueDefault: '',
-  isDefaultValue: true,
-  functions: [],
-};
+export const INIT_VALUE_TYPE = [
+  {
+    type: '',
+    isArray: false,
+    scope: 'public',
+    constant: '',
+    label: '',
+    valueDefault: '',
+    isDefaultValue: true,
+    functions: [],
+  },
+];
 
-export const INIT_OBJECT_TYPE = {
-  type: '',
-  item: '',
-  isArray: false,
-  scope: 'public',
-  name: '',
-  functions: [],
-  assignedValues: [],
-};
+export const INIT_OBJECT_TYPE = [
+  {
+    type: '',
+    item: '',
+    isArray: false,
+    scope: 'public',
+    name: '',
+    functions: [],
+    assignedValues: [],
+  },
+];
 
 export const STRUCT = [
   {
@@ -579,8 +375,8 @@ export const ENUM_ITEM = [
 ];
 
 export const FUNCTION_TYPE = {
-  POOLINFO: 'POOLINFO',
-  USERINFO: 'USERINFO',
+  POOLINFO: 'PoolInfo',
+  USERINFO: 'UserInfo',
 };
 
 export const STRUCT_POOLINFO = {
@@ -887,4 +683,54 @@ export const convertToDeclaration = (parts) => {
     node.value = value;
   }
   return node;
+};
+
+export const generateDataType = () => {
+  const types = [
+    {
+      value: 'address',
+      label: 'address',
+    },
+    {
+      value: 'bool',
+      label: 'bool',
+    },
+  ];
+
+  // generate bytes type
+  for (let i = 0; i <= 32; i++) {
+    const value = i > 0 ? `bytes${i}` : 'bytes';
+    types.push({
+      value: value,
+      label: value,
+    });
+  }
+  // add IERC type
+  types.push({
+    value: `IERC20`,
+    label: `IERC20`,
+  });
+  // generate int type
+  for (let i = 0; i <= 256; i += 8) {
+    const value = i > 0 ? `int${i}` : 'int';
+    types.push({
+      value: value,
+      label: value,
+    });
+  }
+  // generate uint type
+  for (let i = 0; i <= 256; i += 8) {
+    const value = i > 0 ? `uint${i}` : 'uint';
+    types.push({
+      value: value,
+      label: value,
+    });
+  }
+  // add string type
+  types.push({
+    value: `string`,
+    label: `string`,
+  });
+
+  return types;
 };

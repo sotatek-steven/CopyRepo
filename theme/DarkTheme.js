@@ -54,6 +54,7 @@ export const darkTheme = createTheme({
       primary: '#E1E1E1',
       secondary: '#F6F6F6',
       // disabled: 'rgba(55, 65, 81, 0.48)'
+      colorNode: '#4D4D4D',
     },
   },
   shape: {

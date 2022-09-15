@@ -1,26 +1,11 @@
-import { OBJECT_TYPE } from '@/config/constant/common';
 import { createModel } from '@rematch/core';
 
-const TYPES = [
-  {
-    value: OBJECT_TYPE.STRUCT,
-    label: 'Structs',
-  },
-  {
-    value: 'enum',
-    label: 'Enums',
-  },
-];
-
-const object = createModel({
+const mapping = createModel({
   state: {
-    objects: [],
-    types: TYPES,
     numberError: 0,
     errorFunctions: [],
   },
   reducers: {
-    setObjects: (state, objects) => ({ ...state, objects }),
     setNumberError: (state, numberError) => ({ ...state, numberError }),
     setErrorFunctions: (state, errorFunctions) => ({ ...state, errorFunctions }),
     resetError: (state) => ({ ...state, numberError: 0, errorFunctions: [] }),
@@ -30,4 +15,4 @@ const object = createModel({
   },
 });
 
-export default object;
+export default mapping;
