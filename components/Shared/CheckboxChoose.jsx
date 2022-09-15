@@ -9,19 +9,16 @@ import {
   Typography,
   useTheme,
 } from '@mui/material';
-import { useRadioGroup } from '@mui/material/RadioGroup';
-import React, { useEffect } from 'react';
+import React from 'react';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 import { styled } from '@mui/material/styles';
 import _ from 'lodash';
 
-const CheckBoxStyled = styled(Card)(({ theme }) => ({
+const CheckBoxStyled = styled(Card)({
   minWidth: 500,
   px: 1.5,
   borderRadius: '4px',
-  marginTop: '24px',
-  marginRight: '30px',
   cursor: 'pointer',
   '@media screen and (max-width:1200px )': {
     minWidth: '400px',
@@ -33,7 +30,7 @@ const CheckBoxStyled = styled(Card)(({ theme }) => ({
   '@media screen and (max-width:600px )': {
     minWidth: '200px',
   },
-}));
+});
 
 const RadioCustom = styled(Radio)(({ theme }) => ({
   color: theme.palette.primary.green1,
@@ -42,19 +39,12 @@ const RadioCustom = styled(Radio)(({ theme }) => ({
   },
 }));
 
-const Description = styled('div')(({ theme }) => ({
-  fontSize: '14px',
-  paddingRight: '32px',
-  fontFamily: 'Segoe UI',
-  color: theme.palette.text.primary,
-  ...theme.components.truncate.threeLineEllipsis,
-}));
-
-const CheckboxChoose = ({ options, name, handleChange, idTemplate }) => {
+const CheckboxChoose = ({ options, handleChange, idTemplate }) => {
   const theme = useTheme();
   return _.isArray(options) && options.length > 0 ? (
     <FormControl>
       <RadioGroup
+        sx={{ display: 'flex', flexDirection: 'column', gap: '24px' }}
         aria-labelledby="demo-radio-buttons-group-label"
         name="radio-buttons-group"
         defaultValue={options[0]._id}

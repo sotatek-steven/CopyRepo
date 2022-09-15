@@ -110,9 +110,9 @@ const TemplateDialog = ({ open, setOpen, type }) => {
 
   const DetailsTemplate = useMemo(() => {
     return modulesByTemplate ? (
-      <Grid container>
-        <Scrollbars autoHeight autoHeightMin="100%" autoHeightMax="450px" autoHide>
-          <Grid item xs={12} sx={{ height: '500px' }}>
+      <Box sx={{ height: '100%', display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ flexGrow: 1, pt: 3, px: 1 }}>
+          <Scrollbars autoHeight autoHide autoHeightMax={600}>
             {modulesByTemplate?.length > 0 &&
               modulesByTemplate.map((item, index) => {
                 const listFunctions = [];
@@ -128,14 +128,13 @@ const TemplateDialog = ({ open, setOpen, type }) => {
                 });
                 return (
                   <>
+                    {' '}
                     <Box
                       key={item._id}
                       sx={{
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center',
-                        pt: 3,
-                        px: 1.5,
                       }}>
                       <Button
                         startIcon={
@@ -182,36 +181,27 @@ const TemplateDialog = ({ open, setOpen, type }) => {
                   </>
                 );
               })}
-          </Grid>
-        </Scrollbars>
-        <Grid item xs={12} sx={{ mr: 2 }}>
-          <Box sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Button
-              variant="outlined"
-              sx={{ color: '#fff', border: '1px solid #fff', minWidth: '114px', mx: 1 }}
-              onClick={(e) => handleSubmit(e, 'skip')}>
-              Skip
-            </Button>
-            <Button variant="contained" onClick={(e) => handleSubmit(e, 'create')}>
-              {' '}
-              Let&apos;s do this
-            </Button>
-          </Box>
-        </Grid>
-      </Grid>
+          </Scrollbars>
+        </Box>
+        <Box sx={{ display: 'flex', justifyContent: 'flex-end', padding: '20px 20px' }}>
+          <Button
+            variant="outlined"
+            sx={{ color: '#fff', border: '1px solid #fff', minWidth: '114px', mx: 1 }}
+            onClick={(e) => handleSubmit(e, 'skip')}>
+            Skip
+          </Button>
+          <Button variant="contained" onClick={(e) => handleSubmit(e, 'create')}>
+            {' '}
+            Let&apos;s do this
+          </Button>
+        </Box>
+      </Box>
     ) : null;
   }, [modulesByTemplate, openCollapse]);
 
   return (
-    <Dialog
-      component="form"
-      // onSubmit={handleSubmit}
-      fullWidth
-      maxWidth="lg"
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="responsive-dialog-title">
-      <DialogTitle sx={{ textAlign: 'left', mb: 2 }} id="responsive-dialog-title">
+    <Dialog fullWidth maxWidth="lg" open={open} onClose={handleClose}>
+      <DialogTitle sx={{ textAlign: 'left' }}>
         <Box>
           <Typography sx={{ fontSize: '22px' }}>Suggested Smart Contracts for you</Typography>
           <Typography sx={{ fontSize: '14px', py: 1, fontFamily: 'Segoe UI' }}>
@@ -230,28 +220,30 @@ const TemplateDialog = ({ open, setOpen, type }) => {
         </IconButton>
       </DialogTitle>
       <DialogContent>
-        <Grid container sx={{ borderTop: '1px solid', borderColor: theme.shape.borderColor }}>
+        <Grid
+          container
+          sx={{ borderTop: '1px solid', borderColor: theme.shape.borderColor, paddingTop: '24px' }}
+          spacing={2}>
           <Grid
             sx={{
               '&:hover': { opacity: 0.7 },
-              paddingTop: '24px',
               overflow: 'hidden',
             }}
             item
-            xs={6}>
-            <CheckboxChoose
-              name="template"
-              options={listTemplate}
-              handleChange={handeSetIdTemplate}
-              idTemplate={idTemplate}
-            />
+            xs={5}>
+            <Scrollbars autoHeight autoHide autoHeightMax={700}>
+              <CheckboxChoose
+                name="template"
+                options={listTemplate}
+                handleChange={handeSetIdTemplate}
+                idTemplate={idTemplate}
+              />
+            </Scrollbars>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={7}>
             <Box
               sx={{
-                width: '575px',
-                height: '500px',
-                overflowY: 'hidden',
+                height: '100%',
                 background: theme.palette.background.default,
               }}>
               {DetailsTemplate}
