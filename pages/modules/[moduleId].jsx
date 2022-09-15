@@ -18,6 +18,7 @@ import FunctionCanvas from '@/components/FunctionCanvas';
 import AddFieldTab from '@/components/ModulePage/AddFieldTab';
 import useModulePage from '@/components/ModulePage/hooks/useModulePage';
 import SavingScreen from '@/components/Saving';
+import useModule from '@/hooks/useModule';
 
 const ContentWapper = styled('div')(() => ({
   display: 'flex',
@@ -168,6 +169,8 @@ const ModulePage = () => {
   const [sources, setSource] = useState(null);
   const [addFieldTab, setAddFieldTab] = useState('values');
   const [totalError, setTotalError] = useState(0);
+  const { checkValidateMapping } = useModule();
+  const { duplicateNames } = useSelector((state) => state.modules);
 
   // Variable name of All Tab
   useEffect(() => {
@@ -201,6 +204,16 @@ const ModulePage = () => {
   useEffect(() => {
     setTotalError(numberErrorObject + numberErrorValue + numberErrorMapping + numberErrorEvent);
   }, [numberErrorObject, numberErrorValue, numberErrorMapping, numberErrorEvent]);
+
+  useEffect(() => {
+    if (moduleState?.variables?.mappings) {
+      const { data, numErr, funcIds } = checkValidateMapping(moduleState?.variables?.mappings);
+      mapping.setNumberError(numErr);
+      mapping.setErrorFunctions(funcIds);
+
+      userModule.updateMappings(data);
+    }
+  }, [duplicateNames, moduleState?.variables?.mappings]);
 
   useEffect(() => {
     fetchDetailModule();

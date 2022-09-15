@@ -1,8 +1,7 @@
-import useModule from '@/hooks/useModule';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { styled, Tab } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import EventErrorTabPanel from '../EventErrorTabPanel';
 import MappingTabPanel from '../MappingTabPanel';
 import ObjectTabPanel from '../ObjectTabPanel';
@@ -84,21 +83,10 @@ const TabPanelContent = styled(TabPanel)({
 const AddFieldTab = ({ tab }) => {
   const [activeTab, setActiveTab] = useState('values');
 
-  const moduleState = useSelector((state) => state.userModule);
-  const { duplicateNames } = useSelector((state) => state.modules);
   const { numberError: numberErrorObject } = useSelector((state) => state.object);
   const { numberError: numberErrorValue } = useSelector((state) => state.value);
   const { numberError: numberErrorMapping } = useSelector((state) => state.mapping);
   const { numberError: numberErrorEvent } = useSelector((state) => state.eventError);
-  const { userModule, mapping } = useDispatch();
-  const { checkValidateMapping } = useModule();
-
-  useEffect(() => {
-    const { data, numErr, funcIds } = checkValidateMapping(moduleState?.variables?.mappings);
-    mapping.setNumberError(numErr);
-    mapping.setErrorFunctions(funcIds);
-    userModule.updateMappings(data);
-  }, [duplicateNames]);
 
   useEffect(() => {
     setActiveTab(tab);

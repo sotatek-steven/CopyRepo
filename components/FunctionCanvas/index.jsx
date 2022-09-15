@@ -139,8 +139,8 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
     let funcDepen = [];
 
     // Create Struct
-    const listStructName = _.concat(structs, listStruct).map((item) => item?.name);
-    const listEnumName = _.concat(enums, listEnum).map((item) => item?.name);
+    let listStructName = _.concat(structs, listStruct).map((item) => item?.name);
+    let listEnumName = _.concat(enums, listEnum).map((item) => item?.name);
 
     funcData?.structs?.forEach((struct) => {
       if (!listStructName.includes(struct?.name)) {
@@ -170,6 +170,16 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
     listFunc.push(funcData);
 
     funcDepen = listFunction?.filter((item) => funcData?.dependencies?.includes(item?._id));
+
+    if (funcData?.modifiers?.length) {
+      let modifierDepen = [];
+      funcData?.modifiers?.forEach((modi) => {
+        modifierDepen = _.concat(modifierDepen, modi?.content?.dependencies);
+      });
+
+      funcDepen = _.uniq(_.concat(funcDepen, modifierDepen));
+    }
+
     funcDepen.forEach((depen, index) => {
       position = {
         ...position,
@@ -187,6 +197,23 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
         },
       });
       listFunc.push(depen);
+
+      listStructName = _.concat(structs, listStruct).map((item) => item?.name);
+      listEnumName = _.concat(enums, listEnum).map((item) => item?.name);
+
+      // Create Struct of dependence
+      depen?.structs?.forEach((struct) => {
+        if (!listStructName.includes(struct?.name)) {
+          listStruct.push(struct);
+        }
+      });
+
+      // Create Enum of dependence
+      depen?.enums?.forEach((item) => {
+        if (!listEnumName.includes(item?.name)) {
+          listEnum.push(item);
+        }
+      });
 
       if (depen?.dependencies?.length) {
         createNodeFromFunc(depen, type, position, newNode, listFunc, listStruct, listEnum);

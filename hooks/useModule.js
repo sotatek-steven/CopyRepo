@@ -39,7 +39,7 @@ const useModule = () => {
 
     // const duplicateNames = _.uniq(data?.map(({ label }) => label).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i));
 
-    data.forEach((item) => {
+    data?.forEach((item) => {
       if (item?.label.trim()) {
         if (duplicateNames?.includes(item.label)) {
           numErr++;
