@@ -11,7 +11,18 @@ export const createNodes = (functions, coordinates) => {
       return funcData._id === functionId;
     });
 
-    edges = _.unionBy(_.concat(edges, createEdges(item?.func, data?.dependencies)), 'id');
+    let dependencies = data?.dependencies;
+
+    if (data?.modifiers?.length) {
+      let modiDepen = [];
+      data?.modifiers.forEach((modi) => {
+        const idDepen = modi?.content?.dependencies.map((depen) => depen?._id);
+        modiDepen = _.concat(modiDepen, idDepen);
+      });
+      dependencies = _.concat(dependencies, modiDepen);
+    }
+
+    edges = _.unionBy(_.concat(edges, createEdges(item?.func, dependencies)), 'id');
     return {
       id: item?.func,
       type,
