@@ -69,7 +69,7 @@ const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) =>
     if (!moduleState.variables) return;
     let globalVariables = [];
     const { mappings, structs, values } = moduleState.variables;
-    mappings.forEach((value) => {
+    mappings?.forEach((value) => {
       let { label, isArray, type } = value;
       let stringbuffer = [];
       generateTypeOfMapping(type, stringbuffer);
@@ -81,7 +81,7 @@ const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) =>
       });
     });
 
-    structs.forEach((value) => {
+    structs?.forEach((value) => {
       const { label, type, isArray } = value;
       globalVariables.push({
         label,
@@ -91,7 +91,7 @@ const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) =>
       });
     });
 
-    values.forEach((value) => {
+    values?.forEach((value) => {
       const { label, type, isArray } = value;
       globalVariables.push({
         label,

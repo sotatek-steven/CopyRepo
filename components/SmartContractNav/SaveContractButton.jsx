@@ -23,41 +23,46 @@ const SaveContractButton = () => {
   const { contract } = useDispatch();
 
   const saveContract = async () => {
-    setLoading(true);
-    const { code, message, data } = await contract.updateContract();
+    try {
+      setLoading(true);
+      const { code, message, data } = await contract.updateContract();
 
-    const errors = data.errors;
-    if (code == HTTP_CODE.SUCCESS) {
-      if (errors.length > 0) {
-        toast(
-          <>
-            <CompiledErrorToast errors={errors} />
-          </>,
-          {
-            position: 'bottom-center',
-            autoClose: 5000,
-            hideProgressBar: true,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            closeButton: false,
-            bodyClassName: classes.customToast,
-            style: {
-              width: '457px',
-              right: '50%',
-              padding: 0,
-              background: theme.palette.background.dark,
-            },
-          }
-        );
-      } else
-        toast.success('Save contract success', {
-          style: { top: '3.5em' },
-        });
-      return;
+      const errors = data.errors;
+      if (code == HTTP_CODE.SUCCESS) {
+        if (errors.length > 0) {
+          toast(
+            <>
+              <CompiledErrorToast errors={errors} />
+            </>,
+            {
+              position: 'bottom-center',
+              autoClose: 5000,
+              hideProgressBar: true,
+              closeOnClick: true,
+              pauseOnHover: true,
+              draggable: true,
+              closeButton: false,
+              bodyClassName: classes.customToast,
+              style: {
+                width: '457px',
+                right: '50%',
+                padding: 0,
+                background: theme.palette.background.dark,
+              },
+            }
+          );
+        } else
+          toast.success('Save contract success', {
+            style: { top: '3.5em' },
+          });
+        return;
+      }
+      toast.error('saving contract failed!', message);
+    } catch (error) {
+      console.log('error');
+    } finally {
+      setLoading(false);
     }
-    toast.error('saving contract failed!', message);
-    setLoading(false);
   };
 
   return (
