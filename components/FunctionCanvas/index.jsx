@@ -52,10 +52,21 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
     if (!id || !functionId) return;
 
     let isDependence = false;
-    nodes.every((node) => {
+
+    initialNodes.every((node) => {
       if (node?.data?.dependencies?.includes(functionId)) {
         isDependence = true;
         return false;
+      }
+      if (node?.data?.modifiers.length) {
+        node?.data?.modifiers.every((modi) => {
+          if (modi?.content?.dependencies?.includes(functionId)) {
+            isDependence = true;
+            return false;
+          } else {
+            return true;
+          }
+        });
       }
       return true;
     });
