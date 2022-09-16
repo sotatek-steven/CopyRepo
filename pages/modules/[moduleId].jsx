@@ -213,7 +213,7 @@ const ModulePage = () => {
 
       userModule.updateMappings(data);
     }
-  }, [duplicateNames, moduleState?.variables?.mappings]);
+  }, [duplicateNames]);
 
   useEffect(() => {
     fetchDetailModule();

@@ -24,8 +24,7 @@ const useModulePage = () => {
     setLoading(true);
     try {
       if (!moduleId) return;
-      object.setObjects([]);
-      value.setValues(INIT_VALUE_TYPE);
+
       const data = await userModule.getDetailModule(moduleId);
       const events = data?.sources?.events.map((item) => {
         return {
@@ -49,7 +48,8 @@ const useModulePage = () => {
       userModule.set(data);
       initialModule.setData(data);
     } catch (error) {
-      console.log('error');
+      object.setObjects([]);
+      value.setValues(INIT_VALUE_TYPE);
     } finally {
       setLoading(false);
     }
