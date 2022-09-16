@@ -32,7 +32,7 @@ const Container = styled('div')(() => ({
 const ModuleActionList = () => {
   const { userModule, struct } = useDispatch();
   const { structs } = useSelector((state) => state.struct);
-  const { owner, variables } = useSelector((state) => state.userModule);
+  const { owner, variables, sources } = useSelector((state) => state.userModule);
   const mapping = useSelector((state) => state.mapping);
   const object = useSelector((state) => state.object);
   const value = useSelector((state) => state.value);
@@ -50,11 +50,13 @@ const ModuleActionList = () => {
   const { checkValidateMapping } = useModule();
 
   const errorFunc = useMemo(() => {
+    if (!sources?.functions.length) {
+      return [];
+    }
     const errorFunctions = mapping.errorFunctions.concat(object.errorFunctions, value.errorFunctions);
     const uniqErrorFunctions = _.uniq(errorFunctions);
-
     return uniqErrorFunctions;
-  }, [mapping, object, value]);
+  }, [mapping, object, value, sources?.functions]);
 
   const saveModule = async () => {
     setLoading(true);
