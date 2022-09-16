@@ -199,7 +199,9 @@ const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) =>
       aria-describedby="modal-modal-description"
       open={open}
       onClose={(_, reason) => {
-        if (reason !== 'backdropClick') {
+        if (reason === 'escapeKeyDown') {
+          handleSubmit();
+        } else if (reason !== 'backdropClick') {
           onClose();
         }
       }}>
