@@ -50,7 +50,7 @@ const ModuleActionList = () => {
   const { checkValidateMapping } = useModule();
 
   const errorFunc = useMemo(() => {
-    if (!sources?.functions.length) {
+    if (!sources?.functions?.length) {
       return [];
     }
     const errorFunctions = mapping.errorFunctions.concat(object.errorFunctions, value.errorFunctions);

@@ -1,3 +1,4 @@
+import { EVENT_ERROR_TYPE } from '@/config/constant/common';
 import { Box } from '@mui/system';
 import _ from 'lodash';
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
@@ -14,6 +15,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import CustomNodes from '../CustomNode';
 import useEnumPage from '../EnumTabPanel/hooks/useEnumPage';
+import useEventErrorTab from '../EventErrorTabPanel/hooks/useEventErrorTab';
 import IndentifierModal from '../IndentifierModal';
 import useStructPage from '../StructTabPanel/hooks/useStructPage';
 
@@ -37,6 +39,7 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
   const nodeTypes = useMemo(() => CustomNodes, []);
   const { handelAddStruct, convertStructToFEDisplay } = useStructPage();
   const { handelAddEnum, convertEnumToFEDisplay } = useEnumPage();
+  const { convertToEventErrorShow } = useEventErrorTab();
   const [identifierModalOpen, setIdentifierModalOpen] = useState(false);
   const [missingIdentifiers, setMissingIdentifiers] = useState([]);
 
@@ -291,6 +294,30 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
       //add new node
       const { newNode, listFunc, listStruct, listEnum } = createNodeFromFunc(data, type, position);
 
+      // get list event - error
+      let dataEventError = [];
+      listFunc.forEach((func) => {
+        if (func?.events?.length) {
+          const events = func.events.map((item) => {
+            return {
+              ...item,
+              type: EVENT_ERROR_TYPE.EVENT,
+            };
+          });
+
+          dataEventError = _.concat(dataEventError, events);
+        }
+        if (func?.errors?.length) {
+          const errors = func.errors.map((item) => {
+            return {
+              ...item,
+              type: EVENT_ERROR_TYPE.ERROR,
+            };
+          });
+          dataEventError = _.concat(dataEventError, errors);
+        }
+      });
+
       //open Identifier modal
       const missingIdentify = getMissingIdentifiers(listFunc);
       const isOpen = !!missingIdentify.length;
@@ -301,6 +328,7 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
       addNewFuctionToModule(listFunc, position);
       handelAddStruct(convertStructToFEDisplay(listStruct));
       handelAddEnum(convertEnumToFEDisplay(listEnum));
+      convertToEventErrorShow(dataEventError);
     },
     [reactFlowInstance, setNodes, moduleState.functions, nodes]
   );

@@ -1,9 +1,8 @@
 import { ELEMENT_TYPE, EVENT_ERROR_TYPE } from '@/config/constant/common';
 import { REGEX } from '@/config/constant/regex';
 import _ from 'lodash';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { toast } from 'react-toastify';
 
 const INIT_ITEM = {
   type: '',
@@ -22,6 +21,7 @@ const regex = new RegExp(REGEX.VARIABLE_NAME);
 const useEventErrorTab = () => {
   const { dataEventError } = useSelector((state) => state.eventError);
   const moduleDetail = useSelector((state) => state.userModule);
+  const { duplicateNames } = useSelector((state) => state.modules);
   const { eventError, userModule } = useDispatch();
   const [typeParam, setTypeParam] = useState('');
 
@@ -41,37 +41,52 @@ const useEventErrorTab = () => {
     const data = [...dataEventError];
     data.splice(iItem, 1);
 
-    eventError.setDataEventError(data);
-    const { events, errors } = convertToEventErrorModule(data);
+    const { data: dataEE, numErr } = checkValidateItemName(data);
+    eventError.setDataEventError(dataEE);
+    eventError.setNumberError(numErr);
+
+    const { events, errors } = convertToEventErrorModule(dataEE);
     userModule.updateEvents(events);
     userModule.updateErrors(errors);
   };
 
-  const checkValidateItemName = (type, name) => {
-    let errorMessage = '';
-    const isDuplicateModuleName = moduleDetail?.name?.toUpperCase() === name?.toUpperCase();
-    const listFuncName = moduleDetail?.sources?.functions?.map((item) => item?.name?.toUpperCase());
-    const isDuplicateFuncName = listFuncName?.includes(name?.toUpperCase());
+  useEffect(() => {
+    if (dataEventError?.length) {
+      const { data, numErr } = checkValidateItemName(dataEventError);
+      eventError.setDataEventError(data);
+      eventError.setNumberError(numErr);
+      const { events, errors } = convertToEventErrorModule(data);
 
-    // check duplicate variable
-    const valuesVariable = moduleDetail?.variables?.values?.map((item) => item?.label?.toUpperCase());
-    const structsVariable = moduleDetail?.variables?.structs?.map((item) => item?.label?.toUpperCase());
-    const mappingsVariable = moduleDetail?.variables?.mappings?.map((item) => item?.label?.toUpperCase());
-
-    const listVariable = _.concat(valuesVariable, structsVariable, mappingsVariable);
-    const isDuplicateVariableName = listVariable?.includes(name?.toUpperCase());
-
-    if (!regex.test(name.trim())) {
-      errorMessage = type === EVENT_ERROR_TYPE.EVENT ? 'Invalid Event name' : 'Invalid Error name';
-    } else if (isDuplicateModuleName) {
-      errorMessage = 'Found existing module with the same name';
-    } else if (isDuplicateFuncName) {
-      errorMessage = 'Found existing function with the same name';
-    } else if (isDuplicateVariableName) {
-      errorMessage = 'Found existing state variable with the same name';
+      userModule.updateEvents(events);
+      userModule.updateErrors(errors);
     }
+  }, [duplicateNames]);
 
-    return errorMessage;
+  const checkValidateItemName = (data) => {
+    let numErr = 0;
+    const listFuncName = moduleDetail?.sources?.functions?.map((item) => item?.name);
+    data.forEach((item) => {
+      const isDuplicateModuleName = moduleDetail?.name === item?.name;
+      const isDuplicateFuncName = listFuncName?.includes(item?.name);
+      const isDuplicateVariableName = duplicateNames?.includes(item?.name);
+      if (item?.name) {
+        if (isDuplicateVariableName) {
+          item.errorName = 'Found existing state variable with the same name';
+          numErr++;
+        } else if (isDuplicateModuleName) {
+          item.errorName = 'Found existing module with the same name';
+          numErr++;
+        } else if (isDuplicateFuncName) {
+          item.errorName = 'Found existing function with the same name';
+          numErr++;
+        } else {
+          item.errorName = null;
+        }
+      } else if (item?.errorName) {
+        numErr++;
+      }
+    });
+    return { data, numErr };
   };
 
   const handleChangeItem = (itemId, field, e, type) => {
@@ -86,8 +101,6 @@ const useEventErrorTab = () => {
 
           if (!e.target.value.trim()) {
             data[iItem]['errorName'] = 'This field is required';
-          } else {
-            data[iItem]['errorName'] = checkValidateItemName(data[iItem]['type'], e.target.value);
           }
         }
         break;
@@ -121,8 +134,11 @@ const useEventErrorTab = () => {
         break;
     }
 
-    eventError.setDataEventError(data);
-    const { events, errors } = convertToEventErrorModule(data);
+    const { data: dataEE, numErr } = checkValidateItemName(data);
+    eventError.setDataEventError(dataEE);
+    eventError.setNumberError(numErr);
+
+    const { events, errors } = convertToEventErrorModule(dataEE);
     userModule.updateEvents(events);
     userModule.updateErrors(errors);
   };
@@ -246,36 +262,36 @@ const useEventErrorTab = () => {
         errorName: null,
       };
     });
-    eventError.setDataEventError(cloneData);
-    return cloneData;
+
+    const { data, numErr } = checkValidateItemName(cloneData);
+    eventError.setDataEventError(data);
+    eventError.setNumberError(numErr);
+
+    const { events, errors } = convertToEventErrorModule(data);
+    userModule.updateEvents(events);
+    userModule.updateErrors(errors);
   };
 
   const checkErrorTab = () => {
     let isError = false;
     const data = [...dataEventError];
+    let numErr = 0;
     data.forEach((item) => {
       if (!item?.name?.trim()) {
         item.errorName = 'This field is required';
         isError = true;
-      } else if (checkValidateItemName(item?.type, item?.name)) {
-        item.errorName = checkValidateItemName(item?.type, item?.name);
+      } else if (item?.errorName) {
         isError = true;
+        numErr++;
       }
-      item?.parameters.forEach((param) => {
-        if (!param?.name.trim()) {
-          param.errorName = 'Name should not be blank';
-          isError = true;
-        } else if (!regex.test(param?.name)) {
-          param.errorName = 'Invalid name';
-          isError = true;
-        }
-      });
     });
 
     eventError.setDataEventError(data);
-    if (isError) {
-      toast.warning('Event & Error tab has errors');
-    }
+    eventError.setNumberError(numErr);
+
+    const { events, errors } = convertToEventErrorModule(data);
+    userModule.updateEvents(events);
+    userModule.updateErrors(errors);
 
     return isError;
   };
@@ -291,6 +307,7 @@ const useEventErrorTab = () => {
     handleChangeParam,
     convertToEventErrorShow,
     checkErrorTab,
+    convertToEventErrorModule,
   };
 };
 
