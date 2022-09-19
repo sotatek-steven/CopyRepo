@@ -158,7 +158,8 @@ const ModulePage = () => {
   const { objects, numberError: numberErrorObject } = useSelector((state) => state.object);
   const { values, numberError: numberErrorValue } = useSelector((state) => state.value);
   const { numberError: numberErrorMapping } = useSelector((state) => state.mapping);
-  const { dataEventError, numberError: numberErrorEvent } = useSelector((state) => state.eventError);
+  const { dataEvent, numberError: numberErrorEvent } = useSelector((state) => state.event);
+  const { dataError, numberError: numberErrorError } = useSelector((state) => state.error);
   const { moduleMode, template, value, object, mapping, modules } = useDispatch();
   const { fetchDetailModule, loading } = useModulePage();
   const [tabVertical, setTabVertical] = useState('canvas');
@@ -185,7 +186,12 @@ const ModulePage = () => {
         listVariableName.push(item?.label);
       }
     });
-    dataEventError.forEach((item) => {
+    dataEvent.forEach((item) => {
+      if (item?.name) {
+        listVariableName.push(item?.name);
+      }
+    });
+    dataError.forEach((item) => {
       if (item?.name) {
         listVariableName.push(item?.name);
       }
@@ -199,11 +205,11 @@ const ModulePage = () => {
     const duplicateNames = listVariableName.map((item) => item).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i);
 
     modules.setDuplicateNames(duplicateNames);
-  }, [objects, values, dataEventError, moduleState?.variables?.mappings]);
+  }, [objects, values, dataEvent, dataError, moduleState?.variables?.mappings]);
 
   useEffect(() => {
-    setTotalError(numberErrorObject + numberErrorValue + numberErrorMapping + numberErrorEvent);
-  }, [numberErrorObject, numberErrorValue, numberErrorMapping, numberErrorEvent]);
+    setTotalError(numberErrorObject + numberErrorValue + numberErrorMapping + numberErrorEvent + numberErrorError);
+  }, [numberErrorObject, numberErrorValue, numberErrorMapping, numberErrorEvent, numberErrorError]);
 
   useEffect(() => {
     if (moduleState?.variables?.mappings) {

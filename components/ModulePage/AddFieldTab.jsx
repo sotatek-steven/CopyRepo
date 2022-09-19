@@ -2,7 +2,8 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { styled, Tab } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
-import EventErrorTabPanel from '../EventErrorTabPanel';
+import ErrorTabPanel from '../ErrorTabPanel';
+import EventErrorTabPanel from '../EventTabPanel';
 import MappingTabPanel from '../MappingTabPanel';
 import ObjectTabPanel from '../ObjectTabPanel';
 import ValuesTabPanel from '../ValuesPanel';
@@ -24,9 +25,14 @@ const TAB_LIST = [
     tabPanel: 'Mappings',
   },
   {
-    id: 'events-errors',
-    label: 'Events & Errors',
-    tabPanel: 'Events & Errors',
+    id: 'events',
+    label: 'Events',
+    tabPanel: 'Events',
+  },
+  {
+    id: 'errors',
+    label: 'Errors',
+    tabPanel: 'Errors',
   },
 ];
 
@@ -86,7 +92,8 @@ const AddFieldTab = ({ tab }) => {
   const { numberError: numberErrorObject } = useSelector((state) => state.object);
   const { numberError: numberErrorValue } = useSelector((state) => state.value);
   const { numberError: numberErrorMapping } = useSelector((state) => state.mapping);
-  const { numberError: numberErrorEvent } = useSelector((state) => state.eventError);
+  const { numberError: numberErrorEvent } = useSelector((state) => state.event);
+  const { numberError: numberErrorError } = useSelector((state) => state.error);
 
   useEffect(() => {
     setActiveTab(tab);
@@ -108,9 +115,8 @@ const AddFieldTab = ({ tab }) => {
                 {tab.id === 'mappings' && !!numberErrorMapping && (
                   <div className="number-error">{numberErrorMapping}</div>
                 )}
-                {tab.id === 'events-errors' && !!numberErrorEvent && (
-                  <div className="number-error">{numberErrorEvent}</div>
-                )}
+                {tab.id === 'events' && !!numberErrorEvent && <div className="number-error">{numberErrorEvent}</div>}
+                {tab.id === 'errors' && !!numberErrorError && <div className="number-error">{numberErrorError}</div>}
               </div>
             );
 
@@ -124,8 +130,11 @@ const AddFieldTab = ({ tab }) => {
         <TabPanelContent value="mappings">
           <MappingTabPanel />
         </TabPanelContent>
-        <TabPanelContent value="events-errors">
+        <TabPanelContent value="events">
           <EventErrorTabPanel />
+        </TabPanelContent>
+        <TabPanelContent value="errors">
+          <ErrorTabPanel />
         </TabPanelContent>
       </Container>
     </TabContext>

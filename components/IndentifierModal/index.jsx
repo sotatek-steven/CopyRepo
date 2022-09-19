@@ -10,6 +10,7 @@ import useValuesTab from '../ValuesPanel/hooks/useValuesTab';
 import useObjectTab from '../ObjectTabPanel/hooks/useObjectTab';
 import ObjectID from 'bson-objectid';
 import useModule from '@/hooks/useModule';
+import _ from 'lodash';
 
 const ModalBody = styled('div')({
   padding: '20px 30px',
@@ -147,10 +148,15 @@ const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) =>
           case 'objects': {
             const { func, label, type, isArray, scope, constant, valueDefault } = identifier;
             const mappingToFunctions = func.map((item) => `${item}-${label}`);
+            let objectType = 'struct';
+            const struct = moduleState?.sources?.structs?.find((str) => str?.name === type);
+            if (_.isEmpty(struct)) {
+              objectType = 'enum';
+            }
             newObjects.push({
               name: label,
               item: type,
-              type: 'struct',
+              type: objectType,
               isArray,
               scope,
               constant,
