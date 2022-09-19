@@ -46,8 +46,8 @@ const useModulePage = () => {
       getEnums(data?.sources?.enums);
       convertToObjectShow(data?.variables?.structs);
       converToValueShow(data?.variables?.values);
-      convertToEventShow(events);
-      convertToErrorShow(errors);
+      convertToEventShow(events, 'get');
+      convertToErrorShow(errors, 'get');
       userModule.set(data);
       initialModule.setData(data);
     } catch (error) {

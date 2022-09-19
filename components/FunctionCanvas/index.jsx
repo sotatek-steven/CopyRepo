@@ -310,8 +310,7 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
               type: EVENT_ERROR_TYPE.EVENT,
             };
           });
-
-          dataEvents = _.concat(dataEvent, events);
+          dataEvents = _.concat(dataEvents, events);
         }
         if (func?.errors?.length) {
           const errors = func.errors.map((item) => {
@@ -320,7 +319,7 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
               type: EVENT_ERROR_TYPE.ERROR,
             };
           });
-          dataErrors = _.concat(dataError, errors);
+          dataErrors = _.concat(dataErrors, errors);
         }
       });
 

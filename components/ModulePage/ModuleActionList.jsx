@@ -1,20 +1,14 @@
 import { HTTP_CODE } from '@/config/constant/common';
 import { styled } from '@mui/material';
-import React, { useMemo, useState } from 'react';
+import React, { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import { PrimaryButton } from '../ButtonStyle';
-import useObjectTab from '../ObjectTabPanel/hooks/useObjectTab';
 import useStructPage from '../StructTabPanel/hooks/useStructPage';
 import useModulePage from './hooks/useModulePage';
 import { makeStyles } from '@mui/styles';
 import ErrorsCompileModal from '../ErrorsCompileModal';
-import useEventTab from '../EventTabPanel/hooks/useEventTab';
-import useEnumPage from '../EnumTabPanel/hooks/useEnumPage';
-import useValuesTab from '../ValuesPanel/hooks/useValuesTab';
-import useModule from '@/hooks/useModule';
 import SavingScreen from '../Saving';
-import _ from 'lodash';
 
 export const useStyles = makeStyles(() => {
   return {
@@ -32,50 +26,19 @@ const Container = styled('div')(() => ({
 const ModuleActionList = () => {
   const { userModule, struct } = useDispatch();
   const { structs } = useSelector((state) => state.struct);
-  const { owner, variables, sources } = useSelector((state) => state.userModule);
-  const mapping = useSelector((state) => state.mapping);
-  const object = useSelector((state) => state.object);
-  const value = useSelector((state) => state.value);
+  const { owner } = useSelector((state) => state.userModule);
 
   const [errorsModalOpen, setErrorsModalOpen] = useState(false);
   const [errors, setErrors] = useState([]);
   const [loading, setLoading] = useState(false);
 
   const { handleErrorStructs } = useStructPage();
-  const { valueHasError } = useValuesTab();
-  const { objectHasError } = useObjectTab();
-  const { checkErrorEventTab } = useEventTab();
-  const { checkErrorEnumTab } = useEnumPage();
   const { fetchDetailModule } = useModulePage();
-  const { checkValidateMapping } = useModule();
-
-  const errorFunc = useMemo(() => {
-    if (!sources?.functions?.length) {
-      return [];
-    }
-    const errorFunctions = mapping.errorFunctions.concat(object.errorFunctions, value.errorFunctions);
-    const uniqErrorFunctions = _.uniq(errorFunctions);
-    return uniqErrorFunctions;
-  }, [mapping, object, value, sources?.functions]);
 
   const saveModule = async () => {
     setLoading(true);
     const isErrorStruct = handleErrorStructs();
     if (isErrorStruct) {
-      return;
-    }
-
-    const valueError = valueHasError();
-    const objectError = objectHasError();
-    const { numErr: mappingError } = checkValidateMapping(variables.mappings);
-    const eventError = checkErrorEventTab();
-    const enumError = checkErrorEnumTab();
-
-    if (valueError || objectError || !!mappingError || eventError || enumError || !!errorFunc?.length) {
-      setLoading(false);
-      toast.warning('Cannot save due to error', {
-        style: { top: '3.5em' },
-      });
       return;
     }
 
