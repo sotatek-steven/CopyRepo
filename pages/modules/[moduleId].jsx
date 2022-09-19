@@ -160,7 +160,7 @@ const ModulePage = () => {
   const { numberError: numberErrorMapping } = useSelector((state) => state.mapping);
   const { dataEvent, numberError: numberErrorEvent } = useSelector((state) => state.event);
   const { dataError, numberError: numberErrorError } = useSelector((state) => state.error);
-  const { moduleMode, template, value, object, mapping, modules } = useDispatch();
+  const { moduleMode, template, value, object, mapping, modules, event, error } = useDispatch();
   const { fetchDetailModule, loading } = useModulePage();
   const [tabVertical, setTabVertical] = useState('canvas');
   const [tabHorizontal, setTabHorizontal] = useState('logic');
@@ -227,6 +227,8 @@ const ModulePage = () => {
       value.resetError();
       object.resetError();
       mapping.resetError();
+      event.resetError();
+      error.resetError();
       userModule.set({});
     };
   }, [moduleId]);
