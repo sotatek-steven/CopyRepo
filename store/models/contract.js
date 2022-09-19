@@ -79,11 +79,25 @@ const contract = createModel({
       },
       async updateContract(payload, state) {
         const { _id, ...other } = payload && payload._id ? payload : state.contract.current;
+        const coordinates = other?.coordinates?.map((coor) => {
+          return {
+            module: coor?.module?._id,
+            position: coor?.position,
+          };
+        });
+        const body = {
+          name: other?.name,
+          description: other?.description,
+          domainId: other?.domainId,
+          tags: other?.tags,
+          modules: other?.modules,
+          coordinates: coordinates,
+        };
         const { code, data, message } = await putRequest({
           url: `/api/v1/user-contracts/${_id}`,
           userModoel: player,
           userState: state.player,
-          body: other,
+          body: body,
         });
         if (code == 200) {
           const module_keys = (data.modules || []).join('-');
