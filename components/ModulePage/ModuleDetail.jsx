@@ -1,6 +1,5 @@
 import { styled } from '@mui/material';
-import React, { useEffect, useState } from 'react';
-import { useDispatch } from 'react-redux';
+import React from 'react';
 import FormModal from '../FormModal';
 
 const Container = styled('div')(({ theme }) => ({
@@ -51,10 +50,12 @@ const ModuleDetail = ({ open, onClose, moduleInfo }) => {
           <div className="title">Functions</div>
           <div className="content">{moduleInfo?.sources?.functions?.map((item) => item.name).join(', ')}</div>
         </FunctionContainer>
-        <ParamContainer>
-          <div className="title">Parameters Included</div>
-          <div className="content">{moduleInfo?.sources?.contructorParams?.map((item) => item.label).join(', ')}</div>
-        </ParamContainer>
+        {moduleInfo?.sources?.contructorParams?.length > 0 && (
+          <ParamContainer>
+            <div className="title">Parameters Included</div>
+            <div className="content">{moduleInfo?.sources?.contructorParams?.map((item) => item.label).join(', ')}</div>
+          </ParamContainer>
+        )}
         <LibraryContainer>
           <div className="title">Libraries</div>
           <div className="content">
