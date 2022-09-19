@@ -15,7 +15,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
 import CustomNodes from '../CustomNode';
 import useEnumPage from '../EnumTabPanel/hooks/useEnumPage';
-import useEventErrorTab from '../EventErrorTabPanel/hooks/useEventErrorTab';
+import useErrorTab from '../ErrorTabPanel/hooks/useErrorTab';
+import useEventErrorTab from '../EventTabPanel/hooks/useEventTab';
 import IndentifierModal from '../IndentifierModal';
 import useStructPage from '../StructTabPanel/hooks/useStructPage';
 
@@ -36,10 +37,13 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
   const { functions: listFunction } = useSelector((state) => state.functions);
   const { structs } = useSelector((state) => state.struct);
   const { enums } = useSelector((state) => state.enumState);
+  const { dataEvent } = useSelector((state) => state.event);
+  const { dataError } = useSelector((state) => state.error);
   const nodeTypes = useMemo(() => CustomNodes, []);
   const { handelAddStruct, convertStructToFEDisplay } = useStructPage();
   const { handelAddEnum, convertEnumToFEDisplay } = useEnumPage();
-  const { convertToEventErrorShow } = useEventErrorTab();
+  const { convertToEventShow } = useEventErrorTab();
+  const { convertToErrorShow } = useErrorTab();
   const [identifierModalOpen, setIdentifierModalOpen] = useState(false);
   const [missingIdentifiers, setMissingIdentifiers] = useState([]);
 
@@ -295,7 +299,9 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
       const { newNode, listFunc, listStruct, listEnum } = createNodeFromFunc(data, type, position);
 
       // get list event - error
-      let dataEventError = [];
+      let dataEvents = [];
+      let dataErrors = [];
+
       listFunc.forEach((func) => {
         if (func?.events?.length) {
           const events = func.events.map((item) => {
@@ -305,7 +311,7 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
             };
           });
 
-          dataEventError = _.concat(dataEventError, events);
+          dataEvents = _.concat(dataEvent, events);
         }
         if (func?.errors?.length) {
           const errors = func.errors.map((item) => {
@@ -314,7 +320,7 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
               type: EVENT_ERROR_TYPE.ERROR,
             };
           });
-          dataEventError = _.concat(dataEventError, errors);
+          dataErrors = _.concat(dataError, errors);
         }
       });
 
@@ -328,7 +334,8 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
       addNewFuctionToModule(listFunc, position);
       handelAddStruct(convertStructToFEDisplay(listStruct));
       handelAddEnum(convertEnumToFEDisplay(listEnum));
-      convertToEventErrorShow(dataEventError);
+      convertToEventShow(dataEvents);
+      convertToErrorShow(dataErrors);
     },
     [reactFlowInstance, setNodes, moduleState.functions, nodes]
   );

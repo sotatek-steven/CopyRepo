@@ -2,21 +2,21 @@ import React from 'react';
 import { PrimaryButton } from '../ButtonStyle';
 import AddIcon from 'assets/icon/addIcon.svg';
 import Scrollbars from 'react-custom-scrollbars';
-import EventErrorItem from './EventErrorItem';
-import { BodyContent, Container, Footer } from './EventErrorTab.style';
-import useEventErrorTab from './hooks/useEventErrorTab';
+import ErrorItem from './ErrorItem';
+import { BodyContent, Container, Footer } from '../EventTabPanel/EventErrorTab.style';
+import useErrorTab from './hooks/useErrorTab';
 
-const EventErrorTabPanel = () => {
+const ErrorTabPanel = () => {
   const {
     typeParam,
-    dataEventError,
+    dataError,
     handleAddItem,
     handleRemoveItem,
     handleChangeItem,
     handleAddParam,
     handleRemoveParam,
     handleChangeParam,
-  } = useEventErrorTab();
+  } = useErrorTab();
 
   return (
     <Container>
@@ -26,8 +26,8 @@ const EventErrorTabPanel = () => {
           overflowX: 'hidden',
         }}>
         <BodyContent>
-          {dataEventError?.map((item) => (
-            <EventErrorItem
+          {dataError?.map((item) => (
+            <ErrorItem
               key={item?._id}
               typeParam={typeParam}
               dataItem={item}
@@ -50,4 +50,4 @@ const EventErrorTabPanel = () => {
   );
 };
 
-export default EventErrorTabPanel;
+export default ErrorTabPanel;

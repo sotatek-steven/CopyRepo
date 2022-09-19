@@ -1,5 +1,6 @@
 import useEnumPage from '@/components/EnumTabPanel/hooks/useEnumPage';
-import useEventErrorTab from '@/components/EventErrorTabPanel/hooks/useEventErrorTab';
+import useErrorTab from '@/components/ErrorTabPanel/hooks/useErrorTab';
+import useEventErrorTab from '@/components/EventTabPanel/hooks/useEventTab';
 import useObjectTab from '@/components/ObjectTabPanel/hooks/useObjectTab';
 import useStructPage from '@/components/StructTabPanel/hooks/useStructPage';
 import useValuesTab from '@/components/ValuesPanel/hooks/useValuesTab';
@@ -15,7 +16,8 @@ const useModulePage = () => {
   const { getEnums } = useEnumPage();
   const { convertToObjectShow } = useObjectTab();
   const { converToValueShow } = useValuesTab();
-  const { convertToEventErrorShow } = useEventErrorTab();
+  const { convertToEventShow } = useEventErrorTab();
+  const { convertToErrorShow } = useErrorTab();
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const { moduleId } = router.query;
@@ -44,7 +46,8 @@ const useModulePage = () => {
       getEnums(data?.sources?.enums);
       convertToObjectShow(data?.variables?.structs);
       converToValueShow(data?.variables?.values);
-      convertToEventErrorShow(_.concat(events, errors));
+      convertToEventShow(events);
+      convertToErrorShow(errors);
       userModule.set(data);
       initialModule.setData(data);
     } catch (error) {

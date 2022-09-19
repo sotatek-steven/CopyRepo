@@ -9,7 +9,7 @@ import useStructPage from '../StructTabPanel/hooks/useStructPage';
 import useModulePage from './hooks/useModulePage';
 import { makeStyles } from '@mui/styles';
 import ErrorsCompileModal from '../ErrorsCompileModal';
-import useEventErrorTab from '../EventErrorTabPanel/hooks/useEventErrorTab';
+import useEventTab from '../EventTabPanel/hooks/useEventTab';
 import useEnumPage from '../EnumTabPanel/hooks/useEnumPage';
 import useValuesTab from '../ValuesPanel/hooks/useValuesTab';
 import useModule from '@/hooks/useModule';
@@ -44,7 +44,7 @@ const ModuleActionList = () => {
   const { handleErrorStructs } = useStructPage();
   const { valueHasError } = useValuesTab();
   const { objectHasError } = useObjectTab();
-  const { checkErrorTab } = useEventErrorTab();
+  const { checkErrorEventTab } = useEventTab();
   const { checkErrorEnumTab } = useEnumPage();
   const { fetchDetailModule } = useModulePage();
   const { checkValidateMapping } = useModule();
@@ -68,7 +68,7 @@ const ModuleActionList = () => {
     const valueError = valueHasError();
     const objectError = objectHasError();
     const { numErr: mappingError } = checkValidateMapping(variables.mappings);
-    const eventError = checkErrorTab();
+    const eventError = checkErrorEventTab();
     const enumError = checkErrorEnumTab();
 
     if (valueError || objectError || !!mappingError || eventError || enumError || !!errorFunc?.length) {

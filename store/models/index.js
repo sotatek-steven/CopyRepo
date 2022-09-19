@@ -13,13 +13,14 @@ import object from './object';
 import value from './values';
 import mappingVariableOptions from './mappingVariableOptions';
 import initialModule from './initialModule';
-import eventError from './eventError';
+import event from './event';
 import enumState from './enum';
 import userFunction from './userFunction';
 import logicBlocks from './logicBlocks';
 import initialFunction from './initialFunction';
 import functionDefinition from './functionDefinition';
 import mapping from './mapping';
+import error from './error';
 
 export {
   ticket,
@@ -37,11 +38,12 @@ export {
   value,
   mappingVariableOptions,
   initialModule,
-  eventError,
+  event,
   enumState,
   userFunction,
   logicBlocks,
   initialFunction,
   functionDefinition,
   mapping,
+  error,
 };
