@@ -122,8 +122,8 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
     return result.length !== 0;
   };
 
-  const duplicateName = () => {
-    const index = modules?.findIndex((module) => module?.name === moduleInfo?.name && module?._id !== moduleInfo?._id);
+  const duplicateName = (value) => {
+    const index = modules?.findIndex((module) => module?.name === value && module?._id !== moduleInfo?._id);
     return index !== -1;
   };
 
@@ -181,16 +181,6 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
   };
 
   return (
-    // <FormModal
-    //   open={open}
-    //   onClose={handleClose}
-    //   title={'Module Info'}
-    //   closeText={'Cancel'}
-    //   confirmText={mode === MODE.CLONE ? 'Clone' : 'Save'}
-    //   showSave={data?.owner?.toUpperCase() !== MODULE_OWNER.SYSTEM}
-    //   onConfirm={(e) => {
-    //     handleSubmit(e, handleSave);
-    //   }}>
     <Modal open={open} onClose={onClose} aria-labelledby="modal-modal-title" aria-describedby="modal-modal-description">
       <ModalBox>
         <ModalHeaderBasic title={'Module Info'} onClose={handleClose} />
@@ -255,7 +245,6 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
         </Footer>
       </ModalBox>
     </Modal>
-    // </FormModal>
   );
 };
 
