@@ -23,7 +23,7 @@ const Text = styled('div')(({ theme }) => ({
   ...theme.components.truncate.twoLineEllipsis,
 }));
 
-const ImportedLibrary = ({ name }) => {
+const ImportedLibrary = ({ name, allowRemove }) => {
   const { userModule } = useDispatch();
   const userModuleState = useSelector((state) => state.userModule);
   const libraryState = useSelector((state) => state.library);
@@ -47,7 +47,7 @@ const ImportedLibrary = ({ name }) => {
   return (
     <Container>
       <Text>{name}</Text>
-      <CloseIcon sx={{ fontSize: 20, cursor: 'pointer' }} onClick={removeLibrary} />
+      {allowRemove && <CloseIcon sx={{ fontSize: 20, cursor: 'pointer' }} onClick={removeLibrary} />}
     </Container>
   );
 };

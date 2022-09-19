@@ -1,5 +1,6 @@
 import { styled } from '@mui/material';
 import React from 'react';
+import { useMemo } from 'react';
 import Scrollbars from 'react-custom-scrollbars';
 import { useSelector } from 'react-redux';
 import { DashedDivider } from '../atom/Divider';
@@ -24,18 +25,28 @@ const TextContainer = styled('div')(() => ({
 const ImportedLibraries = () => {
   const userModuleState = useSelector((state) => state.userModule);
   const libraries = userModuleState.sources?.libraries;
+  const mustHaveItem = useMemo(() => {
+    const functions = userModuleState.sources?.functions || [];
+    return functions.reduce((arr, item) => {
+      return arr.concat(item.libraries);
+    }, []);
+  }, [userModuleState.sources?.functions]);
+
   return (
     <>
       <Title>Imported libraries</Title>
       <Scrollbars style={{ flexGrow: 1 }}>
         <DashedDivider />
         {libraries?.length ? (
-          libraries.map((library) => (
-            <div key={library}>
-              <ImportedLibrary name={library} />
-              <DashedDivider />
-            </div>
-          ))
+          libraries.map((library) => {
+            const allowRemove = !mustHaveItem.find((item) => item.name === library);
+            return (
+              <div key={library}>
+                <ImportedLibrary allowRemove={allowRemove} name={library} />
+                <DashedDivider />
+              </div>
+            );
+          })
         ) : (
           <TextContainer>
             <p>No libraries imported</p>
