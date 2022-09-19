@@ -1,5 +1,5 @@
 /* eslint-disable no-param-reassign */
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { styled } from '@mui/material/styles';
 import DragIcon from '../../assets/icon/drag.svg';
 import { useRouter } from 'next/router';
@@ -113,13 +113,6 @@ const ModuleItem = ({ data, nodeType, fetchModules, setDataClone, setIsOpenModul
   const [anchorEl, setAnchorEl] = useState(null);
   const [isOpenModuleDetail, setIsOpenModuleDetail] = useState(false);
   const [isOpenConfirmDelete, setIsOpenConfirmDelete] = useState(false);
-
-  const [moduleInfo, setModuleInfo] = useState({});
-  useEffect(async () => {
-    if (!data) return {};
-    const moduleData = await userModule.getDetailModule(data._id);
-    setModuleInfo(moduleData);
-  }, [data]);
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
@@ -251,7 +244,7 @@ const ModuleItem = ({ data, nodeType, fetchModules, setDataClone, setIsOpenModul
           </Popover>
         </div>
       </div>
-      <ModuleDetail open={isOpenModuleDetail} onClose={() => setIsOpenModuleDetail(false)} moduleInfo={moduleInfo} />
+      <ModuleDetail open={isOpenModuleDetail} onClose={() => setIsOpenModuleDetail(false)} moduleInfo={data} />
       <ConfirmDeleteDialog
         open={isOpenConfirmDelete}
         onClose={() => setIsOpenConfirmDelete(false)}
