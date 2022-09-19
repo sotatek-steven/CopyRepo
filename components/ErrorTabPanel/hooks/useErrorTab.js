@@ -203,8 +203,10 @@ const useErrorTab = () => {
     listData?.forEach((data) => {
       const params = data?.parameters?.map((param) => {
         return {
+          _id: param?._id,
           label: param?.name,
           type: param?.type,
+          location: param?.location,
         };
       });
       const functions = data?.functions?.map((funcItem) => {
@@ -215,9 +217,12 @@ const useErrorTab = () => {
       });
 
       const item = {
+        _id: data?._id,
         name: data?.name,
         params,
         functions,
+        libraries: data?.libraries,
+        others: data?.others,
       };
 
       errors.push(item);
@@ -226,14 +231,15 @@ const useErrorTab = () => {
     return { errors };
   };
 
-  const convertToErrorShow = (listData) => {
-    const cloneData = listData?.map((data) => {
+  const convertToErrorShow = (listData, mode = '') => {
+    let cloneData = listData?.map((data) => {
       const parameters = data?.params?.map((param) => {
         return {
           _id: param?._id,
           type: param?.type,
           name: param?.label,
           errorName: null,
+          location: param?.location,
         };
       });
       const functions = data?.functions?.map((item) => {
@@ -247,8 +253,16 @@ const useErrorTab = () => {
         parameters,
         functions,
         errorName: null,
+        libraries: data?.libraries,
+        others: data?.others,
       };
     });
+
+    if (mode === 'get') {
+      cloneData = _.concat([], cloneData);
+    } else {
+      cloneData = _.concat(dataError, cloneData);
+    }
 
     const { data, numErr } = checkValidateItemName(cloneData);
     error.setDataError(data);

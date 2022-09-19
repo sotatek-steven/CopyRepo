@@ -8,6 +8,7 @@ const error = createModel({
   reducers: {
     setDataError: (state, dataError) => ({ ...state, dataError }),
     setNumberError: (state, numberError) => ({ ...state, numberError }),
+    resetError: (state) => ({ ...state, dataError: [], numberError: 0 }),
   },
   effects: (dispatch) => {
     return {};

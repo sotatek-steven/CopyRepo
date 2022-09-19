@@ -55,6 +55,7 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
   }, [listDomain]);
 
   useEffect(() => {
+    setErrors({});
     if (!open) return;
     if (!data) return;
     setModuleInfo(data);
