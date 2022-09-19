@@ -1,12 +1,12 @@
 import { createModel } from '@rematch/core';
 
-const eventError = createModel({
+const event = createModel({
   state: {
-    dataEventError: [],
+    dataEvent: [],
     numberError: 0,
   },
   reducers: {
-    setDataEventError: (state, dataEventError) => ({ ...state, dataEventError }),
+    setDataEvent: (state, dataEvent) => ({ ...state, dataEvent }),
     setNumberError: (state, numberError) => ({ ...state, numberError }),
   },
   effects: (dispatch) => {
@@ -14,4 +14,4 @@ const eventError = createModel({
   },
 });
 
-export default eventError;
+export default event;

@@ -1,11 +1,11 @@
-import { ELEMENT_TYPE, EVENT_ERROR_TYPE } from '@/config/constant/common';
+import { ELEMENT_TYPE } from '@/config/constant/common';
 import { REGEX } from '@/config/constant/regex';
 import _ from 'lodash';
 import { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 
 const INIT_ITEM = {
-  type: '',
+  type: 'errors',
   parameters: [],
   function: [],
 };
@@ -18,46 +18,43 @@ const INIT_PARAM = {
 
 const regex = new RegExp(REGEX.VARIABLE_NAME);
 
-const useEventErrorTab = () => {
-  const { dataEventError } = useSelector((state) => state.eventError);
+const useErrorTab = () => {
+  const { dataError } = useSelector((state) => state.error);
   const moduleDetail = useSelector((state) => state.userModule);
   const { duplicateNames } = useSelector((state) => state.modules);
-  const { eventError, userModule } = useDispatch();
+  const { error, userModule } = useDispatch();
   const [typeParam, setTypeParam] = useState('');
 
   const handleAddItem = () => {
     const init = JSON.parse(JSON.stringify(INIT_ITEM));
-    const data = [...dataEventError];
+    const data = [...dataError];
     data.push({ ...init, _id: Date.now() });
 
-    eventError.setDataEventError(data);
-    const { events, errors } = convertToEventErrorModule(data);
-    userModule.updateEvents(events);
+    error.setDataError(data);
+    const { errors } = convertToErrorModule(data);
     userModule.updateErrors(errors);
   };
 
   const handleRemoveItem = (itemId) => {
-    const iItem = dataEventError.findIndex(({ _id }) => _id === itemId);
-    const data = [...dataEventError];
+    const iItem = dataError.findIndex(({ _id }) => _id === itemId);
+    const data = [...dataError];
     data.splice(iItem, 1);
 
     const { data: dataEE, numErr } = checkValidateItemName(data);
-    eventError.setDataEventError(dataEE);
-    eventError.setNumberError(numErr);
+    error.setDataError(dataEE);
+    error.setNumberError(numErr);
 
-    const { events, errors } = convertToEventErrorModule(dataEE);
-    userModule.updateEvents(events);
+    const { errors } = convertToErrorModule(dataEE);
     userModule.updateErrors(errors);
   };
 
   useEffect(() => {
-    if (dataEventError?.length) {
-      const { data, numErr } = checkValidateItemName(dataEventError);
-      eventError.setDataEventError(data);
-      eventError.setNumberError(numErr);
-      const { events, errors } = convertToEventErrorModule(data);
+    if (dataError?.length) {
+      const { data, numErr } = checkValidateItemName(dataError);
+      error.setDataError(data);
+      error.setNumberError(numErr);
 
-      userModule.updateEvents(events);
+      const { errors } = convertToErrorModule(data);
       userModule.updateErrors(errors);
     }
   }, [duplicateNames]);
@@ -90,8 +87,8 @@ const useEventErrorTab = () => {
   };
 
   const handleChangeItem = (itemId, field, e, type) => {
-    const iItem = dataEventError.findIndex(({ _id }) => _id === itemId);
-    const data = [...dataEventError];
+    const iItem = dataError.findIndex(({ _id }) => _id === itemId);
+    const data = [...dataError];
 
     switch (type) {
       case ELEMENT_TYPE.INPUT:
@@ -135,45 +132,42 @@ const useEventErrorTab = () => {
     }
 
     const { data: dataEE, numErr } = checkValidateItemName(data);
-    eventError.setDataEventError(dataEE);
-    eventError.setNumberError(numErr);
+    error.setDataError(dataEE);
+    error.setNumberError(numErr);
 
-    const { events, errors } = convertToEventErrorModule(dataEE);
-    userModule.updateEvents(events);
+    const { errors } = convertToErrorModule(dataEE);
     userModule.updateErrors(errors);
   };
 
   const handleAddParam = (itemId) => {
-    const iItem = dataEventError.findIndex(({ _id }) => _id === itemId);
-    const data = [...dataEventError];
+    const iItem = dataError.findIndex(({ _id }) => _id === itemId);
+    const data = [...dataError];
     const dataParam = JSON.parse(JSON.stringify(INIT_PARAM));
     data[iItem]['parameters'] = _.concat(data[iItem]['parameters'], [{ ...dataParam, _id: Date.now() }]);
     data[iItem]['functions'] = [];
 
-    eventError.setDataEventError(data);
-    const { events, errors } = convertToEventErrorModule(data);
-    userModule.updateEvents(events);
+    error.setDataError(data);
+    const { errors } = convertToErrorModule(data);
     userModule.updateErrors(errors);
   };
 
   const handleRemoveParam = (itemId, paramId) => {
-    const iItem = dataEventError.findIndex(({ _id }) => _id === itemId);
-    const data = [...dataEventError];
+    const iItem = dataError.findIndex(({ _id }) => _id === itemId);
+    const data = [...dataError];
 
     // Remove Param
     data[iItem]['parameters'] = _.remove(data[iItem]['parameters'], (item) => item?._id !== paramId);
     data[iItem]['functions'] = [];
 
-    eventError.setDataEventError(data);
-    const { events, errors } = convertToEventErrorModule(data);
-    userModule.updateEvents(events);
+    error.setDataError(data);
+    const { errors } = convertToErrorModule(data);
     userModule.updateErrors(errors);
   };
 
   const handleChangeParam = (itemId, paramId, e, field, type) => {
-    const iItem = dataEventError.findIndex(({ _id }) => _id === itemId);
-    const iParam = dataEventError[iItem]?.parameters.findIndex(({ _id }) => _id === paramId);
-    const data = [...dataEventError];
+    const iItem = dataError.findIndex(({ _id }) => _id === itemId);
+    const iParam = dataError[iItem]?.parameters.findIndex(({ _id }) => _id === paramId);
+    const data = [...dataError];
 
     switch (type) {
       case ELEMENT_TYPE.INPUT:
@@ -199,18 +193,15 @@ const useEventErrorTab = () => {
         break;
     }
 
-    eventError.setDataEventError(data);
-    const { events, errors } = convertToEventErrorModule(data);
-
-    userModule.updateEvents(events);
+    error.setDataError(data);
+    const { errors } = convertToErrorModule(data);
     userModule.updateErrors(errors);
   };
 
-  const convertToEventErrorModule = (listData) => {
-    let events = [];
+  const convertToErrorModule = (listData) => {
     let errors = [];
     listData?.forEach((data) => {
-      const params = data?.parameters.map((param) => {
+      const params = data?.parameters?.map((param) => {
         return {
           label: param?.name,
           type: param?.type,
@@ -229,17 +220,13 @@ const useEventErrorTab = () => {
         functions,
       };
 
-      if (data?.type === EVENT_ERROR_TYPE.EVENT) {
-        events.push(item);
-      } else if (data?.type === EVENT_ERROR_TYPE.ERROR) {
-        errors.push(item);
-      }
+      errors.push(item);
     });
 
-    return { events, errors };
+    return { errors };
   };
 
-  const convertToEventErrorShow = (listData) => {
+  const convertToErrorShow = (listData) => {
     const cloneData = listData?.map((data) => {
       const parameters = data?.params?.map((param) => {
         return {
@@ -264,17 +251,16 @@ const useEventErrorTab = () => {
     });
 
     const { data, numErr } = checkValidateItemName(cloneData);
-    eventError.setDataEventError(data);
-    eventError.setNumberError(numErr);
+    error.setDataError(data);
+    error.setNumberError(numErr);
 
-    const { events, errors } = convertToEventErrorModule(data);
-    userModule.updateEvents(events);
+    const { errors } = convertToErrorModule(data);
     userModule.updateErrors(errors);
   };
 
   const checkErrorTab = () => {
     let isError = false;
-    const data = [...dataEventError];
+    const data = [...dataError];
     let numErr = 0;
     data.forEach((item) => {
       if (!item?.name?.trim()) {
@@ -286,11 +272,10 @@ const useEventErrorTab = () => {
       }
     });
 
-    eventError.setDataEventError(data);
-    eventError.setNumberError(numErr);
+    error.setDataError(data);
+    error.setNumberError(numErr);
 
-    const { events, errors } = convertToEventErrorModule(data);
-    userModule.updateEvents(events);
+    const { errors } = convertToErrorModule(data);
     userModule.updateErrors(errors);
 
     return isError;
@@ -298,17 +283,17 @@ const useEventErrorTab = () => {
 
   return {
     typeParam,
-    dataEventError,
+    dataError,
     handleAddItem,
     handleRemoveItem,
     handleChangeItem,
     handleAddParam,
     handleRemoveParam,
     handleChangeParam,
-    convertToEventErrorShow,
+    convertToErrorShow,
     checkErrorTab,
-    convertToEventErrorModule,
+    convertToErrorModule,
   };
 };
 
-export default useEventErrorTab;
+export default useErrorTab;

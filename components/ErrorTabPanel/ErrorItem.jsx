@@ -10,7 +10,7 @@ import {
   ItemParam,
   MapFunctions,
   RemoveButton,
-} from './EventErrorTab.style';
+} from '../EventTabPanel/EventErrorTab.style';
 import AddIcon from 'assets/icon/addIcon.svg';
 import RemoveIcon from 'assets/icon/removeIcon.svg';
 import { PrimaryButton } from '../ButtonStyle';
@@ -18,7 +18,7 @@ import { useMemo } from 'react';
 import { useSelector } from 'react-redux';
 import MultipleAutoComplete from '../AutoComplete/MultipleAutoComplete';
 
-const EventErrorItem = ({
+const ErrorItem = ({
   typeParam,
   dataItem,
   handleRemoveItem,
@@ -28,7 +28,7 @@ const EventErrorItem = ({
   handleChangeParam,
 }) => {
   const moduleState = useSelector((state) => state.userModule);
-  const { dataEventError } = useSelector((state) => state.eventError);
+  const { dataError } = useSelector((state) => state.error);
 
   const getTooltip = (type) => {
     return (
@@ -45,7 +45,7 @@ const EventErrorItem = ({
     );
   };
 
-  const lstFuncUsed = dataEventError?.reduce((array, data) => {
+  const lstFuncUsed = dataError?.reduce((array, data) => {
     const temp = data?.functions?.map((func) => func);
     return array?.concat(temp);
   }, []);
@@ -53,27 +53,15 @@ const EventErrorItem = ({
   const listFunction = useMemo(() => {
     let listFunction = moduleState?.sources?.functions?.reduce((array, item) => {
       let temp = [];
-      if (dataItem?.type === EVENT_ERROR_TYPE.EVENT && item?.events.length) {
-        temp = item?.events.map((event) => {
-          const typeParam = event?.params?.map((param) => param?.type);
+      temp = item?.errors.map((error) => {
+        const typeParam = error?.params?.map((param) => param?.type);
 
-          return {
-            type: typeParam?.toString(),
-            value: `${item?._id}-${event?.name}`,
-            label: `(${item?.name})(${event?.name})`,
-          };
-        });
-      } else if (dataItem?.type === EVENT_ERROR_TYPE.ERROR && item?.errors.length) {
-        temp = item?.errors.map((error) => {
-          const typeParam = error?.params?.map((param) => param?.type);
-
-          return {
-            type: typeParam?.toString(),
-            value: `${item?._id}-${error?.name}`,
-            label: `(${item?.name})(${error?.name})`,
-          };
-        });
-      }
+        return {
+          type: typeParam?.toString(),
+          value: `${item?._id}-${error?.name}`,
+          label: `(${item?.name})(${error?.name})`,
+        };
+      });
       return array?.concat(temp);
     }, []);
 
@@ -92,7 +80,7 @@ const EventErrorItem = ({
           <SingleAutoComplete
             label={'CHOOSE TYPE'}
             value={EVENT_ERROR_OPTION.find((type) => type.value === dataItem?.type)}
-            options={EVENT_ERROR_OPTION}
+            options={EVENT_ERROR_OPTION.filter((item) => item?.value === 'errors')}
             onChange={(e, newValue) => handleChangeItem(dataItem?._id, 'type', newValue, ELEMENT_TYPE.SELECT)}
           />
         </Item>
@@ -119,10 +107,7 @@ const EventErrorItem = ({
       </TypeContainer>
       {dataItem?.type && (
         <EventParameters>
-          <div className="title">
-            {dataItem?.type === EVENT_ERROR_TYPE.EVENT && 'Event Parameters'}
-            {dataItem?.type === EVENT_ERROR_TYPE.ERROR && 'Error Parameters'}
-          </div>
+          <div className="title">Error Parameters</div>
           <div className="content">
             {dataItem?.parameters?.map((param, index) => (
               <ItemParam key={index}>
@@ -173,4 +158,4 @@ const EventErrorItem = ({
   );
 };
 
-export default EventErrorItem;
+export default ErrorItem;
