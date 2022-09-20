@@ -124,7 +124,7 @@ const ModuleActionPopover = ({ data }) => {
         <Container>
           {options.map((item) => {
             const { id, label, mode } = item;
-            if (data?.owner.toUpperCase() === MODULE_OWNER.SYSTEM) {
+            if (data?.owner?.toUpperCase() === MODULE_OWNER.SYSTEM) {
               return (
                 <div key={id} className="item" onClick={() => handleClickActionMenu(mode)}>
                   <Label>{label}</Label>

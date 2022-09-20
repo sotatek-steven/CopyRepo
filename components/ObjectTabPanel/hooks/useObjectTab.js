@@ -56,12 +56,19 @@ const useObjectTab = () => {
   };
 
   const handleAddObject = (initObject) => {
-    const initData = initObject?.map((item) => {
-      return {
-        ...item,
-        _id: ObjectID(24).toHexString(),
-      };
+    const initData = [];
+    initObject?.forEach((item) => {
+      if (item?.variableId) {
+        const index = objects.findIndex(({ _id }) => _id === item?.variableId);
+        objects[index].functions = _.concat(objects[index].functions, item?.functions);
+      } else {
+        initData.push({
+          ...item,
+          _id: ObjectID(32).toHexString(),
+        });
+      }
     });
+
     let data = _.concat(objects, initData);
     let numberErr = 0;
 
@@ -261,7 +268,7 @@ const useObjectTab = () => {
   };
 
   const convertToObjectShow = (data) => {
-    const cloneData = data?.map((item, iData) => {
+    const cloneData = data?.map((item) => {
       const functions = item?.functions?.map(({ func, variable }) => {
         return `${func}-${variable}`;
       });
@@ -283,7 +290,7 @@ const useObjectTab = () => {
         }
       });
       return {
-        _id: iData,
+        _id: ObjectID(32).toHexString(),
         type: item?.objecType || OBJECT_TYPE.STRUCT,
         item: item?.type,
         isArray: item?.isArray,
