@@ -53,6 +53,8 @@ const defaulItem = { value: 'declare new one', label: 'Declare new one' };
 
 const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) => {
   const moduleState = useSelector((state) => state.userModule);
+  const objectState = useSelector((state) => state.object);
+  const valueState = useSelector((state) => state.value);
   const [globalVariables, setGlobalVariables] = useState([]);
   const [mappings, setMappings] = useState([]);
 
@@ -69,9 +71,9 @@ const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) =>
   useEffect(() => {
     if (!moduleState.variables) return;
     let globalVariables = [];
-    const { mappings, structs, values } = moduleState.variables;
+    const { mappings } = moduleState.variables;
     mappings?.forEach((value) => {
-      let { label, isArray, type } = value;
+      let { label, isArray, type, _id } = value;
       let stringbuffer = [];
       generateTypeOfMapping(type, stringbuffer);
       globalVariables.push({
@@ -79,26 +81,29 @@ const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) =>
         type: stringbuffer.join(''),
         isArray,
         category: 'mappings',
+        _id,
       });
     });
 
-    structs?.forEach((value) => {
-      const { label, type, isArray } = value;
+    objectState.objects.forEach((value) => {
+      const { label, type, isArray, _id } = value;
       globalVariables.push({
         label,
         type,
         isArray,
         category: 'structs',
+        _id,
       });
     });
 
-    values?.forEach((value) => {
-      const { label, type, isArray } = value;
+    valueState.values.forEach((value) => {
+      const { label, type, isArray, _id } = value;
       globalVariables.push({
         label,
         type,
         isArray,
         category: 'values',
+        _id,
       });
     });
 
@@ -128,50 +133,50 @@ const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) =>
 
     mappings.forEach((item) => {
       const { identifier, selectedOption } = item;
-      if (selectedOption.value === 'declare new one') {
-        switch (identifier.objectType) {
-          case 'values': {
-            const { func, label, type, isArray, scope, constant, valueDefault } = identifier;
-            const mappingToFunctions = func.map((item) => `${item}-${label}`);
-            newValues.push({
-              label,
-              type,
-              isArray,
-              scope,
-              constant,
-              functionId: func,
-              functions: mappingToFunctions,
-              valueDefault,
-            });
-            break;
+      switch (identifier.objectType) {
+        case 'values': {
+          const { func, label, type, isArray, scope, constant, valueDefault } = identifier;
+          const mappingToFunctions = func.map((item) => `${item}-${label}`);
+          newValues.push({
+            label,
+            type,
+            isArray,
+            scope,
+            constant,
+            functionId: func,
+            functions: mappingToFunctions,
+            valueDefault,
+            variableId: selectedOption._id,
+          });
+          break;
+        }
+        case 'objects': {
+          const { func, label, type, isArray, scope, constant, valueDefault } = identifier;
+          const mappingToFunctions = func.map((item) => `${item}-${label}`);
+          let objectType = 'struct';
+          const struct = moduleState?.sources?.structs?.find((str) => str?.name === type);
+          if (_.isEmpty(struct)) {
+            objectType = 'enum';
           }
-          case 'objects': {
-            const { func, label, type, isArray, scope, constant, valueDefault } = identifier;
-            const mappingToFunctions = func.map((item) => `${item}-${label}`);
-            let objectType = 'struct';
-            const struct = moduleState?.sources?.structs?.find((str) => str?.name === type);
-            if (_.isEmpty(struct)) {
-              objectType = 'enum';
-            }
-            newObjects.push({
-              name: label,
-              item: type,
-              type: objectType,
-              isArray,
-              scope,
-              constant,
-              functionId: func,
-              functions: mappingToFunctions,
-              valueDefault,
-            });
-            break;
-          }
-          case 'mappings': {
-            const { func, label, scope } = identifier;
-            const { mapping } = identifier;
+          newObjects.push({
+            name: label,
+            item: type,
+            type: objectType,
+            isArray,
+            scope,
+            constant,
+            functionId: func,
+            functions: mappingToFunctions,
+            valueDefault,
+            variableId: selectedOption._id,
+          });
+          break;
+        }
+        case 'mappings': {
+          const { func, label, scope, mapping } = identifier;
+          if (!selectedOption._id) {
             if (!mappings) return;
             const mappingToFunctions = func.map((item) => ({ func: item, variable: label }));
-
             const newMappingItem = {
               _id: ObjectID(),
               label: label,
@@ -180,12 +185,19 @@ const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) =>
               type: mapping,
             };
             newMappings.push(newMappingItem);
+          } else {
+            const selectedVariableIndex = newMappings.findIndex((item) => item._id === selectedOption._id);
+            const selectedVariable = newMappings[selectedVariableIndex];
 
-            break;
+            const mappingToFunctions = [
+              ...selectedVariable.functions,
+              ...func.map((item) => ({ func: item, variable: label })),
+            ];
+            newMappings[selectedVariableIndex] = { ...selectedVariable, functions: mappingToFunctions };
           }
-        }
 
-        return;
+          break;
+        }
       }
     });
     handleAddValues(newValues);
@@ -221,10 +233,10 @@ const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) =>
                 const { type, isArray, label } = item;
                 let options = [{ ...defaulItem }];
                 globalVariables.forEach((element) => {
-                  const { type: _type, isArray: _isArray, label: _label } = element;
+                  const { type: _type, isArray: _isArray, label: _label, _id } = element;
 
                   if (type.replace(/\s*/g, '') === _type.replace(/\s*/g, '') && !!isArray === !!_isArray)
-                    options.push({ ...element, value: _label });
+                    options.push({ ...element, value: _label, _id });
                 });
                 return (
                   <SelectWrapper key={index}>
