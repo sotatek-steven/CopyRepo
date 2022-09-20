@@ -57,14 +57,21 @@ const useValuesTab = () => {
   };
 
   const handleAddValues = (initValue) => {
-    const initData = initValue?.map((item) => {
-      return {
-        ...item,
-        isDefaultValue: !item?.valueDefault,
-        _id: ObjectID(32).toHexString(),
-      };
+    let data = [...values];
+    const initData = [];
+    initValue?.forEach((item) => {
+      if (item?.variableId) {
+        const index = values.findIndex(({ _id }) => _id === item?.variableId);
+        data[index].functions = _.concat(data[index].functions, item?.functions);
+      } else {
+        initData.push({
+          ...item,
+          isDefaultValue: !item?.valueDefault,
+          _id: ObjectID(32).toHexString(),
+        });
+      }
     });
-    let data = _.concat(values, initData);
+    data = _.concat(values, initData);
     let numberErr = 0;
 
     const { data: dataValidate, numErr, funcIds } = checkValidateValue(data);
