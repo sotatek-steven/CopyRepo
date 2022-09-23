@@ -6,11 +6,20 @@ import ErrorIconDeclaration from 'assets/icon/ErrorIconDeclaration.svg';
 import IconCancel from 'assets/icon/IconCancel.svg';
 import IconConfirm from 'assets/icon/IconConfirm.svg';
 import IconEditNode from 'assets/icon/IconEditNode.svg';
-import { convertToDeclaration, splitElements } from '@/config/constant/common';
+import {
+  convertToDeclaration,
+  generateDataType,
+  getFirstNearSpace,
+  LOCATION_OPTIONS,
+  splitElements,
+} from '@/config/constant/common';
 import useDeclaration from '../functionsPage/hooks/useDeclaration';
 import { useDispatch, useSelector } from 'react-redux';
 import ButtonRemoveNode from '../atom/ButtonRemoveNode';
 import _ from 'lodash';
+import SuggestionPopover from '../SuggestionPopover';
+import { REGEX } from '@/config/constant/regex';
+import { useRef } from 'react';
 
 const Card = styled('article')(({ color, theme }) => ({
   padding: '10px 15px',
@@ -101,6 +110,11 @@ const AbsoluteContainer = styled('div')(({ theme }) => ({
   },
 }));
 
+const POSITION_SUGGEST = {
+  top: 68,
+  left: 48,
+};
+const regex = new RegExp(REGEX.SPECIAL_CHARACTER);
 const DeclarationNode = ({ id, data }) => {
   const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
 
@@ -109,7 +123,11 @@ const DeclarationNode = ({ id, data }) => {
   const { validateDeclaration } = useDeclaration();
   const { logicBlocks } = useDispatch();
   const [mode, setMode] = useState(_.isEmpty(data) ? 'editing' : 'view');
-  // const [mode, setMode] = useState('view');
+  // State Suggest
+  const [open, setOpen] = useState(false);
+  const [options, setOptions] = useState([]);
+  const [position, setPosition] = useState(POSITION_SUGGEST);
+  const [positionChange, setPositionChange] = useState({ start: 0, end: 0 });
 
   const convertDataToText = () => {
     return `${data?.type ? data?.type : ''} ${data?.isArray ? '[]' : ''} ${data?.location ? data?.location : ''} ${
@@ -125,18 +143,102 @@ const DeclarationNode = ({ id, data }) => {
     }
   }, [data, mode]);
 
+  const showSuggestion = (value = inputText) => {
+    const element = splitElements(value);
+    const nodeData = convertToDeclaration(element);
+    const input = document.getElementById(id);
+
+    // get position cursor in value text
+    const position = input.selectionStart;
+
+    // get index location or indentifier
+    const iLoIn = value.lastIndexOf(nodeData?.location || nodeData?.indentifier);
+
+    // get width of element
+    const offsetWidth = input.offsetWidth;
+
+    // get width of value text
+    const canvas = document.createElement('canvas');
+    const context = canvas.getContext('2d');
+    context.font = getComputedStyle(document.body).font;
+
+    const { iBeforeSpace, iBehindSpace } = getFirstNearSpace(value, position);
+    const textPosition = value.substring(0, position);
+    const widthValue =
+      Math.floor(context.measureText(textPosition).width) + 48 > offsetWidth
+        ? offsetWidth - 48
+        : Math.floor(context.measureText(textPosition).width);
+
+    let isOpen = false;
+    let listOption = [];
+    let textSearch = value.substring(iBeforeSpace, position).trimStart();
+    if (iLoIn + nodeData?.location?.length < position) {
+      setOpen(false);
+      setOptions([]);
+      return;
+    }
+
+    if (!regex.test(textSearch)) {
+      isOpen = true;
+      if (iLoIn === -1 || position < iLoIn) {
+        const listType = generateDataType();
+        listOption = listType.filter((item) => item.label.includes(textSearch));
+      } else {
+        listOption = LOCATION_OPTIONS.filter((item) => item.label.includes(textSearch));
+      }
+    }
+
+    setOpen(isOpen);
+    setPosition({ ...POSITION_SUGGEST, left: widthValue + 48 });
+    setOptions(listOption);
+    setPositionChange({ start: iBeforeSpace, end: iBehindSpace });
+  };
+
+  const onClickSuggest = (item) => {
+    let textValue = '';
+    if (!positionChange?.start && !positionChange?.end) {
+      textValue = `${item?.value} `;
+    } else if (!positionChange?.start && positionChange?.end) {
+      textValue = `${item?.value} ${inputText.substring(positionChange?.end).trim()} `;
+    } else if (positionChange?.start && !positionChange?.end) {
+      textValue = `${inputText.substring(0, positionChange?.start)} ${item?.value} `;
+    } else if (positionChange?.start && positionChange?.end) {
+      textValue = `${inputText.substring(0, positionChange?.start)} ${item?.value}${inputText.substring(
+        positionChange?.end
+      )}`;
+    }
+
+    // set position cursor
+    const input = document.getElementById(id);
+    input.focus();
+
+    setOpen(false);
+    setInputText(textValue);
+  };
+
   const handleChange = (e) => {
     let value = e.target.value;
+
+    setInputText(value);
+  };
+
+  const handleKeyUp = (e) => {
+    let value = inputText;
+    let keyPress = e.key;
+    const input = document.getElementById(id);
+    // get position cursor in value text
+    const position = input.selectionStart;
     const indexEqual = value.lastIndexOf('=');
+    let valuePlus = '';
 
     switch (e.key) {
       case '[':
-        value = `${value}]`;
+        valuePlus = ']';
         break;
       case '{': {
         const index = value.lastIndexOf('{');
         if (indexEqual > -1 && index > indexEqual) {
-          value = `${value}}`;
+          valuePlus = '}';
         }
         break;
       }
@@ -144,7 +246,7 @@ const DeclarationNode = ({ id, data }) => {
       case '(': {
         const index = value.lastIndexOf('(');
         if (indexEqual > -1 && index > indexEqual) {
-          value = `${value})`;
+          valuePlus = ')';
         }
         break;
       }
@@ -152,7 +254,7 @@ const DeclarationNode = ({ id, data }) => {
       case "'": {
         const index = value.lastIndexOf("'");
         if (indexEqual > -1 && index > indexEqual) {
-          value = `${value}'`;
+          valuePlus = "'";
         }
         break;
       }
@@ -160,8 +262,13 @@ const DeclarationNode = ({ id, data }) => {
       case '"': {
         const index = value.lastIndexOf('"');
         if (indexEqual > -1 && index > indexEqual) {
-          value = `${value}"`;
+          valuePlus = '"';
         }
+        break;
+      }
+
+      case 'Backspace': {
+        keyPress = inputText.charAt(position - 1);
         break;
       }
 
@@ -169,7 +276,17 @@ const DeclarationNode = ({ id, data }) => {
         break;
     }
 
-    setInputText(value);
+    if (valuePlus) {
+      value = `${value.substring(0, position)}${valuePlus}${value.substring(position)}`;
+      setInputText(value);
+    }
+
+    if (regex.test(keyPress)) {
+      setOpen(false);
+      setOptions([]);
+    } else {
+      showSuggestion(value);
+    }
   };
 
   const checkValidateText = () => {
@@ -217,7 +334,13 @@ const DeclarationNode = ({ id, data }) => {
         <EditingContainer>
           <Title>DECLARATION</Title>
           <ItemContainer error={errorText}>
-            <Input value={inputText} onChange={handleChange} onKeyUp={handleChange} />
+            <Input
+              id={id}
+              value={inputText}
+              onClick={() => showSuggestion()}
+              onChange={handleChange}
+              onKeyUp={handleKeyUp}
+            />
             {!!errorText && (
               <ErrorContainer>
                 <div className="icon">
@@ -226,6 +349,7 @@ const DeclarationNode = ({ id, data }) => {
                 <div className="error-text-declaration">{errorText}</div>
               </ErrorContainer>
             )}
+            <SuggestionPopover open={open} options={options} position={position} onClick={onClickSuggest} />
           </ItemContainer>
           <ActionContainer>
             <Button className="action-icon" onClick={() => setMode('view')}>

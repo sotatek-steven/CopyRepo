@@ -9,6 +9,8 @@ const Container = styled('div')(({ theme, open, position }) => ({
   display: open === 1 ? 'block' : 'none',
   background: theme.palette.background.dark,
   maxWidth: 300,
+  height: 140,
+  overflowY: 'scroll',
 }));
 
 const SuggestionItem = styled('div')(({ theme }) => ({
@@ -27,7 +29,7 @@ const SuggestionItem = styled('div')(({ theme }) => ({
 
 const SuggestionPopover = ({ open, options, position, onClick }) => {
   return (
-    <Container open={open ? 1 : 0} position={position}>
+    <Container open={open ? 1 : 0} position={position} className="nowheel">
       {options?.map((item, index) => {
         return (
           <SuggestionItem key={index} onClick={() => onClick(item)}>

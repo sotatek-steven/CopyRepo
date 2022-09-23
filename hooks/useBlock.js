@@ -59,8 +59,8 @@ const useBlock = () => {
     const index = blocksState.findIndex((item) => item?.id === id);
 
     //find next block and pre block
-    const nextBlockId = edges.find((item) => item.source === id).target;
-    const preBlockId = edges.find((item) => item.target === id).source;
+    const nextBlockId = edges.find((item) => item.source === id)?.target;
+    const preBlockId = edges.find((item) => item.target === id)?.source;
 
     //delete drop node
     let _blocksState = [...blocksState];
@@ -85,10 +85,10 @@ const useBlock = () => {
       const { id } = node;
       const index = nodes.findIndex((item) => item?.id === id);
       //find next block and pre block
-      const nextBlockId = edges.find((item) => item.source === id).target;
+      const nextBlockId = edges.find((item) => item.source === id)?.target;
       const nextBlock = nodes.find((item) => item.id === nextBlockId);
 
-      const preBlockId = edges.find((item) => item.target === id).source;
+      const preBlockId = edges.find((item) => item.target === id)?.source;
       const preBlock = nodes.find((item) => item.id === preBlockId);
 
       if (!nextBlock || nextBlock.type === 'activityFinal') {
