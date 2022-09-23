@@ -157,8 +157,22 @@ const useStructPage = () => {
   };
 
   const checkDuplicateStructName = (data) => {
-    const duplicateNames = data.map(({ name }) => name).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i);
-    return duplicateNames;
+    const duplicateNames = data.map(({ name }) => name.trim()).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i);
+    data.forEach((item) => {
+      if (item?.name.trim()) {
+        if (!regex.test(item?.name?.trim())) {
+          item.errorName = 'Invalid struct name';
+        } else {
+          if (duplicateNames?.includes(item.name.trim())) {
+            item.errorName = 'Struct name cannot be duplicated';
+          } else {
+            item.errorName = null;
+          }
+        }
+      }
+    });
+
+    return data;
   };
 
   const handleChangeNameStruct = (structId, e) => {
@@ -171,11 +185,7 @@ const useStructPage = () => {
     if (!value?.trim()) {
       data[iStruct].errorName = 'This field is required';
     }
-    const duplicateArr = checkDuplicateStructName(data);
-
-    data.forEach((item) => {
-      item.errorName = !!duplicateArr?.includes(item?.name) && 'Struct name cannot be duplicated';
-    });
+    const dataValid = checkDuplicateStructName(data);
 
     // Add Struct to List Type
     const iType = types.findIndex(({ value }) => value === structId);
@@ -189,21 +199,35 @@ const useStructPage = () => {
       tempType[iType].label = e.target.value;
     }
 
-    struct.setStructs(data);
+    struct.setStructs(dataValid);
     struct.setTypes(tempType);
-    userModule.updateStructs(convertStructs(data));
+    userModule.updateStructs(convertStructs(dataValid));
   };
 
   const checkDuplicateVariableName = (variables) => {
-    const duplicateNames = variables.map(({ name }) => name.value).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i);
-    return duplicateNames;
+    const duplicateNames = variables
+      .map(({ name }) => name.value.trim())
+      .filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i);
+
+    variables.forEach((item) => {
+      if (!regex.test(item?.name?.value?.trim())) {
+        item.name.errorName = 'Invalid variable name';
+      } else {
+        if (duplicateNames?.includes(item.name?.value?.trim())) {
+          item.name.errorName = 'Variable name cannot be duplicated';
+        } else {
+          item.name.errorName = null;
+        }
+      }
+    });
+
+    return variables;
   };
 
   const handleChangeVariable = (structId, variableId, e, type) => {
     const iStruct = structs.findIndex(({ _id }) => _id === structId);
     const iVariable = structs[iStruct]?.variables.findIndex(({ _id }) => _id === variableId);
     const data = [...structs];
-    let duplicateArr = [];
 
     switch (type) {
       case ELEMENT_TYPE.INPUT:
@@ -212,15 +236,8 @@ const useStructPage = () => {
         if (!e.target.value?.trim()) {
           data[iStruct].variables[iVariable].name.errorName = 'This field is required';
         } else {
-          if (!regex.test(e.target.value.trim())) {
-            data[iStruct].variables[iVariable].name.errorName = 'Invalid variable name';
-          } else {
-            duplicateArr = checkDuplicateVariableName(data[iStruct].variables);
-
-            data[iStruct].variables.forEach(({ name }) => {
-              name.errorName = !!duplicateArr?.includes(name.value) && 'Variable name cannot be duplicated';
-            });
-          }
+          const variables = checkDuplicateVariableName(data[iStruct].variables);
+          data[iStruct].variables = variables;
         }
 
         break;

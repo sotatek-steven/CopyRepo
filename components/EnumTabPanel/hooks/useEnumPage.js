@@ -1,3 +1,4 @@
+import { REGEX } from '@/config/constant/regex';
 import _ from 'lodash';
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'react-toastify';
@@ -5,6 +6,8 @@ import { toast } from 'react-toastify';
 const VALUE = {
   name: '',
 };
+
+const regex = new RegExp(REGEX.VARIABLE_NAME);
 
 const useEnumPage = () => {
   const { enums } = useSelector((state) => state.enumState);
@@ -58,6 +61,25 @@ const useEnumPage = () => {
     userModule.updateEnums(convertToEnumModule(data));
   };
 
+  const checkDuplicateEnumName = (data) => {
+    const duplicateNames = data.map(({ name }) => name.trim()).filter((v, i, vIds) => !!v && vIds.indexOf(v) !== i);
+    data.forEach((item) => {
+      if (item?.name.trim()) {
+        if (!regex.test(item?.name?.trim())) {
+          item.errorName = 'Invalid enum name';
+        } else {
+          if (duplicateNames?.includes(item.name.trim())) {
+            item.errorName = 'Enum name cannot be duplicated';
+          } else {
+            item.errorName = null;
+          }
+        }
+      }
+    });
+
+    return data;
+  };
+
   const handleChangeNameEnum = (enumId, e) => {
     const value = e.target.value;
     const iEnum = enums.findIndex(({ _id }) => _id === enumId);
@@ -67,9 +89,10 @@ const useEnumPage = () => {
     if (!value?.trim()) {
       data[iEnum].errorName = 'This field is required';
     }
+    const dataValid = checkDuplicateEnumName(data);
 
-    enumState.setEnums(data);
-    userModule.updateEnums(convertToEnumModule(data));
+    enumState.setEnums(dataValid);
+    userModule.updateEnums(convertToEnumModule(dataValid));
   };
 
   const handelAddValue = (enumId) => {
