@@ -37,10 +37,11 @@ const ModuleActionList = () => {
 
   const saveModule = async () => {
     setLoading(true);
-    const isErrorStruct = handleErrorStructs();
-    if (isErrorStruct) {
-      return;
-    }
+    // const isErrorStruct = handleErrorStructs();
+    // if (isErrorStruct) {
+    //   setLoading(false);
+    //   return;
+    // }
 
     const { code, data } = await userModule.updateModule();
 
