@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { REGEX } from './regex';
 
 export const ELEMENT_TYPE = {
   INPUT: 'INPUT',
@@ -733,4 +734,25 @@ export const generateDataType = () => {
   });
 
   return types;
+};
+
+export const getFirstNearSpace = (textValue, position) => {
+  const regex = new RegExp(REGEX.SPECIAL_CHARACTER);
+  textValue = textValue?.trim();
+  let iBeforeSpace = 0;
+  let iBehindSpace = 0;
+
+  for (let index = 0; index < textValue.length; index++) {
+    if (iBehindSpace) {
+      break;
+    }
+    if (regex.test(textValue.charAt(index))) {
+      if (index > iBeforeSpace && index < position) {
+        iBeforeSpace = index;
+      } else if (index >= position) {
+        iBehindSpace = index;
+      }
+    }
+  }
+  return { iBeforeSpace, iBehindSpace };
 };
