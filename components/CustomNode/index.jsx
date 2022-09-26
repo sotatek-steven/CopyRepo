@@ -9,6 +9,7 @@ import ActivityFinalNode from './AcitvityFinalNode';
 import DropHereNode from './DropHereNode';
 import ConditionNode from './ConditionNode';
 import ParentNode from './ParentNode';
+import RequireNode from './RequireNode';
 
 const CustomNodes = {
   module: ModuleNode,
@@ -22,6 +23,7 @@ const CustomNodes = {
   drop: DropHereNode,
   condition: ConditionNode,
   parent: ParentNode,
+  require: RequireNode,
 };
 
 export default CustomNodes;
