@@ -181,7 +181,7 @@ const AssignmentNode = ({ data, id }) => {
       return;
     }
     const { identifier, value } = data;
-    setVariable({ label: identifier });
+    setVariable(identifier ? { label: identifier } : undefined);
     setValue(value);
   };
 
