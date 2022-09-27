@@ -25,6 +25,12 @@ const CardBody = styled('div')(({ theme }) => ({
   justifyContent: 'center',
   fontFamily: 'Segoe UI',
   fontWeight: theme.typography.fontWeightBold,
+  '.data-view': {
+    width: '100%',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+  },
 }));
 
 const Body = styled('div')(({ theme, isError }) => ({

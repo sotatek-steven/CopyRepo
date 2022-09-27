@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import { Input } from '../Input';
@@ -19,16 +19,28 @@ const RequireNode = ({ id, data }) => {
   const { logicBlocks } = useDispatch();
   const [mode, setMode] = useState(_.isEmpty(data) ? 'editing' : 'view');
   const [listData, setListData] = useState([]);
+  const [dataView, setDataView] = useState([]);
   const [errorMessage, setErrorMessage] = useState({});
 
+  const convertDataView = () => {
+    const condition = [];
+    for (let index = 0; index < data?.inputs?.length; index += 2) {
+      condition.push(data?.inputs[index]);
+    }
+    setDataView(condition);
+  };
+
   useEffect(() => {
-    if (mode === 'view') return;
-    if (!data?.condition?.inputs?.length) {
+    if (mode === 'view') {
+      convertDataView();
+      return;
+    }
+    if (!data?.inputs?.length) {
       setListData([{ id: ObjectID(32).toHexString(), condition: '', operation: CONDITION_TYPE.NONE }]);
       setErrorMessage({ value: '', errorText: '' });
     } else {
       const dataConvert = [];
-      for (let index = 0; index <= data?.condition?.inputs?.length - 2; index += 2) {
+      for (let index = 0; index <= data?.inputs?.length - 2; index += 2) {
         dataConvert.push({
           id: ObjectID(32).toHexString(),
           condition: data?.inputs[index],
@@ -105,7 +117,7 @@ const RequireNode = ({ id, data }) => {
     // Update Declaration
     const _blocksState = [...blocksState];
     const index = blocksState.findIndex((item) => item?.id === id);
-    _blocksState[index]['data'] = { inputs };
+    _blocksState[index]['data'] = { inputs, errorMessage };
 
     logicBlocks.setBlocks(_blocksState);
 
@@ -120,7 +132,11 @@ const RequireNode = ({ id, data }) => {
     <>
       {mode === 'view' && (
         <Card>
-          <CardBody>{data?.label || 'Require'}</CardBody>
+          <CardBody>
+            <Tooltip title={`Require: ${dataView.join()}`} placement="top" arrow>
+              <div className="data-view">{`Require: ${dataView.join()}`}</div>
+            </Tooltip>
+          </CardBody>
           <AbsoluteContainer className="action-node">
             <Button className="action-icon" onClick={() => setMode('editing')}>
               <IconEditNode />
