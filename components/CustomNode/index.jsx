@@ -10,6 +10,7 @@ import DropHereNode from './DropHereNode';
 import ConditionNode from './ConditionNode';
 import ParentNode from './ParentNode';
 import RequireNode from './RequireNode';
+import RevertNode from './RevertNode';
 
 const CustomNodes = {
   module: ModuleNode,
@@ -24,6 +25,7 @@ const CustomNodes = {
   condition: ConditionNode,
   parent: ParentNode,
   require: RequireNode,
+  revert: RevertNode,
 };
 
 export default CustomNodes;

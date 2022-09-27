@@ -13,6 +13,7 @@ import SingleAutoComplete from '../AutoComplete/SingleAutoComplete';
 import { CONDITION_OPTION, CONDITION_TYPE, ELEMENT_TYPE } from '@/config/constant/common';
 import ObjectID from 'bson-objectid';
 import Label from '../atom/Label';
+import Scrollbars from 'react-custom-scrollbars';
 
 const RequireNode = ({ id, data }) => {
   const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
@@ -149,36 +150,43 @@ const RequireNode = ({ id, data }) => {
         <EditingContainer>
           <Title>Require</Title>
           <Label type="basic">Condition</Label>
-          <div className="nowheel">
-            {listData?.length &&
-              listData.map((item) => {
-                return (
-                  <Body key={item?.id} isError={!!item?.errorCondition}>
-                    <Input
-                      background="dark"
-                      value={item?.condition}
-                      errorText={item?.errorCondition}
-                      onChange={(e) => handleChange(item?.id, 'condition', e, ELEMENT_TYPE.INPUT)}
-                    />
-                    <div className="operation">
-                      <SingleAutoComplete
-                        value={CONDITION_OPTION.find((option) => option.value === item?.operation)}
-                        options={CONDITION_OPTION}
-                        onChange={(e, newValue) => handleChange(item?.id, 'operation', newValue, ELEMENT_TYPE.SELECT)}
+          <Scrollbars
+            style={{
+              height: 140,
+              overflowX: 'hidden',
+            }}>
+            <div className="pr-10 nowheel">
+              {listData?.length &&
+                listData.map((item) => {
+                  return (
+                    <Body key={item?.id} isError={!!item?.errorCondition}>
+                      <Input
+                        background="dark"
+                        value={item?.condition}
+                        errorText={item?.errorCondition}
+                        onChange={(e) => handleChange(item?.id, 'condition', e, ELEMENT_TYPE.INPUT)}
                       />
-                    </div>
-                  </Body>
-                );
-              })}
-          </div>
-
+                      <div className="operation">
+                        <SingleAutoComplete
+                          value={CONDITION_OPTION.find((option) => option.value === item?.operation)}
+                          options={CONDITION_OPTION}
+                          onChange={(e, newValue) => handleChange(item?.id, 'operation', newValue, ELEMENT_TYPE.SELECT)}
+                        />
+                      </div>
+                    </Body>
+                  );
+                })}
+            </div>
+          </Scrollbars>
           <Label type="basic">Error message</Label>
-          <Input
-            background="dark"
-            value={errorMessage?.value}
-            errorText={errorMessage?.errorText}
-            onChange={(e) => handleChange('', 'errorMessage', e, ELEMENT_TYPE.INPUT)}
-          />
+          <div className="pr-10">
+            <Input
+              background="dark"
+              value={errorMessage?.value}
+              errorText={errorMessage?.errorText}
+              onChange={(e) => handleChange('', 'errorMessage', e, ELEMENT_TYPE.INPUT)}
+            />
+          </div>
 
           <Footer>
             <Button className="action-icon" onClick={handleCancel}>
