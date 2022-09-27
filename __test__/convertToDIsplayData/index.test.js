@@ -19,7 +19,7 @@ describe('convert to display data', () => {
         })
       );
 
-      if (element.extent === 'parent') expect(element.extent).toEqual('parent');
+      if (element.extent === 'parent') expect(_element.extent).toEqual('parent');
     });
 
     _edges.forEach((_element, idx) => {
