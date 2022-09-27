@@ -51,10 +51,9 @@ const EditingContainer = styled('div')(({ theme }) => ({
   height: 'fit-content',
   border: `1.5px dashed ${theme.palette.success.main}`,
   background: theme.palette.background.light,
-  '.nowheel': {
-    height: 140,
+  '.nowheel': {},
+  '.pr-10': {
     paddingRight: 10,
-    overflowY: 'scroll',
   },
 }));
 
@@ -97,6 +96,7 @@ const ErrorContainer = styled('div')({
 const Footer = styled('div')({
   display: 'flex',
   justifyContent: 'end',
+  marginTop: 15,
 });
 
 const AbsoluteContainer = styled('div')(({ theme }) => ({
