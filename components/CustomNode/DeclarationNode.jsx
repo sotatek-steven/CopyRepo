@@ -37,6 +37,7 @@ const POSITION_SUGGEST = {
 const regex = new RegExp(REGEX.SPECIAL_CHARACTER);
 const DeclarationNode = ({ id, data }) => {
   const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
+  const moduleState = useSelector((state) => state.userModule);
 
   const [inputText, setInputText] = useState('');
   const [errorText, setErrorText] = useState('');
@@ -54,6 +55,8 @@ const DeclarationNode = ({ id, data }) => {
       data?.indentifier ? data?.indentifier : ''
     } ${data?.assignOperation ? data?.assignOperation : ''} ${data?.valueText ? data?.valueText : ''}`;
   };
+
+  console.log('moduleState', moduleState);
 
   useEffect(() => {
     if (mode === 'editing') {
@@ -99,12 +102,21 @@ const DeclarationNode = ({ id, data }) => {
     }
 
     if (!regex.test(textSearch)) {
-      isOpen = true;
       if (iLoIn === -1 || position < iLoIn) {
         const listType = generateDataType();
         listOption = listType.filter((item) => item.label.includes(textSearch));
+        isOpen = !!listOption.length;
       } else {
         listOption = LOCATION_OPTIONS.filter((item) => item.label.includes(textSearch));
+        const listStructName = moduleState?.sources?.structs?.map((item) => item?.name);
+        if (
+          nodeData.type === 'string' ||
+          nodeData.type === 'bytes' ||
+          nodeData.isArray ||
+          listStructName.includes(nodeData.type)
+        ) {
+          isOpen = !!listOption.length;
+        }
       }
     }
 
@@ -209,6 +221,16 @@ const DeclarationNode = ({ id, data }) => {
     }
   };
 
+  const handleClickInput = (e) => {
+    showSuggestion();
+    e.stopPropagation();
+  };
+
+  const handleClickOut = () => {
+    setOpen(false);
+    setOptions([]);
+  };
+
   const checkValidateText = () => {
     // Validate Declaration
     const element = splitElements(inputText);
@@ -251,16 +273,10 @@ const DeclarationNode = ({ id, data }) => {
         </Card>
       )}
       {mode === 'editing' && (
-        <EditingContainer>
+        <EditingContainer onClick={handleClickOut}>
           <Title>DECLARATION</Title>
           <ItemContainer error={errorText}>
-            <Input
-              id={id}
-              value={inputText}
-              onClick={() => showSuggestion()}
-              onChange={handleChange}
-              onKeyUp={handleKeyUp}
-            />
+            <Input id={id} value={inputText} onClick={handleClickInput} onChange={handleChange} onKeyUp={handleKeyUp} />
             {!!errorText && (
               <ErrorContainer>
                 <div className="icon">
