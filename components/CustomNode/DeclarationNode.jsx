@@ -1,4 +1,4 @@
-import { Button, styled } from '@mui/material';
+import { Button, Tooltip } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import { Input } from '../Input';
@@ -263,7 +263,11 @@ const DeclarationNode = ({ id, data }) => {
     <>
       {mode === 'view' && (
         <Card>
-          <CardBody>{convertDataToText().trim() || 'Declaration'}</CardBody>
+          <CardBody>
+            <Tooltip title={convertDataToText().trim()} placement="top" arrow>
+              <div className="data-view">{`Declaration: ${convertDataToText().trim()}`}</div>
+            </Tooltip>
+          </CardBody>
           <AbsoluteContainer className="action-node">
             <Button className="action-icon" onClick={() => setMode('editing')}>
               <IconEditNode />

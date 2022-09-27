@@ -11,6 +11,7 @@ import ConditionNode from './ConditionNode';
 import ParentNode from './ParentNode';
 import RequireNode from './RequireNode';
 import RevertNode from './RevertNode';
+import AssertNode from './AssertNode';
 
 const CustomNodes = {
   module: ModuleNode,
@@ -26,6 +27,7 @@ const CustomNodes = {
   parent: ParentNode,
   require: RequireNode,
   revert: RevertNode,
+  assert: AssertNode,
 };
 
 export default CustomNodes;

@@ -30,6 +30,7 @@ const CardBody = styled('div')(({ theme }) => ({
     textOverflow: 'ellipsis',
     overflow: 'hidden',
     whiteSpace: 'nowrap',
+    textAlign: 'center',
   },
 }));
 

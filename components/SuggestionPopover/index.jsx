@@ -11,6 +11,16 @@ const Container = styled('div')(({ theme, open, position }) => ({
   maxWidth: 300,
   height: 140,
   overflowY: 'scroll',
+  '::-webkit-scrollbar': {
+    width: 8,
+  },
+  '::-webkit-scrollbar-track': {
+    boxShadow: 'inset 0',
+  },
+  '::-webkit-scrollbar-thumb': {
+    background: theme.palette.common.black,
+    borderRadius: 8,
+  },
 }));
 
 const SuggestionItem = styled('div')(({ theme }) => ({
