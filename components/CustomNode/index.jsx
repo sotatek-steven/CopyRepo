@@ -13,6 +13,7 @@ import RequireNode from './RequireNode';
 import RevertNode from './RevertNode';
 import AssertNode from './AssertNode';
 import EmitNode from './EmitNode';
+import ContinueNode from './ContinueNode';
 
 const CustomNodes = {
   module: ModuleNode,
@@ -30,6 +31,7 @@ const CustomNodes = {
   revert: RevertNode,
   assert: AssertNode,
   emit: EmitNode,
+  continue: ContinueNode,
 };
 
 export default CustomNodes;
