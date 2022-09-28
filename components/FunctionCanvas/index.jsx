@@ -67,7 +67,8 @@ const FunctionCanvas = ({ initialNodes, initialEdges, redirectToAddField }) => {
       }
       if (node?.data?.modifiers.length) {
         node?.data?.modifiers.every((modi) => {
-          if (modi?.content?.dependencies?.includes(functionId)) {
+          const funcName = modi?.content?.dependencies.map((depen) => depen?._id);
+          if (funcName?.includes(functionId)) {
             isDependence = true;
             return false;
           } else {
