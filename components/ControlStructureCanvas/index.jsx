@@ -1,3 +1,4 @@
+import { convertToELKFormat } from '@/utils/functionData/convertToELKFormat';
 import { Box } from '@mui/system';
 import _ from 'lodash';
 import React, { useEffect, useRef, useCallback, useMemo } from 'react';
@@ -11,6 +12,8 @@ import ReactFlow, {
 } from 'react-flow-renderer';
 import { useSelector } from 'react-redux';
 import CustomNodes from '../CustomNode';
+import ELK from 'elkjs/lib/elk.bundled.js';
+import { convertFromELKDataToDisplayData } from '@/utils/functionData/convertFromELKDataToDisplayData';
 
 const styles = {
   backgroundFlow: {
@@ -22,15 +25,23 @@ const styles = {
 
 const ControlStructureCanvas = () => {
   const reactFlowWrapper = useRef(null);
-  const { nodes: blocksState, edges: edgesState } = useSelector((state) => state.logicBlocks);
+  const logicBlocks = useSelector((state) => state.logicBlocks);
   const nodeTypes = useMemo(() => CustomNodes, []);
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
 
-  useEffect(() => {
-    setNodes(blocksState);
-    setEdges(edgesState);
-  }, [blocksState, edgesState]);
+  useEffect(async () => {
+    const elk = new ELK();
+    const graph = convertToELKFormat(logicBlocks);
+
+    if (!graph || _.isEmpty(graph)) return;
+
+    const layout = await elk.layout(graph);
+
+    const { nodes, edges } = convertFromELKDataToDisplayData(layout);
+    setNodes(nodes);
+    setEdges(edges);
+  }, [logicBlocks]);
 
   const onConnect = useCallback((params) => setEdges((eds) => addEdge(params, eds)), []);
 

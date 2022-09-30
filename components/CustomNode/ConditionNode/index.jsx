@@ -204,9 +204,8 @@ const ConditionNode = ({ data, id }) => {
           </AbsoluteContainer>
           <CardBody onDoubleClick={() => setMode('editing')}>IF</CardBody>
 
-          <Handle type="target" position={Position.Top} id="top" style={{ background: '#555' }} />
           <Handle type="source" position={Position.Right} id="right" style={{ background: '#555' }} />
-          <Handle type="target" position={Position.Bottom} id="bottom" style={{ background: '#555' }} />
+          <Handle type="source" position={Position.Bottom} id="bottom" style={{ background: '#555' }} />
           <Handle type="source" position={Position.Left} id="left" style={{ background: '#555' }} />
         </Card>
       )}

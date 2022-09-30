@@ -1,4 +1,3 @@
-import OvalNode from './OvalNode';
 import ModuleNode from './ModuleNode';
 import SimpleRectangleNode from './SimpleRectangleNode';
 import CircleNode from './CircleNode';
@@ -14,10 +13,15 @@ import RevertNode from './RevertNode';
 import AssertNode from './AssertNode';
 import EmitNode from './EmitNode';
 import ContinueNode from './ContinueNode';
+import ReturnNode from './ReturnNode';
+import ReturnsNode from './ReturnsNode';
+import DeleteNode from './DeleteNode';
+import LogicNode from './LogicNode';
+import ForLoopNode from './ForLoopNode';
+import UncheckedNode from './UncheckedNode';
 
 const CustomNodes = {
   module: ModuleNode,
-  oval: OvalNode,
   simpleRectangle: SimpleRectangleNode,
   circle: CircleNode,
   declaration: DeclarationNode,
@@ -32,6 +36,12 @@ const CustomNodes = {
   assert: AssertNode,
   emit: EmitNode,
   continue: ContinueNode,
+  return: ReturnNode,
+  returns: ReturnsNode,
+  delete: DeleteNode,
+  logic: LogicNode,
+  forLoop: ForLoopNode,
+  unchecked: UncheckedNode,
 };
 
 export default CustomNodes;

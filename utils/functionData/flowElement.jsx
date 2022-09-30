@@ -193,8 +193,8 @@ export const createLogicNode = (id, position, data, parentId) => {
     position,
     data: {
       size: data?.size || {
-        width: 80,
-        height: 80,
+        width: 200,
+        height: 100,
       },
     },
     dragHandle: 'dragHandle',
@@ -218,13 +218,29 @@ export const createParentNode = (id, position, data, parentId) => {
   };
 };
 
-export const createForLoopConditionNode = (id, position, data, parentId) => {
+export const createForLoopNode = (id, position, data, parentId) => {
   return {
     id: id || ObjectID(24).toHexString(),
-    type: 'forLoopCondition',
+    type: 'forLoop',
     position,
     data: {
       ...data,
+      size: data?.size || {
+        width: 200,
+        height: 100,
+      },
+    },
+    dragHandle: 'dragHandle',
+    ...parentInfo(parentId),
+  };
+};
+
+export const createUncheckedNode = (id, position, data, parentId) => {
+  return {
+    id: id || ObjectID(24).toHexString(),
+    type: 'unchecked',
+    position,
+    data: {
       size: data?.size || {
         width: 200,
         height: 100,
@@ -277,8 +293,8 @@ export const createConditionNode = (id, position, data, parentId) => {
     data: {
       ...data,
       size: data?.size || {
-        width: 85,
-        height: 85,
+        width: 140,
+        height: 140,
       },
     },
     dragHandle: 'dragHandle',
@@ -286,7 +302,7 @@ export const createConditionNode = (id, position, data, parentId) => {
   };
 };
 
-export const createActivityFinalNode = (_id, position, data) => {
+export const createActivityFinalNode = (_id, position, data, parentId) => {
   return {
     id: ObjectID(24).toHexString(),
     type: 'activityFinal',
@@ -298,6 +314,7 @@ export const createActivityFinalNode = (_id, position, data) => {
       },
     },
     dragHandle: 'dragHandle',
+    ...parentInfo(parentId),
   };
 };
 
