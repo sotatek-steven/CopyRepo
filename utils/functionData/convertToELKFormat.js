@@ -1,16 +1,45 @@
+const PARENT_TYPE = ['parent', 'forLoop', 'unchecked'];
+
 export const convertToELKFormat = ({ nodes, edges }) => {
+  if (nodes.length === 0 && edges.length === 0) return;
+
   const flowList = getAllFlow({ nodes, edges });
 
-  const createGraph = (flow, layoutOptions) => {
+  const createGraph = (flow) => {
     const children = flow.map((nodeId) => {
       const nodeData = nodes.find((item) => item.id === nodeId);
-      if (nodeData.type === 'parent') {
+
+      const { type } = nodeData;
+      if (PARENT_TYPE.includes(type)) {
         const child = nodes.find((item) => item.parentNode === nodeData.id);
         const subFlow = flowList.find((item) => item.includes(child.id));
+        if (type === 'parent')
+          return {
+            ...nodeData.data.size,
+            ...nodeData,
+            ...createGraph(subFlow),
+            layoutOptions: {
+              'nodePlacement.strategy': 'SIMPLE',
+              'elk.direction': 'DOWN',
+              'spacing.nodeNodeBetweenLayers': 55,
+            },
+          };
         return {
           ...nodeData.data.size,
           ...nodeData,
-          ...createGraph(subFlow, { 'nodePlacement.strategy': 'SIMPLE', 'elk.direction': 'DOWN' }),
+          ...createGraph(subFlow),
+          labels: [
+            {
+              text: 'abc',
+              width: 200,
+              height: 100,
+            },
+          ],
+          layoutOptions: {
+            'nodeLabels.placement': '[H_CENTER, V_TOP, INSIDE]',
+            'nodePlacement.strategy': 'SIMPLE',
+            'elk.direction': 'DOWN',
+          },
         };
       }
 
@@ -21,7 +50,6 @@ export const convertToELKFormat = ({ nodes, edges }) => {
     });
 
     let edgeList = [];
-
     flow.forEach((nodeId) => {
       const _edges = edges.filter((item) => item.source === nodeId);
       edgeList = edgeList.concat(_edges);
@@ -30,19 +58,19 @@ export const convertToELKFormat = ({ nodes, edges }) => {
     return {
       children,
       edges: edgeList,
-      layoutOptions,
     };
   };
 
   const initialBlock = nodes.find((item) => item.type === 'initial');
 
-  let layoutOptions = {
+  const initialFlow = flowList.find((flow) => flow.includes(initialBlock.id));
+  let graphLayout = createGraph(initialFlow);
+  graphLayout.id = '0';
+  graphLayout.layoutOptions = {
     'elk.direction': 'DOWN',
     interactiveLayout: 'true',
+    'spacing.nodeNodeBetweenLayers': 30,
   };
-  const initialFlow = flowList.find((item) => item.includes(initialBlock.id));
-  let graphLayout = createGraph(initialFlow, layoutOptions);
-  graphLayout.id = '0';
 
   return graphLayout;
 };

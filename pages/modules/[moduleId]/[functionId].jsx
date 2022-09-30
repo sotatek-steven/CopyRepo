@@ -5,7 +5,7 @@ import FunctionSidebar from '@/components/functionsPage/FunctionSidebar';
 import useDeclaration from '@/components/functionsPage/hooks/useDeclaration';
 import DesignLayout from '@/components/layout/DesignLayout';
 import { generateDataType } from '@/config/constant/common';
-import { FAKE_DATA, FAKE_EDGES, FAKE_NODES, simpleData } from '@/store/models/fakeData';
+import { convertToDataDisplay } from '@/utils/functionData/convertToDataDisplay';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import { styled, Tab } from '@mui/material';
 import _ from 'lodash';
@@ -143,7 +143,7 @@ const FunctionPage = () => {
 
         // set logicBlocks data
         if (data.block) {
-          const _blocksData = await logicBlocks.convertToFEDataDisplay(data.block);
+          const _blocksData = convertToDataDisplay(data.block);
           logicBlocks.set(_blocksData);
         } else {
           const { nodes, edges } = await logicBlocks.createInitNode();

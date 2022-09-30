@@ -11,7 +11,7 @@ import {
   createDropItemNode,
   createEdge,
   createEmitNode,
-  createForLoopConditionNode,
+  createForLoopNode,
   createInitNode,
   createLogicNode,
   createParentNode,
@@ -19,15 +19,14 @@ import {
   createReturnNode,
   createReturnsNode,
   createRevertNode,
+  createUncheckedNode,
 } from '@/utils/functionData/flowElement';
 
 export const convertToDataDisplay = (blockData) => {
   const blocksList = [];
   const edgesList = [];
   const createBlocks = (blockData, groupId, parent) => {
-    let parentNode;
     let newNode;
-    let conditionNode;
     const { type, next, position, params, _id, size } = blockData;
     switch (type) {
       case 'init':
@@ -82,32 +81,27 @@ export const convertToDataDisplay = (blockData) => {
         break;
       case 'condition': {
         const { nextTrue, nextFalse, conditions, parent } = blockData;
-        parentNode = createParentNode(parent?._id, parent?.position, { size: parent?.size }, groupId);
+        const parentNode = createParentNode(parent?._id, parent?.position, { size: parent?.size }, groupId);
         newNode = parentNode;
         blocksList.push(parentNode);
-        conditionNode = createConditionNode(_id, position, { conditions, size }, parentNode.id);
+        const conditionNode = createConditionNode(_id, position, { conditions, size }, parentNode.id);
         blocksList.push(conditionNode);
         if (nextTrue) createBlocks({ ...nextTrue, branch: 'true' }, parentNode.id, conditionNode.id);
         if (nextFalse) createBlocks({ ...nextFalse, branch: 'false' }, parentNode.id, conditionNode.id);
         break;
       }
       case 'loopFor': {
-        const { parent } = blockData;
-        parentNode = createParentNode(parent?._id, parent?.position, { size: parent?.size }, groupId);
-        newNode = parentNode;
-        blocksList.push(parentNode);
         const { start, step, condition, next } = params;
-        conditionNode = createForLoopConditionNode(_id, position, { start, step, condition }, parentNode.id);
-        blocksList.push(conditionNode);
-        if (next) createBlocks(next, parentNode.id, conditionNode.id);
+        newNode = createForLoopNode(_id, position, { start, step, condition }, groupId);
+        blocksList.push(newNode);
+        if (next) createBlocks(next, newNode.id);
         break;
       }
       case 'unchecked': {
-        const { parent, params } = blockData;
-        parentNode = createParentNode(parent?._id, parent?.position, { size: parent?.size }, groupId);
-        newNode = parentNode;
-        blocksList.push(parentNode);
-        if (params.next) createBlocks(params.next, parentNode.id, parentNode.id);
+        const uncheckedNode = createUncheckedNode(_id, position, { size }, groupId);
+        newNode = uncheckedNode;
+        blocksList.push(uncheckedNode);
+        if (params.next) createBlocks(params.next, uncheckedNode.id);
         break;
       }
       case 'assembly':
@@ -129,7 +123,7 @@ export const convertToDataDisplay = (blockData) => {
         break;
       }
       case 'activityFinal':
-        newNode = createActivityFinalNode(_id, position, { size });
+        newNode = createActivityFinalNode(_id, position, { size }, groupId);
         blocksList.push(newNode);
         break;
       case 'drop': {
@@ -141,20 +135,24 @@ export const convertToDataDisplay = (blockData) => {
     }
 
     if (parent && newNode) {
+      let sourceHandle = undefined;
+      if (blockData.branch) {
+        const parentNodeData = blocksList.find((item) => item.id === parent);
+        const { nextTrue, nextFalse } = parentNodeData;
+        if (nextTrue && nextFalse) {
+          sourceHandle = blockData.branch === 'true' ? 'left' : 'right';
+        } else {
+          sourceHandle = 'bottom';
+        }
+      }
       edgesList.push(
-        createEdge(
-          parent,
-          newNode.id,
-          blockData.branch ? 'step' : undefined,
-          blockData.branch,
-          blockData?.branch ? (blockData.branch === 'true' ? 'left' : 'right') : undefined
-        )
+        createEdge(parent, newNode.id, blockData.branch ? 'step' : undefined, blockData.branch, sourceHandle)
       );
     }
     if (!next) {
       return;
     }
-    createBlocks(next, undefined, newNode?.id);
+    createBlocks(next, groupId, newNode?.id);
   };
 
   createBlocks(blockData);
