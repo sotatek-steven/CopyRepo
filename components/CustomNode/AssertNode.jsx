@@ -59,7 +59,7 @@ const AssertNode = ({ id, data }) => {
     const index = blocksState.findIndex((item) => item?.id === id);
     _blocksState[index]['data'] = { inputs: dataEdit?.value };
 
-    logicBlocks.setBlocks(_blocksState);
+    logicBlocks.setNodes(_blocksState);
 
     setMode('view');
   };

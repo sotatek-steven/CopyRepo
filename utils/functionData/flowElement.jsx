@@ -1,5 +1,7 @@
 import ObjectID from 'bson-objectid';
 
+export const PARENT_TYPE = ['parent', 'forLoop', 'unchecked'];
+
 //create node
 export const createInitNode = (id, position, data) => {
   return {
@@ -324,7 +326,7 @@ export const createDropItemNode = (_id, position, data, parentId) => {
     type: 'drop',
     position,
     data: {
-      allowRemove: data.allowRemove,
+      allowRemove: data?.allowRemove || false,
       size: data?.size || {
         width: 200,
         height: 100,

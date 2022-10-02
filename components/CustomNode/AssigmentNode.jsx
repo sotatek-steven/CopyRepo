@@ -86,7 +86,7 @@ const AbsoluteContainer = styled('div')(({ theme }) => ({
   },
 }));
 
-const ButtonWrapper = styled('div')(({ theme }) => ({
+const ButtonWrapper = styled('div')({
   height: 45,
   width: 45,
   display: 'flex',
@@ -96,7 +96,7 @@ const ButtonWrapper = styled('div')(({ theme }) => ({
   '&:hover': {
     background: '#504e4d',
   },
-}));
+});
 
 const AssignmentNode = ({ data, id }) => {
   const theme = useTheme();
@@ -119,14 +119,15 @@ const AssignmentNode = ({ data, id }) => {
   const [valueError, setValueError] = useState('');
 
   useEffect(() => {
-    if (!data || _.isEmpty(data)) {
+    if (!data.params || _.isEmpty(data.params)) {
       setVariable(null);
       setValue('');
       return;
     }
-    const { identifier, value } = data;
-    setVariable({ label: identifier });
-    setValue(value);
+
+    const { identifier, value } = data.params;
+    setVariable(identifier ? { label: identifier } : null);
+    setValue(value || '');
   }, [data]);
 
   const handleVariableChange = (e, value) => {
@@ -138,7 +139,7 @@ const AssignmentNode = ({ data, id }) => {
   const handleValueChange = (e) => {
     const _value = e.target.value;
     setValue(_value);
-    if (!value) setValueError('This field required');
+    if (!_value) setValueError('This field required');
     else setValueError('');
   };
 
@@ -158,7 +159,6 @@ const AssignmentNode = ({ data, id }) => {
     setValueError('');
     const { label, isArray, position } = variable;
     const updatedData = {
-      ...data,
       identifier: label,
       isArray,
       position,
@@ -166,7 +166,7 @@ const AssignmentNode = ({ data, id }) => {
       value,
     };
 
-    logicBlocks.updateBlock(id, updatedData);
+    logicBlocks.updateNode(id, { params: updatedData });
     setMode('view');
   };
 
@@ -194,6 +194,12 @@ const AssignmentNode = ({ data, id }) => {
       setValueError('This field required');
     }
   };
+
+  useEffect(() => {
+    let size = { width: 200, height: 100 };
+    if (mode === 'editing') size = { width: 468, height: 213 };
+    logicBlocks.updateNode(id, { size });
+  }, [mode]);
 
   return (
     <>

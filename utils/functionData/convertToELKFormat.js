@@ -1,4 +1,4 @@
-const PARENT_TYPE = ['parent', 'forLoop', 'unchecked'];
+import { PARENT_TYPE } from './flowElement';
 
 export const convertToELKFormat = ({ nodes, edges }) => {
   if (nodes.length === 0 && edges.length === 0) return;
