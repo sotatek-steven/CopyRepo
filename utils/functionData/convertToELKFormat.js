@@ -32,7 +32,7 @@ export const convertToELKFormat = ({ nodes, edges }) => {
             {
               text: 'abc',
               width: 200,
-              height: 100,
+              height: 70,
             },
           ],
           layoutOptions: {
@@ -87,12 +87,17 @@ const getAllFlow = ({ nodes, edges }) => {
   const result = [];
   // eslint-disable-next-line no-undef
   const visited = new Set();
-  for (const node of nodes) {
-    if (visited.has(node.id)) continue;
+  const sourceNodes = Object.keys(adjList);
+  const otherNodes = nodes.filter((item) => !sourceNodes.includes(item.id));
+  const otherNodesId = otherNodes.map((item) => item.id);
+  const _nodes = sourceNodes.concat(otherNodesId);
 
-    const queue = [node.id];
+  for (const node of _nodes) {
+    if (visited.has(node)) continue;
+
+    const queue = [node];
     const flow = [];
-    visited.add(node.id);
+    visited.add(node);
     while (queue.length) {
       const u = queue.shift();
       flow.push(u);
