@@ -158,7 +158,7 @@ const ConditionNode = ({ data, id }) => {
     const index = blocksState.findIndex((item) => item?.id === id);
     _blocksState[index]['data'] = { inputs };
 
-    logicBlocks.setBlocks(_blocksState);
+    logicBlocks.setNodes(_blocksState);
     setMode('view');
   };
 

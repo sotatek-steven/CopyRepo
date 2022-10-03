@@ -59,7 +59,7 @@ const EmitNode = ({ id, data }) => {
     const index = blocksState.findIndex((item) => item?.id === id);
     _blocksState[index]['data'] = { inputs: dataEdit?.value };
 
-    logicBlocks.setBlocks(_blocksState);
+    logicBlocks.setNodes(_blocksState);
 
     setMode('view');
   };
@@ -67,6 +67,12 @@ const EmitNode = ({ id, data }) => {
   const handleCancel = () => {
     setMode('view');
   };
+
+  useEffect(() => {
+    let size = { width: 200, height: 100 };
+    if (mode === 'editing') size = { width: 468, height: 183 };
+    logicBlocks.updateNode(id, { size });
+  }, [mode]);
 
   return (
     <>

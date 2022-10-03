@@ -571,9 +571,7 @@ export const splitElements = (text) => {
         element.splice(0);
         continue;
       }
-      if (element.length == 0 || (element.length == 1 && [' ', '\t'].includes(element[0]))) {
-        console.log('splitElements');
-      } else {
+      if (!(element.length == 0 || (element.length == 1 && [' ', '\t'].includes(element[0])))) {
         elements.push(element.join(''));
       }
 

@@ -44,9 +44,6 @@ const useDeclaration = () => {
   };
 
   const validateDeclaration = (data) => {
-    const properties = Object.getOwnPropertyNames(data);
-    console.log(properties);
-
     if (!data?.type || (data?.type && _.findIndex(listType, (item) => item.value === data.type) === -1)) {
       return 'Type is invalid';
     }

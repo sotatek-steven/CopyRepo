@@ -3,8 +3,8 @@ import { Handle, Position } from 'react-flow-renderer';
 
 const Card = styled('article')(({ theme, width, height }) => ({
   padding: '10px 15px',
-  width: width,
-  height: height,
+  width: width || 700,
+  height: height || 500,
   backgroundColor: theme.palette.background.parentNode,
   display: 'flex',
   flexDirection: 'column',
@@ -30,7 +30,7 @@ const CardBody = styled('div')({
 
 const ForLoopConditionNode = ({ id, data }) => (
   <>
-    <Card width={data?.width || 700} height={data?.height || 500}>
+    <Card width={data?.size.width} height={data?.size.height}>
       For Loop Node
       <CardBody>
         <Handle type="target" position={Position.Top} id="a" style={{ background: '#555' }} />

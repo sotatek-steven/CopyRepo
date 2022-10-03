@@ -1,4 +1,3 @@
-import { createEdge } from '@/store/models/logicBlocks';
 import { useDispatch, useSelector } from 'react-redux';
 
 const useBlock = () => {
@@ -11,7 +10,7 @@ const useBlock = () => {
     const index = blocksState.findIndex((item) => item?.id === id);
 
     _blocksState[index]['type'] = 'drop';
-    _blocksState[index]['data'] = { allowRemove: true };
+    _blocksState[index]['data'] = { allowRemove: true, size: { width: 200, height: 100 } };
 
     // list data will remove
     const listRemove = removeChildrenByParentId(_blocksState, [id]);
@@ -20,8 +19,8 @@ const useBlock = () => {
     _edgesState = _edgesState.filter((item) => !listRemove.includes(item?.source));
 
     _blocksState = updateDropItemNodes(_blocksState, _edgesState);
-    logicBlocks.setBlocks(_blocksState);
-    logicBlocks.setEdgeBlocks(_edgesState);
+    logicBlocks.setNodes(_blocksState);
+    logicBlocks.setEdges(_edgesState);
   };
 
   const removeChildrenByParentId = (listBlock, listIdRemove) => {
@@ -56,27 +55,29 @@ const useBlock = () => {
   };
 
   const deleteDropNode = (id) => {
-    const index = blocksState.findIndex((item) => item?.id === id);
-
-    //find next block and pre block
-    const nextBlockId = edges.find((item) => item.source === id)?.target;
-    const preBlockId = edges.find((item) => item.target === id)?.source;
-
     //delete drop node
-    let _blocksState = [...blocksState];
-    _blocksState.splice(index, 1);
+    let _nodesState = blocksState.filter((item) => item.id !== id);
+    let _edgesState = [...edges];
 
-    //remove all the edge connected
-    const updatedEdges = edges.filter((edge) => edge.target !== id && edge.source !== id);
+    //find next block
+    const nextBlockId = edges.find((item) => item.source === id)?.target;
 
-    //create edge bettween preBlock and newBlock
-    updatedEdges.push(createEdge(nextBlockId, preBlockId));
+    if (nextBlockId) {
+      //delete edge(id, nexBlockId)
+      _edgesState = _edgesState.filter((item) => item.source !== id);
+      //update target of edge(preBlockId, id)
+      const edgeIndex = _edgesState.findIndex((item) => item.target === id);
+      _edgesState[edgeIndex].target = nextBlockId;
+    } else {
+      //delete edge(preNodeId, id)
+      _edgesState = _edgesState.filter((item) => item.target !== id);
+    }
 
     //update allowRemove atribute of drop item node
-    _blocksState = updateDropItemNodes(_blocksState, updatedEdges);
+    _nodesState = updateDropItemNodes(_nodesState, _edgesState);
 
     //update nodes and edges to store
-    logicBlocks.set({ nodes: _blocksState, edges: updatedEdges });
+    logicBlocks.set({ nodes: _nodesState, edges: _edgesState });
   };
 
   const updateDropItemNodes = (nodes, edges) => {

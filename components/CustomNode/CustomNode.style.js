@@ -1,10 +1,10 @@
 import { styled } from '@mui/material';
 
-const Card = styled('article')(({ color, theme }) => ({
+const Card = styled('article')(({ color, width, height, theme }) => ({
   padding: '10px 15px',
   borderRadius: 30,
-  width: 200,
-  height: 100,
+  width: width || 200,
+  height: height || 100,
   backgroundColor: color || '#BEA75A',
   cursor: 'pointer',
   display: 'flex',
@@ -46,9 +46,9 @@ const Body = styled('div')(({ theme, isError }) => ({
   },
 }));
 
-const EditingContainer = styled('div')(({ theme }) => ({
+const EditingContainer = styled('div')(({ theme, width, height }) => ({
   padding: 30,
-  width: 468,
+  width: width || 468,
   height: 'fit-content',
   border: `1.5px dashed ${theme.palette.success.main}`,
   background: theme.palette.background.light,

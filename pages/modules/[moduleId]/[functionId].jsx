@@ -147,8 +147,8 @@ const FunctionPage = () => {
           logicBlocks.set(_blocksData);
         } else {
           const { nodes, edges } = await logicBlocks.createInitNode();
-          logicBlocks.setBlocks(nodes);
-          logicBlocks.setEdgeBlocks(edges);
+          logicBlocks.setNodes(nodes);
+          logicBlocks.setEdges(edges);
         }
 
         // fetch detail module
@@ -186,8 +186,8 @@ const FunctionPage = () => {
   //   const convertData = async () => {
   //     // Init data
   //     const { nodes, edges } = await logicBlocks.createInitNode();
-  //     logicBlocks.setBlocks(nodes);
-  //     logicBlocks.setEdgeBlocks(edges);
+  //     logicBlocks.setNodes(nodes);
+  //     logicBlocks.setEdges(edges);
 
   //     // const { nodes: _nodes, edges: _edges } = await logicBlocks.convertToFEDataDisplay(FAKE_DATA);
   //     // console.log('nodes: ', JSON.stringify(_nodes));

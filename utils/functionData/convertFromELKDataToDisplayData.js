@@ -1,4 +1,5 @@
 import _ from 'lodash';
+import { PARENT_TYPE } from './flowElement';
 
 export const convertFromELKDataToDisplayData = (ELKData) => {
   if (!ELKData || _.isEmpty(ELKData)) return {};
@@ -10,11 +11,11 @@ export const convertFromELKDataToDisplayData = (ELKData) => {
     //get node of flow
     const _nodes = children.map((item) => {
       const { id, type, data, x, y, parent, parentNode, width, height } = item;
-      // const _data = type === 'parent' ? {...data, size: }
+      const _data = PARENT_TYPE.includes(type) ? { ...data, size: { width, height } } : data;
       return {
         id,
         type,
-        data: { ...data, width, height },
+        data: _data,
         position: { x, y },
         parent,
         parentNode,

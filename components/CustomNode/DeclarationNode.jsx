@@ -56,8 +56,6 @@ const DeclarationNode = ({ id, data }) => {
     } ${data?.assignOperation ? data?.assignOperation : ''} ${data?.valueText ? data?.valueText : ''}`;
   };
 
-  console.log('moduleState', moduleState);
-
   useEffect(() => {
     if (mode === 'editing') {
       // convert data to text
@@ -255,9 +253,15 @@ const DeclarationNode = ({ id, data }) => {
     delete _blocksState[index]['data'].value;
     delete _blocksState[index]['data'].errorIsArray;
 
-    logicBlocks.setBlocks(_blocksState);
+    logicBlocks.setNodes(_blocksState);
     setMode('view');
   };
+
+  useEffect(() => {
+    let size = { width: 200, height: 100 };
+    if (mode === 'editing') size = { width: 468, height: 213 };
+    logicBlocks.updateNode(id, { size });
+  }, [mode]);
 
   return (
     <>
