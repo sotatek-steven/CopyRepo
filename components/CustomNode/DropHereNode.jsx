@@ -13,6 +13,7 @@ import {
   createBreakNode,
   createContinueNode,
   createEmitNode,
+  createForLoopNode,
 } from '@/utils/functionData/flowElement';
 import { styled } from '@mui/material';
 import React, { useState } from 'react';
@@ -154,7 +155,12 @@ const DropHereNode = (props) => {
         newNodes.push(continueNode);
         break;
       }
-
+      case 'for_loop': {
+        const forLoopNode = createForLoopNode(undefined, undefined, undefined, dropNode.parentNode);
+        const dropItemNode = createDropItemNode(undefined, undefined, undefined, forLoopNode.id);
+        newNodes.push(forLoopNode, dropItemNode);
+        break;
+      }
       default:
     }
 
@@ -170,7 +176,9 @@ const DropHereNode = (props) => {
 
     // update source of edge(preNode, dropNode)
     const edgeIndex = _edgesState.findIndex((item) => item.target === dropNodeId);
-    _edgesState[edgeIndex].target = mainNode.id;
+    if (edgeIndex >= 0) {
+      _edgesState[edgeIndex].target = mainNode.id;
+    }
 
     // add edge(mainNode, dropNode)
     newEdges.push(createEdge(mainNode.id, dropNodeId));
