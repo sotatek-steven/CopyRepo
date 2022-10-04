@@ -14,7 +14,7 @@ const Container = styled('div')(({ theme }) => ({
 }));
 
 const CircleNode = ({ id, data }) => (
-  <Container id={id}>
+  <Container id={id} className="nodrag">
     <Handle type="source" position={Position.Right} id="a1" style={{ background: '#555' }} />
     <Handle type="target" position={Position.Left} id="c1" style={{ background: '#555' }} />
     <div>{data.label}</div>

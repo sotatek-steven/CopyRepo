@@ -15,7 +15,7 @@ const Card = styled('div')(({ theme, color }) => ({
 
 const DeleteNode = ({ id, data }) => (
   <>
-    <Card id={id}>
+    <Card id={id} className="nodrag">
       <div>Return Node</div>
       <Handle type="target" position={Position.Top} id="a1" style={{ background: '#555' }} />
       <Handle type="source" position={Position.Bottom} id="c1" style={{ background: '#555' }} />

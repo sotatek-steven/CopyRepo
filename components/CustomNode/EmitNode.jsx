@@ -77,7 +77,7 @@ const EmitNode = ({ id, data }) => {
   return (
     <>
       {mode === 'view' && (
-        <Card>
+        <Card className="nodrag">
           <CardBody>
             <Tooltip title={`Emit ("${dataView}")`} placement="top" arrow>
               <div className="data-view">{`Emit ("${dataView}")`}</div>
@@ -92,7 +92,7 @@ const EmitNode = ({ id, data }) => {
         </Card>
       )}
       {mode === 'editing' && (
-        <EditingContainer>
+        <EditingContainer className="nodrag">
           <Title>Emit</Title>
           <Label type="basic">Event</Label>
           <Input background="dark" value={dataEdit?.value} errorText={dataEdit?.errorText} onChange={handleChange} />

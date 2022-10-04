@@ -6,7 +6,7 @@ import { AbsoluteContainer, Card, CardBody } from './CustomNode.style';
 const ContinueNode = ({ id }) => {
   return (
     <>
-      <Card>
+      <Card className="nodrag">
         <CardBody>
           <div className="data-view">{`Continue`}</div>
         </CardBody>
