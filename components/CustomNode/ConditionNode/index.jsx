@@ -1,4 +1,4 @@
-import { Button, styled } from '@mui/material';
+import { Button, styled, Tooltip } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import IconCancel from 'assets/icon/IconCancel.svg';
@@ -20,6 +20,14 @@ const CardBody = styled('article')(({ theme }) => ({
   justifyContent: 'center',
   backgroundColor: theme.palette.mode === 'dark' ? '#BEA75A' : '#BEA75A',
   clipPath: 'polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%)',
+  '.data-view': {
+    width: '100%',
+    textOverflow: 'ellipsis',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textAlign: 'center',
+    padding: '0 12px',
+  },
 }));
 
 const Card = styled('div')(({ theme }) => ({
@@ -110,10 +118,22 @@ const ConditionNode = ({ data, id }) => {
   const { logicBlocks } = useDispatch();
 
   const [listData, setListData] = useState([]);
+  const [dataView, setDataView] = useState([]);
   const [mode, setMode] = useState('view');
 
+  const convertDataView = () => {
+    const condition = [];
+    for (let index = 0; index < data?.inputs?.length; index += 2) {
+      condition.push(data?.inputs[index]);
+    }
+    setDataView(condition);
+  };
+
   useEffect(() => {
-    if (mode === 'view') return;
+    if (mode === 'view') {
+      convertDataView();
+      return;
+    }
     if (!data?.inputs?.length) {
       setListData([{ id: ObjectID(32).toHexString(), condition: '', operation: CONDITION_TYPE.NONE }]);
     } else {
@@ -196,13 +216,17 @@ const ConditionNode = ({ data, id }) => {
   return (
     <>
       {mode === 'view' && (
-        <Card>
+        <Card className="nodrag">
           <AbsoluteContainer className="action-node">
             <Button className="action-icon" onClick={() => setMode('editing')}>
               <IconEditNode />
             </Button>
           </AbsoluteContainer>
-          <CardBody onDoubleClick={() => setMode('editing')}>IF</CardBody>
+          <CardBody onDoubleClick={() => setMode('editing')}>
+            <Tooltip title={`If: ${dataView.join()}`} placement="top" arrow>
+              <div className="data-view">{`If: ${dataView.join()}`}</div>
+            </Tooltip>
+          </CardBody>
 
           <Handle type="source" position={Position.Right} id="right" style={{ background: '#555' }} />
           <Handle type="source" position={Position.Bottom} id="bottom" style={{ background: '#555' }} />
@@ -210,7 +234,7 @@ const ConditionNode = ({ data, id }) => {
         </Card>
       )}
       {mode === 'editing' && (
-        <EditingContainer>
+        <EditingContainer className="nodrag">
           <Title>If</Title>
           <div className="nowheel">
             {listData?.length &&

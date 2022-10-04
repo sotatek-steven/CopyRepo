@@ -90,7 +90,7 @@ const ForLoopConditionNode = ({ id, data }) => {
   const [mode, setMode] = useState('view');
   return (
     <>
-      <Card width={data?.size.width} height={data?.size.height}>
+      <Card className="nodrag" width={data?.size.width} height={data?.size.height}>
         <ParentAbsoluteContainer className="action-node">
           <ButtonRemoveNode id={id} />
         </ParentAbsoluteContainer>

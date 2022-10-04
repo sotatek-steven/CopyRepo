@@ -46,7 +46,7 @@ const AbsoluteContainer = styled('div')(({ theme }) => ({
 const ParentNode = ({ id, data }) => {
   return (
     <>
-      <Card width={data?.size.width} height={data?.size.height}>
+      <Card className="nodrag" width={data?.size.width} height={data?.size.height}>
         <AbsoluteContainer className="action-node">
           <ButtonRemoveNode id={id} />
         </AbsoluteContainer>

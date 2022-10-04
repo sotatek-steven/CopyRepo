@@ -71,7 +71,7 @@ const AssertNode = ({ id, data }) => {
   return (
     <>
       {mode === 'view' && (
-        <Card>
+        <Card className="nodrag">
           <CardBody>
             <Tooltip title={`Assert ("${dataView}")`} placement="top" arrow>
               <div className="data-view">{`Assert ("${dataView}")`}</div>
@@ -86,7 +86,7 @@ const AssertNode = ({ id, data }) => {
         </Card>
       )}
       {mode === 'editing' && (
-        <EditingContainer>
+        <EditingContainer className="nodrag">
           <Title>Assert</Title>
           <Label type="basic">Expression</Label>
           <Input background="dark" value={dataEdit?.value} errorText={dataEdit?.errorText} onChange={handleChange} />

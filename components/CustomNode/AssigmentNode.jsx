@@ -204,7 +204,7 @@ const AssignmentNode = ({ data, id }) => {
   return (
     <>
       {mode === 'view' && (
-        <Card onDoubleClick={() => setMode('editing')}>
+        <Card onDoubleClick={() => setMode('editing')} className="nodrag">
           <AbsoluteContainer className="action-node">
             <Button className="action-icon" onClick={() => setMode('editing')}>
               <IconEditNode />
@@ -219,7 +219,7 @@ const AssignmentNode = ({ data, id }) => {
         </Card>
       )}
       {mode === 'editing' && (
-        <EditingContainer>
+        <EditingContainer className="nodrag">
           <Title>Assignment</Title>
           <Body>
             <Grid container spacing={2}>

@@ -16,7 +16,7 @@ const Container = styled('div')(({ theme }) => ({
 
 const ActivityFinalNode = () => {
   return (
-    <Container>
+    <Container className="nodrag">
       <Handle type="source" position={Position.Bottom} id="a1" style={{ background: '#555' }} />
       <Handle type="target" position={Position.Top} id="c1" style={{ background: '#555' }} />
       <div>END</div>

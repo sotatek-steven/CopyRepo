@@ -192,7 +192,12 @@ const DropHereNode = (props) => {
 
   return (
     <>
-      <Card isAllowDrop={isAllowDrop} onDragOver={allowDrop} onDragLeave={notAllowDrop} onDrop={handleDrop}>
+      <Card
+        className="nodrag"
+        isAllowDrop={isAllowDrop}
+        onDragOver={allowDrop}
+        onDragLeave={notAllowDrop}
+        onDrop={handleDrop}>
         {allowRemove && (
           <AbsoluteContainer className="action-node">
             <ButtonRemoveNode id={id} />

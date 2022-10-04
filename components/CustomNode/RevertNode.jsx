@@ -77,7 +77,7 @@ const RevertNode = ({ id, data }) => {
   return (
     <>
       {mode === 'view' && (
-        <Card>
+        <Card className="nodrag">
           <CardBody>
             <Tooltip title={`Revert ("${dataView}")`} placement="top" arrow>
               <div className="data-view">{`Revert ("${dataView}")`}</div>
@@ -92,7 +92,7 @@ const RevertNode = ({ id, data }) => {
         </Card>
       )}
       {mode === 'editing' && (
-        <EditingContainer>
+        <EditingContainer className="nodrag">
           <Title>Revert</Title>
           <Label type="basic">Error message</Label>
           <Input background="dark" value={dataEdit?.value} errorText={dataEdit?.errorText} onChange={handleChange} />

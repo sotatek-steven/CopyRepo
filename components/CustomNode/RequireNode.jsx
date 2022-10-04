@@ -138,7 +138,7 @@ const RequireNode = ({ id, data }) => {
   return (
     <>
       {mode === 'view' && (
-        <Card>
+        <Card className="nodrag">
           <CardBody>
             <Tooltip title={`Require: ${dataView.join()}`} placement="top" arrow>
               <div className="data-view">{`Require: ${dataView.join()}`}</div>
@@ -153,7 +153,7 @@ const RequireNode = ({ id, data }) => {
         </Card>
       )}
       {mode === 'editing' && (
-        <EditingContainer>
+        <EditingContainer className="nodrag">
           <Title>Require</Title>
           <Label type="basic">Condition</Label>
           <Scrollbars

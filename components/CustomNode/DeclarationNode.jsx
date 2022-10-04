@@ -266,7 +266,7 @@ const DeclarationNode = ({ id, data }) => {
   return (
     <>
       {mode === 'view' && (
-        <Card>
+        <Card className="nodrag">
           <CardBody>
             <Tooltip title={convertDataToText().trim()} placement="top" arrow>
               <div className="data-view">{`Declaration: ${convertDataToText().trim()}`}</div>
@@ -281,7 +281,7 @@ const DeclarationNode = ({ id, data }) => {
         </Card>
       )}
       {mode === 'editing' && (
-        <EditingContainer onClick={handleClickOut}>
+        <EditingContainer className="nodrag" onClick={handleClickOut}>
           <Title>DECLARATION</Title>
           <ItemContainer error={errorText}>
             <Input id={id} value={inputText} onClick={handleClickInput} onChange={handleChange} onKeyUp={handleKeyUp} />
