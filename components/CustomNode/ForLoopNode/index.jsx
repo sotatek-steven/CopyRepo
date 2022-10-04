@@ -3,6 +3,8 @@ import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import IconEditNode from 'assets/icon/IconEditNode.svg';
+import IconConfirm from 'assets/icon/IconConfirm.svg';
+import IconCancel from 'assets/icon/IconCancel.svg';
 import ButtonRemoveNode from '@/components/atom/ButtonRemoveNode';
 
 const Card = styled('article')(({ theme, width, height }) => ({
@@ -37,7 +39,7 @@ const ForBlock = styled('div')(({ theme }) => ({
   width: 120,
   height: 70,
   backgroundColor: theme.shape.backgroundNode,
-  color: theme.palette.text.primary,
+  color: theme.palette.primary.contrastText,
   position: 'relative',
   top: -10,
   left: -15,
@@ -86,22 +88,93 @@ const ParentAbsoluteContainer = styled('div')(({ theme }) => ({
   },
 }));
 
+const EditFormContainer = styled('div')(({ theme }) => ({
+  width: 364,
+  height: 500,
+  background: theme.palette.background.light,
+  border: `1.5px dashed ${theme.palette.success.main}`,
+  padding: '30px',
+  position: 'absolute',
+  top: -450,
+  left: '-100%',
+  zIndex: 1000,
+  display: 'flex',
+  flexDirection: 'column',
+}));
+
+const FormTitle = styled('div')(({ theme }) => ({
+  backgroundColor: theme.shape.backgroundNode,
+  padding: '7px 30px',
+  position: 'absolute',
+  top: '-20px',
+  left: '-30px',
+  color: theme.palette.primary.contrastText,
+}));
+
+const FormBody = styled('div')(({ theme }) => ({
+  flexGrow: 1,
+}));
+
+const FormFooter = styled('div')(({ theme }) => ({
+  display: 'flex',
+  justifyContent: 'end',
+}));
+
+const ButtonWrapper = styled('div')({
+  height: 45,
+  width: 45,
+  display: 'flex',
+  justifyContent: 'center',
+  alignItems: 'center',
+  borderRadius: 5,
+  cursor: 'pointer',
+  '&:hover': {
+    background: '#504e4d',
+  },
+});
+
 const ForLoopConditionNode = ({ id, data }) => {
   const [mode, setMode] = useState('view');
+
+  const handleCancel = () => {
+    setMode('view');
+  };
+
+  const handleConfirm = () => {
+    setMode('view');
+  };
+
   return (
     <>
       <Card className="nodrag" width={data?.size.width} height={data?.size.height}>
         <ParentAbsoluteContainer className="action-node">
           <ButtonRemoveNode id={id} />
         </ParentAbsoluteContainer>
-        <ForBlock>
-          <AbsoluteContainer className="action-node">
-            <Button className="action-icon" onClick={() => setMode('editing')}>
-              <IconEditNode />
-            </Button>
-          </AbsoluteContainer>
-          <p>For</p>
-        </ForBlock>
+        {mode === 'view' ? (
+          <ForBlock>
+            <AbsoluteContainer className="action-node">
+              <Button className="action-icon" onClick={() => setMode('editing')}>
+                <IconEditNode />
+              </Button>
+            </AbsoluteContainer>
+            <p>For</p>
+          </ForBlock>
+        ) : (
+          <EditFormContainer>
+            <FormTitle>
+              <span>For</span>
+            </FormTitle>
+            <FormBody></FormBody>
+            <FormFooter>
+              <ButtonWrapper className="action-icon" onClick={handleCancel}>
+                <IconCancel />
+              </ButtonWrapper>
+              <ButtonWrapper className="action-icon" onClick={handleConfirm}>
+                <IconConfirm />
+              </ButtonWrapper>
+            </FormFooter>
+          </EditFormContainer>
+        )}
         <CardBody>
           <Handle type="target" position={Position.Top} id="a" style={{ background: '#555' }} />
           <Handle type="source" position={Position.Bottom} id="c" style={{ background: '#555' }} />
