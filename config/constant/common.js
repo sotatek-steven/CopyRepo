@@ -754,3 +754,257 @@ export const getFirstNearSpace = (textValue, position) => {
   }
   return { iBeforeSpace, iBehindSpace };
 };
+
+export const convertOperation = ({ node, maps = {} }) => {
+  const { type, params } = node;
+  let content = [type];
+  if (type == 'throw') {
+    content.push(';');
+    return;
+  }
+  for (const key of ['operations']) {
+    if (params[key]) {
+      exportExpression({ operations: params[key], content, endChar: '', maps });
+    }
+  }
+
+  let line = content.join('');
+
+  return line;
+};
+
+export const convertLogicBlock = ({ node, maps }) => {
+  const { conditions } = node;
+  const content = [];
+  exportExpression({ operations: conditions, content, endChar: '', maps });
+  content.push(';');
+
+  let dataShow = '';
+  let dataEdit = [];
+  let line = '';
+
+  for (const at of _.compact(content)) {
+    dataShow = `${dataShow}${at}`;
+    switch (at) {
+      case mapOperations.and:
+      case mapOperations.or:
+      case ';':
+        dataEdit.push(line);
+        dataEdit.push(mapRevestOperations[at.trim()] || 'end');
+        line = '';
+        break;
+
+      default:
+        line = `${line}${at}`;
+        break;
+    }
+  }
+
+  return { dataShow, dataEdit };
+};
+export const convertCondition = ({ node, maps = {} }) => {
+  const { type, params } = node;
+  let content = [type];
+  if (type == 'throw') {
+    content.push(';');
+    return;
+  }
+  for (const key of ['condition']) {
+    if (params[key]) {
+      exportExpression({ operations: [params[key]], content, endChar: '', maps });
+    }
+  }
+  content.push(';');
+
+  let dataShow = '';
+  let dataEdit = [];
+  let line = '';
+
+  for (const at of _.compact(content)) {
+    dataShow = `${dataShow}${at}`;
+    switch (at) {
+      case mapOperations.and:
+      case mapOperations.or:
+      case ';':
+        dataEdit.push(line);
+        dataEdit.push(mapRevestOperations[at.trim()] || 'end');
+        line = '';
+        break;
+
+      default:
+        line = `${line}${at}`;
+        break;
+    }
+  }
+
+  return { dataShow, dataEdit };
+};
+
+const mapOperations = {
+  add: ' + ',
+  sub: ' - ',
+  mul: ' * ',
+  div: ' / ',
+  mod: ' % ',
+  call: '.',
+  eq: ' == ',
+  ne: ' != ',
+  lt: ' < ',
+  lte: ' <= ',
+  gt: ' > ',
+  gte: ' >= ',
+  'plus-plus': '++',
+  'sub-sub': '--',
+  and: ' && ',
+  or: ' || ',
+};
+
+const mapRevestOperations = {
+  '+': 'add',
+  '-': 'sub',
+  '*': 'mul',
+  '/': 'div',
+  '%': 'mod',
+  '.': 'call',
+  '==': 'eq',
+  '!=': 'ne',
+  '<': 'lt',
+  '<=': 'lte',
+  '>': 'gt',
+  '>=': 'gte',
+  '&&': 'and',
+  '||': 'or',
+  '++': 'special-plus-plus',
+  '--': 'special-sub-sub',
+};
+
+function exportExpression({ operations, content, endChar = 'end', defaultChar = '', show = false, maps = {} }) {
+  for (const operation of operations) {
+    if (operation.init) {
+      content.push('new ');
+      content.push(operation.indentifier);
+      if (operation.isArray) content.push('[] ');
+      operation.indentifier = '';
+      exportFunction({ content, operation, endChar: '', maps });
+      content.push(operation.operation == 'end' ? endChar : `${mapOperations[operation.operation] || defaultChar}`);
+      continue;
+    }
+    if (operation.external && operation.external.type == 'call') {
+      content.push(operation.indentifier);
+      for (const o of operation.external.data) {
+        exportObject({ data: o, content, maps });
+      }
+
+      operation.indentifier = '';
+    }
+    switch (operation.type) {
+      case 'object': {
+        const contentObject = [];
+        exportObject({ data: operation.value, content: contentObject });
+        content.push(contentObject.join(''));
+        break;
+      }
+      case 'function':
+        exportFunction({ content, operation, endChar: '', maps });
+        break;
+      case 'expression':
+        exportExpression({ ...operation, content, endChar: '', maps });
+        break;
+      case 'variable':
+        if (operation.specialOperator?.position == 'prefix')
+          content.push(mapOperations[operation.specialOperator?.operation]);
+        content.push(maps[operation.indentifier] || operation.indentifier);
+        if (operation.specialOperator?.position == 'suffix')
+          content.push(mapOperations[operation.specialOperator?.operation]);
+        break;
+      case 'shortCondtion':
+        exportExpression({ operations: operation.conditions, content, endChar: '', maps });
+        content.push(' ? ');
+        exportExpression({ operations: operation.nextTrue, content, endChar: '', maps });
+        content.push(' : ');
+        exportExpression({ operations: operation.nextFalse, content, endChar: '', maps });
+        if (operation.operation == 'end') operation.operation = '';
+        break;
+      case 'value':
+        content.push(operation.value);
+        break;
+      default:
+    }
+    for (const at of operation.at || []) {
+      content.push('[');
+      exportExpression({ operations: [at], content, endChar: '', maps });
+      content.push(']');
+    }
+    content.push(operation.operation == 'end' ? endChar : `${mapOperations[operation.operation] || defaultChar}`);
+  }
+}
+
+function exportFunction({ operation, content, maps }) {
+  content.push(operation.indentifier);
+  content.push('(');
+  const params = [];
+  for (const p of operation.params) {
+    switch (p.type) {
+      case 'object': {
+        const contentObject = [];
+        exportObject({ data: p.value, content: contentObject, maps });
+        params.push(contentObject.join(''));
+        break;
+      }
+      case 'expression':
+        exportExpression({ ...p, content: params, endChar: '', maps });
+        break;
+      case 'variable':
+        params.push(maps[p.indentifier] || p.indentifier);
+        break;
+      case 'function': {
+        const tParams = [];
+        exportFunction({ operation: p, content: tParams, maps });
+        params.push(tParams.join(''));
+        break;
+      }
+      default:
+        params.push(p.value);
+        break;
+    }
+    params.push(', ');
+  }
+  params.pop();
+  content.push(params.join('').trim());
+  content.push(')');
+}
+
+function exportObject({ data, content, maps = {} }) {
+  content.push('{');
+  for (const obj of data) {
+    content.push(obj.key);
+    content.push(': ');
+    const value = obj.value;
+    switch (value.type) {
+      case 'object': {
+        const contentObject = [];
+        exportObject({ data: value.value, content: contentObject, maps });
+        content.push(contentObject.join(''));
+        break;
+      }
+      case 'expression':
+        exportExpression({ operations: value.operations, content, endChar: '', maps });
+        break;
+      case 'variable':
+        content.push(maps[value.indentifier] || value.indentifier);
+        break;
+      case 'function': {
+        const tParams = [];
+        exportFunction({ operation: value, content: tParams, maps });
+        content.push(tParams.join(''));
+        break;
+      }
+      default:
+        content.push(value.value);
+        break;
+    }
+    content.push(',');
+  }
+  content.pop();
+  content.push('}');
+}

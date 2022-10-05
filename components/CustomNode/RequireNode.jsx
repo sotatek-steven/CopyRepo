@@ -10,7 +10,7 @@ import ButtonRemoveNode from '../atom/ButtonRemoveNode';
 import _ from 'lodash';
 import { AbsoluteContainer, Footer, Card, CardBody, EditingContainer, Title, Body } from './CustomNode.style';
 import SingleAutoComplete from '../AutoComplete/SingleAutoComplete';
-import { CONDITION_OPTION, CONDITION_TYPE, ELEMENT_TYPE } from '@/config/constant/common';
+import { CONDITION_OPTION, CONDITION_TYPE, convertCondition, ELEMENT_TYPE } from '@/config/constant/common';
 import ObjectID from 'bson-objectid';
 import Label from '../atom/Label';
 import Scrollbars from 'react-custom-scrollbars';
@@ -33,13 +33,19 @@ const RequireNode = ({ id, data }) => {
 
   useEffect(() => {
     if (mode === 'view') {
-      convertDataView();
+      if (data?.inputs) {
+        // Data after change
+        convertDataView();
+      } else {
+        // data from api
+        const { dataShow } = convertCondition({ node: data });
+        setDataView(dataShow);
+      }
       return;
     }
-    if (!data?.inputs?.length) {
-      setListData([{ id: ObjectID(32).toHexString(), condition: '', operation: CONDITION_TYPE.NONE }]);
-      setErrorMessage({ value: '', errorText: '' });
-    } else {
+
+    // Data after change
+    if (data?.inputs?.length) {
       const dataConvert = [];
       for (let index = 0; index <= data?.inputs?.length - 2; index += 2) {
         dataConvert.push({
@@ -50,6 +56,25 @@ const RequireNode = ({ id, data }) => {
       }
       setListData(dataConvert);
       setErrorMessage(data?.errorMessage);
+      return;
+    }
+
+    // data from api
+    if (!data?.params?.condition?.operations?.length) {
+      setListData([{ id: ObjectID(32).toHexString(), condition: '', operation: CONDITION_TYPE.NONE }]);
+      setErrorMessage({ value: '', errorText: '' });
+    } else {
+      const { dataEdit } = convertCondition({ node: data });
+      const dataConvert = [];
+      for (let index = 0; index <= dataEdit?.length - 2; index += 2) {
+        dataConvert.push({
+          id: ObjectID(32).toHexString(),
+          condition: dataEdit[index],
+          operation: dataEdit[index + 1],
+        });
+      }
+      setListData(dataConvert);
+      setErrorMessage({ value: data?.params?.value?.value });
     }
   }, [data, mode]);
 
@@ -109,7 +134,6 @@ const RequireNode = ({ id, data }) => {
 
   const handleConfirm = () => {
     if (isDataError()) return;
-
     const inputs = [];
     for (let index = 0; index < listData.length; index++) {
       inputs.push(listData[index].condition);
@@ -140,8 +164,8 @@ const RequireNode = ({ id, data }) => {
       {mode === 'view' && (
         <Card className="nodrag">
           <CardBody>
-            <Tooltip title={`Require: ${dataView.join()}`} placement="top" arrow>
-              <div className="data-view">{`Require: ${dataView.join()}`}</div>
+            <Tooltip title={`Require: ${dataView}`} placement="top" arrow>
+              <div className="data-view">{`Require: ${dataView}`}</div>
             </Tooltip>
           </CardBody>
           <AbsoluteContainer className="action-node">

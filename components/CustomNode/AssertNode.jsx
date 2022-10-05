@@ -10,6 +10,7 @@ import ButtonRemoveNode from '../atom/ButtonRemoveNode';
 import _ from 'lodash';
 import { AbsoluteContainer, Footer, Card, CardBody, EditingContainer, Title } from './CustomNode.style';
 import Label from '../atom/Label';
+import { convertCondition } from '@/config/constant/common';
 
 const AssertNode = ({ id, data }) => {
   const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
@@ -20,11 +21,27 @@ const AssertNode = ({ id, data }) => {
 
   useEffect(() => {
     if (mode === 'view') {
-      setDataView(data?.inputs || '');
+      if (data?.inputs) {
+        // Data after change
+        setDataView(data?.inputs || '');
+      } else {
+        // data from api
+        const { dataShow } = convertCondition({ node: data });
+        setDataView(dataShow);
+      }
     } else {
-      setDataEdit({
-        value: data?.inputs,
-      });
+      if (data?.inputs) {
+        // Data after change
+        setDataEdit({
+          value: data?.inputs,
+        });
+      } else {
+        // data from api
+        const { dataShow } = convertCondition({ node: data });
+        setDataEdit({
+          value: dataShow,
+        });
+      }
     }
   }, [data, mode]);
 

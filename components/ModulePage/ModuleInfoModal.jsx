@@ -188,8 +188,8 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
 
         <BodyContent>
           <InputWrapper>
+            <Label htmlFor="name">Name</Label>
             <Input
-              label="Name"
               id="name"
               name="name"
               isRequired={true}
@@ -201,8 +201,8 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
             />
           </InputWrapper>
           <InputWrapper>
+            <Label htmlFor="name">Description</Label>
             <TextArea
-              label="Description"
               name="description"
               id="description"
               value={moduleInfo?.description}
@@ -211,8 +211,8 @@ const ModuleInfoModal = ({ mode, open, onClose, data }) => {
             />
           </InputWrapper>
           <InputWrapper>
+            <Label htmlFor="name">Domain</Label>
             <SingleAutoComplete
-              label="Domain"
               isRequired={true}
               options={optionDomain}
               value={optionDomain.find((domain) => domain.value === moduleInfo?.domainId)}
