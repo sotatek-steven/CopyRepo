@@ -91,13 +91,14 @@ const InfoFunctionModal = ({ open, onClose, onCancel, onSubmit, mode = 'edit' })
   };
 
   const checkFormError = () => {
-    if (!name.value) return true;
-    if (params.find((item) => !item.label.value)) return true;
-    return !!returns.find((item) => !item.label.value);
+    if (!name.value || name.errorMessage) return true;
+    if (params.find((item) => !item.label.value || item.label.errorMessage)) return true;
+    return !!returns.find((item) => !item.label.value || item.label.errorMessage);
   };
 
   const handleConfirm = async () => {
     if (checkFormError()) {
+      //show error message 'This field is required' if any
       functionDefinition.updateName({
         ...name,
         errorMessage: !name.value ? 'This field is required' : '',
@@ -145,7 +146,7 @@ const InfoFunctionModal = ({ open, onClose, onCancel, onSubmit, mode = 'edit' })
         onClose();
       }}>
       <ModalBox width="900px">
-        <ModalHeader title="Function" onClose={onClose} />
+        <ModalHeader title="Function" onClose={onCancel} />
         <Scrollbars autoHeight autoHeightMax={600}>
           <ModalBody edited={mode === 'view' ? 0 : 1}>
             <FunctionNameField />

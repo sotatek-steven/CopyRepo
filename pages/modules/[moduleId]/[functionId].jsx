@@ -119,7 +119,6 @@ const FunctionPage = () => {
   const { moduleId, functionId } = router.query;
   const { userFunction, initialFunction, userModule, functions, functionDefinition } = useDispatch();
   const [tab, setTab] = useState('workflow_view');
-  // const { convertDeclaration } = useDeclaration();
 
   const handleChangeTab = (e, newValue) => {
     setTab(newValue);
@@ -162,9 +161,6 @@ const FunctionPage = () => {
           };
         });
         functions.setListType(_.concat(generateDataType(), typeStructs));
-        // // Convert Declaration
-        // const listDeclaration = convertDeclaration(data.block);
-        // declaration.updateDeclarations(listDeclaration);
 
         //fetch all of functions
         functions.getAllUserFunctions();
@@ -181,24 +177,6 @@ const FunctionPage = () => {
   }, [functionId, moduleId]);
 
   const { logicBlocks } = useDispatch();
-
-  // useEffect(() => {
-  //   const convertData = async () => {
-  //     // Init data
-  //     const { nodes, edges } = await logicBlocks.createInitNode();
-  //     logicBlocks.setNodes(nodes);
-  //     logicBlocks.setEdges(edges);
-
-  //     // const { nodes: _nodes, edges: _edges } = await logicBlocks.convertToFEDataDisplay(FAKE_DATA);
-  //     // console.log('nodes: ', JSON.stringify(_nodes));
-  //     // console.log('edges: ', JSON.stringify(_edges));
-
-  //     // const blocks = await logicBlocks.convertToDataTransferApi({ nodes: FAKE_NODES, edges: FAKE_EDGES });
-  //     // console.log('blocks: ', blocks);
-  //   };
-
-  //   convertData();
-  // }, []);
 
   return (
     <div>

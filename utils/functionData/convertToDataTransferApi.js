@@ -117,7 +117,7 @@ export const convertToDataTransferApi = ({ nodes, edges }) => {
         blocks.type = 'activityFinal';
         break;
       case 'drop':
-        block.type = 'drop';
+        blocks.type = 'drop';
         break;
     }
 

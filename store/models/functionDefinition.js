@@ -77,8 +77,9 @@ const functionDefinition = createModel({
         };
       },
       convertToDataTransferApi(data) {
-        delete data.type;
-        const { name, params, scopes, returns } = data;
+        const _data = { ...data };
+        delete _data.type;
+        const { name, params, scopes, returns } = _data;
         const _params = params.map((item) => {
           return {
             ...item,
@@ -94,7 +95,7 @@ const functionDefinition = createModel({
         });
 
         return {
-          ...data,
+          ..._data,
           name: name.value,
           scopes,
           params: _params,
