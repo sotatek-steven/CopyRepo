@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { PrimaryButton } from '../ButtonStyle';
 import { makeStyles } from '@mui/styles';
 import ErrorsCompileModal from '../ErrorsCompileModal';
+import { convertToDataTransferApi } from '@/utils/functionData/convertToDataTransferApi';
 
 export const useStyles = makeStyles(() => {
   return {
@@ -21,7 +22,7 @@ const Container = styled('div')(() => ({
 }));
 
 const FunctionActionList = () => {
-  const { userFunction, initialFunction, logicBlocks } = useDispatch();
+  const { userFunction, initialFunction } = useDispatch();
   const functionState = useSelector((state) => state.userFunction);
   const logicBlocksState = useSelector((state) => state.logicBlocks);
   const [errorsModalOpen, setErrorsModalOpen] = useState(false);
@@ -29,7 +30,7 @@ const FunctionActionList = () => {
 
   const saveFunction = async () => {
     //update block field
-    const blockData = await logicBlocks.convertToDataTransferApi(logicBlocksState);
+    const blockData = convertToDataTransferApi(logicBlocksState);
 
     const { code, data } = await userFunction.updateFunction({ ...functionState, block: blockData });
     delete data.updatedAt;
