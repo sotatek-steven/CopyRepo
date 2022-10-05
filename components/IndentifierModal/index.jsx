@@ -86,10 +86,10 @@ const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) =>
     });
 
     objectState.objects.forEach((value) => {
-      const { label, type, isArray, _id } = value;
+      const { isArray, _id, name, item } = value;
       globalVariables.push({
-        label,
-        type,
+        label: name,
+        type: item,
         isArray,
         category: 'structs',
         _id,
