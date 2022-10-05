@@ -141,7 +141,7 @@ const ConditionNode = ({ data, id }) => {
       if (data?.inputs) {
         // Data after change
         convertDataView();
-      } else {
+      } else if (data?.conditions) {
         // data from api
         const { dataShow } = convertLogicBlock({ node: data });
         setDataView(dataShow);

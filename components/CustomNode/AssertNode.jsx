@@ -15,7 +15,14 @@ import { convertCondition } from '@/config/constant/common';
 const AssertNode = ({ id, data }) => {
   const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
   const { logicBlocks } = useDispatch();
-  const [mode, setMode] = useState(_.isEmpty(data) ? 'editing' : 'view');
+  const [mode, setMode] = useState(() => {
+    if (data?.inputs === 'undefined') {
+      return 'editing';
+    } else if (data?.params?.condition) {
+      return 'view';
+    }
+    return 'editing';
+  });
   const [dataView, setDataView] = useState([]);
   const [dataEdit, setDataEdit] = useState([]);
 
@@ -24,25 +31,24 @@ const AssertNode = ({ id, data }) => {
       if (data?.inputs) {
         // Data after change
         setDataView(data?.inputs || '');
-      } else {
+      } else if (data?.params?.condition) {
         // data from api
         const { dataShow } = convertCondition({ node: data });
         setDataView(dataShow);
       }
-    } else {
-      if (data?.inputs) {
-        // Data after change
-        setDataEdit({
-          value: data?.inputs,
-        });
-      } else {
-        // data from api
-        const { dataShow } = convertCondition({ node: data });
-        setDataEdit({
-          value: dataShow,
-        });
-      }
     }
+    if (data?.params?.condition) {
+      // data from api
+      const { dataShow } = convertCondition({ node: data });
+      setDataEdit({
+        value: dataShow,
+      });
+      return;
+    }
+    // Data after change
+    setDataEdit({
+      value: data?.inputs || '',
+    });
   }, [data, mode]);
 
   const handleChange = (e) => {

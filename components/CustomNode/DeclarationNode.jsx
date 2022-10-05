@@ -43,7 +43,7 @@ const DeclarationNode = ({ id, data }) => {
   const [errorText, setErrorText] = useState('');
   const { validateDeclaration } = useDeclaration();
   const { logicBlocks } = useDispatch();
-  const [mode, setMode] = useState(_.isEmpty(data) ? 'editing' : 'view');
+  const [mode, setMode] = useState(_.isEmpty(data?.params) ? 'editing' : 'view');
   // State Suggest
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState([]);
