@@ -1,4 +1,4 @@
-import { Button } from '@mui/material';
+import { Box, Button } from '@mui/material';
 import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
@@ -6,6 +6,8 @@ import IconEditNode from 'assets/icon/IconEditNode.svg';
 import IconConfirm from 'assets/icon/IconConfirm.svg';
 import IconCancel from 'assets/icon/IconCancel.svg';
 import ButtonRemoveNode from '@/components/atom/ButtonRemoveNode';
+import FreeText from './FreeText';
+import Scrollbars from 'react-custom-scrollbars';
 
 const Card = styled('article')(({ theme, width, height }) => ({
   padding: '10px 15px',
@@ -90,16 +92,17 @@ const ParentAbsoluteContainer = styled('div')(({ theme }) => ({
 
 const EditFormContainer = styled('div')(({ theme }) => ({
   width: 364,
-  height: 500,
+  height: 400,
   background: theme.palette.background.light,
   border: `1.5px dashed ${theme.palette.success.main}`,
-  padding: '30px',
   position: 'absolute',
-  top: -450,
+  top: -350,
   left: '-100%',
   zIndex: 1000,
+  padding: '20px 0px 10px',
   display: 'flex',
   flexDirection: 'column',
+  gap: 15,
 }));
 
 const FormTitle = styled('div')(({ theme }) => ({
@@ -111,14 +114,18 @@ const FormTitle = styled('div')(({ theme }) => ({
   color: theme.palette.primary.contrastText,
 }));
 
-const FormBody = styled('div')(({ theme }) => ({
-  flexGrow: 1,
-}));
+const ContentWrapper = styled('div')({
+  display: 'flex',
+  flexDirection: 'column',
+  gap: '10px',
+  padding: '0px 25px',
+});
 
-const FormFooter = styled('div')(({ theme }) => ({
+const FormFooter = styled('div')({
   display: 'flex',
   justifyContent: 'end',
-}));
+  padding: '0px 25px',
+});
 
 const ButtonWrapper = styled('div')({
   height: 45,
@@ -132,6 +139,14 @@ const ButtonWrapper = styled('div')({
     background: '#504e4d',
   },
 });
+
+const Label = styled('label')(({ theme }) => ({
+  fontFamily: 'Segoe UI',
+  fontWeight: theme.typography.fontWeightBold,
+  fontSize: 14,
+  color: theme.palette.text.primary,
+  marginBottom: 5,
+}));
 
 const ForLoopConditionNode = ({ id, data }) => {
   const [mode, setMode] = useState('view');
@@ -164,7 +179,16 @@ const ForLoopConditionNode = ({ id, data }) => {
             <FormTitle>
               <span>For</span>
             </FormTitle>
-            <FormBody></FormBody>
+            <Box sx={{ flexGrow: 1 }}>
+              <Scrollbars>
+                <ContentWrapper sx={{}}>
+                  <div>
+                    <Label>Start</Label>
+                    <FreeText />
+                  </div>
+                </ContentWrapper>
+              </Scrollbars>
+            </Box>
             <FormFooter>
               <ButtonWrapper className="action-icon" onClick={handleCancel}>
                 <IconCancel />
