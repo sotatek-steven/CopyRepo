@@ -18,7 +18,14 @@ import Scrollbars from 'react-custom-scrollbars';
 const RequireNode = ({ id, data }) => {
   const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
   const { logicBlocks } = useDispatch();
-  const [mode, setMode] = useState(_.isEmpty(data) ? 'editing' : 'view');
+  const [mode, setMode] = useState(() => {
+    if (data?.inputs === 'undefined') {
+      return 'view';
+    } else if (!_.isEmpty(data?.params?.condition)) {
+      return 'view';
+    }
+    return 'editing';
+  });
   const [listData, setListData] = useState([]);
   const [dataView, setDataView] = useState([]);
   const [errorMessage, setErrorMessage] = useState({});
@@ -36,7 +43,7 @@ const RequireNode = ({ id, data }) => {
       if (data?.inputs) {
         // Data after change
         convertDataView();
-      } else {
+      } else if (data?.params?.condition) {
         // data from api
         const { dataShow } = convertCondition({ node: data });
         setDataView(dataShow);

@@ -15,7 +15,14 @@ import { convertOperation } from '@/config/constant/common';
 const RevertNode = ({ id, data }) => {
   const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
   const { logicBlocks } = useDispatch();
-  const [mode, setMode] = useState(_.isEmpty(data) ? 'editing' : 'view');
+  const [mode, setMode] = useState(() => {
+    if (data?.inputs === 'undefined') {
+      return 'editing';
+    } else if (data?.params?.operations?.length) {
+      return 'view';
+    }
+    return 'editing';
+  });
   const [dataView, setDataView] = useState([]);
   const [dataEdit, setDataEdit] = useState([]);
 
@@ -24,26 +31,25 @@ const RevertNode = ({ id, data }) => {
       if (data?.inputs) {
         // Data after change
         setDataView(data?.inputs || '');
-      } else {
+      } else if (data?.params?.operations?.length) {
         // data from api
         const line = convertOperation({ node: data });
         setDataView(line);
       }
       return;
-    } else {
-      if (data?.inputs) {
-        // Data after change
-        setDataEdit({
-          value: data?.inputs,
-        });
-      } else {
-        // data from api
-        const line = convertOperation({ node: data });
-        setDataEdit({
-          value: line,
-        });
-      }
     }
+    if (data?.params?.operations?.length) {
+      // data from api
+      const line = convertOperation({ node: data });
+      setDataEdit({
+        value: line,
+      });
+      return;
+    }
+    // Data after change
+    setDataEdit({
+      value: data?.inputs || '',
+    });
   }, [data, mode]);
 
   const handleChange = (e) => {
