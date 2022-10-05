@@ -5,7 +5,14 @@ import IconCancel from 'assets/icon/IconCancel.svg';
 import IconEditNode from 'assets/icon/IconEditNode.svg';
 import IconConfirm from 'assets/icon/IconConfirm.svg';
 import SingleAutoComplete from '@/components/AutoComplete/SingleAutoComplete';
-import { CONDITION_OPTION, CONDITION_TYPE, ELEMENT_TYPE } from '@/config/constant/common';
+import {
+  CONDITION_OPTION,
+  CONDITION_TYPE,
+  convertCondition,
+  convertConditions,
+  convertLogicBlock,
+  ELEMENT_TYPE,
+} from '@/config/constant/common';
 import ObjectID from 'bson-objectid';
 import { Input } from '@/components/Input';
 import { useDispatch, useSelector } from 'react-redux';
@@ -131,18 +138,40 @@ const ConditionNode = ({ data, id }) => {
 
   useEffect(() => {
     if (mode === 'view') {
-      convertDataView();
+      if (data?.inputs) {
+        // Data after change
+        convertDataView();
+      } else {
+        // data from api
+        const { dataShow } = convertLogicBlock({ node: data });
+        setDataView(dataShow);
+      }
       return;
     }
-    if (!data?.inputs?.length) {
-      setListData([{ id: ObjectID(32).toHexString(), condition: '', operation: CONDITION_TYPE.NONE }]);
-    } else {
+    // Data after change
+    if (data?.inputs?.length) {
       const dataConvert = [];
       for (let index = 0; index <= data?.inputs?.length - 2; index += 2) {
         dataConvert.push({
           id: ObjectID(32).toHexString(),
           condition: data?.inputs[index],
           operation: data?.inputs[index + 1],
+        });
+      }
+      setListData(dataConvert);
+      return;
+    }
+    // data from api
+    if (!data?.conditions?.length) {
+      setListData([{ id: ObjectID(32).toHexString(), condition: '', operation: CONDITION_TYPE.NONE }]);
+    } else {
+      const { dataEdit } = convertLogicBlock({ node: data });
+      const dataConvert = [];
+      for (let index = 0; index <= dataEdit?.length - 2; index += 2) {
+        dataConvert.push({
+          id: ObjectID(32).toHexString(),
+          condition: dataEdit[index],
+          operation: dataEdit[index + 1],
         });
       }
       setListData(dataConvert);
@@ -223,8 +252,8 @@ const ConditionNode = ({ data, id }) => {
             </Button>
           </AbsoluteContainer>
           <CardBody onDoubleClick={() => setMode('editing')}>
-            <Tooltip title={`If: ${dataView.join()}`} placement="top" arrow>
-              <div className="data-view">{`If: ${dataView.join()}`}</div>
+            <Tooltip title={`If: ${dataView}`} placement="top" arrow>
+              <div className="data-view">{`If: ${dataView}`}</div>
             </Tooltip>
           </CardBody>
 

@@ -154,7 +154,7 @@ const TemplateDialog = ({ open, setOpen, type }) => {
                       </Button>
                       <Box sx={{ display: 'flex', fontSize: '14px', px: 3 }}>
                         <Typography sx={{ color: theme.palette.primary.purple, px: 2, textDecoration: 'underline' }}>
-                          {item?.sources?.contructorParams?.length} Paramester
+                          {item?.sources?.contructorParams?.length} Parameters
                         </Typography>
                         <Typography sx={{ color: theme.palette.primary.yellow, textDecoration: 'underline' }}>
                           {' '}

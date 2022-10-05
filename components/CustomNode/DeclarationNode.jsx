@@ -51,9 +51,11 @@ const DeclarationNode = ({ id, data }) => {
   const [positionChange, setPositionChange] = useState({ start: 0, end: 0 });
 
   const convertDataToText = () => {
-    return `${data?.type ? data?.type : ''} ${data?.isArray ? '[]' : ''} ${data?.location ? data?.location : ''} ${
-      data?.indentifier ? data?.indentifier : ''
-    } ${data?.assignOperation ? data?.assignOperation : ''} ${data?.valueText ? data?.valueText : ''}`;
+    return `${data?.params?.type ? data?.params?.type : ''} ${data?.params?.isArray ? '[]' : ''} ${
+      data?.params?.location ? data?.params?.location : ''
+    } ${data?.params?.indentifier ? data?.params?.indentifier : ''} ${
+      data?.params?.assignOperation ? data?.params?.assignOperation : ''
+    } ${data?.params?.valueText ? data?.params?.valueText : ''}`;
   };
 
   useEffect(() => {
@@ -249,9 +251,13 @@ const DeclarationNode = ({ id, data }) => {
     const _blocksState = [...blocksState];
     const index = blocksState.findIndex((item) => item?.id === id);
 
-    _blocksState[index]['data'] = { ...nodeData, valueText: nodeData?.value, assignOperation: nodeData?.value && '=' };
-    delete _blocksState[index]['data'].value;
-    delete _blocksState[index]['data'].errorIsArray;
+    _blocksState[index]['data']['params'] = {
+      ...nodeData,
+      valueText: nodeData?.value,
+      assignOperation: nodeData?.value && '=',
+    };
+    delete _blocksState[index]['data']['params'].value;
+    delete _blocksState[index]['data']['params'].errorIsArray;
 
     logicBlocks.setNodes(_blocksState);
     setMode('view');

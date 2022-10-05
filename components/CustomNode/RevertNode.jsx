@@ -10,6 +10,7 @@ import ButtonRemoveNode from '../atom/ButtonRemoveNode';
 import _ from 'lodash';
 import { AbsoluteContainer, Footer, Card, CardBody, EditingContainer, Title } from './CustomNode.style';
 import Label from '../atom/Label';
+import { convertOperation } from '@/config/constant/common';
 
 const RevertNode = ({ id, data }) => {
   const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
@@ -20,11 +21,28 @@ const RevertNode = ({ id, data }) => {
 
   useEffect(() => {
     if (mode === 'view') {
-      setDataView(data?.inputs || '');
+      if (data?.inputs) {
+        // Data after change
+        setDataView(data?.inputs || '');
+      } else {
+        // data from api
+        const line = convertOperation({ node: data });
+        setDataView(line);
+      }
+      return;
     } else {
-      setDataEdit({
-        value: data?.inputs,
-      });
+      if (data?.inputs) {
+        // Data after change
+        setDataEdit({
+          value: data?.inputs,
+        });
+      } else {
+        // data from api
+        const line = convertOperation({ node: data });
+        setDataEdit({
+          value: line,
+        });
+      }
     }
   }, [data, mode]);
 
