@@ -7,23 +7,29 @@ import IconConfirm from 'assets/icon/IconConfirm.svg';
 import IconEditNode from 'assets/icon/IconEditNode.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import ButtonRemoveNode from '../atom/ButtonRemoveNode';
-import _ from 'lodash';
 import { AbsoluteContainer, Footer, Card, CardBody, EditingContainer, Title } from './CustomNode.style';
 import Label from '../atom/Label';
 
 const EmitNode = ({ id, data }) => {
   const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
   const { logicBlocks } = useDispatch();
-  const [mode, setMode] = useState(_.isEmpty(data) ? 'editing' : 'view');
+  const [mode, setMode] = useState(() => {
+    if (data?.params?.inputs) {
+      return 'view';
+    } else if (data?.params?.operations?.length) {
+      return 'view';
+    }
+    return 'editing';
+  });
   const [dataView, setDataView] = useState([]);
   const [dataEdit, setDataEdit] = useState([]);
 
   useEffect(() => {
     if (mode === 'view') {
-      setDataView(data?.inputs || '');
+      setDataView(data?.params?.inputs || '');
     } else {
       setDataEdit({
-        value: data?.inputs,
+        value: data?.params?.inputs,
       });
     }
   }, [data, mode]);
@@ -57,7 +63,7 @@ const EmitNode = ({ id, data }) => {
     // Update Declaration
     const _blocksState = [...blocksState];
     const index = blocksState.findIndex((item) => item?.id === id);
-    _blocksState[index]['data'] = { inputs: dataEdit?.value };
+    _blocksState[index]['data']['params'] = { inputs: dataEdit?.value };
 
     logicBlocks.setNodes(_blocksState);
 
