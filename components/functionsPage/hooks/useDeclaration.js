@@ -5,7 +5,15 @@ import { useSelector } from 'react-redux';
 
 const useDeclaration = () => {
   const { listType } = useSelector((state) => state.functions);
-  const { validateSyntax, checkExistingFunction, checkExistingStateVariable } = useValidateVariableName();
+  const {
+    validateSyntax,
+    checkExistingFunction,
+    checkExistingStateVariable,
+    checkExistingParameter,
+    checkExistingModule,
+    checkExistingContract,
+    checkExistingVariableBlock,
+  } = useValidateVariableName();
 
   const indentifierError = (value) => {
     let errorText = '';
@@ -70,6 +78,22 @@ const useDeclaration = () => {
 
     if (data?.indentifier && checkExistingStateVariable(data?.indentifier)) {
       return 'Found an existing declaration with the same name';
+    }
+
+    if (data?.indentifier && checkExistingParameter(data?.indentifier)) {
+      return 'Found an existing parameter with the same name';
+    }
+
+    if (data?.indentifier && checkExistingModule(data?.indentifier)) {
+      return 'Found an existing module with the same name';
+    }
+
+    if (data?.indentifier && checkExistingContract(data?.indentifier)) {
+      return 'Found an existing contract with the same name';
+    }
+
+    if (data?.indentifier && checkExistingVariableBlock(data?.indentifier)) {
+      return 'Found an existing variable with the same name';
     }
 
     // TODO Validate value
