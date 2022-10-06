@@ -224,10 +224,10 @@ const IndentifierModal = ({ open, onClose, identifiers, redirectToAddField }) =>
         }
       }}>
       <ModalBox maxheight="700px">
-        <ModalHeader type="warning" title="Unidentified identifiers" />
-        <Scrollbars autoHeightMax={460} autoHeight>
+        <ModalHeader type="warning" title="Declare or select a variable" />
+        <Scrollbars autoHeightMax={560} autoHeight>
           <ModalBody>
-            <Message>{`A new state variable will be declared taking the same name of the identifier if you choose the option 'Declare new one'`}</Message>
+            <Message>{`This function contains some unidentified objects which must be mapped to variables, without which, it may result in compiler errors. You can declare new variables with the same name as the unidentified object using the 'Declare New One' option, or map each object to an already declared variable by choosing the name of the variable from the dropdown.`}</Message>
             {identifiers &&
               identifiers.map((item, index) => {
                 const { type, isArray, label } = item;
