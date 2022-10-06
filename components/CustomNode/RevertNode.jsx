@@ -16,8 +16,8 @@ const RevertNode = ({ id, data }) => {
   const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
   const { logicBlocks } = useDispatch();
   const [mode, setMode] = useState(() => {
-    if (data?.inputs === 'undefined') {
-      return 'editing';
+    if (data?.params?.inputs) {
+      return 'view';
     } else if (data?.params?.operations?.length) {
       return 'view';
     }
@@ -28,9 +28,9 @@ const RevertNode = ({ id, data }) => {
 
   useEffect(() => {
     if (mode === 'view') {
-      if (data?.inputs) {
+      if (data?.params?.inputs) {
         // Data after change
-        setDataView(data?.inputs || '');
+        setDataView(data?.params?.inputs || '');
       } else if (data?.params?.operations?.length) {
         // data from api
         const line = convertOperation({ node: data });
@@ -48,7 +48,7 @@ const RevertNode = ({ id, data }) => {
     }
     // Data after change
     setDataEdit({
-      value: data?.inputs || '',
+      value: data?.params?.inputs || '',
     });
   }, [data, mode]);
 
@@ -81,7 +81,7 @@ const RevertNode = ({ id, data }) => {
     // Update Declaration
     const _blocksState = [...blocksState];
     const index = blocksState.findIndex((item) => item?.id === id);
-    _blocksState[index]['data'] = { inputs: dataEdit?.value };
+    _blocksState[index]['data']['params'] = { inputs: dataEdit?.value };
 
     logicBlocks.setNodes(_blocksState);
 

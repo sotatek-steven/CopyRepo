@@ -19,7 +19,7 @@ const RequireNode = ({ id, data }) => {
   const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
   const { logicBlocks } = useDispatch();
   const [mode, setMode] = useState(() => {
-    if (data?.inputs === 'undefined') {
+    if (data?.params?.inputs?.length) {
       return 'view';
     } else if (!_.isEmpty(data?.params?.condition)) {
       return 'view';
@@ -32,15 +32,15 @@ const RequireNode = ({ id, data }) => {
 
   const convertDataView = () => {
     const condition = [];
-    for (let index = 0; index < data?.inputs?.length; index += 2) {
-      condition.push(data?.inputs[index]);
+    for (let index = 0; index < data?.params?.inputs?.length; index += 2) {
+      condition.push(data?.params?.inputs[index]);
     }
     setDataView(condition);
   };
 
   useEffect(() => {
     if (mode === 'view') {
-      if (data?.inputs) {
+      if (data?.params?.inputs) {
         // Data after change
         convertDataView();
       } else if (data?.params?.condition) {
@@ -52,17 +52,17 @@ const RequireNode = ({ id, data }) => {
     }
 
     // Data after change
-    if (data?.inputs?.length) {
+    if (data?.params?.inputs?.length) {
       const dataConvert = [];
-      for (let index = 0; index <= data?.inputs?.length - 2; index += 2) {
+      for (let index = 0; index <= data?.params?.inputs?.length - 2; index += 2) {
         dataConvert.push({
           id: ObjectID(32).toHexString(),
-          condition: data?.inputs[index],
-          operation: data?.inputs[index + 1],
+          condition: data?.params?.inputs[index],
+          operation: data?.params?.inputs[index + 1],
         });
       }
       setListData(dataConvert);
-      setErrorMessage(data?.errorMessage);
+      setErrorMessage(data?.params?.errorMessage);
       return;
     }
 
@@ -149,7 +149,7 @@ const RequireNode = ({ id, data }) => {
     // Update Declaration
     const _blocksState = [...blocksState];
     const index = blocksState.findIndex((item) => item?.id === id);
-    _blocksState[index]['data'] = { inputs, errorMessage };
+    _blocksState[index]['data']['params'] = { inputs, errorMessage };
 
     logicBlocks.setNodes(_blocksState);
 

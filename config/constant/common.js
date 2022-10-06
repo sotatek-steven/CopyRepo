@@ -840,7 +840,7 @@ export const convertCondition = ({ node, maps = {} }) => {
   return { dataShow, dataEdit };
 };
 
-const mapOperations = {
+export const mapOperations = {
   add: ' + ',
   sub: ' - ',
   mul: ' * ',

@@ -33,7 +33,7 @@ const FunctionActionList = () => {
     const blockData = convertToDataTransferApi(logicBlocksState);
 
     const { code, data } = await userFunction.updateFunction({ ...functionState, block: blockData });
-    delete data.updatedAt;
+    delete data?.updatedAt;
     userFunction.update(data);
 
     // save initial function data to compare

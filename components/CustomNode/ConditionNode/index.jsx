@@ -8,10 +8,9 @@ import SingleAutoComplete from '@/components/AutoComplete/SingleAutoComplete';
 import {
   CONDITION_OPTION,
   CONDITION_TYPE,
-  convertCondition,
-  convertConditions,
   convertLogicBlock,
   ELEMENT_TYPE,
+  mapOperations,
 } from '@/config/constant/common';
 import ObjectID from 'bson-objectid';
 import { Input } from '@/components/Input';
@@ -129,16 +128,16 @@ const ConditionNode = ({ data, id }) => {
   const [mode, setMode] = useState('view');
 
   const convertDataView = () => {
-    const condition = [];
-    for (let index = 0; index < data?.inputs?.length; index += 2) {
-      condition.push(data?.inputs[index]);
+    let condition = data?.params?.inputs[0] || '';
+    for (let index = 1; index < data?.params?.inputs?.length - 1; index += 2) {
+      condition = `${condition}${mapOperations[`${data?.params?.inputs[index]}`]}${data?.params?.inputs[index + 1]}`;
     }
     setDataView(condition);
   };
 
   useEffect(() => {
     if (mode === 'view') {
-      if (data?.inputs) {
+      if (data?.params?.inputs) {
         // Data after change
         convertDataView();
       } else if (data?.conditions) {
@@ -149,13 +148,13 @@ const ConditionNode = ({ data, id }) => {
       return;
     }
     // Data after change
-    if (data?.inputs?.length) {
+    if (data?.params?.inputs?.length) {
       const dataConvert = [];
-      for (let index = 0; index <= data?.inputs?.length - 2; index += 2) {
+      for (let index = 0; index <= data?.params?.inputs?.length - 2; index += 2) {
         dataConvert.push({
           id: ObjectID(32).toHexString(),
-          condition: data?.inputs[index],
-          operation: data?.inputs[index + 1],
+          condition: data?.params?.inputs[index],
+          operation: data?.params?.inputs[index + 1],
         });
       }
       setListData(dataConvert);
@@ -205,7 +204,7 @@ const ConditionNode = ({ data, id }) => {
     // Update Declaration
     const _blocksState = [...blocksState];
     const index = blocksState.findIndex((item) => item?.id === id);
-    _blocksState[index]['data'] = { inputs };
+    _blocksState[index]['data']['params'] = { inputs };
 
     logicBlocks.setNodes(_blocksState);
     setMode('view');
