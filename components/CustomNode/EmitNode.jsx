@@ -1,7 +1,6 @@
-import { Button, Tooltip } from '@mui/material';
+import { Button, Tooltip, useTheme } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
-import { Input } from '../Input';
 import IconCancel from 'assets/icon/IconCancel.svg';
 import IconConfirm from 'assets/icon/IconConfirm.svg';
 import IconEditNode from 'assets/icon/IconEditNode.svg';
@@ -10,9 +9,12 @@ import ButtonRemoveNode from '../atom/ButtonRemoveNode';
 import { AbsoluteContainer, Footer, Card, CardBody, EditingContainer, Title } from './CustomNode.style';
 import Label from '../atom/Label';
 import { convertOperation } from '@/config/constant/common';
+import SingleAutoComplete from '../AutoComplete/SingleAutoComplete';
 
 const EmitNode = ({ id, data }) => {
+  const theme = useTheme();
   const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
+  const { sources } = useSelector((state) => state.userModule);
   const { logicBlocks } = useDispatch();
   const [mode, setMode] = useState(() => {
     if (data?.params?.inputs) {
@@ -24,16 +26,28 @@ const EmitNode = ({ id, data }) => {
   });
   const [dataView, setDataView] = useState([]);
   const [dataEdit, setDataEdit] = useState([]);
+  const [eventOptions, setEventOptions] = useState([]);
+
+  useEffect(() => {
+    const events = sources?.events?.map((item) => {
+      return {
+        value: item?.name,
+        label: item?.name,
+      };
+    });
+
+    setEventOptions(events);
+  }, [sources]);
 
   useEffect(() => {
     if (mode === 'view') {
       if (data?.params?.inputs) {
         // Data after change
-        setDataView(data?.params?.inputs ? `("${data?.params?.inputs}")` : '');
+        setDataView(data?.params?.inputs || '');
       } else if (data?.params?.operations?.length) {
         // data from api
         const line = convertOperation({ node: data });
-        setDataView(line ? `${line}` : '');
+        setDataView(line || '');
       }
       return;
     }
@@ -51,12 +65,10 @@ const EmitNode = ({ id, data }) => {
     });
   }, [data, mode]);
 
-  const handleChange = (e) => {
-    const value = e.target.value;
-
+  const handleChange = (newValue) => {
     setDataEdit({
-      value,
-      errorText: !value ? 'This field is required' : '',
+      value: newValue?.value,
+      // errorText: !value ? 'This field is required' : '',
     });
   };
 
@@ -76,11 +88,11 @@ const EmitNode = ({ id, data }) => {
 
   const handleConfirm = () => {
     if (isDataError()) return;
-
+    console.log('blocksState', blocksState);
     // Update Declaration
     const _blocksState = [...blocksState];
     const index = blocksState.findIndex((item) => item?.id === id);
-    _blocksState[index]['data']['params'] = { inputs: dataEdit?.value, conditions: [] };
+    _blocksState[index]['data']['params'] = { inputs: dataEdit?.value, operations: [] };
 
     logicBlocks.setNodes(_blocksState);
 
@@ -102,8 +114,8 @@ const EmitNode = ({ id, data }) => {
       {mode === 'view' && (
         <Card className="nodrag">
           <CardBody>
-            <Tooltip title={`Emit ("${dataView}")`} placement="top" arrow>
-              <div className="data-view">{`Emit ("${dataView}")`}</div>
+            <Tooltip title={`emit ${dataView}`} placement="top" arrow>
+              <div className="data-view">{`emit ${dataView}`}</div>
             </Tooltip>
           </CardBody>
           <AbsoluteContainer className="action-node">
@@ -118,7 +130,13 @@ const EmitNode = ({ id, data }) => {
         <EditingContainer className="nodrag">
           <Title>Emit</Title>
           <Label type="basic">Event</Label>
-          <Input background="dark" value={dataEdit?.value} errorText={dataEdit?.errorText} onChange={handleChange} />
+
+          <SingleAutoComplete
+            background={theme.palette.background.default}
+            value={eventOptions.find((option) => option.value === dataEdit?.value)}
+            options={eventOptions}
+            onChange={(e, newValue) => handleChange(newValue)}
+          />
 
           <Footer>
             <Button className="action-icon" onClick={handleCancel}>

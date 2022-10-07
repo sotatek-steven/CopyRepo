@@ -14,6 +14,7 @@ const SingleAutoComplete = ({
   getOptionLabelCustom,
   renderOptionCustom,
   disabled = false,
+  background,
 }) => {
   const getOptionLabelDefault = (option) => option.label;
   const renderOptionDefault = (props, option) => (
@@ -33,6 +34,7 @@ const SingleAutoComplete = ({
         id="combo-box-demo"
         autoHighlight
         disableClearable
+        background={background}
         disabled={!!disabled}
         loading={loading}
         options={options}
