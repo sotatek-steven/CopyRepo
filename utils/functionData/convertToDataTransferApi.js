@@ -36,23 +36,22 @@ export const convertToDataTransferApi = ({ nodes, edges }) => {
         break;
       case 'break':
         blocks.type = 'logic';
-        block.action = 'break';
+        blocks.action = 'break';
         blocks.params = data.params;
         break;
       case 'continue':
         blocks.type = 'logic';
-        block.action = 'continue';
         blocks.position = position;
         blocks.params = data.params;
         break;
       case 'emit':
         blocks.type = 'logic';
-        block.action = 'continue';
+        blocks.action = 'emit';
         blocks.params = data.params;
         break;
       case 'delete':
         blocks.type = 'logic';
-        block.action = 'delete';
+        blocks.action = 'delete';
         blocks.params = data.params;
         break;
       case 'logic':

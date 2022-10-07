@@ -1,7 +1,6 @@
-import { Button, Tooltip } from '@mui/material';
+import { Button, Tooltip, useTheme } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
-import { Input } from '../Input';
 import IconCancel from 'assets/icon/IconCancel.svg';
 import IconConfirm from 'assets/icon/IconConfirm.svg';
 import IconEditNode from 'assets/icon/IconEditNode.svg';
@@ -11,9 +10,12 @@ import _ from 'lodash';
 import { AbsoluteContainer, Footer, Card, CardBody, EditingContainer, Title } from './CustomNode.style';
 import Label from '../atom/Label';
 import { convertOperation } from '@/config/constant/common';
+import SingleAutoComplete from '../AutoComplete/SingleAutoComplete';
 
 const RevertNode = ({ id, data }) => {
+  const theme = useTheme();
   const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
+  const { sources } = useSelector((state) => state.userModule);
   const { logicBlocks } = useDispatch();
   const [mode, setMode] = useState(() => {
     if (data?.params?.inputs) {
@@ -25,6 +27,18 @@ const RevertNode = ({ id, data }) => {
   });
   const [dataView, setDataView] = useState([]);
   const [dataEdit, setDataEdit] = useState([]);
+  const [eventOptions, setEventOptions] = useState([]);
+
+  useEffect(() => {
+    const errors = sources?.errors?.map((item) => {
+      return {
+        value: item?.name,
+        label: item?.name,
+      };
+    });
+
+    setEventOptions(errors);
+  }, [sources]);
 
   useEffect(() => {
     if (mode === 'view') {
@@ -52,12 +66,10 @@ const RevertNode = ({ id, data }) => {
     });
   }, [data, mode]);
 
-  const handleChange = (e) => {
-    const value = e.target.value;
-
+  const handleChange = (newValue) => {
     setDataEdit({
-      value,
-      errorText: !value ? 'This field is required' : '',
+      value: newValue?.value,
+      // errorText: !value ? 'This field is required' : '',
     });
   };
 
@@ -81,7 +93,7 @@ const RevertNode = ({ id, data }) => {
     // Update Declaration
     const _blocksState = [...blocksState];
     const index = blocksState.findIndex((item) => item?.id === id);
-    _blocksState[index]['data']['params'] = { inputs: dataEdit?.value, conditions: [] };
+    _blocksState[index]['data']['params'] = { inputs: dataEdit?.value, operations: [] };
 
     logicBlocks.setNodes(_blocksState);
 
@@ -119,7 +131,12 @@ const RevertNode = ({ id, data }) => {
         <EditingContainer className="nodrag">
           <Title>Revert</Title>
           <Label type="basic">Error message</Label>
-          <Input background="dark" value={dataEdit?.value} errorText={dataEdit?.errorText} onChange={handleChange} />
+          <SingleAutoComplete
+            background={theme.palette.background.default}
+            value={eventOptions.find((option) => option.value === dataEdit?.value)}
+            options={eventOptions}
+            onChange={(e, newValue) => handleChange(newValue)}
+          />
 
           <Footer>
             <Button className="action-icon" onClick={handleCancel}>

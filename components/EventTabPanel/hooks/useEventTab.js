@@ -202,7 +202,6 @@ const useEventTab = () => {
     listData?.forEach((data) => {
       const params = data?.parameters?.map((param) => {
         return {
-          _id: param?._id,
           label: param?.name,
           type: param?.type,
           location: param?.location,
@@ -216,7 +215,6 @@ const useEventTab = () => {
       });
 
       const item = {
-        _id: data?._id,
         name: data?.name,
         params,
         functions,
