@@ -63,6 +63,9 @@ const DeclarationNode = ({ id, data }) => {
       // convert data to text
       const declaration = convertDataToText().trim();
       setInputText(declaration);
+      if (!declaration) {
+        setErrorText('');
+      }
     }
   }, [data, mode]);
 

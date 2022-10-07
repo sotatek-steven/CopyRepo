@@ -7,7 +7,6 @@ import IconConfirm from 'assets/icon/IconConfirm.svg';
 import IconEditNode from 'assets/icon/IconEditNode.svg';
 import { useDispatch, useSelector } from 'react-redux';
 import ButtonRemoveNode from '../atom/ButtonRemoveNode';
-import _ from 'lodash';
 import { AbsoluteContainer, Footer, Card, CardBody, EditingContainer, Title } from './CustomNode.style';
 import Label from '../atom/Label';
 import { convertCondition } from '@/config/constant/common';
@@ -16,8 +15,8 @@ const AssertNode = ({ id, data }) => {
   const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
   const { logicBlocks } = useDispatch();
   const [mode, setMode] = useState(() => {
-    if (data?.inputs === 'undefined') {
-      return 'editing';
+    if (data?.params?.inputs) {
+      return 'view';
     } else if (data?.params?.condition) {
       return 'view';
     }
@@ -28,13 +27,13 @@ const AssertNode = ({ id, data }) => {
 
   useEffect(() => {
     if (mode === 'view') {
-      if (data?.inputs) {
+      if (data?.params?.inputs) {
         // Data after change
-        setDataView(data?.inputs || '');
+        setDataView(data?.params?.inputs ? `("${data?.params?.inputs}")` : '');
       } else if (data?.params?.condition) {
         // data from api
         const { dataShow } = convertCondition({ node: data });
-        setDataView(dataShow);
+        setDataView(dataShow ? `("${dataShow}")` : '');
       }
     }
     if (data?.params?.condition) {
@@ -47,7 +46,7 @@ const AssertNode = ({ id, data }) => {
     }
     // Data after change
     setDataEdit({
-      value: data?.inputs || '',
+      value: data?.params?.inputs || '',
     });
   }, [data, mode]);
 
@@ -80,7 +79,7 @@ const AssertNode = ({ id, data }) => {
     // Update Declaration
     const _blocksState = [...blocksState];
     const index = blocksState.findIndex((item) => item?.id === id);
-    _blocksState[index]['data'] = { inputs: dataEdit?.value };
+    _blocksState[index]['data']['params'] = { inputs: dataEdit?.value, conditions: [] };
 
     logicBlocks.setNodes(_blocksState);
 
@@ -96,8 +95,8 @@ const AssertNode = ({ id, data }) => {
       {mode === 'view' && (
         <Card className="nodrag">
           <CardBody>
-            <Tooltip title={`Assert ("${dataView}")`} placement="top" arrow>
-              <div className="data-view">{`Assert ("${dataView}")`}</div>
+            <Tooltip title={`Assert ${dataView}`} placement="top" arrow>
+              <div className="data-view">{`Assert ${dataView}`}</div>
             </Tooltip>
           </CardBody>
           <AbsoluteContainer className="action-node">

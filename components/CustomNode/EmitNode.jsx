@@ -9,6 +9,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import ButtonRemoveNode from '../atom/ButtonRemoveNode';
 import { AbsoluteContainer, Footer, Card, CardBody, EditingContainer, Title } from './CustomNode.style';
 import Label from '../atom/Label';
+import { convertOperation } from '@/config/constant/common';
 
 const EmitNode = ({ id, data }) => {
   const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
@@ -26,12 +27,28 @@ const EmitNode = ({ id, data }) => {
 
   useEffect(() => {
     if (mode === 'view') {
-      setDataView(data?.params?.inputs || '');
-    } else {
-      setDataEdit({
-        value: data?.params?.inputs,
-      });
+      if (data?.params?.inputs) {
+        // Data after change
+        setDataView(data?.params?.inputs ? `("${data?.params?.inputs}")` : '');
+      } else if (data?.params?.operations?.length) {
+        // data from api
+        const line = convertOperation({ node: data });
+        setDataView(line ? `${line}` : '');
+      }
+      return;
     }
+    if (data?.params?.operations?.length) {
+      // data from api
+      const line = convertOperation({ node: data });
+      setDataEdit({
+        value: line,
+      });
+      return;
+    }
+    // Data after change
+    setDataEdit({
+      value: data?.params?.inputs || '',
+    });
   }, [data, mode]);
 
   const handleChange = (e) => {
@@ -63,7 +80,7 @@ const EmitNode = ({ id, data }) => {
     // Update Declaration
     const _blocksState = [...blocksState];
     const index = blocksState.findIndex((item) => item?.id === id);
-    _blocksState[index]['data']['params'] = { inputs: dataEdit?.value };
+    _blocksState[index]['data']['params'] = { inputs: dataEdit?.value, conditions: [] };
 
     logicBlocks.setNodes(_blocksState);
 

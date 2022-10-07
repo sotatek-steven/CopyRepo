@@ -799,6 +799,7 @@ export const convertLogicBlock = ({ node, maps }) => {
         break;
     }
   }
+  dataShow = dataShow.slice(0, -1);
 
   return { dataShow, dataEdit };
 };
@@ -836,6 +837,7 @@ export const convertCondition = ({ node, maps = {} }) => {
         break;
     }
   }
+  dataShow = dataShow.slice(0, -1);
 
   return { dataShow, dataEdit };
 };

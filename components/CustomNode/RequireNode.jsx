@@ -10,7 +10,13 @@ import ButtonRemoveNode from '../atom/ButtonRemoveNode';
 import _ from 'lodash';
 import { AbsoluteContainer, Footer, Card, CardBody, EditingContainer, Title, Body } from './CustomNode.style';
 import SingleAutoComplete from '../AutoComplete/SingleAutoComplete';
-import { CONDITION_OPTION, CONDITION_TYPE, convertCondition, ELEMENT_TYPE } from '@/config/constant/common';
+import {
+  CONDITION_OPTION,
+  CONDITION_TYPE,
+  convertCondition,
+  ELEMENT_TYPE,
+  mapOperations,
+} from '@/config/constant/common';
 import ObjectID from 'bson-objectid';
 import Label from '../atom/Label';
 import Scrollbars from 'react-custom-scrollbars';
@@ -31,11 +37,11 @@ const RequireNode = ({ id, data }) => {
   const [errorMessage, setErrorMessage] = useState({});
 
   const convertDataView = () => {
-    const condition = [];
-    for (let index = 0; index < data?.params?.inputs?.length; index += 2) {
-      condition.push(data?.params?.inputs[index]);
+    let condition = data?.params?.inputs[0] || '';
+    for (let index = 1; index < data?.params?.inputs?.length - 1; index += 2) {
+      condition = `${condition}${mapOperations[`${data?.params?.inputs[index]}`]}${data?.params?.inputs[index + 1]}`;
     }
-    setDataView(condition);
+    setDataView(condition ? `(${condition})` : '');
   };
 
   useEffect(() => {
@@ -46,7 +52,7 @@ const RequireNode = ({ id, data }) => {
       } else if (data?.params?.condition) {
         // data from api
         const { dataShow } = convertCondition({ node: data });
-        setDataView(dataShow);
+        setDataView(dataShow ? `(${dataShow})` : '');
       }
       return;
     }
@@ -149,7 +155,7 @@ const RequireNode = ({ id, data }) => {
     // Update Declaration
     const _blocksState = [...blocksState];
     const index = blocksState.findIndex((item) => item?.id === id);
-    _blocksState[index]['data']['params'] = { inputs, errorMessage };
+    _blocksState[index]['data']['params'] = { inputs, errorMessage, conditions: [] };
 
     logicBlocks.setNodes(_blocksState);
 
@@ -171,8 +177,8 @@ const RequireNode = ({ id, data }) => {
       {mode === 'view' && (
         <Card className="nodrag">
           <CardBody>
-            <Tooltip title={`Require: ${dataView}`} placement="top" arrow>
-              <div className="data-view">{`Require: ${dataView}`}</div>
+            <Tooltip title={`Require ${dataView}`} placement="top" arrow>
+              <div className="data-view">{`Require ${dataView}`}</div>
             </Tooltip>
           </CardBody>
           <AbsoluteContainer className="action-node">

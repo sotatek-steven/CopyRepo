@@ -30,11 +30,11 @@ const RevertNode = ({ id, data }) => {
     if (mode === 'view') {
       if (data?.params?.inputs) {
         // Data after change
-        setDataView(data?.params?.inputs || '');
+        setDataView(data?.params?.inputs ? `("${data?.params?.inputs}")` : '');
       } else if (data?.params?.operations?.length) {
         // data from api
         const line = convertOperation({ node: data });
-        setDataView(line);
+        setDataView(line ? `("${line}")` : '');
       }
       return;
     }
@@ -81,7 +81,7 @@ const RevertNode = ({ id, data }) => {
     // Update Declaration
     const _blocksState = [...blocksState];
     const index = blocksState.findIndex((item) => item?.id === id);
-    _blocksState[index]['data']['params'] = { inputs: dataEdit?.value };
+    _blocksState[index]['data']['params'] = { inputs: dataEdit?.value, conditions: [] };
 
     logicBlocks.setNodes(_blocksState);
 
@@ -103,8 +103,8 @@ const RevertNode = ({ id, data }) => {
       {mode === 'view' && (
         <Card className="nodrag">
           <CardBody>
-            <Tooltip title={`Revert ("${dataView}")`} placement="top" arrow>
-              <div className="data-view">{`Revert ("${dataView}")`}</div>
+            <Tooltip title={`Revert ${dataView}`} placement="top" arrow>
+              <div className="data-view">{`Revert ${dataView}`}</div>
             </Tooltip>
           </CardBody>
           <AbsoluteContainer className="action-node">

@@ -132,7 +132,7 @@ const ConditionNode = ({ data, id }) => {
     for (let index = 1; index < data?.params?.inputs?.length - 1; index += 2) {
       condition = `${condition}${mapOperations[`${data?.params?.inputs[index]}`]}${data?.params?.inputs[index + 1]}`;
     }
-    setDataView(condition);
+    setDataView(condition ? `(${condition})` : '');
   };
 
   useEffect(() => {
@@ -143,7 +143,7 @@ const ConditionNode = ({ data, id }) => {
       } else if (data?.conditions) {
         // data from api
         const { dataShow } = convertLogicBlock({ node: data });
-        setDataView(dataShow);
+        setDataView(dataShow ? `(${dataShow})` : '');
       }
       return;
     }
@@ -204,7 +204,7 @@ const ConditionNode = ({ data, id }) => {
     // Update Declaration
     const _blocksState = [...blocksState];
     const index = blocksState.findIndex((item) => item?.id === id);
-    _blocksState[index]['data']['params'] = { inputs };
+    _blocksState[index]['data']['params'] = { inputs, conditions: [] };
 
     logicBlocks.setNodes(_blocksState);
     setMode('view');
@@ -251,8 +251,8 @@ const ConditionNode = ({ data, id }) => {
             </Button>
           </AbsoluteContainer>
           <CardBody onDoubleClick={() => setMode('editing')}>
-            <Tooltip title={`If: ${dataView}`} placement="top" arrow>
-              <div className="data-view">{`If: ${dataView}`}</div>
+            <Tooltip title={`If ${dataView}`} placement="top" arrow>
+              <div className="data-view">{`If ${dataView}`}</div>
             </Tooltip>
           </CardBody>
 
