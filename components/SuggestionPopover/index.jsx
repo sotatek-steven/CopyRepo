@@ -1,5 +1,6 @@
 import React from 'react';
 import { styled } from '@mui/material';
+import Scrollbars from 'react-custom-scrollbars';
 
 const Container = styled('div')(({ theme, open, position }) => ({
   position: 'absolute',
@@ -9,18 +10,18 @@ const Container = styled('div')(({ theme, open, position }) => ({
   display: open === 1 ? 'block' : 'none',
   background: theme.palette.background.dark,
   maxWidth: 300,
-  height: 140,
-  overflowY: 'scroll',
-  '::-webkit-scrollbar': {
-    width: 8,
-  },
-  '::-webkit-scrollbar-track': {
-    boxShadow: 'inset 0',
-  },
-  '::-webkit-scrollbar-thumb': {
-    background: theme.palette.common.black,
-    borderRadius: 8,
-  },
+  // height: 140,
+  // overflowY: 'scroll',
+  // '::-webkit-scrollbar': {
+  //   width: 8,
+  // },
+  // '::-webkit-scrollbar-track': {
+  //   boxShadow: 'inset 0',
+  // },
+  // '::-webkit-scrollbar-thumb': {
+  //   background: theme.palette.common.black,
+  //   borderRadius: 8,
+  // },
 }));
 
 const SuggestionItem = styled('div')(({ theme }) => ({
@@ -40,13 +41,15 @@ const SuggestionItem = styled('div')(({ theme }) => ({
 const SuggestionPopover = ({ open, options, position, onClick }) => {
   return (
     <Container open={open ? 1 : 0} position={position} className="nowheel">
-      {options?.map((item, index) => {
-        return (
-          <SuggestionItem key={index} onClick={() => onClick(item)}>
-            {item.label}
-          </SuggestionItem>
-        );
-      })}
+      <Scrollbars autoHeight autoHeightMax={140}>
+        {options?.map((item, index) => {
+          return (
+            <SuggestionItem key={index} onClick={() => onClick(item)}>
+              {item.label}
+            </SuggestionItem>
+          );
+        })}
+      </Scrollbars>
     </Container>
   );
 };

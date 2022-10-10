@@ -152,6 +152,7 @@ const FunctionPage = () => {
 
         // fetch detail module
         const moduleData = await userModule.getDetailModule(moduleId);
+        console.log('moduleData: ', moduleData);
         userModule.update(moduleData);
         // get list type for declaration modal
         const typeStructs = moduleData?.sources?.structs?.map((item) => {

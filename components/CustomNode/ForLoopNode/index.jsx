@@ -184,7 +184,7 @@ const ForLoopConditionNode = ({ id, data }) => {
                 <ContentWrapper sx={{}}>
                   <div>
                     <Label>Start</Label>
-                    <FreeText />
+                    <FreeText nodeId={id} />
                   </div>
                 </ContentWrapper>
               </Scrollbars>

@@ -75,6 +75,24 @@ export const convertToELKFormat = ({ nodes, edges }) => {
   return graphLayout;
 };
 
+export const sortNodes = ({ nodes, edges }) => {
+  const flows = getAllFlow({ nodes, edges });
+  const adjList = {};
+  const mainFlow = flows[0];
+
+  for (const parentNode of mainFlow) {
+    const childNodes = nodes.filter((item) => item.parentNode === parentNode);
+    adjList[parentNode] = childNodes.map((item) => item.id);
+  }
+
+  const result = [];
+  for (const parentNode of mainFlow) {
+    result.push(parentNode, ...adjList[parentNode]);
+  }
+
+  return result;
+};
+
 const getAllFlow = ({ nodes, edges }) => {
   const adjList = {};
   for (const { source, target } of edges) {
