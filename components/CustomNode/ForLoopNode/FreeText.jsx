@@ -110,17 +110,34 @@ const FreeText = ({ nodeId }) => {
     const cursor = e.target.selectionStart;
     const preLetter = inputValue[cursor - 1];
 
-    if (!key || key === ' ' || ((key === 'Delete' || key === 'Backspace') && preLetter && preLetter === ' ')) {
+    if (e.ctrlKey) {
+      // If key pressed is C and if ctrl is true.
+      if (key == ' ') showSuggestionsBox(inputValue, cursor);
+      return;
+    }
+
+    if (!key || key === ' ') {
       setOpenSuggesstionBox(false);
       return;
     }
 
-    if (!regex.test(key)) return;
+    if (key === 'Delete' || key === 'Backspace') {
+      if (!preLetter || preLetter === ' ') {
+        setOpenSuggesstionBox(false);
+      } else {
+        showSuggestionsBox(inputValue, cursor);
+      }
+      return;
+    }
 
+    if (!regex.test(key)) return;
+    showSuggestionsBox(inputValue, cursor);
+  };
+
+  const showSuggestionsBox = (inputValue, cursor) => {
     //update suggestion list
     const lastWordTyped = inputValue.slice(0, cursor).split(' ').pop();
     const suggestionList = initialSuggestionList.filter(({ label }) => label.includes(lastWordTyped));
-
     if (suggestionList.length > 0) {
       setSuggestions(suggestionList);
       setPosition({ ...position, left: POSITION_SUGGEST.left + cursor * widthLetter });
@@ -155,9 +172,9 @@ const FreeText = ({ nodeId }) => {
 
   const onClick = ({ label }) => {
     const leftCursor = value.slice(0, positionOfCursor.current).split(' '); //text to the left of the cursor
-    const words = value.split(' ');
-    words[leftCursor.length - 1] = label; //replace the word is being edited with selected suggestion
-    const updatedValue = words.join(' ');
+    const textOfRightCursor = value.slice(positionOfCursor.current);
+    leftCursor[leftCursor.length - 1] = label; //replace the word is being edited with selected suggestion
+    const updatedValue = leftCursor.join(' ') + textOfRightCursor;
     positionOfCursor.current = positionOfCursor.current + (updatedValue.length - value.length); //move cusor to the end of the word just added
 
     setValue(updatedValue);
