@@ -28,7 +28,7 @@ const KEYS = [
   'enum',
 ];
 
-const regex = new RegExp('(^[a-zA-Z]{1}$|^Delete$|^Backspace$)');
+const regex = new RegExp('^[a-zA-Z]{1}$');
 
 const widthLetter = 5;
 const POSITION_SUGGEST = {
