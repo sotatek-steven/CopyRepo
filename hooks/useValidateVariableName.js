@@ -48,11 +48,11 @@ const useValidateVariableName = () => {
     return contractState.current.name === value;
   };
 
-  const checkExistingVariableBlock = (value) => {
+  const checkExistingVariableBlock = (id, value) => {
     let isDuplicate = false;
     const declarationBlock = blocksState.filter((block) => block.type === 'declaration');
     declarationBlock?.every((block) => {
-      if (block?.data?.params?.indentifier === value) {
+      if (id !== block.id && block?.data?.params?.indentifier === value) {
         isDuplicate = true;
         return false;
       }

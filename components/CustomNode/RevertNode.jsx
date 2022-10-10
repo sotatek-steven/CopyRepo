@@ -14,7 +14,6 @@ import SingleAutoComplete from '../AutoComplete/SingleAutoComplete';
 
 const RevertNode = ({ id, data }) => {
   const theme = useTheme();
-  const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
   const { sources } = useSelector((state) => state.userModule);
   const { logicBlocks } = useDispatch();
   const [mode, setMode] = useState(() => {
@@ -90,12 +89,10 @@ const RevertNode = ({ id, data }) => {
   const handleConfirm = () => {
     if (isDataError()) return;
 
-    // Update Declaration
-    const _blocksState = [...blocksState];
-    const index = blocksState.findIndex((item) => item?.id === id);
-    _blocksState[index]['data']['params'] = { inputs: dataEdit?.value, operations: [] };
+    // Update
+    data['params'] = { inputs: dataEdit?.value, operations: [] };
 
-    logicBlocks.setNodes(_blocksState);
+    logicBlocks.updateNode(data);
 
     setMode('view');
   };
