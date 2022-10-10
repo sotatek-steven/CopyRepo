@@ -120,7 +120,6 @@ const ButtonWrapper = styled('div')({
 });
 
 const ConditionNode = ({ data, id }) => {
-  const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
   const { logicBlocks } = useDispatch();
 
   const [listData, setListData] = useState([]);
@@ -201,16 +200,18 @@ const ConditionNode = ({ data, id }) => {
       inputs.push(listData[index].condition);
       inputs.push(listData[index].operation);
     }
-    // Update Declaration
-    const _blocksState = [...blocksState];
-    const index = blocksState.findIndex((item) => item?.id === id);
-    _blocksState[index]['data']['params'] = { inputs, conditions: [] };
+    // Update
+    data['params'] = { inputs, conditions: [] };
+    data['size'] = { height: 140, width: 140 };
 
-    logicBlocks.setNodes(_blocksState);
+    logicBlocks.updateNode(id, data);
     setMode('view');
   };
 
   const handleCancel = () => {
+    // Update Size
+    data['size'] = { height: 140, width: 140 };
+    logicBlocks.updateNode(id, data);
     setMode('view');
   };
 
@@ -241,16 +242,23 @@ const ConditionNode = ({ data, id }) => {
     setListData(dataClone);
   };
 
+  const handleEdit = () => {
+    // Update Size
+    data['size'] = { height: 232, width: 468 };
+    logicBlocks.updateNode(id, data);
+    setMode('editing');
+  };
+
   return (
     <>
       {mode === 'view' && (
         <Card className="nodrag">
           <AbsoluteContainer className="action-node">
-            <Button className="action-icon" onClick={() => setMode('editing')}>
+            <Button className="action-icon" onClick={handleEdit}>
               <IconEditNode />
             </Button>
           </AbsoluteContainer>
-          <CardBody onDoubleClick={() => setMode('editing')}>
+          <CardBody>
             <Tooltip title={`If ${dataView}`} placement="top" arrow>
               <div className="data-view">{`If ${dataView}`}</div>
             </Tooltip>

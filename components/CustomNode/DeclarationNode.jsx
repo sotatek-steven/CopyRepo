@@ -36,7 +36,6 @@ const POSITION_SUGGEST = {
 };
 const regex = new RegExp(REGEX.SPECIAL_CHARACTER);
 const DeclarationNode = ({ id, data }) => {
-  const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
   const moduleState = useSelector((state) => state.userModule);
 
   const [inputText, setInputText] = useState('');
@@ -238,7 +237,7 @@ const DeclarationNode = ({ id, data }) => {
     // Validate Declaration
     const element = splitElements(inputText);
     const nodeData = convertToDeclaration(element);
-    const errorMess = validateDeclaration(nodeData);
+    const errorMess = validateDeclaration(id, nodeData);
 
     setErrorText(errorMess);
 
@@ -251,18 +250,14 @@ const DeclarationNode = ({ id, data }) => {
     if (errorMess) return;
 
     // Update Declaration
-    const _blocksState = [...blocksState];
-    const index = blocksState.findIndex((item) => item?.id === id);
-
-    _blocksState[index]['data']['params'] = {
+    data['params'] = {
       ...nodeData,
       valueText: nodeData?.value,
       assignOperation: nodeData?.value && '=',
     };
-    delete _blocksState[index]['data']['params'].value;
-    delete _blocksState[index]['data']['params'].errorIsArray;
-
-    logicBlocks.setNodes(_blocksState);
+    delete data['params'].value;
+    delete data['params'].errorIsArray;
+    logicBlocks.updateNode(data);
     setMode('view');
   };
 

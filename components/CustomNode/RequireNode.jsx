@@ -22,7 +22,6 @@ import Label from '../atom/Label';
 import Scrollbars from 'react-custom-scrollbars';
 
 const RequireNode = ({ id, data }) => {
-  const { nodes: blocksState } = useSelector((state) => state.logicBlocks);
   const { logicBlocks } = useDispatch();
   const [mode, setMode] = useState(() => {
     if (data?.params?.inputs?.length) {
@@ -152,12 +151,10 @@ const RequireNode = ({ id, data }) => {
       inputs.push(listData[index].condition);
       inputs.push(listData[index].operation);
     }
-    // Update Declaration
-    const _blocksState = [...blocksState];
-    const index = blocksState.findIndex((item) => item?.id === id);
-    _blocksState[index]['data']['params'] = { inputs, errorMessage, conditions: [] };
+    // Update
+    data['params'] = { inputs, errorMessage, conditions: [] };
 
-    logicBlocks.setNodes(_blocksState);
+    logicBlocks.updateNode(data);
 
     setMode('view');
   };

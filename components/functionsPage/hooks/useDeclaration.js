@@ -51,7 +51,7 @@ const useDeclaration = () => {
     return listData;
   };
 
-  const validateDeclaration = (data) => {
+  const validateDeclaration = (id, data) => {
     if (!data?.type || (data?.type && _.findIndex(listType, (item) => item.value === data.type) === -1)) {
       return 'Type is invalid';
     }
@@ -92,7 +92,7 @@ const useDeclaration = () => {
       return 'Found an existing contract with the same name';
     }
 
-    if (data?.indentifier && checkExistingVariableBlock(data?.indentifier)) {
+    if (data?.indentifier && checkExistingVariableBlock(id, data?.indentifier)) {
       return 'Found an existing variable with the same name';
     }
 
