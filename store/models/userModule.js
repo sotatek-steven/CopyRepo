@@ -148,8 +148,19 @@ const userModule = createModel({
       },
       async updateModule(payload, state) {
         const { _id, ...dataModule } = state.userModule;
+        const functions = dataModule?.sources.functions.map((func) => func._id);
+        const body = {
+          domain: dataModule?.domain,
+          domainId: dataModule?.domainId,
+          name: dataModule?.name,
+          tags: dataModule?.tags,
+          sources: {
+            ...dataModule?.sources,
+            functions,
+          },
+          variables: dataModule?.variables,
+        };
 
-        const body = { ...dataModule };
         const { code, data, message } = await putRequest({
           url: `/api/v1/modules/${_id}`,
           userModoel: player,
