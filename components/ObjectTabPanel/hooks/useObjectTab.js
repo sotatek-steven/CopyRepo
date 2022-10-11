@@ -125,7 +125,7 @@ const useObjectTab = () => {
           case 'type':
             data[iObject][field] = e?.value;
             // if (e?.value === OBJECT_TYPE.STRUCT) {
-            const init = JSON.parse(JSON.stringify(INIT_OBJECT_TYPE));
+            const init = JSON.parse(JSON.stringify(INIT_OBJECT_TYPE[0]));
             data[iObject] = { ...init, _id: Date.now(), type: e?.value };
             // }
             break;

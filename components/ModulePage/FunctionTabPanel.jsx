@@ -37,28 +37,28 @@ const FunctionTabPanel = () => {
   const { functions } = useDispatch();
   const theme = useTheme();
 
-  useEffect(() => {
-    const updateModules = () => {
-      if (!listFunction.length || !moduleState.sources) {
-        return;
-      }
+  // useEffect(() => {
+  //   const updateModules = () => {
+  //     if (!listFunction.length || !moduleState.sources) {
+  //       return;
+  //     }
 
-      const activeModules = moduleState.sources.functions || [];
+  //     const activeModules = moduleState.sources.functions || [];
 
-      const updatedFunctions = listFunction.map((data) => {
-        const { _id } = data;
-        const disable = activeModules.some((item) => item._id === _id);
-        return {
-          ...data,
-          disable,
-        };
-      });
+  //     const updatedFunctions = listFunction.map((data) => {
+  //       const { _id } = data;
+  //       const disable = activeModules.some((item) => item._id === _id);
+  //       return {
+  //         ...data,
+  //         disable,
+  //       };
+  //     });
 
-      functions.setFunctions(updatedFunctions);
-    };
+  //     functions.setFunctions(updatedFunctions);
+  //   };
 
-    updateModules();
-  }, [moduleState.sources]);
+  //   updateModules();
+  // }, [moduleState.sources]);
 
   return (
     <FunctionContainer>

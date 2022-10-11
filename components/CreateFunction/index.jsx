@@ -21,7 +21,10 @@ const CreateFunction = () => {
   };
 
   const hanleSubmit = async () => {
-    const dataTransferApi = await functionDefinition.convertToDataTransferApi({ ...functionDefinitionState });
+    const dataTransferApi = await functionDefinition.convertToDataTransferApi({
+      ...functionDefinitionState,
+      module: moduleState._id,
+    });
     const { data } = await userFunction.createFunction(dataTransferApi);
     const { _id } = data;
     router.push(`/modules/${moduleState._id}/${_id}`);
