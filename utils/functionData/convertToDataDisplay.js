@@ -91,8 +91,8 @@ export const convertToDataDisplay = (blockData) => {
         break;
       }
       case 'loopFor': {
-        const { start, step, condition, next } = params;
-        newNode = createForLoopNode(_id, position, { start, step, condition }, groupId);
+        const { start, step, condition, edit, next } = params;
+        newNode = createForLoopNode(_id, position, { start, step, condition, edit }, groupId);
         blocksList.push(newNode);
         if (next) createBlocks(next, newNode.id);
         break;

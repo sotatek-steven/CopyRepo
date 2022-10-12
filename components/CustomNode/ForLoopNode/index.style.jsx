@@ -29,7 +29,7 @@ export const CardBody = styled('div')({
 
 export const ForBlock = styled('div')(({ theme }) => ({
   padding: '10px 15px',
-  width: 120,
+  width: 160,
   height: 70,
   backgroundColor: theme.shape.backgroundNode,
   color: theme.palette.primary.contrastText,
