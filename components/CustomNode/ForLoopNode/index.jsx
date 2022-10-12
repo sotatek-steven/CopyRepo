@@ -1,5 +1,4 @@
 import { Box, Button } from '@mui/material';
-import { styled } from '@mui/material/styles';
 import { useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import IconEditNode from 'assets/icon/IconEditNode.svg';
@@ -8,155 +7,88 @@ import IconCancel from 'assets/icon/IconCancel.svg';
 import ButtonRemoveNode from '@/components/atom/ButtonRemoveNode';
 import FreeText from './FreeText';
 import Scrollbars from 'react-custom-scrollbars';
+import Expression from '@/components/Expression';
+import ObjectID from 'bson-objectid';
+import { ErrorMessage } from '@/components/atom/Message.style';
+import { useDispatch } from 'react-redux';
+import {
+  AbsoluteContainer,
+  ButtonWrapper,
+  Card,
+  CardBody,
+  ContentWrapper,
+  EditFormContainer,
+  ForBlock,
+  FormFooter,
+  FormTitle,
+  Label,
+  ParentAbsoluteContainer,
+} from './index.style';
 
-const Card = styled('article')(({ theme, width, height }) => ({
-  padding: '10px 15px',
-  width: width || 700,
-  height: height || 500,
-  backgroundColor: theme.palette.background.parentNode,
-  display: 'flex',
-  flexDirection: 'column',
-  color: theme.palette.text.primary,
-  border: `1px dashed`,
-  borderColor: theme.palette.text.primary,
-  '&:hover': {
-    '.action-node': {
-      display: 'flex',
-    },
-  },
-}));
-
-const CardBody = styled('div')({
-  display: 'flex',
-  flexDirection: 'column',
-  flexGrow: 1,
-  alignItems: 'center',
-  justifyContent: 'center',
-  fontFamily: 'Segoe UI',
-  fontStyle: 'italic',
-});
-
-const ForBlock = styled('div')(({ theme }) => ({
-  padding: '10px 15px',
-  width: 120,
-  height: 70,
-  backgroundColor: theme.shape.backgroundNode,
-  color: theme.palette.primary.contrastText,
-  position: 'relative',
-  top: -10,
-  left: -15,
-  borderRadius: '0 0 6px 0',
-  textAlign: 'center',
-  display: 'flex',
-  alignItems: 'center',
-  '& p': {
-    margin: 0,
-    flexGrow: 1,
-  },
-}));
-
-const AbsoluteContainer = styled('div')(({ theme }) => ({
-  display: 'none',
-  justifyContent: 'end',
-  position: 'absolute',
-  top: 0,
-  right: 0,
-  zIndex: 10,
-  '.action-icon': {
-    minWidth: 28,
-    background: theme.palette.success.main,
-    opacity: 0.8,
-    '&:hover': {
-      background: theme.palette.success.main,
-      opacity: 1,
-    },
-  },
-}));
-
-const ParentAbsoluteContainer = styled('div')(({ theme }) => ({
-  display: 'flex',
-  justifyContent: 'end',
-  position: 'absolute',
-  height: 25,
-  right: 0,
-  top: -25,
-  gap: 2,
-  '.action-icon': {
-    minWidth: 28,
-    background: theme.palette.success.main,
-    '&:hover': {
-      background: theme.palette.success.light,
-    },
-  },
-}));
-
-const EditFormContainer = styled('div')(({ theme }) => ({
-  width: 364,
-  height: 400,
-  background: theme.palette.background.light,
-  border: `1.5px dashed ${theme.palette.success.main}`,
-  position: 'absolute',
-  top: -350,
-  left: '-100%',
-  zIndex: 1000,
-  padding: '20px 0px 10px',
-  display: 'flex',
-  flexDirection: 'column',
-  gap: 15,
-}));
-
-const FormTitle = styled('div')(({ theme }) => ({
-  backgroundColor: theme.shape.backgroundNode,
-  padding: '7px 30px',
-  position: 'absolute',
-  top: '-20px',
-  left: '-30px',
-  color: theme.palette.primary.contrastText,
-}));
-
-const ContentWrapper = styled('div')({
-  display: 'flex',
-  flexDirection: 'column',
-  gap: '10px',
-  padding: '0px 25px',
-});
-
-const FormFooter = styled('div')({
-  display: 'flex',
-  justifyContent: 'end',
-  padding: '0px 25px',
-});
-
-const ButtonWrapper = styled('div')({
-  height: 45,
-  width: 45,
-  display: 'flex',
-  justifyContent: 'center',
-  alignItems: 'center',
-  borderRadius: 5,
-  cursor: 'pointer',
-  '&:hover': {
-    background: '#504e4d',
-  },
-});
-
-const Label = styled('label')(({ theme }) => ({
-  fontFamily: 'Segoe UI',
-  fontWeight: theme.typography.fontWeightBold,
-  fontSize: 14,
-  color: theme.palette.text.primary,
-  marginBottom: 5,
-}));
+const REQUIRE_MESSAGE = 'This field is required';
 
 const ForLoopConditionNode = ({ id, data }) => {
   const [mode, setMode] = useState('view');
+  const [start, setStart] = useState('');
+  const [startError, setStartError] = useState('');
+  const [step, setStep] = useState('');
+  const [stepError, setStepError] = useState('');
+  const [condition, setCondition] = useState([
+    {
+      _id: ObjectID(24).toHexString(),
+      expression: '',
+      logicalOperator: 'end',
+      error: '',
+    },
+  ]);
 
   const handleCancel = () => {
     setMode('view');
   };
+  const { logicBlocks } = useDispatch();
+
+  const validate = () => {
+    let hasError = false;
+    if (!start) {
+      setStartError(REQUIRE_MESSAGE);
+      hasError = true;
+    }
+    if (!step) {
+      setStepError(REQUIRE_MESSAGE);
+      hasError = true;
+    }
+    const updatedCondition = condition.map((item) => {
+      if (!item.expression) {
+        hasError = true;
+        return { ...item, error: REQUIRE_MESSAGE };
+      }
+      return item;
+    });
+    setCondition(updatedCondition);
+    return hasError;
+  };
 
   const handleConfirm = () => {
+    if (validate()) return;
+    const _condition = condition.map(({ error, ...others }) => ({ ...others }));
+    const data = {
+      start,
+      condition: _condition,
+      step,
+    };
+
+    logicBlocks.updateNode(id, data);
     setMode('view');
+  };
+
+  const handleStartChange = (value) => {
+    setStart(value);
+    setStartError(value ? '' : REQUIRE_MESSAGE);
+  };
+
+  const handleStepChange = (value) => {
+    setStep(value);
+    setStepError(value ? '' : REQUIRE_MESSAGE);
   };
 
   return (
@@ -184,7 +116,18 @@ const ForLoopConditionNode = ({ id, data }) => {
                 <ContentWrapper sx={{}}>
                   <div>
                     <Label>Start</Label>
-                    <FreeText nodeId={id} />
+                    <FreeText nodeId={id} value={start} setValue={handleStartChange} />
+                    {startError && <ErrorMessage customStyle={{ marginTop: 5 }}>{startError}</ErrorMessage>}
+                  </div>
+
+                  <div>
+                    <Label>Condition</Label>
+                    <Expression data={condition} setData={setCondition} nodeId={id} />
+                  </div>
+                  <div>
+                    <Label>Step</Label>
+                    <FreeText nodeId={id} value={step} setValue={handleStepChange} />
+                    {stepError && <ErrorMessage customStyle={{ marginTop: 5 }}>{stepError}</ErrorMessage>}
                   </div>
                 </ContentWrapper>
               </Scrollbars>

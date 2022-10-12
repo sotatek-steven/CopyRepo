@@ -40,8 +40,7 @@ const InputWrapper = styled('div')({
   position: 'relative',
 });
 
-const FreeText = ({ nodeId }) => {
-  const [value, setValue] = useState('');
+const FreeText = ({ nodeId, value, setValue }) => {
   const [openSuggesstionBox, setOpenSuggesstionBox] = useState(false);
   const [suggestions, setSuggestions] = useState([]);
   const [position, setPosition] = useState(POSITION_SUGGEST);
@@ -197,7 +196,17 @@ const FreeText = ({ nodeId }) => {
         onKeyDown={handleKeyDown}
         onKeyUp={handleKeyUp}
       />
-      <SuggestionPopover open={openSuggesstionBox} options={suggestions} position={position} onClick={onClick} />
+      {openSuggesstionBox ? (
+        <SuggestionPopover
+          open={openSuggesstionBox}
+          setOpen={setOpenSuggesstionBox}
+          options={suggestions}
+          position={position}
+          onClick={onClick}
+        />
+      ) : (
+        <></>
+      )}
     </InputWrapper>
   );
 };
