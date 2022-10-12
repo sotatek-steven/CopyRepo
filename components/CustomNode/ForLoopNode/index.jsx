@@ -1,5 +1,5 @@
 import { Box, Button } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Handle, Position } from 'react-flow-renderer';
 import IconEditNode from 'assets/icon/IconEditNode.svg';
 import IconConfirm from 'assets/icon/IconConfirm.svg';
@@ -27,6 +27,26 @@ import {
 
 const REQUIRE_MESSAGE = 'This field is required';
 
+const convertDataToText = (start, condition, step) => {
+  if (!start || !step) return 'For';
+  console.log('start: ', start);
+  let text = start.trim() + '; ';
+  for (const { expression, logicalOperator } of condition) {
+    text = text + expression.trim();
+    if (logicalOperator === 'end') {
+      text = text + '; ';
+    } else {
+      text = text + ' ' + logicalOperator + ' ';
+    }
+  }
+
+  console.log('text: ', text);
+  text = text + step.trim();
+
+  // console.log('text: ', text);
+  return 'for(' + text + ')';
+};
+
 const ForLoopConditionNode = ({ id, data }) => {
   const [mode, setMode] = useState('view');
   const [start, setStart] = useState('');
@@ -41,6 +61,32 @@ const ForLoopConditionNode = ({ id, data }) => {
       error: '',
     },
   ]);
+
+  useEffect(() => {
+    //system function has no edit field
+    if (!data.edit) {
+      console.log('condition: ', data);
+      const { start, condition, step } = data;
+      //convert start, condition, step to corresponding state
+
+      // const convertToText = ({ indentifier, assignOperation, value }) => {
+      //   return assignOperation ? indentifier + ' ' + assignOperation + ' ' + value.value : indentifier;
+      // };
+
+      // const _start = convertToText(start);
+      // const _condition = convertConditionForLoop(condition);
+      // const _step = convertToText(step);
+      // setStart(_start);
+      // setCondition(_condition);
+      // setStep(_step);
+      return;
+    }
+    const { start, condition, step } = data.edit;
+    setStart(start);
+    const _condition = condition.map((item) => ({ ...item, error: '' }));
+    setCondition(_condition);
+    setStep(step);
+  }, [data, mode]);
 
   const handleCancel = () => {
     setMode('view');
@@ -71,13 +117,13 @@ const ForLoopConditionNode = ({ id, data }) => {
   const handleConfirm = () => {
     if (validate()) return;
     const _condition = condition.map(({ error, ...others }) => ({ ...others }));
-    const data = {
+    const _data = {
       start,
       condition: _condition,
       step,
     };
 
-    logicBlocks.updateNode(id, data);
+    logicBlocks.updateNode(id, { ...data, edit: _data });
     setMode('view');
   };
 
@@ -104,7 +150,7 @@ const ForLoopConditionNode = ({ id, data }) => {
                 <IconEditNode />
               </Button>
             </AbsoluteContainer>
-            <p>For</p>
+            <p>{convertDataToText(start, condition, step)}</p>
           </ForBlock>
         ) : (
           <EditFormContainer>
