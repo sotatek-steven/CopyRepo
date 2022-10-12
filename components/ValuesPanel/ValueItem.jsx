@@ -14,31 +14,45 @@ import { Box, IconButton, Tooltip, useTheme } from '@mui/material';
 import { useMemo } from 'react';
 import SingleAutoComplete from '../AutoComplete/SingleAutoComplete';
 import MultipleAutoComplete from '../AutoComplete/MultipleAutoComplete';
+import _ from 'lodash';
 
 const ValuesItem = ({ value, handleRemoveValue, handleChangeValue }) => {
   const theme = useTheme();
   const moduleState = useSelector((state) => state.userModule);
-
+  const { values } = useSelector((state) => state.value);
   const listFunction = useMemo(() => {
+    let functionSelected = [];
+    values.forEach((item) => {
+      functionSelected = _.concat(functionSelected, item?.functions);
+    });
     return moduleState?.sources?.functions?.reduce((array, item) => {
       let temp = [];
       if (item?.globalVariables.length) {
         temp = item?.globalVariables
           .filter((variable) => {
-            return (
-              variable?.isArray?.toString() === value?.isArray?.toString() && value?.type?.includes(variable?.type)
-            );
+            if (value?.type) {
+              return (
+                variable?.isArray?.toString() === value?.isArray?.toString() &&
+                value?.type?.includes(variable?.type) &&
+                variable?.objectType === 'values'
+              );
+            } else {
+              return variable?.isArray?.toString() === value?.isArray?.toString() && variable?.objectType === 'values';
+            }
           })
           .map((variable) => {
+            const valueOption = `${item?._id}-${variable?.label}`;
             return {
-              value: `${item?._id}-${variable?.label}`,
+              value: valueOption,
               label: `(${item?.name})(${variable?.label})`,
+              data: variable,
+              locked: !value?.functions.includes(valueOption) && functionSelected.includes(valueOption),
             };
           });
       }
       return array?.concat(temp);
     }, []);
-  }, [moduleState?.sources?.functions, value?.type, value?.isArray]);
+  }, [moduleState?.sources?.functions, value?.type, value?.isArray, values]);
 
   const getPlaceholderDefaultValue = useMemo(() => {
     let placeholder = '';
