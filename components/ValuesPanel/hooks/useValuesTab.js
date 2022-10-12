@@ -66,7 +66,8 @@ const useValuesTab = () => {
       } else {
         initData.push({
           ...item,
-          isDefaultValue: !item?.valueDefault,
+          isDefaultValue: false,
+          valueDefault: '',
           _id: ObjectID(32).toHexString(),
         });
       }
@@ -113,7 +114,7 @@ const useValuesTab = () => {
       case ELEMENT_TYPE.INPUT:
         data[iValue][field] = e.target.value;
         if (field === 'label') {
-          if (data[iValue]['constant'] == true) data[iValue][field] = e.target.value.toUpperCase();
+          if (data[iValue]['constant'] == 'constant') data[iValue][field] = e.target.value.toUpperCase();
 
           data[iValue]['errorName'] = null;
           if (!e.target.value.trim()) {
@@ -165,6 +166,11 @@ const useValuesTab = () => {
             break;
           case 'functions':
             data[iValue][field] = e?.map((item) => item?.value);
+            if (e.length) {
+              data[iValue]['type'] = e[0]?.data?.type;
+              data[iValue]['isArray'] = e[0]?.data?.isArray;
+              data[iValue]['errorName'] = !data[iValue]['label'] && 'This field is required';
+            }
             break;
           default:
             data[iValue][field] = e?.value;

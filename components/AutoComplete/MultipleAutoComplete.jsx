@@ -1,4 +1,4 @@
-import { Checkbox } from '@mui/material';
+import { Checkbox, MenuItem } from '@mui/material';
 import TextField from '@mui/material/TextField';
 import ArrowDown from 'assets/icon/arrow-down.svg';
 import { BaseAutocomplete, Container, Error, Label } from './AutoComplete.style';
@@ -16,10 +16,10 @@ export default function MultipleAutoComplete({
 }) {
   const getOptionLabelDefault = (option) => option.label;
   const renderOptionDefault = (props, option, { selected }) => (
-    <li {...props} style={{ padding: 0 }}>
+    <MenuItem {...props} style={{ padding: 0 }} disabled={option?.locked}>
       <Checkbox checked={selected} />
       <div className="label">{option.label}</div>
-    </li>
+    </MenuItem>
   );
   return (
     <Container>
