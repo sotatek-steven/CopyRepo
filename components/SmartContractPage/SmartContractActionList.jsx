@@ -73,6 +73,7 @@ const SmartContractActionList = () => {
   const deployed = () => {
     setLoading(false);
     setConfirmDeployModalOpen(false);
+    setContractDeployedAlertOpen(true);
   };
 
   const handleConfirmDeployModalClose = () => {
