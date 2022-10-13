@@ -14,6 +14,7 @@ import {
   createContinueNode,
   createEmitNode,
   createForLoopNode,
+  createWhileLoopNode,
 } from '@/utils/functionData/flowElement';
 import { styled } from '@mui/material';
 import React, { useState } from 'react';
@@ -159,6 +160,13 @@ const DropHereNode = (props) => {
         const forLoopNode = createForLoopNode(undefined, undefined, undefined, dropNode.parentNode);
         const dropItemNode = createDropItemNode(undefined, undefined, undefined, forLoopNode.id);
         newNodes.push(forLoopNode, dropItemNode);
+        break;
+      }
+      case 'while_loop': {
+        console.log('while loop');
+        const whileLoopNode = createWhileLoopNode(undefined, undefined, undefined, dropNode.parentNode);
+        const dropItemNode = createDropItemNode(undefined, undefined, undefined, whileLoopNode.id);
+        newNodes.push(whileLoopNode, dropItemNode);
         break;
       }
       default:

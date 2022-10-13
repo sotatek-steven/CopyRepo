@@ -1,6 +1,6 @@
 import ObjectID from 'bson-objectid';
 
-export const PARENT_TYPE = ['parent', 'forLoop', 'unchecked'];
+export const PARENT_TYPE = ['parent', 'forLoop', 'whileLoop', 'unchecked'];
 
 //create node
 export const createInitNode = (id, position, data) => {
@@ -224,6 +224,23 @@ export const createForLoopNode = (id, position, data, parentId) => {
   return {
     id: id || ObjectID(24).toHexString(),
     type: 'forLoop',
+    position,
+    data: {
+      ...data,
+      size: data?.size || {
+        width: 200,
+        height: 100,
+      },
+    },
+    dragHandle: 'dragHandle',
+    ...parentInfo(parentId),
+  };
+};
+
+export const createWhileLoopNode = (id, position, data, parentId) => {
+  return {
+    id: id || ObjectID(24).toHexString(),
+    type: 'whileLoop',
     position,
     data: {
       ...data,
