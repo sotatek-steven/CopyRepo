@@ -19,6 +19,7 @@ import DeleteNode from './DeleteNode';
 import LogicNode from './LogicNode';
 import ForLoopNode from './ForLoopNode';
 import UncheckedNode from './UncheckedNode';
+import WhileLoopNode from './WhileLoopNode';
 
 const CustomNodes = {
   module: ModuleNode,
@@ -42,6 +43,7 @@ const CustomNodes = {
   logic: LogicNode,
   forLoop: ForLoopNode,
   unchecked: UncheckedNode,
+  whileLoop: WhileLoopNode,
 };
 
 export default CustomNodes;

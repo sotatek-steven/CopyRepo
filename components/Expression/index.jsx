@@ -4,7 +4,7 @@ import ObjectID from 'bson-objectid';
 import React from 'react';
 import { ErrorMessage } from '../atom/Message.style';
 import { BaseAutocomplete } from '../AutoComplete/AutoComplete.style';
-import FreeText from '../CustomNode/ForLoopNode/FreeText';
+import FreeText from '../atom/FreeText';
 
 const Container = styled('div')({
   display: 'flex',

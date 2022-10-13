@@ -5,7 +5,7 @@ import IconEditNode from 'assets/icon/IconEditNode.svg';
 import IconConfirm from 'assets/icon/IconConfirm.svg';
 import IconCancel from 'assets/icon/IconCancel.svg';
 import ButtonRemoveNode from '@/components/atom/ButtonRemoveNode';
-import FreeText from './FreeText';
+import FreeText from '../../atom/FreeText';
 import Scrollbars from 'react-custom-scrollbars';
 import Expression from '@/components/Expression';
 import ObjectID from 'bson-objectid';
@@ -189,8 +189,8 @@ const ForLoopConditionNode = ({ id, data }) => {
           </EditFormContainer>
         )}
         <CardBody>
-          <Handle type="target" position={Position.Top} id="a" style={{ background: '#555' }} />
-          <Handle type="source" position={Position.Bottom} id="c" style={{ background: '#555' }} />
+          <Handle type="target" position={Position.Top} id="top" style={{ background: '#555' }} />
+          <Handle type="source" position={Position.Bottom} id="bottom" style={{ background: '#555' }} />
         </CardBody>
       </Card>
     </>

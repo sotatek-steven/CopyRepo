@@ -20,6 +20,7 @@ import {
   createReturnsNode,
   createRevertNode,
   createUncheckedNode,
+  createWhileLoopNode,
 } from '@/utils/functionData/flowElement';
 
 export const convertToDataDisplay = (blockData) => {
@@ -93,6 +94,13 @@ export const convertToDataDisplay = (blockData) => {
       case 'loopFor': {
         const { start, step, condition, edit, next } = params;
         newNode = createForLoopNode(_id, position, { start, step, condition, edit }, groupId);
+        blocksList.push(newNode);
+        if (next) createBlocks(next, newNode.id);
+        break;
+      }
+      case 'loopWhile': {
+        const { condition, edit, next } = params;
+        newNode = createWhileLoopNode(_id, position, { condition, edit }, groupId);
         blocksList.push(newNode);
         if (next) createBlocks(next, newNode.id);
         break;
