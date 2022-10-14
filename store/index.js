@@ -4,16 +4,15 @@ import * as models from './models';
 
 let store;
 
-const exampleInitialState = {
+const exampleInitialState = {};
 
-};
-
-export const initStore = (initialState = exampleInitialState) => init({
-  models,
-  redux: {
-    initialState,
-  },
-});
+export const initStore = (initialState = exampleInitialState) =>
+  init({
+    models,
+    redux: {
+      initialState,
+    },
+  });
 
 export const initializeStore = (preloadedState) => {
   let _store = store ?? initStore(preloadedState);
@@ -38,6 +37,6 @@ export const initializeStore = (preloadedState) => {
 };
 
 export function useStore(initialState) {
-  const _store = useMemo(() => initializeStore(initialState), [initialState]);
-  return _store;
+  const store = useMemo(() => initializeStore(initialState), [initialState]);
+  return store;
 }
