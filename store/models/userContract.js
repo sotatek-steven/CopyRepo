@@ -48,7 +48,7 @@ const userContract = createModel({
           const { meta, data } = await getRequest({
             url: '/api/v1/user-contracts',
             params: {
-              status: 'draff',
+              status: 'draft',
               page: payload.page,
               size: payload.size,
               description_like: payload.keywords,

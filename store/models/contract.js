@@ -78,7 +78,7 @@ const contract = createModel({
         return data;
       },
       async updateContract(payload, state) {
-        const { _id, ...other } = payload && payload._id ? payload : state.contract.current;
+        const { _id, address, hash, ...other } = payload && payload._id ? payload : state.contract.current;
         const coordinates = other?.coordinates?.map((coor) => {
           return {
             module: coor?.module?._id,
@@ -92,6 +92,8 @@ const contract = createModel({
           tags: other?.tags,
           modules: other?.modules,
           coordinates: coordinates,
+          address,
+          hash,
         };
         const { code, data, message } = await putRequest({
           url: `/api/v1/user-contracts/${_id}`,
