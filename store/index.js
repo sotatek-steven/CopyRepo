@@ -38,6 +38,6 @@ export const initializeStore = (preloadedState) => {
 };
 
 export function useStore(initialState) {
-  const store = useMemo(() => initializeStore(initialState), [initialState]);
-  return store;
+  const _store = useMemo(() => initializeStore(initialState), [initialState]);
+  return _store;
 }
